@@ -34,7 +34,7 @@ ister mi?* Evet ise → CMS element.
 | Platform | Shopware **6.7.12.1** (core, storefront, administration, elasticsearch) |
 | Sürükle-bırak | Shopware **native CMS** — 3. parti page builder yok, custom builder yok |
 | Dev ortamı | **Yerel** (Docker YOK) — brew Apache + PHP-FPM **8.4**, MySQL 8.0, Node 26 |
-| Yerel URL | `http://localhost:8088` (admin: `/admin`, kullanıcı `admin` / şifre `shopware`) |
+| Yerel URL | `http://24vapestore.test:8088` (admin: `/admin`, kullanıcı `admin` / şifre `shopware`) |
 | Proje yolu | `/Applications/XAMPP/xamppfiles/htdocs/24vapestore-shopware6` |
 | Tema plugin'i | `custom/plugins/VapeStoreTheme` — tek plugin, hem tema hem CMS element'ler |
 | Tasarım referansı | https://www.aboutyou.de/ (yapı, grid, filtre UX'i, ürün kartı anatomisi) |
