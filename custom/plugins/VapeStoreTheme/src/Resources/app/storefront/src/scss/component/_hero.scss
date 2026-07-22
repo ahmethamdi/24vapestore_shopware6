@@ -1,0 +1,144 @@
+/*
+Hero element — storefront görünümü.
+Tüm değerler token'lardan gelir; magic hex/px yok.
+*/
+
+.vape-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    background-color: $vape-neutral-100;
+
+    &__media {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    &__content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: $vape-space-4;
+        width: 100%;
+        max-width: 640px;
+        padding: $vape-space-8 $vape-space-4;
+        margin: 0 auto;
+
+        @media (min-width: 768px) {
+            padding: $vape-space-12 $vape-space-16;
+        }
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: $vape-text-3xl;
+        font-weight: $vape-weight-black;
+        line-height: $vape-leading-tight;
+        letter-spacing: $vape-tracking-tight;
+
+        @media (min-width: 768px) {
+            font-size: $vape-text-5xl;
+        }
+    }
+
+    &__subline {
+        margin: 0;
+        font-size: $vape-text-md;
+        line-height: $vape-leading-normal;
+
+        @media (min-width: 768px) {
+            font-size: $vape-text-lg;
+        }
+    }
+
+    &__cta {
+        align-self: flex-start;
+        min-height: $vape-btn-height;
+        padding: 0 $vape-btn-padding-x;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        &.is--disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+    }
+
+    // ---------- Yatay hizalama ----------
+    // Metin bloğu hizaya göre konumlanır; ortalanmışsa içerik de ortalanır.
+
+    &.is--align-left .vape-hero__content {
+        margin-left: 0;
+        margin-right: auto;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    &.is--align-center .vape-hero__content {
+        margin-left: auto;
+        margin-right: auto;
+        align-items: center;
+        text-align: center;
+
+        .vape-hero__cta {
+            align-self: center;
+        }
+    }
+
+    &.is--align-right .vape-hero__content {
+        margin-left: auto;
+        margin-right: 0;
+        align-items: flex-end;
+        text-align: right;
+
+        .vape-hero__cta {
+            align-self: flex-end;
+        }
+    }
+
+    // ---------- Metin tonu ----------
+    // Görsel üzerindeki metin okunabilirliği için.
+
+    &.is--tone-light {
+        .vape-hero__headline,
+        .vape-hero__subline {
+            color: $vape-text-inverse;
+        }
+    }
+
+    &.is--tone-dark {
+        .vape-hero__headline {
+            color: $vape-text-heading;
+        }
+
+        .vape-hero__subline {
+            color: $vape-text-primary;
+        }
+    }
+}
+
+// Block sarmalayıcı — hero tam genişlik kullanır
+.vape-hero-block {
+    padding-left: 0;
+    padding-right: 0;
+}

@@ -1,0 +1,93 @@
+{#
+    Hero element — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-hero.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    ⚠️ Yönetici metni için `element.translated.config.*` kullanılır —
+       `element.config.*` çeviri-farkında değildir, çok dilli mağazada bozulur.
+       Düzen/görünüm bayrakları için `element.config.*` yeterlidir.
+#}
+{% block element_vape_hero %}
+    {% set config = element.translated.config %}
+    {% set layout = element.config %}
+
+    {% set media = element.data.media %}
+    {% set headline = config.headline.value %}
+    {% set subline = config.subline.value %}
+    {% set ctaText = config.ctaText.value %}
+    {% set ctaUrl = config.ctaUrl.value %}
+
+    {% set minHeight = layout.minHeight.value|default(480) %}
+    {% set overlayOpacity = (layout.overlayOpacity.value|default(35)) / 100 %}
+    {% set textAlign = layout.textAlign.value|default('left') %}
+    {% set verticalAlign = layout.verticalAlign.value|default('center') %}
+    {% set textColor = layout.textColor.value|default('light') %}
+    {% set ctaVariant = layout.ctaVariant.value|default('primary') %}
+
+    <div class="cms-element-{{ element.type }} vape-hero is--align-{{ textAlign }} is--tone-{{ textColor }}"
+         style="min-height: {{ minHeight }}px; justify-content: {{ verticalAlign }};">
+
+        {% block element_vape_hero_media %}
+            {% if media %}
+                <div class="vape-hero__media">
+                    {% sw_thumbnails 'vape-hero-image-thumbnails' with {
+                        media: media,
+                        sizes: {
+                            xs: '576px',
+                            sm: '767px',
+                            md: '991px',
+                            lg: '1199px',
+                            xl: '1920px'
+                        },
+                        attributes: {
+                            class: 'vape-hero__image',
+                            alt: (media.translated.alt ?: headline),
+                            title: (media.translated.title ?: headline)
+                        }
+                    } %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block element_vape_hero_overlay %}
+            {% if media and overlayOpacity > 0 %}
+                <div class="vape-hero__overlay"
+                     style="background-color: rgba(0, 0, 0, {{ overlayOpacity }});"></div>
+            {% endif %}
+        {% endblock %}
+
+        {% block element_vape_hero_content %}
+            <div class="vape-hero__content">
+
+                {% block element_vape_hero_headline %}
+                    {% if headline %}
+                        <h2 class="vape-hero__headline">{{ headline }}</h2>
+                    {% endif %}
+                {% endblock %}
+
+                {% block element_vape_hero_subline %}
+                    {% if subline %}
+                        <p class="vape-hero__subline">{{ subline }}</p>
+                    {% endif %}
+                {% endblock %}
+
+                {% block element_vape_hero_cta %}
+                    {% if ctaText and ctaUrl %}
+                        <a href="{{ ctaUrl }}"
+                           class="btn btn-{{ ctaVariant }} vape-hero__cta"
+                           {% if layout.newTab.value %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                            {{ ctaText }}
+                        </a>
+                    {% elseif ctaText %}
+                        {# Link girilmemişse buton tıklanamaz olur — metni yine de göster #}
+                        <span class="btn btn-{{ ctaVariant }} vape-hero__cta is--disabled">{{ ctaText }}</span>
+                    {% endif %}
+                {% endblock %}
+
+            </div>
+        {% endblock %}
+
+    </div>
+{% endblock %}

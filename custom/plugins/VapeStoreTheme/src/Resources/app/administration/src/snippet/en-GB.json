@@ -1,0 +1,51 @@
+{
+  "vape-cms": {
+    "elements": {
+      "hero": {
+        "label": "Hero / campaign banner",
+        "placeholder": {
+          "headline": "Enter a headline"
+        },
+        "config": {
+          "media": "Background image",
+          "headline": "Headline",
+          "subline": "Subline",
+          "ctaText": "Button text",
+          "ctaUrl": "Button link",
+          "ctaUrlHelp": "Internal path (e.g. /liquids) or full URL",
+          "newTab": "Open link in a new tab",
+          "textAlign": "Text alignment",
+          "verticalAlign": "Vertical alignment",
+          "minHeight": "Minimum height (px)",
+          "overlayOpacity": "Darkening (%)",
+          "overlayOpacityHelp": "Darkens the image so the text stays readable",
+          "textColor": "Text colour",
+          "ctaVariantLabel": "Button style",
+          "align": {
+            "left": "Left",
+            "center": "Centred",
+            "right": "Right"
+          },
+          "vAlign": {
+            "top": "Top",
+            "center": "Middle",
+            "bottom": "Bottom"
+          },
+          "tone": {
+            "light": "Light (for dark images)",
+            "dark": "Dark (for light images)"
+          },
+          "ctaVariant": {
+            "primary": "Primary (red)",
+            "secondary": "Secondary (outline)"
+          }
+        }
+      }
+    },
+    "blocks": {
+      "hero": {
+        "label": "Hero / campaign banner"
+      }
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{#
+    Hero config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model
+       sw-*  (legacy)  → v-model:value
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+#}
+{% block vape_cms_element_hero_config %}
+<div class="vape-cms-el-config-hero">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-hero"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="settings" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.settings') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== İÇERİK ==================== #}
+            <sw-container v-if="active === 'content'">
+
+                {% block vape_cms_element_hero_config_media %}
+                    <div class="vape-cms-el-config-hero__field">
+                        <sw-media-upload-v2
+                            variant="regular"
+                            :upload-tag="uploadTag"
+                            :source="previewSource"
+                            :allow-multi-select="false"
+                            :label="$t('vape-cms.elements.hero.config.media')"
+                            @selection-change="onSelectionChanges"
+                            @media-upload-remove-image="onMediaRemove"
+                            @media-upload-sidebar-open="onMediaRemove"
+                        />
+                        <sw-upload-listener
+                            :upload-tag="uploadTag"
+                            auto-upload
+                            @media-upload-finish="onMediaUploadFinish"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_hero_config_headline %}
+                    <div class="vape-cms-el-config-hero__field">
+                        <mt-text-field
+                            v-model="element.config.headline.value"
+                            :label="$t('vape-cms.elements.hero.config.headline')"
+                            :placeholder="$t('vape-cms.elements.hero.placeholder.headline')"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_hero_config_subline %}
+                    <div class="vape-cms-el-config-hero__field">
+                        <mt-textarea
+                            v-model="element.config.subline.value"
+                            :label="$t('vape-cms.elements.hero.config.subline')"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_hero_config_cta %}
+                    <div class="vape-cms-el-config-hero__field">
+                        <mt-text-field
+                            v-model="element.config.ctaText.value"
+                            :label="$t('vape-cms.elements.hero.config.ctaText')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-hero__field">
+                        <mt-text-field
+                            v-model="element.config.ctaUrl.value"
+                            :label="$t('vape-cms.elements.hero.config.ctaUrl')"
+                            placeholder="/kategori/likitler"
+                            :help-text="$t('vape-cms.elements.hero.config.ctaUrlHelp')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-hero__field">
+                        <mt-switch
+                            v-model="element.config.newTab.value"
+                            :label="$t('vape-cms.elements.hero.config.newTab')"
+                            bordered
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== AYARLAR ==================== #}
+            <sw-container v-if="active === 'settings'">
+
+                {% block vape_cms_element_hero_config_layout %}
+                    <sw-container columns="1fr 1fr" gap="0 24px">
+                        <div class="vape-cms-el-config-hero__field">
+                            <mt-select
+                                v-model="element.config.textAlign.value"
+                                :options="textAlignOptions"
+                                :label="$t('vape-cms.elements.hero.config.textAlign')"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-hero__field">
+                            <mt-select
+                                v-model="element.config.verticalAlign.value"
+                                :options="verticalAlignOptions"
+                                :label="$t('vape-cms.elements.hero.config.verticalAlign')"
+                            />
+                        </div>
+                    </sw-container>
+                {% endblock %}
+
+                {% block vape_cms_element_hero_config_appearance %}
+                    <div class="vape-cms-el-config-hero__field">
+                        <mt-number-field
+                            v-model="element.config.minHeight.value"
+                            number-type="int"
+                            :min="200"
+                            :max="1000"
+                            :step="20"
+                            :label="$t('vape-cms.elements.hero.config.minHeight')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-hero__field">
+                        <mt-number-field
+                            v-model="element.config.overlayOpacity.value"
+                            number-type="int"
+                            :min="0"
+                            :max="80"
+                            :step="5"
+                            :label="$t('vape-cms.elements.hero.config.overlayOpacity')"
+                            :help-text="$t('vape-cms.elements.hero.config.overlayOpacityHelp')"
+                        />
+                    </div>
+
+                    <sw-container columns="1fr 1fr" gap="0 24px">
+                        <div class="vape-cms-el-config-hero__field">
+                            <mt-select
+                                v-model="element.config.textColor.value"
+                                :options="textColorOptions"
+                                :label="$t('vape-cms.elements.hero.config.textColor')"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-hero__field">
+                            <mt-select
+                                v-model="element.config.ctaVariant.value"
+                                :options="ctaVariantOptions"
+                                :label="$t('vape-cms.elements.hero.config.ctaVariantLabel')"
+                            />
+                        </div>
+                    </sw-container>
+                {% endblock %}
+
+            </sw-container>
+
+        </template>
+    </sw-tabs>
+</div>
+{% endblock %}

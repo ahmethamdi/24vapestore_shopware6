@@ -1,0 +1,52 @@
+{% block vape_cms_el_hero %}
+<div class="vape-cms-el-hero" :style="heroStyles">
+
+    {% block vape_cms_el_hero_placeholder %}
+        <div v-if="!mediaUrl" class="vape-cms-el-hero__placeholder">
+            <mt-icon name="regular-image" size="32px" />
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_hero_overlay %}
+        <div class="vape-cms-el-hero__overlay" :style="overlayStyles"></div>
+    {% endblock %}
+
+    {% block vape_cms_el_hero_content %}
+        <div class="vape-cms-el-hero__content" :class="contentClasses">
+
+            {% block vape_cms_el_hero_headline %}
+                <h2
+                    v-if="element.config.headline.value"
+                    class="vape-cms-el-hero__headline"
+                >
+                    {{ element.config.headline.value }}
+                </h2>
+                <h2 v-else class="vape-cms-el-hero__headline is--empty">
+                    {{ $t('vape-cms.elements.hero.placeholder.headline') }}
+                </h2>
+            {% endblock %}
+
+            {% block vape_cms_el_hero_subline %}
+                <p
+                    v-if="element.config.subline.value"
+                    class="vape-cms-el-hero__subline"
+                >
+                    {{ element.config.subline.value }}
+                </p>
+            {% endblock %}
+
+            {% block vape_cms_el_hero_cta %}
+                <span
+                    v-if="element.config.ctaText.value"
+                    class="vape-cms-el-hero__cta"
+                    :class="'is--' + element.config.ctaVariant.value"
+                >
+                    {{ element.config.ctaText.value }}
+                </span>
+            {% endblock %}
+
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

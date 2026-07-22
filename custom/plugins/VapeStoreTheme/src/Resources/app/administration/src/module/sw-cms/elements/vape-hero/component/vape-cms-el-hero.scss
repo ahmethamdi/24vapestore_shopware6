@@ -1,0 +1,114 @@
+/*
+Hero element — CMS editörü içindeki görünüm.
+Storefront stilinden AYRIDIR; buradaki amaç yöneticiye
+sonucun nasıl görüneceğine dair sadık bir önizleme vermek.
+*/
+
+.vape-cms-el-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+    background-color: #f0f0f3;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &__placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a0a0ad;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    &__content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 32px;
+        max-width: 640px;
+
+        &.is--align-center {
+            margin-left: auto;
+            margin-right: auto;
+            align-items: center;
+        }
+
+        &.is--align-right {
+            margin-left: auto;
+            align-items: flex-end;
+        }
+
+        &.is--align-left {
+            align-items: flex-start;
+        }
+
+        &.is--tone-light {
+            color: #ffffff;
+
+            .vape-cms-el-hero__headline,
+            .vape-cms-el-hero__subline {
+                color: #ffffff;
+            }
+        }
+
+        &.is--tone-dark {
+            color: #18181d;
+
+            .vape-cms-el-hero__headline,
+            .vape-cms-el-hero__subline {
+                color: #18181d;
+            }
+        }
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1.15;
+
+        // İçerik girilmediğinde yer tutucu metin soluk gösterilir
+        &.is--empty {
+            opacity: 0.5;
+            font-style: italic;
+        }
+    }
+
+    &__subline {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.5;
+        opacity: 0.9;
+    }
+
+    &__cta {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 12px 24px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 14px;
+
+        &.is--primary {
+            background-color: #e11122;
+            color: #ffffff;
+        }
+
+        &.is--secondary {
+            border: 1px solid currentColor;
+            background-color: transparent;
+        }
+    }
+}

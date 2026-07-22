@@ -16,6 +16,7 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 // @import 'layout/footer';
 
 // 3. Component'ler (CMS element'leri dahil)
+@import 'component/hero';
 // @import 'component/product-card';
 
 // ==================================================

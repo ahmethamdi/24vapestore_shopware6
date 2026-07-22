@@ -12,9 +12,9 @@ dosyalar diskte olsa bile. En sık yapılan hata budur.
 // ==================================================
 // CMS Elements
 // ==================================================
-// import './module/sw-cms/elements/<element-adi>';
+import './module/sw-cms/elements/vape-hero';
 
 // ==================================================
 // CMS Blocks
 // ==================================================
-// import './module/sw-cms/blocks/<kategori>/<block-adi>';
+import './module/sw-cms/blocks/image/vape-hero';
