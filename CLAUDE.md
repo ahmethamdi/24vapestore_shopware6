@@ -182,6 +182,11 @@ En kritikleri:
   Ters kullanırsan alan render olur ama **kaydetmez**
 - Vite sadece admin'de; storefront hâlâ webpack
 - 6.7'de native CMS-editable header/footer yok
+- **Mega menü kapsayıcısı `.navigation-flyout` DEĞİL**, Bootstrap `.dropdown-menu`
+  (`.main-navigation-menu .dropdown-menu`). Linkler hâlâ `.navigation-flyout-link`.
+  Yanlış selector → stiller sessizce uygulanmaz, hata da vermez
+- Core arama formu `.collapse` içinde gelir; masaüstünde yüksekliği 0 kalır.
+  992px üstünde `.collapse:not(.show){display:block}` gerekir
 
 ---
 
