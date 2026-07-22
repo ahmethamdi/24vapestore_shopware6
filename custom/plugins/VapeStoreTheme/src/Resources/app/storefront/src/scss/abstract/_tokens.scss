@@ -142,14 +142,22 @@ $vape-tracking-wider:  0.08em;
 
 // ==================================================
 // 5. RADIUS
+// aboutyou ölçümü: 4px baskın (102 kullanım), görsellerde 2px,
+// kartın kendisinde radius YOK. Keskin-to-hafif yuvarlak estetik.
+// Pill formu sadece sayaç rozeti ve slider oklarında.
 // ==================================================
 
 $vape-radius-none: 0;
-$vape-radius-sm:   4px;
+$vape-radius-xs:   2px;   // ürün görseli
+$vape-radius-sm:   4px;   // BASKIN: buton, görsel sarmalayıcı, filtre chip
 $vape-radius-md:   8px;
 $vape-radius-lg:   12px;
 $vape-radius-xl:   16px;
 $vape-radius-pill: 999px;
+
+// Kart radius'u: aboutyou'da 0. Bizde koyu zeminde kart sınırı görünür
+// olmalı, bu yüzden hafif radius veriyoruz — ama abartmıyoruz.
+$vape-card-radius: $vape-radius-sm;
 
 // ==================================================
 // 6. GÖLGE — koyu zeminde gölge zayıf okunur,
@@ -188,16 +196,42 @@ $vape-duration-slow: 400ms;
 
 // ==================================================
 // 9. LAYOUT
+// Aşağıdaki değerler aboutyou.de'den GERÇEK TARAYICIDA ÖLÇÜLDÜ
+// (1440x900 Chromium, getComputedStyle + getBoundingClientRect).
+// Tahmin değil. Detay: docs/reference/aboutyou-design-spec.md
 // ==================================================
 
-$vape-container-max: 1600px;
-$vape-container-pad-mobile:  $vape-space-4;
-$vape-container-pad-desktop: $vape-space-8;
+$vape-container-max: 1800px;                  // ölçüldü
+$vape-container-pad-mobile:  $vape-space-4;   // 16px — ölçüldü (375px'te)
+$vape-container-pad-desktop: $vape-space-16;  // 64px — ölçüldü
 
-// Ürün kartı görsel oranı (aboutyou benzeri portre oran)
-$vape-product-image-ratio: 4 / 5;
+// Ürün kartı görsel oranı — ölçüldü: 3:4 (0.75), CDN de 360x480 servis ediyor
+$vape-product-image-ratio: 3 / 4;
 
-// Header
-$vape-header-height-mobile:  56px;
-$vape-header-height-desktop: 72px;
-$vape-usp-bar-height:        36px;
+// Header — aboutyou 3 katmanlı, toplam 148px; sadece orta bar sticky
+$vape-header-utility-height: 32px;   // üst yardımcı bar
+$vape-header-main-height:    64px;   // ana bar (sticky, z-index 100)
+$vape-header-nav-height:     52px;   // kategori nav
+$vape-header-total-height:   148px;
+$vape-usp-bar-height:        40px;   // header'ın ALTINDA, siyah zemin
+
+// Ürün grid — ölçülen kolon sayıları (viewport → kolon)
+// 1920→4, 1440→4, 1024→3, 768→2, 375→2
+$vape-grid-gap: 5px;
+$vape-grid-cols-xxl: 4;
+$vape-grid-cols-xl:  4;
+$vape-grid-cols-lg:  3;
+$vape-grid-cols-md:  2;
+$vape-grid-cols-sm:  2;
+
+// Ürün kartı detayları — ölçüldü
+$vape-card-text-padding: $vape-space-3 $vape-space-2;  // 12px 8px
+$vape-wishlist-size:     24px;
+$vape-wishlist-inset:    15px;   // görselin sağ üstünden
+$vape-badge-height:      20px;
+$vape-badge-padding:     2px $vape-space-2 2px $vape-space-4;  // sol kenar bayrak formu
+$vape-badge-radius:      0 $vape-radius-sm $vape-radius-sm 0;
+
+// Buton — ölçüldü
+$vape-btn-height:    48px;
+$vape-btn-padding-x: $vape-space-6;  // 24px

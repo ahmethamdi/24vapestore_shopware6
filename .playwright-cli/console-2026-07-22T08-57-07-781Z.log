@@ -1,0 +1,16 @@
+[    7214ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.vapor-handel.de/brevo-frame.html:0
+[    7329ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.vapor-handel.de/theme/3411f54323702d1493529a4cb3073c8a/css/all.css?1784201749:0
+[    7363ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.vapor-handel.de/theme/3411f54323702d1493529a4cb3073c8a/js/storefront/storefront.js?1784201749:0
+[    7517ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.vapor-handel.de/theme/3411f54323702d1493529a4cb3073c8a/js/vio-representative-login/vio-representative-login.js?1784201750:0
+[    7517ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.vapor-handel.de/theme/3411f54323702d1493529a4cb3073c8a/js/vapor-theme/vapor-theme.js?1784201750:0
+[    7524ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.vapor-handel.de/theme/3411f54323702d1493529a4cb3073c8a/js/blur-elysium-slider/blur-elysium-slider.js?1784201750:0
+[    7544ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.vapor-handel.de/theme/3411f54323702d1493529a4cb3073c8a/js/swag-pay-pal/swag-pay-pal.js?1784201749:0
+[    7566ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://www.vapor-handel.de/theme/3411f54323702d1493529a4cb3073c8a/js/moorl-foundation/moorl-foundation.js?1784201750:0
+[    7576ms] TypeError: Cannot read properties of undefined (reading 'register')
+    at V.register (https://www.vapor-handel.de/bundles/molliepayments/mollie-payments.js?1782391499:1:32705)
+    at https://www.vapor-handel.de/bundles/molliepayments/mollie-payments.js?1782391499:1:33598
+[   17574ms] [WARNING] WonderPush seems to be taking some time to initialize one of its external resource on the domain  https://www.vapor-handel.de .
+If you see one error or repeated errors (which will stop in about 50 seconds) about "postMessage" and "target origin […] not match[ing] the recipient window's origin", then you either:
+- have a browser extension blocking that resource;
+- see a broken integration that you would be kind to report.
+If not, then just wait around, and everything should get loaded soon. @ https://cdn.by.wonderpush.com/sdk/1.1.42.1/wonderpush.min.js:0
