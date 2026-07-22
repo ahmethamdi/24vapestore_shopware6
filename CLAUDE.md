@@ -119,6 +119,10 @@ php bin/console dal:refresh:index
 # Veritabanı
 /opt/homebrew/opt/mysql@8.0/bin/mysql -h 127.0.0.1 -P 3307 -u root 24vapestore
 
+# Kategori aktarımı (tekrar çalıştırılabilir; aynı isimli kategori atlanır)
+php bin/console vape:import-categories            # önizleme
+php bin/console vape:import-categories --write    # yaz
+
 # Build (bu template'te bin/*.sh kullanılır, composer script'i YOK)
 bin/build-administration.sh
 bin/build-storefront.sh
