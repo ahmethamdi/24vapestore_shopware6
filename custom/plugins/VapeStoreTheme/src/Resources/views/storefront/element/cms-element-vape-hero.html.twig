@@ -1,93 +1,155 @@
 {#
-    Hero element — storefront çıktısı.
+    Hero slider — storefront çıktısı.
 
     ⚠️ Dosya adı `cms-element-vape-hero.html.twig` OLMAK ZORUNDA.
        Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
        `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
 
-    ⚠️ Yönetici metni için `element.translated.config.*` kullanılır —
-       `element.config.*` çeviri-farkında değildir, çok dilli mağazada bozulur.
-       Düzen/görünüm bayrakları için `element.config.*` yeterlidir.
+    Slide verisi PHP resolver'dan `element.data.slides` olarak gelir; her eleman
+    çözümlenmiş `media` ve `products` entity'lerini içerir. Metinler config'te
+    dizi içinde tutulduğu için `element.translated.config` çeviri katmanı bu
+    alanlara uygulanmaz — çok dilli mağazada slide metinleri için ileride
+    ayrı bir çeviri stratejisi gerekir (şimdilik tek dil).
 #}
 {% block element_vape_hero %}
-    {% set config = element.translated.config %}
     {% set layout = element.config %}
+    {% set slides = element.data.slides|default([]) %}
 
-    {% set media = element.data.media %}
-    {% set headline = config.headline.value %}
-    {% set subline = config.subline.value %}
-    {% set ctaText = config.ctaText.value %}
-    {% set ctaUrl = config.ctaUrl.value %}
+    {% set minHeight = layout.minHeight.value|default(520) %}
+    {% set showArrows = layout.showArrows.value|default(true) and slides|length > 1 %}
+    {% set showDots = layout.showDots.value|default(true) and slides|length > 1 %}
+    {% set showProducts = layout.showProducts.value|default(true) %}
+    {% set autoplay = layout.autoplay.value|default(false) and slides|length > 1 %}
+    {% set autoplaySpeed = layout.autoplaySpeed.value|default(6000) %}
 
-    {% set minHeight = layout.minHeight.value|default(480) %}
-    {% set overlayOpacity = (layout.overlayOpacity.value|default(35)) / 100 %}
-    {% set textAlign = layout.textAlign.value|default('left') %}
-    {% set verticalAlign = layout.verticalAlign.value|default('center') %}
-    {% set textColor = layout.textColor.value|default('light') %}
-    {% set ctaVariant = layout.ctaVariant.value|default('primary') %}
+    {% if slides|length > 0 %}
+        <div class="cms-element-{{ element.type }} vape-hero"
+             style="--vape-hero-min-height: {{ minHeight }}px;"
+             data-vape-hero-slider="true"
+             data-vape-hero-slider-options='{{ {
+                 autoplay: autoplay,
+                 speed: autoplaySpeed
+             }|json_encode }}'>
 
-    <div class="cms-element-{{ element.type }} vape-hero is--align-{{ textAlign }} is--tone-{{ textColor }}"
-         style="min-height: {{ minHeight }}px; justify-content: {{ verticalAlign }};">
+            {% block element_vape_hero_track %}
+                <div class="vape-hero__track" data-vape-hero-track>
 
-        {% block element_vape_hero_media %}
-            {% if media %}
-                <div class="vape-hero__media">
-                    {% sw_thumbnails 'vape-hero-image-thumbnails' with {
-                        media: media,
-                        sizes: {
-                            xs: '576px',
-                            sm: '767px',
-                            md: '991px',
-                            lg: '1199px',
-                            xl: '1920px'
-                        },
-                        attributes: {
-                            class: 'vape-hero__image',
-                            alt: (media.translated.alt ?: headline),
-                            title: (media.translated.title ?: headline)
-                        }
-                    } %}
+                    {% for slide in slides %}
+                        {% block element_vape_hero_slide %}
+                            <div class="vape-hero__slide is--tone-{{ slide.textColor }}"
+                                 data-vape-hero-slide
+                                 aria-hidden="{{ loop.first ? 'false' : 'true' }}">
+
+                                {# ---------- sol renkli panel ---------- #}
+                                <div class="vape-hero__panel" style="background-color: {{ slide.bgColor }};">
+                                    <div class="vape-hero__panel-inner">
+
+                                        {% if slide.eyebrow %}
+                                            <span class="vape-hero__eyebrow">{{ slide.eyebrow }}</span>
+                                        {% endif %}
+
+                                        {% if slide.kicker %}
+                                            <span class="vape-hero__kicker">{{ slide.kicker }}</span>
+                                        {% endif %}
+
+                                        {% if slide.headline %}
+                                            <h2 class="vape-hero__headline">{{ slide.headline }}</h2>
+                                        {% endif %}
+
+                                        {% if showDots %}
+                                            <div class="vape-hero__dots" data-vape-hero-dots role="tablist"
+                                                 aria-label="{{ 'vapeHero.slideNavigation'|trans|sw_sanitize }}">
+                                                {% for i in 0..(slides|length - 1) %}
+                                                    <button type="button"
+                                                            class="vape-hero__dot{{ loop.first ? ' is--active' : '' }}"
+                                                            data-vape-hero-dot="{{ i }}"
+                                                            role="tab"
+                                                            aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                                                            aria-label="{{ 'vapeHero.goToSlide'|trans({'%number%': i + 1})|sw_sanitize }}"></button>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+
+                                        {% if slide.ctaText and slide.ctaUrl %}
+                                            <a href="{{ slide.ctaUrl }}"
+                                               class="btn btn-primary vape-hero__cta"
+                                               {% if slide.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                                                {{ slide.ctaText }}
+                                            </a>
+                                        {% endif %}
+
+                                        {% if showProducts and slide.products|length > 0 %}
+                                            <div class="vape-hero__products">
+                                                {% for product in slide.products %}
+                                                    <a href="{{ seoUrl('frontend.detail.page', { productId: product.id }) }}"
+                                                       class="vape-hero__product"
+                                                       title="{{ product.translated.name }}">
+                                                        {% if product.cover.media %}
+                                                            {% sw_thumbnails 'vape-hero-product-thumbnails' with {
+                                                                media: product.cover.media,
+                                                                sizes: { default: '120px' },
+                                                                attributes: {
+                                                                    class: 'vape-hero__product-image',
+                                                                    alt: product.translated.name,
+                                                                    loading: 'lazy'
+                                                                }
+                                                            } %}
+                                                        {% endif %}
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+
+                                {# ---------- sağ görsel ---------- #}
+                                <div class="vape-hero__media">
+                                    {% if slide.media %}
+                                        {% sw_thumbnails 'vape-hero-image-thumbnails' with {
+                                            media: slide.media,
+                                            sizes: {
+                                                xs: '576px',
+                                                sm: '767px',
+                                                md: '991px',
+                                                lg: '1199px',
+                                                xl: '1920px'
+                                            },
+                                            attributes: {
+                                                class: 'vape-hero__image',
+                                                alt: (slide.media.translated.alt ?: slide.headline),
+                                                loading: (loop.first ? 'eager' : 'lazy')
+                                            }
+                                        } %}
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        {% endblock %}
+                    {% endfor %}
+
                 </div>
-            {% endif %}
-        {% endblock %}
+            {% endblock %}
 
-        {% block element_vape_hero_overlay %}
-            {% if media and overlayOpacity > 0 %}
-                <div class="vape-hero__overlay"
-                     style="background-color: rgba(0, 0, 0, {{ overlayOpacity }});"></div>
-            {% endif %}
-        {% endblock %}
+            {% block element_vape_hero_arrows %}
+                {% if showArrows %}
+                    <div class="vape-hero__arrows">
+                        <button type="button"
+                                class="vape-hero__arrow vape-hero__arrow--prev"
+                                data-vape-hero-prev
+                                aria-label="{{ 'vapeHero.previousSlide'|trans|sw_sanitize }}">
+                            {% sw_icon 'arrow-medium-left' %}
+                        </button>
+                        <button type="button"
+                                class="vape-hero__arrow vape-hero__arrow--next"
+                                data-vape-hero-next
+                                aria-label="{{ 'vapeHero.nextSlide'|trans|sw_sanitize }}">
+                            {% sw_icon 'arrow-medium-right' %}
+                        </button>
+                    </div>
+                {% endif %}
+            {% endblock %}
 
-        {% block element_vape_hero_content %}
-            <div class="vape-hero__content">
-
-                {% block element_vape_hero_headline %}
-                    {% if headline %}
-                        <h2 class="vape-hero__headline">{{ headline }}</h2>
-                    {% endif %}
-                {% endblock %}
-
-                {% block element_vape_hero_subline %}
-                    {% if subline %}
-                        <p class="vape-hero__subline">{{ subline }}</p>
-                    {% endif %}
-                {% endblock %}
-
-                {% block element_vape_hero_cta %}
-                    {% if ctaText and ctaUrl %}
-                        <a href="{{ ctaUrl }}"
-                           class="btn btn-{{ ctaVariant }} vape-hero__cta"
-                           {% if layout.newTab.value %}target="_blank" rel="noopener noreferrer"{% endif %}>
-                            {{ ctaText }}
-                        </a>
-                    {% elseif ctaText %}
-                        {# Link girilmemişse buton tıklanamaz olur — metni yine de göster #}
-                        <span class="btn btn-{{ ctaVariant }} vape-hero__cta is--disabled">{{ ctaText }}</span>
-                    {% endif %}
-                {% endblock %}
-
-            </div>
-        {% endblock %}
-
-    </div>
+        </div>
+    {% endif %}
 {% endblock %}

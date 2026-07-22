@@ -1,20 +1,207 @@
 /*
-Hero element — storefront görünümü.
+Hero slider — storefront görünümü.
+Referans: aboutyou.de marka slider'ı — solda renkli panel, sağda büyük görsel.
 Tüm değerler token'lardan gelir; magic hex/px yok.
 */
 
 .vape-hero {
     position: relative;
-    display: flex;
-    flex-direction: column;
     width: 100%;
     overflow: hidden;
     background-color: $vape-neutral-100;
 
+    // ---------- kaydırma rayı ----------
+    // Slide'lar yan yana durur; JS translateX ile kaydırır.
+
+    &__track {
+        display: flex;
+        width: 100%;
+        transition: transform $vape-duration-slow $vape-ease-out;
+        will-change: transform;
+    }
+
+    &__slide {
+        display: grid;
+        flex: 0 0 100%;
+        width: 100%;
+        min-height: var(--vape-hero-min-height, 520px);
+
+        // Mobilde görsel üstte, panel altta
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+
+        @media (min-width: 768px) {
+            // Referans oranı: sol panel ~1/3, görsel ~2/3
+            grid-template-columns: minmax(280px, 1fr) 2fr;
+            grid-template-rows: 1fr;
+        }
+
+        &.is--tone-light {
+            .vape-hero__kicker,
+            .vape-hero__headline {
+                color: $vape-text-inverse;
+            }
+        }
+
+        &.is--tone-dark {
+            .vape-hero__kicker,
+            .vape-hero__headline {
+                color: $vape-text-heading;
+            }
+        }
+    }
+
+    // ---------- sol panel ----------
+
+    &__panel {
+        display: flex;
+        align-items: center;
+        order: 2;              // mobilde görselin altında
+        padding: $vape-space-6 $vape-space-4;
+
+        @media (min-width: 768px) {
+            order: 1;
+            padding: $vape-space-10 $vape-space-8;
+        }
+    }
+
+    &__panel-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $vape-space-3;
+        width: 100%;
+    }
+
+    &__eyebrow {
+        display: inline-block;
+        padding: $vape-space-1 $vape-space-3;
+        border-radius: $vape-radius-sm;
+        background-color: $vape-neutral-white;
+        color: $vape-neutral-900;
+        font-size: $vape-text-2xs;
+        font-weight: $vape-weight-bold;
+        letter-spacing: $vape-tracking-wider;
+        text-transform: uppercase;
+    }
+
+    &__kicker {
+        font-size: $vape-text-xs;
+        font-weight: $vape-weight-bold;
+        letter-spacing: $vape-tracking-wider;
+        text-transform: uppercase;
+
+        @media (min-width: 768px) {
+            font-size: $vape-text-sm;
+        }
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: $vape-text-3xl;
+        font-weight: $vape-weight-bold;
+        line-height: $vape-leading-tight;
+        letter-spacing: $vape-tracking-tight;
+        overflow-wrap: anywhere;
+
+        @media (min-width: 768px) {
+            font-size: $vape-text-4xl;
+        }
+
+        @media (min-width: 1200px) {
+            font-size: $vape-text-5xl;
+        }
+    }
+
+    &__cta {
+        min-height: $vape-btn-height;
+        padding: 0 $vape-btn-padding-x;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: $vape-space-1;
+    }
+
+    // ---------- slide noktaları ----------
+
+    &__dots {
+        display: flex;
+        gap: $vape-space-1;
+        margin: $vape-space-1 0;
+    }
+
+    &__dot {
+        width: 24px;
+        height: 3px;
+        padding: 0;
+        border: 0;
+        border-radius: $vape-radius-pill;
+        background-color: currentColor;
+        opacity: 0.4;
+        cursor: pointer;
+        transition:
+            width $vape-duration-base $vape-ease-out,
+            opacity $vape-duration-base $vape-ease-out;
+
+        &.is--active {
+            width: 40px;
+            opacity: 1;
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 3px;
+        }
+    }
+
+    // ---------- ürün küçük resimleri ----------
+
+    &__products {
+        display: flex;
+        gap: $vape-space-2;
+        margin-top: $vape-space-4;
+    }
+
+    &__product {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        padding: $vape-space-1;
+        border-radius: $vape-radius-sm;
+        background-color: $vape-neutral-white;
+        overflow: hidden;
+        transition: transform $vape-duration-fast $vape-ease-out;
+
+        @media (min-width: 992px) {
+            width: 80px;
+            height: 80px;
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+        }
+    }
+
+    &__product-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    // ---------- sağ görsel ----------
+
     &__media {
-        position: absolute;
-        inset: 0;
-        z-index: 0;
+        position: relative;
+        order: 1;
+        min-height: 220px;
+        background-color: $vape-neutral-200;
+
+        @media (min-width: 768px) {
+            order: 2;
+            min-height: 0;
+        }
     }
 
     &__image {
@@ -25,114 +212,50 @@ Tüm değerler token'lardan gelir; magic hex/px yok.
         display: block;
     }
 
-    &__overlay {
+    // ---------- ok butonları ----------
+
+    &__arrows {
         position: absolute;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-    }
-
-    &__content {
-        position: relative;
-        z-index: 2;
+        right: $vape-space-4;
+        bottom: $vape-space-4;
+        z-index: $vape-z-base;
         display: flex;
-        flex-direction: column;
-        gap: $vape-space-4;
-        width: 100%;
-        max-width: 640px;
-        padding: $vape-space-8 $vape-space-4;
-        margin: 0 auto;
-
-        @media (min-width: 768px) {
-            padding: $vape-space-12 $vape-space-16;
-        }
+        gap: $vape-space-1;
     }
 
-    &__headline {
-        margin: 0;
-        font-size: $vape-text-3xl;
-        font-weight: $vape-weight-black;
-        line-height: $vape-leading-tight;
-        letter-spacing: $vape-tracking-tight;
-
-        @media (min-width: 768px) {
-            font-size: $vape-text-5xl;
-        }
-    }
-
-    &__subline {
-        margin: 0;
-        font-size: $vape-text-md;
-        line-height: $vape-leading-normal;
-
-        @media (min-width: 768px) {
-            font-size: $vape-text-lg;
-        }
-    }
-
-    &__cta {
-        align-self: flex-start;
-        min-height: $vape-btn-height;
-        padding: 0 $vape-btn-padding-x;
-        display: inline-flex;
+    &__arrow {
+        display: flex;
         align-items: center;
         justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 0;
+        border-radius: $vape-radius-sm;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: $vape-neutral-900;
+        cursor: pointer;
+        transition: background-color $vape-duration-fast $vape-ease-out;
 
-        &.is--disabled {
-            opacity: 0.6;
-            cursor: default;
+        &:hover {
+            background-color: $vape-neutral-white;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
         }
     }
 
-    // ---------- Yatay hizalama ----------
-    // Metin bloğu hizaya göre konumlanır; ortalanmışsa içerik de ortalanır.
-
-    &.is--align-left .vape-hero__content {
-        margin-left: 0;
-        margin-right: auto;
-        align-items: flex-start;
-        text-align: left;
-    }
-
-    &.is--align-center .vape-hero__content {
-        margin-left: auto;
-        margin-right: auto;
-        align-items: center;
-        text-align: center;
-
-        .vape-hero__cta {
-            align-self: center;
-        }
-    }
-
-    &.is--align-right .vape-hero__content {
-        margin-left: auto;
-        margin-right: 0;
-        align-items: flex-end;
-        text-align: right;
-
-        .vape-hero__cta {
-            align-self: flex-end;
-        }
-    }
-
-    // ---------- Metin tonu ----------
-    // Görsel üzerindeki metin okunabilirliği için.
-
-    &.is--tone-light {
-        .vape-hero__headline,
-        .vape-hero__subline {
-            color: $vape-text-inverse;
-        }
-    }
-
-    &.is--tone-dark {
-        .vape-hero__headline {
-            color: $vape-text-heading;
+    // JS yüklenmeden önce / devre dışıysa: yalnızca ilk slide görünsün,
+    // aksi halde tüm slide'lar yan yana taşar.
+    &:not(.is--initialised) {
+        .vape-hero__track {
+            display: block;
         }
 
-        .vape-hero__subline {
-            color: $vape-text-primary;
+        .vape-hero__slide + .vape-hero__slide {
+            display: none;
         }
     }
 }

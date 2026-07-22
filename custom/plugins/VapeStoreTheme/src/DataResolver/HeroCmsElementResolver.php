@@ -6,28 +6,35 @@ use Shopware\Core\Content\Cms\Aggregate\CmsSlot\CmsSlotEntity;
 use Shopware\Core\Content\Cms\DataResolver\CriteriaCollection;
 use Shopware\Core\Content\Cms\DataResolver\Element\AbstractCmsElementResolver;
 use Shopware\Core\Content\Cms\DataResolver\Element\ElementDataCollection;
-use Shopware\Core\Content\Cms\SalesChannel\Struct\ImageStruct;
 use Shopware\Core\Content\Cms\DataResolver\ResolverContext\ResolverContext;
 use Shopware\Core\Content\Media\MediaDefinition;
 use Shopware\Core\Content\Media\MediaEntity;
+use Shopware\Core\Content\Product\ProductDefinition;
+use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\Struct\ArrayStruct;
 
 /**
- * Hero element için medya çözümleyici.
+ * Hero slider için medya ve ürün çözümleyici.
  *
- * Admin tarafında `defaultConfig`'teki `entity` tanımı medyayı otomatik yükler,
- * ama bu YALNIZCA CMS editöründe geçerlidir. Storefront'ta medyanın slot'a
- * bağlanması için bu resolver gerekir — aksi halde `element.data.media` boş
- * gelir ve görsel hiç render edilmez.
+ * Slide'lar config'te bir dizi olarak durur ve yalnızca ID içerir. Admin
+ * tarafındaki `entity` auto-collect düz alanlar için çalışır, dizi içindeki
+ * ID'leri görmez — bu yüzden storefront için burada elle çözümlenir.
  *
- * Akış: collect() Criteria bildirir → framework toplu sorgu çalıştırır →
- * enrich() sonucu slot'a yazar → Twig `element.data.media` ile okur.
+ * Akış: collect() tüm slide'lardaki medya + ürün ID'leri için Criteria bildirir →
+ * framework toplu sorgu çalıştırır → enrich() her slide'ı entity'lerle
+ * zenginleştirip slot'a yazar → Twig `element.data.slides` ile okur.
  *
- * Core'un ImageCmsElementResolver'ı örnek alındı: slot'a ImageStruct set edilir,
- * böylece Twig'de `element.data.media` erişimi core image element'iyle aynı olur.
+ * ⚠️ Shopware entity ID'lerini küçük harfle saklar. Config'e büyük harfli bir ID
+ *    yazılırsa arama eşleşmez ve entity sessizce bulunamaz — ID'ler burada
+ *    normalize edilir.
  */
 class HeroCmsElementResolver extends AbstractCmsElementResolver
 {
+    private const MEDIA_KEY = 'vape-hero-media';
+    private const PRODUCT_KEY = 'vape-hero-products';
+    private const MAX_PRODUCTS_PER_SLIDE = 4;
+
     public function getType(): string
     {
         return 'vape-hero';
@@ -35,66 +42,144 @@ class HeroCmsElementResolver extends AbstractCmsElementResolver
 
     public function collect(CmsSlotEntity $slot, ResolverContext $resolverContext): ?CriteriaCollection
     {
-        $mediaConfig = $slot->getFieldConfig()->get('media');
+        $slides = $this->readSlides($slot);
 
-        // Hero'da medya yalnızca statik seçilir (mapped/default desteklenmez).
-        if (
-            $mediaConfig === null
-            || !$mediaConfig->isStatic()
-            || $mediaConfig->getValue() === null
-        ) {
+        if ($slides === []) {
             return null;
         }
 
-        $mediaId = $mediaConfig->getStringValue();
+        $mediaIds = [];
+        $productIds = [];
 
-        if ($mediaId === '') {
-            return null;
+        foreach ($slides as $slide) {
+            $mediaId = $this->normaliseId($slide['mediaId'] ?? null);
+
+            if ($mediaId !== null) {
+                $mediaIds[$mediaId] = $mediaId;
+            }
+
+            foreach (\array_slice($slide['productIds'] ?? [], 0, self::MAX_PRODUCTS_PER_SLIDE) as $productId) {
+                $productId = $this->normaliseId($productId);
+
+                if ($productId !== null) {
+                    $productIds[$productId] = $productId;
+                }
+            }
         }
 
-        $criteria = new Criteria([$mediaId]);
+        if ($mediaIds === [] && $productIds === []) {
+            return null;
+        }
 
         $criteriaCollection = new CriteriaCollection();
-        $criteriaCollection->add('media_' . $slot->getUniqueIdentifier(), MediaDefinition::class, $criteria);
+
+        if ($mediaIds !== []) {
+            $criteriaCollection->add(
+                self::MEDIA_KEY . '_' . $slot->getUniqueIdentifier(),
+                MediaDefinition::class,
+                new Criteria(\array_values($mediaIds))
+            );
+        }
+
+        if ($productIds !== []) {
+            $productCriteria = new Criteria(\array_values($productIds));
+            // Küçük resim için kapak görseli gerekiyor; association olmadan N+1 olur.
+            $productCriteria->addAssociation('cover.media');
+
+            $criteriaCollection->add(
+                self::PRODUCT_KEY . '_' . $slot->getUniqueIdentifier(),
+                ProductDefinition::class,
+                $productCriteria
+            );
+        }
 
         return $criteriaCollection;
     }
 
     public function enrich(CmsSlotEntity $slot, ResolverContext $resolverContext, ElementDataCollection $result): void
     {
-        $image = new ImageStruct();
-        $slot->setData($image);
+        $slides = $this->readSlides($slot);
 
-        $mediaConfig = $slot->getFieldConfig()->get('media');
+        if ($slides === []) {
+            $slot->setData(new ArrayStruct(['slides' => []]));
 
-        if (
-            $mediaConfig === null
-            || !$mediaConfig->isStatic()
-            || $mediaConfig->getValue() === null
-        ) {
             return;
         }
 
-        $mediaId = $mediaConfig->getStringValue();
+        $mediaResult = $result->get(self::MEDIA_KEY . '_' . $slot->getUniqueIdentifier());
+        $productResult = $result->get(self::PRODUCT_KEY . '_' . $slot->getUniqueIdentifier());
 
-        if ($mediaId === '') {
-            return;
+        $resolved = [];
+
+        foreach ($slides as $slide) {
+            $mediaId = $this->normaliseId($slide['mediaId'] ?? null);
+            $media = null;
+
+            if ($mediaId !== null && $mediaResult !== null) {
+                $candidate = $mediaResult->get($mediaId);
+                $media = $candidate instanceof MediaEntity ? $candidate : null;
+            }
+
+            $products = [];
+
+            foreach (\array_slice($slide['productIds'] ?? [], 0, self::MAX_PRODUCTS_PER_SLIDE) as $productId) {
+                $productId = $this->normaliseId($productId);
+
+                if ($productId === null || $productResult === null) {
+                    continue;
+                }
+
+                $product = $productResult->get($productId);
+
+                if ($product instanceof ProductEntity) {
+                    $products[] = $product;
+                }
+            }
+
+            $resolved[] = [
+                'media' => $media,
+                'products' => $products,
+                'eyebrow' => (string) ($slide['eyebrow'] ?? ''),
+                'kicker' => (string) ($slide['kicker'] ?? ''),
+                'headline' => (string) ($slide['headline'] ?? ''),
+                'ctaText' => (string) ($slide['ctaText'] ?? ''),
+                'ctaUrl' => (string) ($slide['ctaUrl'] ?? ''),
+                'newTab' => (bool) ($slide['newTab'] ?? false),
+                'bgColor' => (string) ($slide['bgColor'] ?? '#3f3f4a'),
+                'textColor' => (string) ($slide['textColor'] ?? 'light'),
+            ];
         }
 
-        $image->setMediaId($mediaId);
+        $slot->setData(new ArrayStruct(['slides' => $resolved]));
+    }
 
-        $searchResult = $result->get('media_' . $slot->getUniqueIdentifier());
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function readSlides(CmsSlotEntity $slot): array
+    {
+        $config = $slot->getFieldConfig()->get('slides');
 
-        if ($searchResult === null) {
-            return;
+        if ($config === null) {
+            return [];
         }
 
-        $media = $searchResult->get($mediaId);
+        $value = $config->getValue();
 
-        if (!$media instanceof MediaEntity) {
-            return;
+        if (!\is_array($value)) {
+            return [];
         }
 
-        $image->setMedia($media);
+        // Yalnızca dizi olan elemanları geçir — bozuk config render'ı çökertmesin.
+        return \array_values(\array_filter($value, static fn ($slide) => \is_array($slide)));
+    }
+
+    private function normaliseId(mixed $id): ?string
+    {
+        if (!\is_string($id) || $id === '') {
+            return null;
+        }
+
+        return \strtolower($id);
     }
 }

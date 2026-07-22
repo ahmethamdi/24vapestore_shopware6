@@ -1,13 +1,20 @@
 /*
 CMS Element: vape-hero
 ==================================================
-Kampanya / hero bannerı. Görsel + başlık + alt metin + buton.
+Çoklu slide'lı hero slider. Her slide:
+  - kendi arka plan rengi (sol panel)
+  - etiket + üst başlık + büyük başlık (sol panel)
+  - büyük görsel (sağ)
+  - buton (metin + link)
+  - 4 adede kadar ürün küçük resmi (sol panel altı)
 
-Mağaza yöneticisi admin'den şunları değiştirebilir:
-  içerik → görsel, başlık, alt metin, buton yazısı, buton linki
-  ayarlar → metin hizası, yükseklik, karartma oranı, buton stili
+Yönetici admin'den sınırsız slide ekler, sıralar, siler.
 
-⚠️ 6.7: component'ler async factory ile kaydedilir — inline `template` DEĞİL.
+⚠️ slides bir DİZİ olarak `config.slides.value` içinde tutulur.
+   Shopware CMS config'i JSON sakladığı için bu sorunsuz çalışır, ancak
+   medya ve ürün ID'leri PHP resolver tarafından ayrıca çözümlenmelidir —
+   `entity` auto-collect yalnızca düz (dizi olmayan) alanlarda çalışır.
+⚠️ 6.7: component'ler async factory ile kaydedilir.
 ⚠️ Bu dosya main.js'te import edilmezse element admin'de sessizce görünmez.
 */
 
@@ -23,60 +30,40 @@ Shopware.Service('cmsService').registerCmsElement({
     previewComponent: 'vape-cms-el-preview-hero',
 
     defaultConfig: {
-        // --- içerik ---
-        // `entity` tanımı sayesinde admin tarafı medyayı otomatik yükler
-        // (element.data.media). Storefront için PHP resolver gerekir.
-        media: {
+        // --- slide'lar ---
+        // Her eleman: {
+        //   mediaId, eyebrow, kicker, headline, ctaText, ctaUrl, newTab,
+        //   bgColor, textColor, productIds[]
+        // }
+        slides: {
             source: 'static',
-            value: null,
-            required: false,
-            entity: { name: 'media' },
-        },
-        headline: {
-            source: 'static',
-            value: '',
-        },
-        subline: {
-            source: 'static',
-            value: '',
-        },
-        ctaText: {
-            source: 'static',
-            value: '',
-        },
-        ctaUrl: {
-            source: 'static',
-            value: '',
-        },
-        newTab: {
-            source: 'static',
-            value: false,
+            value: [],
         },
 
-        // --- görünüm ---
-        textAlign: {
+        // --- slider davranışı ---
+        autoplay: {
             source: 'static',
-            value: 'left',      // left | center | right
+            value: true,
         },
-        verticalAlign: {
+        autoplaySpeed: {
             source: 'static',
-            value: 'center',    // flex-start | center | flex-end
+            value: 6000,      // ms
+        },
+        showArrows: {
+            source: 'static',
+            value: true,
+        },
+        showDots: {
+            source: 'static',
+            value: true,
+        },
+        showProducts: {
+            source: 'static',
+            value: true,
         },
         minHeight: {
             source: 'static',
-            value: 480,         // px
-        },
-        overlayOpacity: {
-            source: 'static',
-            value: 35,          // 0-80 arası, metin okunurluğu için karartma
-        },
-        textColor: {
-            source: 'static',
-            value: 'light',     // light | dark
-        },
-        ctaVariant: {
-            source: 'static',
-            value: 'primary',   // primary | secondary
+            value: 520,       // px
         },
     },
 });

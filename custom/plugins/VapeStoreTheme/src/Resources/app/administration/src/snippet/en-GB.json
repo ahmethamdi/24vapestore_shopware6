@@ -2,49 +2,51 @@
   "vape-cms": {
     "elements": {
       "hero": {
-        "label": "Hero / campaign banner",
+        "label": "Hero slider",
         "placeholder": {
           "headline": "Enter a headline"
         },
         "config": {
-          "media": "Background image",
+          "tab": {
+            "slides": "Slides"
+          },
+          "slide": "Slide",
+          "addSlide": "Add slide",
+          "removeSlide": "Remove",
+          "moveUp": "Move up",
+          "moveDown": "Move down",
+          "emptyHint": "No slides yet. Click “Add slide” to create the first one.",
+          "media": "Image",
+          "eyebrow": "Badge",
+          "eyebrowPlaceholder": "e.g. FROM OUR TOP BRANDS",
+          "kicker": "Overline",
+          "kickerPlaceholder": "e.g. DISCOVER THE BRAND",
           "headline": "Headline",
-          "subline": "Subline",
+          "headlinePlaceholder": "e.g. The FuelCell Rebel",
           "ctaText": "Button text",
           "ctaUrl": "Button link",
-          "ctaUrlHelp": "Internal path (e.g. /liquids) or full URL",
           "newTab": "Open link in a new tab",
-          "textAlign": "Text alignment",
-          "verticalAlign": "Vertical alignment",
-          "minHeight": "Minimum height (px)",
-          "overlayOpacity": "Darkening (%)",
-          "overlayOpacityHelp": "Darkens the image so the text stays readable",
+          "bgColor": "Panel colour",
           "textColor": "Text colour",
-          "ctaVariantLabel": "Button style",
-          "align": {
-            "left": "Left",
-            "center": "Centred",
-            "right": "Right"
-          },
-          "vAlign": {
-            "top": "Top",
-            "center": "Middle",
-            "bottom": "Bottom"
-          },
+          "products": "Products",
+          "productsHelp": "Up to 4 products are shown as thumbnails below the text",
+          "minHeight": "Minimum height (px)",
+          "autoplay": "Auto-advance slides",
+          "autoplaySpeed": "Slide duration (ms)",
+          "autoplaySpeedHelp": "Pauses on hover and when a control has focus",
+          "showArrows": "Show arrows",
+          "showDots": "Show slide indicators",
+          "showProducts": "Show product thumbnails",
           "tone": {
-            "light": "Light (for dark images)",
-            "dark": "Dark (for light images)"
-          },
-          "ctaVariant": {
-            "primary": "Primary (red)",
-            "secondary": "Secondary (outline)"
+            "light": "Light (for dark panels)",
+            "dark": "Dark (for light panels)"
           }
         }
       }
     },
     "blocks": {
       "hero": {
-        "label": "Hero / campaign banner"
+        "label": "Hero slider"
       }
     }
   }

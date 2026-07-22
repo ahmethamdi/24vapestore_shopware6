@@ -1,114 +1,159 @@
 /*
-Hero element — CMS editörü içindeki görünüm.
-Storefront stilinden AYRIDIR; buradaki amaç yöneticiye
-sonucun nasıl görüneceğine dair sadık bir önizleme vermek.
+Hero slider — CMS editörü önizlemesi.
+Storefront stilinden ayrıdır; amaç yöneticiye sadık ama basitleştirilmiş
+bir görünüm sunmak.
 */
 
 .vape-cms-el-hero {
     position: relative;
-    display: flex;
-    flex-direction: column;
     width: 100%;
     overflow: hidden;
     background-color: #f0f0f3;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 
-    &__placeholder {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #a0a0ad;
-    }
-
-    &__overlay {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-    }
-
-    &__content {
-        position: relative;
-        z-index: 1;
+    &__empty {
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        padding: 32px;
-        max-width: 640px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 100%;
+        min-height: 220px;
+        color: #a0a0ad;
+        text-align: center;
 
-        &.is--align-center {
-            margin-left: auto;
-            margin-right: auto;
-            align-items: center;
+        p {
+            margin: 0;
+            font-size: 12px;
+            max-width: 280px;
         }
+    }
 
-        &.is--align-right {
-            margin-left: auto;
-            align-items: flex-end;
-        }
+    &__slide {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        height: 100%;
+        min-height: inherit;
+    }
 
-        &.is--align-left {
-            align-items: flex-start;
-        }
+    // ---------- sol panel ----------
+
+    &__panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        padding: 24px;
+        min-width: 0;
 
         &.is--tone-light {
             color: #ffffff;
-
-            .vape-cms-el-hero__headline,
-            .vape-cms-el-hero__subline {
-                color: #ffffff;
-            }
         }
 
         &.is--tone-dark {
             color: #18181d;
-
-            .vape-cms-el-hero__headline,
-            .vape-cms-el-hero__subline {
-                color: #18181d;
-            }
         }
+    }
+
+    &__eyebrow {
+        align-self: flex-start;
+        padding: 3px 8px;
+        border-radius: 3px;
+        background-color: rgba(255, 255, 255, 0.92);
+        color: #18181d;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    &__kicker {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.9;
     }
 
     &__headline {
         margin: 0;
-        font-size: 32px;
+        font-size: 20px;
         font-weight: 700;
         line-height: 1.15;
-
-        // İçerik girilmediğinde yer tutucu metin soluk gösterilir
-        &.is--empty {
-            opacity: 0.5;
-            font-style: italic;
-        }
+        color: inherit;
+        overflow-wrap: anywhere;
     }
 
-    &__subline {
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.5;
-        opacity: 0.9;
+    &__dots {
+        display: flex;
+        gap: 4px;
+        margin-top: 4px;
+    }
+
+    &__dot {
+        width: 16px;
+        height: 3px;
+        padding: 0;
+        border: 0;
+        border-radius: 2px;
+        background-color: currentColor;
+        opacity: 0.35;
+        cursor: pointer;
+
+        &.is--active {
+            width: 24px;
+            opacity: 1;
+        }
     }
 
     &__cta {
-        display: inline-block;
-        margin-top: 8px;
-        padding: 12px 24px;
-        border-radius: 4px;
+        align-self: flex-start;
+        margin-top: 6px;
+        padding: 6px 14px;
+        border-radius: 3px;
+        background-color: #e11122;
+        color: #ffffff;
+        font-size: 11px;
         font-weight: 600;
-        font-size: 14px;
+    }
 
-        &.is--primary {
-            background-color: #e11122;
-            color: #ffffff;
-        }
+    &__products {
+        display: flex;
+        gap: 5px;
+        margin-top: 12px;
+    }
 
-        &.is--secondary {
-            border: 1px solid currentColor;
-            background-color: transparent;
-        }
+    &__product {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 3px;
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #71717f;
+    }
+
+    // ---------- sağ görsel ----------
+
+    &__media {
+        position: relative;
+        min-width: 0;
+        background-color: #e4e4e9;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    &__media-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 160px;
+        color: #a0a0ad;
     }
 }

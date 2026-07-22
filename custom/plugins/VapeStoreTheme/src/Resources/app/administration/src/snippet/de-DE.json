@@ -2,49 +2,51 @@
   "vape-cms": {
     "elements": {
       "hero": {
-        "label": "Hero / Kampagnen-Banner",
+        "label": "Hero-Slider",
         "placeholder": {
           "headline": "Überschrift eingeben"
         },
         "config": {
-          "media": "Hintergrundbild",
+          "tab": {
+            "slides": "Slides"
+          },
+          "slide": "Slide",
+          "addSlide": "Slide hinzufügen",
+          "removeSlide": "Entfernen",
+          "moveUp": "Nach oben",
+          "moveDown": "Nach unten",
+          "emptyHint": "Noch keine Slides. Klicke auf „Slide hinzufügen“, um zu starten.",
+          "media": "Bild",
+          "eyebrow": "Badge",
+          "eyebrowPlaceholder": "z. B. VON UNSEREN BELIEBTEN MARKEN",
+          "kicker": "Überzeile",
+          "kickerPlaceholder": "z. B. ENTDECKE DIE MARKE",
           "headline": "Überschrift",
-          "subline": "Unterzeile",
+          "headlinePlaceholder": "z. B. The FuelCell Rebel",
           "ctaText": "Button-Text",
           "ctaUrl": "Button-Link",
-          "ctaUrlHelp": "Interner Pfad (z. B. /Liquids) oder vollständige URL",
           "newTab": "Link in neuem Tab öffnen",
-          "textAlign": "Textausrichtung",
-          "verticalAlign": "Vertikale Ausrichtung",
-          "minHeight": "Mindesthöhe (px)",
-          "overlayOpacity": "Abdunklung (%)",
-          "overlayOpacityHelp": "Dunkelt das Bild ab, damit der Text lesbar bleibt",
+          "bgColor": "Panel-Farbe",
           "textColor": "Textfarbe",
-          "ctaVariantLabel": "Button-Stil",
-          "align": {
-            "left": "Links",
-            "center": "Zentriert",
-            "right": "Rechts"
-          },
-          "vAlign": {
-            "top": "Oben",
-            "center": "Mittig",
-            "bottom": "Unten"
-          },
+          "products": "Produkte",
+          "productsHelp": "Bis zu 4 Produkte werden als Vorschaubilder unter dem Text gezeigt",
+          "minHeight": "Mindesthöhe (px)",
+          "autoplay": "Slides automatisch wechseln",
+          "autoplaySpeed": "Anzeigedauer (ms)",
+          "autoplaySpeedHelp": "Pausiert bei Mouseover und wenn ein Bedienelement fokussiert ist",
+          "showArrows": "Pfeile anzeigen",
+          "showDots": "Slide-Indikatoren anzeigen",
+          "showProducts": "Produkt-Vorschaubilder anzeigen",
           "tone": {
-            "light": "Hell (für dunkle Bilder)",
-            "dark": "Dunkel (für helle Bilder)"
-          },
-          "ctaVariant": {
-            "primary": "Primär (rot)",
-            "secondary": "Sekundär (Umriss)"
+            "light": "Hell (für dunkle Panels)",
+            "dark": "Dunkel (für helle Panels)"
           }
         }
       }
     },
     "blocks": {
       "hero": {
-        "label": "Hero / Kampagnen-Banner"
+        "label": "Hero-Slider"
       }
     }
   }

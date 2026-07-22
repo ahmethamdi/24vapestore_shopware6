@@ -4,10 +4,12 @@
 Storefront JS, Shopware'in plugin sistemi üzerinden kaydedilir.
 Inline <script> veya doğrudan DOM manipülasyonu KULLANILMAZ.
 
-Örnek:
-  import VapePlugin from './plugin/vape-plugin/vape-plugin.plugin';
-  const registry = window.PluginManager;
-  registry.register('VapePlugin', VapePlugin, '[data-vape-plugin]');
+⚠️ Bu dosyadaki değişiklikler `bin/build-storefront.sh` ile derlenip
+   dist/ altına yazılmadıkça storefront'ta görünmez.
 */
 
-// Henüz storefront plugin yok — ilk plugin eklendiğinde burada kaydedilecek.
+import VapeHeroSliderPlugin from './plugin/vape-hero-slider/vape-hero-slider.plugin';
+
+const registry = window.PluginManager;
+
+registry.register('VapeHeroSlider', VapeHeroSliderPlugin, '[data-vape-hero-slider]');

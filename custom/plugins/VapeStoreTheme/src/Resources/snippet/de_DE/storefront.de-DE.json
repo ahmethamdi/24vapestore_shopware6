@@ -1,0 +1,8 @@
+{
+  "vapeHero": {
+    "slideNavigation": "Slide-Navigation",
+    "goToSlide": "Zu Slide %number% springen",
+    "previousSlide": "Vorheriger Slide",
+    "nextSlide": "Nächster Slide"
+  }
+}

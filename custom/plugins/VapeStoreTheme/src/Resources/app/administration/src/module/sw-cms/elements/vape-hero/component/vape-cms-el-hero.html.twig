@@ -1,49 +1,90 @@
+{#
+    Hero slider — CMS editörü içindeki önizleme.
+    Storefront'un sadeleştirilmiş bir yansıması: yönetici sonucu görebilsin diye.
+#}
 {% block vape_cms_el_hero %}
 <div class="vape-cms-el-hero" :style="heroStyles">
 
-    {% block vape_cms_el_hero_placeholder %}
-        <div v-if="!mediaUrl" class="vape-cms-el-hero__placeholder">
-            <mt-icon name="regular-image" size="32px" />
+    {% block vape_cms_el_hero_empty %}
+        <div v-if="!slides.length" class="vape-cms-el-hero__empty">
+            <mt-icon name="regular-image" size="28px" />
+            <p>{{ $t('vape-cms.elements.hero.config.emptyHint') }}</p>
         </div>
     {% endblock %}
 
-    {% block vape_cms_el_hero_overlay %}
-        <div class="vape-cms-el-hero__overlay" :style="overlayStyles"></div>
-    {% endblock %}
+    {% block vape_cms_el_hero_slide %}
+        <div v-else class="vape-cms-el-hero__slide">
 
-    {% block vape_cms_el_hero_content %}
-        <div class="vape-cms-el-hero__content" :class="contentClasses">
-
-            {% block vape_cms_el_hero_headline %}
-                <h2
-                    v-if="element.config.headline.value"
-                    class="vape-cms-el-hero__headline"
-                >
-                    {{ element.config.headline.value }}
-                </h2>
-                <h2 v-else class="vape-cms-el-hero__headline is--empty">
-                    {{ $t('vape-cms.elements.hero.placeholder.headline') }}
-                </h2>
-            {% endblock %}
-
-            {% block vape_cms_el_hero_subline %}
-                <p
-                    v-if="element.config.subline.value"
-                    class="vape-cms-el-hero__subline"
-                >
-                    {{ element.config.subline.value }}
-                </p>
-            {% endblock %}
-
-            {% block vape_cms_el_hero_cta %}
+            {# ---------- sol renkli panel ---------- #}
+            <div
+                class="vape-cms-el-hero__panel"
+                :class="panelClasses"
+                :style="panelStyles"
+            >
                 <span
-                    v-if="element.config.ctaText.value"
-                    class="vape-cms-el-hero__cta"
-                    :class="'is--' + element.config.ctaVariant.value"
+                    v-if="currentSlide.eyebrow"
+                    class="vape-cms-el-hero__eyebrow"
                 >
-                    {{ element.config.ctaText.value }}
+                    {{ currentSlide.eyebrow }}
                 </span>
-            {% endblock %}
+
+                <span
+                    v-if="currentSlide.kicker"
+                    class="vape-cms-el-hero__kicker"
+                >
+                    {{ currentSlide.kicker }}
+                </span>
+
+                <h2 class="vape-cms-el-hero__headline">
+                    {{ currentSlide.headline || $t('vape-cms.elements.hero.placeholder.headline') }}
+                </h2>
+
+                {# slide noktaları #}
+                <div v-if="slides.length > 1" class="vape-cms-el-hero__dots">
+                    <button
+                        v-for="(slide, index) in slides"
+                        :key="index"
+                        type="button"
+                        class="vape-cms-el-hero__dot"
+                        :class="{ 'is--active': index === previewIndex }"
+                        @click.stop="onPreviewDot(index)"
+                    ></button>
+                </div>
+
+                <span
+                    v-if="currentSlide.ctaText"
+                    class="vape-cms-el-hero__cta"
+                >
+                    {{ currentSlide.ctaText }}
+                </span>
+
+                {# ürün küçük resimleri — editörde yer tutucu kutular #}
+                <div
+                    v-if="element.config.showProducts.value && currentSlide.productIds && currentSlide.productIds.length"
+                    class="vape-cms-el-hero__products"
+                >
+                    <div
+                        v-for="productId in currentSlide.productIds"
+                        :key="productId"
+                        class="vape-cms-el-hero__product"
+                    >
+                        <mt-icon name="regular-products" size="16px" />
+                    </div>
+                </div>
+            </div>
+
+            {# ---------- sağ görsel ---------- #}
+            <div class="vape-cms-el-hero__media">
+                <img
+                    v-if="currentMediaUrl"
+                    :src="currentMediaUrl"
+                    class="vape-cms-el-hero__image"
+                    alt=""
+                />
+                <div v-else class="vape-cms-el-hero__media-placeholder">
+                    <mt-icon name="regular-image" size="24px" />
+                </div>
+            </div>
 
         </div>
     {% endblock %}
