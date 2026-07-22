@@ -34,9 +34,21 @@ export default {
             return this.slides[this.previewIndex] ?? null;
         },
 
+        assetFilter() {
+            return Shopware.Filter.getByName('asset');
+        },
+
         currentMediaUrl() {
             const id = this.currentSlide?.mediaId;
-            return id ? (this.mediaEntities[id]?.url ?? null) : null;
+            const url = id ? this.mediaEntities[id]?.url : null;
+
+            if (url) {
+                return url;
+            }
+
+            // Görsel seçilmemişse storefront'takiyle aynı varsayılanı göster,
+            // böylece editör önizlemesi sonucu doğru yansıtır.
+            return this.assetFilter('/bundles/framework/assets/default/cms/preview_mountain_large.jpg');
         },
 
         panelStyles() {

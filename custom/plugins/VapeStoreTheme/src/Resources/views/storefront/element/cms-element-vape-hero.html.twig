@@ -103,7 +103,10 @@
                                     </div>
                                 </div>
 
-                                {# ---------- sağ görsel ---------- #}
+                                {# ---------- sağ görsel ----------
+                                   Görsel seçilmemişse Shopware'in hazır CMS görseli
+                                   gösterilir — böylece slide asla boş gri kutu olmaz
+                                   ve yönetici düzeni gerçekçi görür. #}
                                 <div class="vape-hero__media">
                                     {% if slide.media %}
                                         {% sw_thumbnails 'vape-hero-image-thumbnails' with {
@@ -121,6 +124,11 @@
                                                 loading: (loop.first ? 'eager' : 'lazy')
                                             }
                                         } %}
+                                    {% else %}
+                                        <img src="{{ asset('assets/default/cms/preview_mountain_large.jpg', 'asset') }}"
+                                             class="vape-hero__image vape-hero__image--placeholder"
+                                             alt=""
+                                             loading="{{ loop.first ? 'eager' : 'lazy' }}" />
                                     {% endif %}
                                 </div>
 

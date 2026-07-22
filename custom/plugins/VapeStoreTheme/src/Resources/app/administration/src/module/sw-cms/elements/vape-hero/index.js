@@ -35,9 +35,25 @@ Shopware.Service('cmsService').registerCmsElement({
         //   mediaId, eyebrow, kicker, headline, ctaText, ctaUrl, newTab,
         //   bgColor, textColor, productIds[]
         // }
+        // Element sürüklendiğinde boş kutu yerine hazır bir slide gelsin —
+        // yönetici ne düzenleyeceğini görsün. Görsel seçilmezse storefront
+        // Shopware'in varsayılan CMS görselini gösterir.
         slides: {
             source: 'static',
-            value: [],
+            value: [
+                {
+                    mediaId: null,
+                    eyebrow: '',
+                    kicker: '',
+                    headline: '',
+                    ctaText: '',
+                    ctaUrl: '',
+                    newTab: false,
+                    bgColor: '#18181d',
+                    textColor: 'light',
+                    productIds: [],
+                },
+            ],
         },
 
         // --- slider davranışı ---

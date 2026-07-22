@@ -75,15 +75,12 @@
 
             {# ---------- sağ görsel ---------- #}
             <div class="vape-cms-el-hero__media">
+                {# Görsel seçilmemişse currentMediaUrl varsayılan CMS görselini döndürür #}
                 <img
-                    v-if="currentMediaUrl"
                     :src="currentMediaUrl"
                     class="vape-cms-el-hero__image"
                     alt=""
                 />
-                <div v-else class="vape-cms-el-hero__media-placeholder">
-                    <mt-icon name="regular-image" size="24px" />
-                </div>
             </div>
 
         </div>

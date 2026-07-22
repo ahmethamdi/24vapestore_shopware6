@@ -63,6 +63,13 @@ Tüm değerler token'lardan gelir; magic hex/px yok.
             order: 1;
             padding: $vape-space-10 $vape-space-8;
         }
+
+        // Tam ekranda metin sayfa kenarına yapışmasın — sitenin geri kalanıyla
+        // aynı hizada dursun diye container payı kadar iç boşluk.
+        @media (min-width: 1200px) {
+            padding-left: $vape-space-16;
+            padding-right: $vape-space-10;
+        }
     }
 
     &__panel-inner {
@@ -260,8 +267,26 @@ Tüm değerler token'lardan gelir; magic hex/px yok.
     }
 }
 
-// Block sarmalayıcı — hero tam genişlik kullanır
+// ==================================================
+// Block sarmalayıcı — hero HER ZAMAN tam ekran genişliğinde
+//
+// Yönetici section'ı "boxed" bırakırsa hero dar bir kolona sıkışır.
+// Bu bilinçli bir tasarım kararı değil, çoğu zaman gözden kaçan bir ayar —
+// hero'nun doğru görünmesi ona bağlı kalmasın diye kapsayıcıdan taşırıyoruz.
+//
+// 100vw + negatif margin tekniği: elemanı viewport genişliğine çeker,
+// sonra kendi konumuna göre ortalar. calc ile scrollbar payı hesaba katılır.
+// ==================================================
+
 .vape-hero-block {
     padding-left: 0;
     padding-right: 0;
+
+    // Boxed section içindeyken taşır; full_width'te zaten zararsız (margin 0'a yakın)
+    .cms-section-boxed & {
+        width: 100vw;
+        max-width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+    }
 }
