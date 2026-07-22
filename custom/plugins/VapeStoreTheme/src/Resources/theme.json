@@ -1,0 +1,302 @@
+{
+  "name": "VapeStoreTheme",
+  "author": "24VapeStore",
+  "description": {
+    "de-DE": "24VapeStore Theme — Drag-and-Drop CMS",
+    "en-GB": "24VapeStore Theme — drag & drop CMS"
+  },
+  "views": [
+    "@Storefront",
+    "@Plugins",
+    "@VapeStoreTheme"
+  ],
+  "style": [
+    "app/storefront/src/scss/overrides.scss",
+    "@Storefront",
+    "app/storefront/src/scss/base.scss"
+  ],
+  "script": [
+    "@Storefront",
+    "app/storefront/dist/storefront/js/vape-store-theme/vape-store-theme.js"
+  ],
+  "asset": [
+    "@Storefront",
+    "app/storefront/src/assets"
+  ],
+  "config": {
+    "blocks": {
+      "themeColors": {
+        "label": {
+          "de-DE": "Themefarben",
+          "en-GB": "Theme colours"
+        }
+      },
+      "statusColors": {
+        "label": {
+          "de-DE": "Statusfarben",
+          "en-GB": "Status colours"
+        }
+      },
+      "typography": {
+        "label": {
+          "de-DE": "Typografie",
+          "en-GB": "Typography"
+        }
+      },
+      "eCommerce": {
+        "label": {
+          "de-DE": "E-Commerce",
+          "en-GB": "E-Commerce"
+        }
+      },
+      "media": {
+        "label": {
+          "de-DE": "Medien",
+          "en-GB": "Media"
+        }
+      }
+    },
+    "fields": {
+      "sw-color-brand-primary": {
+        "type": "color",
+        "value": "#e11122",
+        "editable": true,
+        "block": "themeColors",
+        "order": 100
+      },
+      "sw-color-brand-secondary": {
+        "type": "color",
+        "value": "#101014",
+        "editable": true,
+        "block": "themeColors",
+        "order": 200
+      },
+      "sw-border-color": {
+        "type": "color",
+        "value": "#2a2a32",
+        "editable": true,
+        "block": "themeColors",
+        "order": 300
+      },
+      "sw-background-color": {
+        "type": "color",
+        "value": "#0b0b0f",
+        "editable": true,
+        "block": "themeColors",
+        "order": 400
+      },
+      "vape-color-surface": {
+        "type": "color",
+        "value": "#15151b",
+        "editable": true,
+        "block": "themeColors",
+        "order": 500,
+        "label": {
+          "de-DE": "Oberflächenfarbe (Karten, Panels)",
+          "en-GB": "Surface colour (cards, panels)"
+        }
+      },
+      "vape-color-accent": {
+        "type": "color",
+        "value": "#ff3344",
+        "editable": true,
+        "block": "themeColors",
+        "order": 600,
+        "label": {
+          "de-DE": "Akzentfarbe",
+          "en-GB": "Accent colour"
+        }
+      },
+      "sw-color-success": {
+        "type": "color",
+        "value": "#1db954",
+        "editable": true,
+        "block": "statusColors",
+        "order": 100
+      },
+      "sw-color-info": {
+        "type": "color",
+        "value": "#2e9bff",
+        "editable": true,
+        "block": "statusColors",
+        "order": 200
+      },
+      "sw-color-warning": {
+        "type": "color",
+        "value": "#ffab2e",
+        "editable": true,
+        "block": "statusColors",
+        "order": 300
+      },
+      "sw-color-danger": {
+        "type": "color",
+        "value": "#e11122",
+        "editable": true,
+        "block": "statusColors",
+        "order": 400
+      },
+      "sw-font-family-base": {
+        "type": "fontFamily",
+        "value": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        "editable": true,
+        "block": "typography",
+        "order": 100
+      },
+      "sw-text-color": {
+        "type": "color",
+        "value": "#f2f2f5",
+        "editable": true,
+        "block": "typography",
+        "order": 200
+      },
+      "sw-font-family-headline": {
+        "type": "fontFamily",
+        "value": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        "editable": true,
+        "block": "typography",
+        "order": 300
+      },
+      "sw-headline-color": {
+        "type": "color",
+        "value": "#ffffff",
+        "editable": true,
+        "block": "typography",
+        "order": 400
+      },
+      "vape-color-text-muted": {
+        "type": "color",
+        "value": "#9a9aa6",
+        "editable": true,
+        "block": "typography",
+        "order": 500,
+        "label": {
+          "de-DE": "Gedämpfte Textfarbe",
+          "en-GB": "Muted text colour"
+        }
+      },
+      "sw-color-price": {
+        "type": "color",
+        "value": "#ffffff",
+        "editable": true,
+        "block": "eCommerce",
+        "order": 100
+      },
+      "vape-color-price-sale": {
+        "type": "color",
+        "value": "#ff3344",
+        "editable": true,
+        "block": "eCommerce",
+        "order": 150,
+        "label": {
+          "de-DE": "Aktionspreis-Farbe",
+          "en-GB": "Sale price colour"
+        }
+      },
+      "sw-color-buy-button": {
+        "type": "color",
+        "value": "#e11122",
+        "editable": true,
+        "block": "eCommerce",
+        "order": 200
+      },
+      "sw-color-buy-button-text": {
+        "type": "color",
+        "value": "#ffffff",
+        "editable": true,
+        "block": "eCommerce",
+        "order": 300
+      },
+      "vape-border-radius": {
+        "type": "number",
+        "value": 8,
+        "editable": true,
+        "block": "eCommerce",
+        "order": 400,
+        "label": {
+          "de-DE": "Eckenradius (px)",
+          "en-GB": "Border radius (px)"
+        }
+      },
+      "sw-logo-desktop": {
+        "type": "media",
+        "value": "",
+        "editable": true,
+        "block": "media",
+        "order": 100,
+        "fullWidth": true
+      },
+      "sw-logo-tablet": {
+        "type": "media",
+        "value": "",
+        "editable": true,
+        "block": "media",
+        "order": 200,
+        "fullWidth": true
+      },
+      "sw-logo-mobile": {
+        "type": "media",
+        "value": "",
+        "editable": true,
+        "block": "media",
+        "order": 300,
+        "fullWidth": true
+      },
+      "sw-logo-share": {
+        "type": "media",
+        "value": "",
+        "editable": true,
+        "block": "media",
+        "order": 400
+      },
+      "sw-logo-favicon": {
+        "type": "media",
+        "value": "",
+        "editable": true,
+        "block": "media",
+        "order": 500
+      },
+      "sw-breakpoint-xs": {
+        "type": "number",
+        "value": 0,
+        "editable": false,
+        "order": 100,
+        "block": "eCommerce"
+      },
+      "sw-breakpoint-sm": {
+        "type": "number",
+        "value": 576,
+        "editable": false,
+        "order": 200,
+        "block": "eCommerce"
+      },
+      "sw-breakpoint-md": {
+        "type": "number",
+        "value": 768,
+        "editable": false,
+        "order": 300,
+        "block": "eCommerce"
+      },
+      "sw-breakpoint-lg": {
+        "type": "number",
+        "value": 992,
+        "editable": false,
+        "order": 400,
+        "block": "eCommerce"
+      },
+      "sw-breakpoint-xl": {
+        "type": "number",
+        "value": 1200,
+        "editable": false,
+        "order": 500,
+        "block": "eCommerce"
+      },
+      "sw-breakpoint-xxl": {
+        "type": "number",
+        "value": 1400,
+        "editable": false,
+        "order": 600,
+        "block": "eCommerce"
+      }
+    }
+  }
+}

@@ -1,0 +1,203 @@
+/*
+Design Tokens — 24VapeStore
+==================================================
+TEK DOĞRULUK KAYNAĞI. Renk, boşluk, tipografi, radius, gölge, z-index
+değerleri BURADA tanımlanır. Component SCSS'lerinde magic hex veya
+magic px kullanılmaz — her zaman bu token'lar referans alınır.
+
+Yeni bir değere ihtiyaç varsa: önce buraya token olarak ekle, sonra kullan.
+
+Palet: kırmızı + siyah, dark-first.
+Referans yapı: aboutyou.de (grid, ürün kartı anatomisi, filtre UX'i)
+*/
+
+// ==================================================
+// 1. RENK — ham palet (raw ramps)
+// ==================================================
+
+// Kırmızı — marka rengi
+$vape-red-50:  #ffe8ea;
+$vape-red-100: #ffc4c9;
+$vape-red-200: #ff8a94;
+$vape-red-300: #ff5563;
+$vape-red-400: #ff3344;   // accent / vurgu
+$vape-red-500: #e11122;   // ana marka kırmızısı
+$vape-red-600: #c00d1c;
+$vape-red-700: #960a16;
+$vape-red-800: #6b0710;
+$vape-red-900: #40040a;
+
+// Nötr — siyahtan beyaza (dark-first, koyu uçta daha fazla kademe)
+$vape-neutral-0:   #000000;
+$vape-neutral-950: #0b0b0f;   // sayfa zemini
+$vape-neutral-900: #101014;   // ikincil zemin
+$vape-neutral-850: #15151b;   // yüzey (kart, panel)
+$vape-neutral-800: #1f1f27;   // yükseltilmiş yüzey / hover
+$vape-neutral-700: #2a2a32;   // kenarlık
+$vape-neutral-600: #3d3d47;   // güçlü kenarlık
+$vape-neutral-500: #6b6b78;   // devre dışı metin
+$vape-neutral-400: #9a9aa6;   // gölgeli/ikincil metin
+$vape-neutral-300: #c4c4cc;
+$vape-neutral-200: #e2e2e8;
+$vape-neutral-100: #f2f2f5;   // ana metin (koyu zeminde)
+$vape-neutral-white: #ffffff; // başlık
+
+// Durum renkleri
+$vape-success: #1db954;
+$vape-info:    #2e9bff;
+$vape-warning: #ffab2e;
+$vape-danger:  #e11122;
+
+// ==================================================
+// 2. SEMANTİK RENK — bileşenler BUNLARI kullanır
+//    (ham paleti doğrudan kullanma; semantik katman
+//     ileride light tema eklemeyi mümkün kılar)
+// ==================================================
+
+$vape-bg-page:      $vape-neutral-950;
+$vape-bg-surface:   $vape-neutral-850;
+$vape-bg-raised:    $vape-neutral-800;
+$vape-bg-inverse:   $vape-neutral-100;
+
+$vape-text-primary:  $vape-neutral-100;
+$vape-text-heading:  $vape-neutral-white;
+$vape-text-muted:    $vape-neutral-400;
+$vape-text-disabled: $vape-neutral-500;
+$vape-text-inverse:  $vape-neutral-950;
+
+$vape-border-subtle: $vape-neutral-700;
+$vape-border-strong: $vape-neutral-600;
+
+$vape-brand:         $vape-red-500;
+$vape-brand-hover:   $vape-red-600;
+$vape-brand-active:  $vape-red-700;
+$vape-accent:        $vape-red-400;
+
+$vape-price:         $vape-neutral-white;
+$vape-price-sale:    $vape-red-400;
+$vape-badge-sale-bg: $vape-red-500;
+$vape-badge-sale-fg: $vape-neutral-white;
+$vape-badge-new-bg:  $vape-neutral-100;
+$vape-badge-new-fg:  $vape-neutral-950;
+
+// ==================================================
+// 3. BOŞLUK — 4px tabanlı skala
+// ==================================================
+
+$vape-space-0:  0;
+$vape-space-1:  4px;
+$vape-space-2:  8px;
+$vape-space-3:  12px;
+$vape-space-4:  16px;
+$vape-space-5:  20px;
+$vape-space-6:  24px;
+$vape-space-8:  32px;
+$vape-space-10: 40px;
+$vape-space-12: 48px;
+$vape-space-16: 64px;
+$vape-space-20: 80px;
+$vape-space-24: 96px;
+
+// Bölüm (section) dikey boşlukları
+$vape-section-gap-mobile:  $vape-space-10;
+$vape-section-gap-desktop: $vape-space-20;
+
+// ==================================================
+// 4. TİPOGRAFİ
+// ==================================================
+
+$vape-font-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$vape-font-heading: $vape-font-base;
+
+// Boyut skalası
+$vape-text-2xs: 10px;
+$vape-text-xs:  12px;
+$vape-text-sm:  14px;
+$vape-text-md:  16px;   // gövde
+$vape-text-lg:  18px;
+$vape-text-xl:  20px;
+$vape-text-2xl: 24px;
+$vape-text-3xl: 32px;
+$vape-text-4xl: 40px;
+$vape-text-5xl: 56px;
+
+// Ağırlıklar
+$vape-weight-regular:  400;
+$vape-weight-medium:   500;
+$vape-weight-semibold: 600;
+$vape-weight-bold:     700;
+$vape-weight-black:    900;
+
+// Satır yükseklikleri
+$vape-leading-tight:  1.15;
+$vape-leading-snug:   1.3;
+$vape-leading-normal: 1.5;
+$vape-leading-loose:  1.7;
+
+// Harf aralığı — büyük harfli etiketlerde kullanılır
+$vape-tracking-tight:  -0.02em;
+$vape-tracking-normal: 0;
+$vape-tracking-wide:   0.04em;
+$vape-tracking-wider:  0.08em;
+
+// ==================================================
+// 5. RADIUS
+// ==================================================
+
+$vape-radius-none: 0;
+$vape-radius-sm:   4px;
+$vape-radius-md:   8px;
+$vape-radius-lg:   12px;
+$vape-radius-xl:   16px;
+$vape-radius-pill: 999px;
+
+// ==================================================
+// 6. GÖLGE — koyu zeminde gölge zayıf okunur,
+//    bu yüzden yükseltme için yüzey rengi + kenarlık tercih edilir
+// ==================================================
+
+$vape-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+$vape-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+$vape-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+$vape-shadow-brand: 0 4px 20px rgba(225, 17, 34, 0.35);
+
+// ==================================================
+// 7. Z-INDEX — çakışmaları önlemek için merkezi ölçek
+// ==================================================
+
+$vape-z-base:        1;
+$vape-z-dropdown:    1000;
+$vape-z-sticky:      1020;
+$vape-z-fixed:       1030;
+$vape-z-offcanvas:   1045;
+$vape-z-modal:       1055;
+$vape-z-popover:     1070;
+$vape-z-tooltip:     1080;
+$vape-z-toast:       1090;
+
+// ==================================================
+// 8. GEÇİŞ / ANİMASYON
+// ==================================================
+
+$vape-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+$vape-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+$vape-duration-fast: 120ms;
+$vape-duration-base: 200ms;
+$vape-duration-slow: 400ms;
+
+// ==================================================
+// 9. LAYOUT
+// ==================================================
+
+$vape-container-max: 1600px;
+$vape-container-pad-mobile:  $vape-space-4;
+$vape-container-pad-desktop: $vape-space-8;
+
+// Ürün kartı görsel oranı (aboutyou benzeri portre oran)
+$vape-product-image-ratio: 4 / 5;
+
+// Header
+$vape-header-height-mobile:  56px;
+$vape-header-height-desktop: 72px;
+$vape-usp-bar-height:        36px;

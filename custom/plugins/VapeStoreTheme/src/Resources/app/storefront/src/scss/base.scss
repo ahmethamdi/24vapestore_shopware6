@@ -1,0 +1,52 @@
+/*
+24VapeStore Theme — ana SCSS giriş noktası
+==================================================
+Bu dosya theme.json'da @Storefront'tan SONRA yüklenir, yani Shopware'in
+kendi stillerinin üzerine yazar.
+
+Kural: buraya doğrudan stil yazma. Token'ları import et, sonra
+component/layout parçalarını import et. Her component kendi dosyasında.
+*/
+
+// 1. Token'lar — her zaman ilk
+@import 'abstract/tokens';
+
+// 2. Layout parçaları
+// @import 'layout/header';
+// @import 'layout/footer';
+
+// 3. Component'ler (CMS element'leri dahil)
+// @import 'component/product-card';
+
+// ==================================================
+// Geçici temel dark tema ayarları
+// (layout dosyaları yazıldıkça buradan oraya taşınacak)
+// ==================================================
+
+body {
+    background-color: $vape-bg-page;
+    color: $vape-text-primary;
+    font-family: $vape-font-base;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    color: $vape-text-heading;
+    font-family: $vape-font-heading;
+    font-weight: $vape-weight-bold;
+    letter-spacing: $vape-tracking-tight;
+    line-height: $vape-leading-tight;
+}
+
+a {
+    transition: color $vape-duration-fast $vape-ease-out;
+}
+
+// Odak görünürlüğü — erişilebilirlik için zorunlu.
+// Koyu zeminde tarayıcı varsayılanı yetersiz kalıyor.
+:focus-visible {
+    outline: 2px solid $vape-accent;
+    outline-offset: 2px;
+}

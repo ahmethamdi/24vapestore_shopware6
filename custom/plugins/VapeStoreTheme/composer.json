@@ -1,0 +1,27 @@
+{
+  "name": "24vapestore/theme",
+  "description": "24VapeStore Shopware 6 theme — drag & drop CMS driven",
+  "type": "shopware-platform-plugin",
+  "license": "proprietary",
+  "version": "0.1.0",
+  "require": {
+    "shopware/core": "~6.7.0",
+    "shopware/storefront": "~6.7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "VapeStoreTheme\\": "src/"
+    }
+  },
+  "extra": {
+    "shopware-plugin-class": "VapeStoreTheme\\VapeStoreTheme",
+    "label": {
+      "de-DE": "24VapeStore Theme",
+      "en-GB": "24VapeStore Theme"
+    },
+    "description": {
+      "de-DE": "Individuelles Theme für 24VapeStore mit Drag-and-Drop CMS-Elementen",
+      "en-GB": "Custom theme for 24VapeStore with drag & drop CMS elements"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+/.idea
+/.vscode
+/vendor/
+.DS_Store
+
+###> 24vapestore ###
+# DDEV: keep config.yaml, ignore generated + personal overrides
+/.ddev/.*
+/.ddev/**/*.generated.*
+/.ddev/config.*.yaml
+!/.ddev/config.yaml
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Build artefacts
+/custom/plugins/*/src/Resources/app/*/node_modules/
+/custom/plugins/*/src/Resources/public/
+/custom/apps/*/node_modules/
+
+# Local tooling
+/.php-cs-fixer.cache
+/.phpunit.result.cache
+###< 24vapestore ###
+
+###> shopware/core ###
+.env.local
+.env.local.php
+.env.*.local
+/public/bundles/*
+/public/media/*
+/public/theme/*
+/public/thumbnail/*
+/public/sitemap/*
+/files/*
+!/files/.htaccess
+/var/*
+!/var/.htaccess
+/auth.json
+/install.lock
+/public/asset-manifest.json
+###< shopware/core ###
