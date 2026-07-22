@@ -7,7 +7,10 @@ magic px kullanılmaz — her zaman bu token'lar referans alınır.
 
 Yeni bir değere ihtiyaç varsa: önce buraya token olarak ekle, sonra kullan.
 
-Palet: kırmızı + siyah, dark-first.
+Palet: beyaz zemin + kırmızı vurgu (light-first).
+Kırmızı yalnızca vurguda kullanılır: buton, indirim, aktif durum, fiyat.
+Zemin ve metin nötrdür — ürün görselleri öne çıksın diye.
+
 Referans yapı: aboutyou.de (grid, ürün kartı anatomisi, filtre UX'i)
 */
 
@@ -27,20 +30,22 @@ $vape-red-700: #960a16;
 $vape-red-800: #6b0710;
 $vape-red-900: #40040a;
 
-// Nötr — siyahtan beyaza (dark-first, koyu uçta daha fazla kademe)
+// Nötr — beyazdan siyaha (light-first, açık uçta daha fazla kademe)
+// Hafif soğuk gri; saf gri yerine mavi tonu ürün görsellerini temiz gösterir.
+$vape-neutral-white: #ffffff; // sayfa zemini, kart yüzeyi
+$vape-neutral-25:  #fcfcfd;   // çok hafif alternatif zemin
+$vape-neutral-50:  #f7f7f9;   // ikincil zemin (bölüm ayrımı)
+$vape-neutral-100: #f0f0f3;   // yükseltilmiş yüzey / hover
+$vape-neutral-200: #e4e4e9;   // kenarlık (ince)
+$vape-neutral-300: #d1d1d9;   // güçlü kenarlık
+$vape-neutral-400: #a0a0ad;   // devre dışı metin
+$vape-neutral-500: #71717f;   // ikincil/gölgeli metin
+$vape-neutral-600: #52525e;
+$vape-neutral-700: #3f3f4a;
+$vape-neutral-800: #2a2a33;   // ana metin
+$vape-neutral-900: #18181d;   // başlık
+$vape-neutral-950: #0b0b0f;   // koyu bölümler (footer, üst bar)
 $vape-neutral-0:   #000000;
-$vape-neutral-950: #0b0b0f;   // sayfa zemini
-$vape-neutral-900: #101014;   // ikincil zemin
-$vape-neutral-850: #15151b;   // yüzey (kart, panel)
-$vape-neutral-800: #1f1f27;   // yükseltilmiş yüzey / hover
-$vape-neutral-700: #2a2a32;   // kenarlık
-$vape-neutral-600: #3d3d47;   // güçlü kenarlık
-$vape-neutral-500: #6b6b78;   // devre dışı metin
-$vape-neutral-400: #9a9aa6;   // gölgeli/ikincil metin
-$vape-neutral-300: #c4c4cc;
-$vape-neutral-200: #e2e2e8;
-$vape-neutral-100: #f2f2f5;   // ana metin (koyu zeminde)
-$vape-neutral-white: #ffffff; // başlık
 
 // Durum renkleri
 $vape-success: #1db954;
@@ -50,35 +55,44 @@ $vape-danger:  #e11122;
 
 // ==================================================
 // 2. SEMANTİK RENK — bileşenler BUNLARI kullanır
-//    (ham paleti doğrudan kullanma; semantik katman
-//     ileride light tema eklemeyi mümkün kılar)
+//    Ham paleti doğrudan kullanma. Bu katman sayesinde
+//    tema yönü (açık/koyu) tek yerden değiştirilebilir.
 // ==================================================
 
-$vape-bg-page:      $vape-neutral-950;
-$vape-bg-surface:   $vape-neutral-850;
-$vape-bg-raised:    $vape-neutral-800;
-$vape-bg-inverse:   $vape-neutral-100;
+// Zemin
+$vape-bg-page:      $vape-neutral-white;  // sayfa
+$vape-bg-surface:   $vape-neutral-white;  // kart, panel
+$vape-bg-subtle:    $vape-neutral-50;     // bölüm ayrımı, alternatif şerit
+$vape-bg-raised:    $vape-neutral-100;    // hover, yükseltilmiş yüzey
+$vape-bg-inverse:   $vape-neutral-950;    // koyu bölüm (footer, üst yardımcı bar)
 
-$vape-text-primary:  $vape-neutral-100;
-$vape-text-heading:  $vape-neutral-white;
-$vape-text-muted:    $vape-neutral-400;
-$vape-text-disabled: $vape-neutral-500;
-$vape-text-inverse:  $vape-neutral-950;
+// Metin
+$vape-text-primary:  $vape-neutral-800;
+$vape-text-heading:  $vape-neutral-900;
+$vape-text-muted:    $vape-neutral-500;
+$vape-text-disabled: $vape-neutral-400;
+$vape-text-inverse:  $vape-neutral-white;  // koyu zemin üzerinde
 
-$vape-border-subtle: $vape-neutral-700;
-$vape-border-strong: $vape-neutral-600;
+// Kenarlık
+$vape-border-subtle: $vape-neutral-200;
+$vape-border-strong: $vape-neutral-300;
 
+// Marka — kırmızı SADECE vurgu için
 $vape-brand:         $vape-red-500;
 $vape-brand-hover:   $vape-red-600;
 $vape-brand-active:  $vape-red-700;
-$vape-accent:        $vape-red-400;
+$vape-brand-subtle:  $vape-red-50;   // kırmızı zeminli hafif uyarı/rozet
+$vape-accent:        $vape-red-500;
 
-$vape-price:         $vape-neutral-white;
-$vape-price-sale:    $vape-red-400;
+// E-ticaret
+// Fiyat nötr koyu — beyaz zeminde kırmızı fiyat "her şey indirimde" hissi verir.
+// Kırmızı sadece GERÇEK indirimde kullanılır, böylece anlamı korunur.
+$vape-price:         $vape-neutral-900;
+$vape-price-sale:    $vape-red-500;
 $vape-badge-sale-bg: $vape-red-500;
 $vape-badge-sale-fg: $vape-neutral-white;
-$vape-badge-new-bg:  $vape-neutral-100;
-$vape-badge-new-fg:  $vape-neutral-950;
+$vape-badge-new-bg:  $vape-neutral-900;
+$vape-badge-new-fg:  $vape-neutral-white;
 
 // ==================================================
 // 3. BOŞLUK — 4px tabanlı skala
@@ -155,19 +169,24 @@ $vape-radius-lg:   12px;
 $vape-radius-xl:   16px;
 $vape-radius-pill: 999px;
 
-// Kart radius'u: aboutyou'da 0. Bizde koyu zeminde kart sınırı görünür
-// olmalı, bu yüzden hafif radius veriyoruz — ama abartmıyoruz.
-$vape-card-radius: $vape-radius-sm;
+// Kart radius'u: aboutyou'da 0. Bizde hafif radius + ince kenarlık,
+// beyaz kartı beyaz zeminden ayırmak için — ama abartmıyoruz.
+$vape-card-radius: $vape-radius-md;
 
 // ==================================================
-// 6. GÖLGE — koyu zeminde gölge zayıf okunur,
-//    bu yüzden yükseltme için yüzey rengi + kenarlık tercih edilir
+// 6. GÖLGE — açık zeminde yumuşak ve düşük opaklık.
+//    Koyu temadaki sert gölgeler beyazda kirli görünür.
+//    Çift katman (yakın + yayılan) daha doğal derinlik verir.
 // ==================================================
 
-$vape-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-$vape-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-$vape-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
-$vape-shadow-brand: 0 4px 20px rgba(225, 17, 34, 0.35);
+$vape-shadow-xs: 0 1px 2px rgba(16, 16, 24, 0.05);
+$vape-shadow-sm: 0 1px 3px rgba(16, 16, 24, 0.08), 0 1px 2px rgba(16, 16, 24, 0.04);
+$vape-shadow-md: 0 4px 12px rgba(16, 16, 24, 0.08), 0 2px 4px rgba(16, 16, 24, 0.04);
+$vape-shadow-lg: 0 12px 32px rgba(16, 16, 24, 0.12), 0 4px 8px rgba(16, 16, 24, 0.04);
+$vape-shadow-brand: 0 4px 16px rgba(225, 17, 34, 0.25);
+
+// Odak halkası — erişilebilirlik için (klavye navigasyonu)
+$vape-focus-ring: 0 0 0 3px rgba(225, 17, 34, 0.35);
 
 // ==================================================
 // 7. Z-INDEX — çakışmaları önlemek için merkezi ölçek

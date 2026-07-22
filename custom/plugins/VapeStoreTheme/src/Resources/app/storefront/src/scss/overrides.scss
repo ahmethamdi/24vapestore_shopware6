@@ -9,31 +9,36 @@ https://getbootstrap.com/docs/5.3/customize/sass/#variable-defaults
 
 DİKKAT: Buraya sadece Bootstrap/Shopware'in mevcut değişkenlerinin override'ları yazılır.
 Projeye ait yeni token'lar `abstract/_tokens.scss` içinde tanımlanır.
+
+⚠️ Bu dosya @Storefront'tan ÖNCE yüklendiği için `abstract/_tokens.scss`'i
+import EDEMEZ (döngüsel bağımlılık olur). Bu yüzden değerler burada ham hex
+olarak yazılır. _tokens.scss ile SENKRON tutulmalı — birini değiştirince
+diğerini de değiştir.
 */
 
 // ==================================================
-// Renk paleti — kırmızı / siyah, dark-first
+// Renk paleti — beyaz zemin + kırmızı vurgu (light-first)
 // Not: theme.json'daki config alanları admin'den değiştirilebilir ve
 // derleme sırasında aynı isimli SCSS değişkenleri olarak enjekte edilir.
 // Buradaki değerler yalnızca admin'de bir değer set edilmemişse geçerli olur.
 // ==================================================
 
 // Bootstrap gövde renkleri
-$body-bg: #0b0b0f !default;
-$body-color: #f2f2f5 !default;
+$body-bg: #ffffff !default;
+$body-color: #2a2a33 !default;
 
 // Marka renkleri
 $primary: #e11122 !default;
-$secondary: #101014 !default;
-$success: #1db954 !default;
-$info: #2e9bff !default;
-$warning: #ffab2e !default;
+$secondary: #18181d !default;
+$success: #16a34a !default;
+$info: #0284c7 !default;
+$warning: #d97706 !default;
 $danger: #e11122 !default;
-$light: #f2f2f5 !default;
-$dark: #0b0b0f !default;
+$light: #f7f7f9 !default;
+$dark: #18181d !default;
 
 // Kenarlık
-$border-color: #2a2a32 !default;
+$border-color: #e4e4e9 !default;
 $border-radius: 8px !default;
 $border-radius-sm: 4px !default;
 $border-radius-lg: 12px !default;
@@ -41,41 +46,42 @@ $border-radius-lg: 12px !default;
 // Tipografi
 $font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !default;
 $headings-font-weight: 700 !default;
-$headings-color: #ffffff !default;
+$headings-color: #18181d !default;
 
-// Bağlantılar
-$link-color: #f2f2f5 !default;
+// Bağlantılar — gövde metniyle aynı renk, hover'da kırmızı.
+// Böylece kırmızı "tıklanabilir" sinyali olarak anlamını korur.
+$link-color: #2a2a33 !default;
 $link-hover-color: #e11122 !default;
 $link-decoration: none !default;
 
-// Formlar — dark tema için kritik, aksi halde beyaz input'lar çıkar
-$input-bg: #15151b !default;
-$input-color: #f2f2f5 !default;
-$input-border-color: #2a2a32 !default;
-$input-placeholder-color: #9a9aa6 !default;
-$input-focus-bg: #15151b !default;
-$input-focus-color: #f2f2f5 !default;
+// Formlar
+$input-bg: #ffffff !default;
+$input-color: #2a2a33 !default;
+$input-border-color: #d1d1d9 !default;
+$input-placeholder-color: #a0a0ad !default;
+$input-focus-bg: #ffffff !default;
+$input-focus-color: #2a2a33 !default;
 $input-focus-border-color: #e11122 !default;
 
 // Kartlar / paneller
-$card-bg: #15151b !default;
-$card-border-color: #2a2a32 !default;
+$card-bg: #ffffff !default;
+$card-border-color: #e4e4e9 !default;
 
 // Dropdown
-$dropdown-bg: #15151b !default;
-$dropdown-color: #f2f2f5 !default;
-$dropdown-border-color: #2a2a32 !default;
-$dropdown-link-color: #f2f2f5 !default;
-$dropdown-link-hover-bg: #1f1f27 !default;
-$dropdown-link-hover-color: #ffffff !default;
+$dropdown-bg: #ffffff !default;
+$dropdown-color: #2a2a33 !default;
+$dropdown-border-color: #e4e4e9 !default;
+$dropdown-link-color: #2a2a33 !default;
+$dropdown-link-hover-bg: #f7f7f9 !default;
+$dropdown-link-hover-color: #18181d !default;
 
 // Modal / offcanvas
-$modal-content-bg: #15151b !default;
-$modal-content-border-color: #2a2a32 !default;
-$offcanvas-bg-color: #0b0b0f !default;
-$offcanvas-color: #f2f2f5 !default;
+$modal-content-bg: #ffffff !default;
+$modal-content-border-color: #e4e4e9 !default;
+$offcanvas-bg-color: #ffffff !default;
+$offcanvas-color: #2a2a33 !default;
 
 // Tablolar
-$table-color: #f2f2f5 !default;
+$table-color: #2a2a33 !default;
 $table-bg: transparent !default;
-$table-border-color: #2a2a32 !default;
+$table-border-color: #e4e4e9 !default;

@@ -66,28 +66,28 @@
       },
       "sw-color-brand-secondary": {
         "type": "color",
-        "value": "#101014",
+        "value": "#18181d",
         "editable": true,
         "block": "themeColors",
         "order": 200
       },
       "sw-border-color": {
         "type": "color",
-        "value": "#2a2a32",
+        "value": "#e4e4e9",
         "editable": true,
         "block": "themeColors",
         "order": 300
       },
       "sw-background-color": {
         "type": "color",
-        "value": "#0b0b0f",
+        "value": "#ffffff",
         "editable": true,
         "block": "themeColors",
         "order": 400
       },
       "vape-color-surface": {
         "type": "color",
-        "value": "#15151b",
+        "value": "#ffffff",
         "editable": true,
         "block": "themeColors",
         "order": 500,
@@ -98,7 +98,7 @@
       },
       "vape-color-accent": {
         "type": "color",
-        "value": "#ff3344",
+        "value": "#e11122",
         "editable": true,
         "block": "themeColors",
         "order": 600,
@@ -144,7 +144,7 @@
       },
       "sw-text-color": {
         "type": "color",
-        "value": "#f2f2f5",
+        "value": "#2a2a33",
         "editable": true,
         "block": "typography",
         "order": 200
@@ -158,14 +158,14 @@
       },
       "sw-headline-color": {
         "type": "color",
-        "value": "#ffffff",
+        "value": "#18181d",
         "editable": true,
         "block": "typography",
         "order": 400
       },
       "vape-color-text-muted": {
         "type": "color",
-        "value": "#9a9aa6",
+        "value": "#71717f",
         "editable": true,
         "block": "typography",
         "order": 500,
@@ -176,14 +176,14 @@
       },
       "sw-color-price": {
         "type": "color",
-        "value": "#ffffff",
+        "value": "#18181d",
         "editable": true,
         "block": "eCommerce",
         "order": 100
       },
       "vape-color-price-sale": {
         "type": "color",
-        "value": "#ff3344",
+        "value": "#e11122",
         "editable": true,
         "block": "eCommerce",
         "order": 150,

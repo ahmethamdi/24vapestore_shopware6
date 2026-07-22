@@ -19,7 +19,7 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 // @import 'component/product-card';
 
 // ==================================================
-// Geçici temel dark tema ayarları
+// Temel tipografi ve zemin
 // (layout dosyaları yazıldıkça buradan oraya taşınacak)
 // ==================================================
 
@@ -27,6 +27,8 @@ body {
     background-color: $vape-bg-page;
     color: $vape-text-primary;
     font-family: $vape-font-base;
+    font-size: $vape-text-md;
+    line-height: $vape-leading-normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -44,9 +46,121 @@ a {
     transition: color $vape-duration-fast $vape-ease-out;
 }
 
-// Odak görünürlüğü — erişilebilirlik için zorunlu.
-// Koyu zeminde tarayıcı varsayılanı yetersiz kalıyor.
+// Odak görünürlüğü — erişilebilirlik için zorunlu (klavye navigasyonu).
 :focus-visible {
-    outline: 2px solid $vape-accent;
+    outline: 2px solid $vape-brand;
     outline-offset: 2px;
+    border-radius: $vape-radius-xs;
+}
+
+// ==================================================
+// Butonlar — modern his: yumuşak geçiş, net hiyerarşi
+// Birincil buton kırmızı (tek güçlü vurgu),
+// ikincil buton nötr çerçeveli.
+// ==================================================
+
+.btn {
+    font-weight: $vape-weight-semibold;
+    letter-spacing: $vape-tracking-normal;
+    border-radius: $vape-radius-sm;
+    transition:
+        background-color $vape-duration-fast $vape-ease-out,
+        border-color $vape-duration-fast $vape-ease-out,
+        color $vape-duration-fast $vape-ease-out,
+        transform $vape-duration-fast $vape-ease-out;
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+.btn-primary {
+    background-color: $vape-brand;
+    border-color: $vape-brand;
+    color: $vape-text-inverse;
+
+    &:hover,
+    &:focus {
+        background-color: $vape-brand-hover;
+        border-color: $vape-brand-hover;
+        color: $vape-text-inverse;
+    }
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border-color: $vape-border-strong;
+    color: $vape-text-primary;
+
+    &:hover,
+    &:focus {
+        background-color: $vape-bg-raised;
+        border-color: $vape-text-primary;
+        color: $vape-text-heading;
+    }
+}
+
+// ==================================================
+// Kart yüzeyleri — beyaz kartı beyaz zeminden ayırmak için
+// gölge yerine ince kenarlık; hover'da hafif yükselme.
+// ==================================================
+
+.card {
+    background-color: $vape-bg-surface;
+    border: 1px solid $vape-border-subtle;
+    border-radius: $vape-card-radius;
+}
+
+// ==================================================
+// Form elemanları
+// ==================================================
+
+.form-control,
+.form-select {
+    border-radius: $vape-radius-sm;
+    border-color: $vape-border-strong;
+    transition:
+        border-color $vape-duration-fast $vape-ease-out,
+        box-shadow $vape-duration-fast $vape-ease-out;
+
+    &:focus {
+        border-color: $vape-brand;
+        box-shadow: $vape-focus-ring;
+    }
+}
+
+// ==================================================
+// Fiyat — indirim kırmızısı anlamını korusun diye
+// normal fiyat nötr koyu renkte.
+// ==================================================
+
+.product-price {
+    color: $vape-price;
+    font-weight: $vape-weight-bold;
+
+    &.with-list-price,
+    &.is--discounted {
+        color: $vape-price-sale;
+    }
+}
+
+.list-price {
+    color: $vape-text-muted;
+    text-decoration: line-through;
+    font-weight: $vape-weight-regular;
+}
+
+// ==================================================
+// Hareket azaltma tercihi — erişilebilirlik
+// ==================================================
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
