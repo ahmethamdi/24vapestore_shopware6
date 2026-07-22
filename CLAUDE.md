@@ -33,22 +33,40 @@ ister mi?* Evet ise → CMS element.
 |---|---|
 | Platform | Shopware **6.7.12.1** (core, storefront, administration, elasticsearch) |
 | Sürükle-bırak | Shopware **native CMS** — 3. parti page builder yok, custom builder yok |
-| Dev ortamı | **DDEV** (Docker) — PHP **8.4**, MySQL 8.0, Node 22 |
-| Yerel URL | `https://24vapestore.ddev.site:8443` (admin: `/admin`) |
-| Proje yolu | `~/Projects/24vapestore_shopware` |
+| Dev ortamı | **Yerel** (Docker YOK) — brew Apache + PHP-FPM **8.4**, MySQL 8.0, Node 26 |
+| Yerel URL | `http://24vapestore.test:8088` (admin: `/admin`) |
+| Proje yolu | `/Applications/XAMPP/xamppfiles/htdocs/24vapestore-shopware6` |
 | Tema plugin'i | `custom/plugins/VapeStoreTheme` — tek plugin, hem tema hem CMS element'ler |
 | Tasarım referansı | https://www.aboutyou.de/ (yapı, grid, filtre UX'i, ürün kartı anatomisi) |
 | Palet | Kırmızı + siyah, **dark-first** |
 | Repo | git@github.com:ahmethamdi/24vapestore_shopware6.git |
 
-**Neden XAMPP altında değil:** Docker Desktop macOS'ta `/Applications` altını paylaşmıyor
-("mounts denied" hatası). Proje `~/Projects/` altına taşındı. XAMPP'ın PHP'si (8.0) zaten
-Shopware 6.7 ile uyumsuzdu; her şey DDEV içinde çalışıyor.
+**Ortam (2026-07-22'de DDEV/Docker'dan taşındı):** Docker artık kullanılmıyor. Proje
+htdocs altında, servisler doğrudan makinede brew ile çalışıyor:
 
-**Neden PHP 8.4, 8.3 değil:** `composer install` host'ta PHP 8.4 ile çalıştırıldı,
-lock dosyası Symfony 8.x bileşenlerini seçti ve bunlar `php >=8.4.1` istiyor.
-8.3 container'da `vendor/composer/platform_check.php` fatal error verir.
-Container PHP'sini düşürmek istersen önce `composer update`'i container içinde çalıştır.
+| Servis | Detay |
+|---|---|
+| Web | brew Apache 2.4.68, **port 8088**, `brew services start httpd` |
+| PHP | brew PHP **8.4.11**, PHP-FPM `127.0.0.1:9000` (Apache `proxy_fcgi` ile bağlı) |
+| DB | brew MySQL **8.0.46**, **port 3307**, DB adı `24vapestore`, kullanıcı `root` (şifresiz) |
+| Redis | brew redis, varsayılan port |
+
+Config dosyaları: `/opt/homebrew/etc/httpd/httpd.conf` (yedek: `.bak-20260722`),
+vhost `/opt/homebrew/etc/httpd/extra/httpd-vhosts.conf`.
+
+**Neden XAMPP'ın kendi Apache/MySQL'i değil:** XAMPP macOS'ta hâlâ **x86_64 (Intel)** binary
+dağıtıyor, brew PHP ise **arm64**. Apache'ye PHP 8.4 modülü bağlanamıyor ("incompatible
+architecture"). Ayrıca XAMPP PHP 8.0 ve MariaDB 10.4 ile geliyor — ikisi de Shopware 6.7 için
+çok eski. Bu yüzden dosyalar htdocs'ta duruyor ama servisler brew'dan geliyor.
+**XAMPP Control Panel'den Apache/MySQL başlatma** — çakışır.
+
+**Neden PHP 8.4, 8.3 değil:** `composer install` PHP 8.4 ile çalıştırıldı, lock dosyası
+Symfony 8.x bileşenlerini seçti ve bunlar `php >=8.4.1` istiyor.
+8.3 ile `vendor/composer/platform_check.php` fatal error verir. (8.3 makinede kurulu — yanlışlıkla
+ona geçme.) PHP'yi düşürmek istersen önce `composer update` çalıştır.
+
+**Geri dönüş:** Eski DDEV kurulumu `~/Projects/24vapestore_shopware` altında ve docker
+volume'ları (`24vapestore-mariadb`) duruyor. Gerekirse `cd ~/Projects/24vapestore_shopware && ddev start`.
 
 ---
 
@@ -79,25 +97,36 @@ custom/plugins/VapeStoreTheme/src/Resources/
 
 ## Komutlar
 
-Her şey DDEV içinde çalışır. `ddev` ön eki olmadan çalıştırma.
+Docker/DDEV yok. Komutlar doğrudan proje dizininde çalışır — `ddev` ön eki **kullanma**.
 
 ```bash
-ddev start                      # ortamı başlat
-ddev ssh                        # container'a gir
-ddev launch                     # storefront'u tarayıcıda aç
-ddev launch /admin              # admin'i aç
+# Servisler (bir kere başlat, arka planda kalır — makine yeniden başlasa da açılır)
+brew services start httpd        # web sunucu :8088
+brew services start mysql@8.0    # veritabanı :3307
+brew services start redis
+brew services list               # durum kontrolü
 
-# Shopware
-ddev exec bin/console cache:clear
-ddev exec bin/console plugin:refresh
-ddev exec bin/console theme:compile
-ddev exec bin/console dal:refresh:index
+# Site
+open http://24vapestore.test:8088          # storefront
+open http://24vapestore.test:8088/admin    # admin
+
+# Shopware (proje kökünde)
+php bin/console cache:clear
+php bin/console plugin:refresh
+php bin/console theme:compile
+php bin/console dal:refresh:index
+
+# Veritabanı
+/opt/homebrew/opt/mysql@8.0/bin/mysql -h 127.0.0.1 -P 3307 -u root 24vapestore
 
 # Build (bu template'te bin/*.sh kullanılır, composer script'i YOK)
-ddev exec bin/build-administration.sh
-ddev exec bin/build-storefront.sh
-ddev exec bin/watch-administration.sh    # admin geliştirme sırasında
+bin/build-administration.sh
+bin/build-storefront.sh
+bin/watch-administration.sh    # admin geliştirme sırasında
 ```
+
+⚠️ `mysql` komutunu düz çağırırsan XAMPP'ın MariaDB'sine (port 3306) gider — yanlış DB.
+Yukarıdaki tam yolu veya `-P 3307` bayrağını kullan.
 
 **Ne zaman ne gerekir:**
 - Admin JS değişti (CMS element/block) → `bin/build-administration.sh`
