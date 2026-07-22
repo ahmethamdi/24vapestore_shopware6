@@ -34,11 +34,11 @@ ister mi?* Evet ise → CMS element.
 | Platform | Shopware **6.7.12.1** (core, storefront, administration, elasticsearch) |
 | Sürükle-bırak | Shopware **native CMS** — 3. parti page builder yok, custom builder yok |
 | Dev ortamı | **Yerel** (Docker YOK) — brew Apache + PHP-FPM **8.4**, MySQL 8.0, Node 26 |
-| Yerel URL | `http://24vapestore.test:8088` (admin: `/admin`) |
+| Yerel URL | `http://localhost:8088` (admin: `/admin`, kullanıcı `admin` / şifre `shopware`) |
 | Proje yolu | `/Applications/XAMPP/xamppfiles/htdocs/24vapestore-shopware6` |
 | Tema plugin'i | `custom/plugins/VapeStoreTheme` — tek plugin, hem tema hem CMS element'ler |
 | Tasarım referansı | https://www.aboutyou.de/ (yapı, grid, filtre UX'i, ürün kartı anatomisi) |
-| Palet | Kırmızı + siyah, **dark-first** |
+| Palet | **Beyaz zemin + kırmızı vurgu** (light-first). Kırmızı yalnızca buton/indirim/aktif durumda |
 | Repo | git@github.com:ahmethamdi/24vapestore_shopware6.git |
 
 **Ortam (2026-07-22'de DDEV/Docker'dan taşındı):** Docker artık kullanılmıyor. Proje
@@ -128,10 +128,23 @@ bin/watch-administration.sh    # admin geliştirme sırasında
 ⚠️ `mysql` komutunu düz çağırırsan XAMPP'ın MariaDB'sine (port 3306) gider — yanlış DB.
 Yukarıdaki tam yolu veya `-P 3307` bayrağını kullan.
 
+⚠️ **`bin/build-administration.sh` composer'a dokunuyor.** 2026-07-22'de bir çalıştırmada
+`composer.json`'u yeniden formatladı ve `swag/paypal` + `composer/composer` paketlerini
+ekleyip indirdi (istenmemişti, geri alındı). Build'den sonra **her zaman
+`git diff composer.json composer.lock` kontrol et**; beklenmedik paket varsa
+`git checkout -- composer.json composer.lock` ile geri al ve `custom/plugins/` altındaki
+istenmeyen plugin klasörünü sil.
+
+⚠️ **Node sürümü:** Shopware admin build'i Node ≤25 istiyor, makinede Node 26 var.
+Build `EBADENGINE` uyarısı verip yine de çalışıyor. Tuhaf build hatası görürsen
+önce Node sürümünü şüphelen.
+
 **Ne zaman ne gerekir:**
-- Admin JS değişti (CMS element/block) → `bin/build-administration.sh`
+- Admin JS değişti (CMS element/block) → `bin/build-administration.sh` — cache clear İŞE YARAMAZ
 - SCSS değişti → `bin/console theme:compile`
-- Twig değişti → `bin/console cache:clear`
+- Twig değişti (storefront) → dev'de bir şey gerekmez; prod'da `cache:clear`
+- `theme.json` değişti → `theme:refresh` → `theme:compile` → admin'i hard-refresh
+- PHP değişti (resolver, services.xml) → `bin/console cache:clear`
 - Yeni plugin eklendi → `plugin:refresh` → `plugin:install --activate`
 
 ---
@@ -168,6 +181,37 @@ En kritikleri:
 
 ---
 
+## Referans Desen: `vape-hero`
+
+**Yeni CMS element yazarken bunu örnek al** — projedeki ilk ve doğrulanmış tam örnek.
+
+```
+custom/plugins/VapeStoreTheme/src/
+├── DataResolver/HeroCmsElementResolver.php        # storefront'ta medyayı slot'a bağlar
+├── Resources/config/services.xml                  # resolver'ı shopware.cms.data_resolver ile tag'ler
+├── Resources/app/administration/src/
+│   ├── main.js                                    # ⚠️ import edilmezse element GÖRÜNMEZ
+│   ├── snippet/{de-DE,en-GB}.json                 # admin etiketleri
+│   └── module/sw-cms/
+│       ├── elements/vape-hero/{index,component,config,preview}
+│       └── blocks/image/vape-hero/{index,component,preview}
+├── Resources/app/storefront/src/scss/component/_hero.scss
+└── Resources/views/storefront/
+    ├── element/cms-element-vape-hero.html.twig    # ⚠️ dosya adı birebir
+    └── block/cms-block-vape-hero.html.twig        # ⚠️ data-cms-element-id şart
+```
+
+Öğrenilenler:
+- Admin'deki `entity` auto-collect **yalnızca editörde** çalışır. Storefront için PHP
+  resolver şart, yoksa `element.data` boş gelir ve görsel hiç render edilmez
+- Resolver'da core'un `ImageCmsElementResolver`'ı örnek alındı: slot'a `ImageStruct`
+  set edilir, `MediaDefinition::class` ile criteria eklenir
+- Snippet JSON'unda aynı anahtarı iki kez kullanma (biri string biri obje) — ikincisi
+  ilkini sessizce ezer. `ctaVariant` (obje) ile `ctaVariantLabel` (string) bu yüzden ayrı
+- Config panelinde her alan bir sarmalayıcı div içinde; `sw-tabs` `position-identifier` ister
+
+---
+
 ## Kod Standartları
 
 - **Core'a dokunma.** `vendor/shopware` altında hiçbir şey değiştirilmez.
@@ -177,7 +221,7 @@ En kritikleri:
 - **Token kullan.** SCSS'te magic hex veya magic px yok — `abstract/_tokens.scss`'ten al.
   Değer yoksa önce token ekle
 - **Snippet kullan.** Kullanıcıya görünen string twig'e gömülmez
-- **Erişilebilirlik.** Koyu zeminde kontrast hataları kolay oluşur — WCAG AA kontrolü yap,
-  odak göstergesi görünür olsun
+- **Erişilebilirlik.** Beyaz zeminde açık gri metin kolayca AA'nın altına düşer —
+  WCAG AA kontrolü yap (gövde metni ≥4.5:1), odak göstergesi görünür olsun
 - **Ölçek bilinci.** 4000 SKU var; listeleme sorgularında N+1'den kaçın, criteria'ya
   association'ları açıkça ekle
