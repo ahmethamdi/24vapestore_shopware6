@@ -45,3 +45,7 @@ npm-debug.log*
 /install.lock
 /public/asset-manifest.json
 ###< shopware/core ###
+
+# Playwright CLI
+.playwright-cli/
+output/

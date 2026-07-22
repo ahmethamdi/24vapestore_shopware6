@@ -33,13 +33,22 @@ ister mi?* Evet ise → CMS element.
 |---|---|
 | Platform | Shopware **6.7.12.1** (core, storefront, administration, elasticsearch) |
 | Sürükle-bırak | Shopware **native CMS** — 3. parti page builder yok, custom builder yok |
-| Dev ortamı | **DDEV** (Docker) — PHP 8.3, MySQL 8.0, Node 22 |
+| Dev ortamı | **DDEV** (Docker) — PHP **8.4**, MySQL 8.0, Node 22 |
+| Yerel URL | `https://24vapestore.ddev.site:8443` (admin: `/admin`) |
+| Proje yolu | `~/Projects/24vapestore_shopware` |
 | Tema plugin'i | `custom/plugins/VapeStoreTheme` — tek plugin, hem tema hem CMS element'ler |
 | Tasarım referansı | https://www.aboutyou.de/ (yapı, grid, filtre UX'i, ürün kartı anatomisi) |
 | Palet | Kırmızı + siyah, **dark-first** |
 | Repo | git@github.com:ahmethamdi/24vapestore_shopware6.git |
 
-XAMPP'ın kendi PHP'si (8.0) **kullanılmıyor** — Shopware 6.7 ile uyumsuz. Her şey DDEV içinde.
+**Neden XAMPP altında değil:** Docker Desktop macOS'ta `/Applications` altını paylaşmıyor
+("mounts denied" hatası). Proje `~/Projects/` altına taşındı. XAMPP'ın PHP'si (8.0) zaten
+Shopware 6.7 ile uyumsuzdu; her şey DDEV içinde çalışıyor.
+
+**Neden PHP 8.4, 8.3 değil:** `composer install` host'ta PHP 8.4 ile çalıştırıldı,
+lock dosyası Symfony 8.x bileşenlerini seçti ve bunlar `php >=8.4.1` istiyor.
+8.3 container'da `vendor/composer/platform_check.php` fatal error verir.
+Container PHP'sini düşürmek istersen önce `composer update`'i container içinde çalıştır.
 
 ---
 
