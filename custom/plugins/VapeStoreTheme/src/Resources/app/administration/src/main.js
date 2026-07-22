@@ -10,6 +10,19 @@ dosyalar diskte olsa bile. En sık yapılan hata budur.
 */
 
 // ==================================================
+// Snippet'ler (admin etiketleri)
+// ==================================================
+// Module.register kullanmadığımız için (sadece CMS element ekliyoruz)
+// snippet'ler otomatik yüklenmez — Locale.extend ile elle bağlanır.
+// Bu olmadan blok seçicide okunaklı isim yerine ham anahtar görünür
+// ("vape-cms.blocks.hero.label" gibi).
+import deDE from './snippet/de-DE.json';
+import enGB from './snippet/en-GB.json';
+
+Shopware.Locale.extend('de-DE', deDE);
+Shopware.Locale.extend('en-GB', enGB);
+
+// ==================================================
 // CMS Elements
 // ==================================================
 import './module/sw-cms/elements/vape-hero';
