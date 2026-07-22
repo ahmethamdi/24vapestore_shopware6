@@ -18,6 +18,10 @@ npm-debug.log*
 /custom/plugins/*/src/Resources/app/*/node_modules/
 /custom/plugins/*/src/Resources/public/
 /custom/apps/*/node_modules/
+# Not: theme.json dist/.../<tema>.js dosyasına referans verdiği için o stub
+# repoda kalır; sadece derleme ürünleri (sourcemap, vendor chunk) ignore edilir.
+*.js.map
+/custom/plugins/*/src/Resources/app/storefront/dist/storefront/js/**/vendors-*.js
 
 # Local tooling
 /.php-cs-fixer.cache
