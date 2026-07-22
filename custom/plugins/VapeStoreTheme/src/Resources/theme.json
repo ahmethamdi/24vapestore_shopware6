@@ -54,6 +54,12 @@
           "de-DE": "Medien",
           "en-GB": "Media"
         }
+      },
+      "header": {
+        "label": {
+          "de-DE": "Header",
+          "en-GB": "Header"
+        }
       }
     },
     "fields": {
@@ -296,6 +302,106 @@
         "editable": false,
         "order": 600,
         "block": "eCommerce"
+      },
+      "vape-usp-1-text": {
+        "type": "text",
+        "value": "Versandkostenfrei ab 50 €",
+        "editable": true,
+        "block": "header",
+        "order": 110,
+        "label": {
+          "de-DE": "USP 1 — Text",
+          "en-GB": "USP 1 — text"
+        }
+      },
+      "vape-usp-1-icon": {
+        "type": "text",
+        "value": "truck",
+        "editable": true,
+        "block": "header",
+        "order": 115,
+        "label": {
+          "de-DE": "USP 1 — Icon",
+          "en-GB": "USP 1 — icon"
+        },
+        "helpText": {
+          "de-DE": "Shopware-Iconname, z. B. truck, lock, checkmark-circle",
+          "en-GB": "Shopware icon name, e.g. truck, lock, checkmark-circle"
+        }
+      },
+      "vape-usp-2-text": {
+        "type": "text",
+        "value": "Versand am selben Tag bis 15 Uhr",
+        "editable": true,
+        "block": "header",
+        "order": 120,
+        "label": {
+          "de-DE": "USP 2 — Text",
+          "en-GB": "USP 2 — text"
+        }
+      },
+      "vape-usp-2-icon": {
+        "type": "text",
+        "value": "clock",
+        "editable": true,
+        "block": "header",
+        "order": 125,
+        "label": {
+          "de-DE": "USP 2 — Icon",
+          "en-GB": "USP 2 — icon"
+        },
+        "helpText": {
+          "de-DE": "Shopware-Iconname, z. B. truck, lock, checkmark-circle",
+          "en-GB": "Shopware icon name, e.g. truck, lock, checkmark-circle"
+        }
+      },
+      "vape-usp-3-text": {
+        "type": "text",
+        "value": "Nur für Erwachsene ab 18 Jahren",
+        "editable": true,
+        "block": "header",
+        "order": 130,
+        "label": {
+          "de-DE": "USP 3 — Text",
+          "en-GB": "USP 3 — text"
+        }
+      },
+      "vape-usp-3-icon": {
+        "type": "text",
+        "value": "lock",
+        "editable": true,
+        "block": "header",
+        "order": 135,
+        "label": {
+          "de-DE": "USP 3 — Icon",
+          "en-GB": "USP 3 — icon"
+        },
+        "helpText": {
+          "de-DE": "Shopware-Iconname, z. B. truck, lock, checkmark-circle",
+          "en-GB": "Shopware icon name, e.g. truck, lock, checkmark-circle"
+        }
+      },
+      "vape-usp-bar-bg": {
+        "type": "color",
+        "value": "#18181d",
+        "editable": true,
+        "block": "header",
+        "order": 200,
+        "label": {
+          "de-DE": "USP-Leiste Hintergrund",
+          "en-GB": "USP bar background"
+        }
+      },
+      "vape-usp-bar-color": {
+        "type": "color",
+        "value": "#ffffff",
+        "editable": true,
+        "block": "header",
+        "order": 210,
+        "label": {
+          "de-DE": "USP-Leiste Textfarbe",
+          "en-GB": "USP bar text colour"
+        }
       }
     }
   }

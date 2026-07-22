@@ -12,7 +12,7 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 @import 'abstract/tokens';
 
 // 2. Layout parçaları
-// @import 'layout/header';
+@import 'layout/header';
 // @import 'layout/footer';
 
 // 3. Component'ler (CMS element'leri dahil)

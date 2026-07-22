@@ -1,0 +1,38 @@
+{#
+    Üst şerit — USP mesajları + dil/para birimi.
+
+    USP metinleri ve ikonları theme.json'dan gelir, yönetici admin'den
+    (Themes → 24VapeStore Theme → Header) düzenleyebilir. Metni boş bırakılan
+    USP hiç render edilmez.
+
+    Mobilde yatay kaydırılabilir; core'un `d-none d-lg-block` kısıtı
+    kaldırıldı çünkü USP'ler mobilde de değerli.
+#}
+{% sw_extends '@Storefront/storefront/layout/header/top-bar.html.twig' %}
+
+{% block layout_header_top_bar %}
+    {% set usps = [
+        { text: theme_config('vape-usp-1-text'), icon: theme_config('vape-usp-1-icon') },
+        { text: theme_config('vape-usp-2-text'), icon: theme_config('vape-usp-2-icon') },
+        { text: theme_config('vape-usp-3-text'), icon: theme_config('vape-usp-3-icon') }
+    ]|filter(usp => usp.text is not empty) %}
+
+    {% if usps|length > 0 %}
+        <div class="vape-usp-bar">
+            <div class="container">
+                <ul class="vape-usp-bar__list">
+                    {% for usp in usps %}
+                        <li class="vape-usp-bar__item">
+                            {% if usp.icon %}
+                                {% sw_icon usp.icon style { size: 'xs', pack: 'solid' } %}
+                            {% endif %}
+                            <span>{{ usp.text }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
