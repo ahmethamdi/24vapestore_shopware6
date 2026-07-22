@@ -1,0 +1,1179 @@
+{
+ "prefilled-pod-kits": {
+  "label": "Prefilled Pod Kits",
+  "children": {
+   "elf-bar-elfa": {
+    "label": "Elf Bar ELFA",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "leerpods": {
+      "label": "Leerpods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "nikotinfrei": {
+      "label": "Nikotinfrei",
+      "children": {}
+     }
+    }
+   },
+   "gzuz": {
+    "label": "Gzuz",
+    "children": {}
+   },
+   "haftbar": {
+    "label": "Haftbar",
+    "children": {}
+   },
+   "cubar": {
+    "label": "Cubar",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "elfbar-elfa-turbo-pro": {
+    "label": "Elfbar Elfa Turbo Pro",
+    "children": {}
+   },
+   "elfbar-mate500": {
+    "label": "ELFBAR Mate500",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "lost-mary-wavi": {
+    "label": "Lost Mary WAVI",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "set": {
+      "label": "Set",
+      "children": {}
+     }
+    }
+   },
+   "elf-bar-elfa-turbo": {
+    "label": "Elf Bar ELFA Turbo",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "leerpods": {
+      "label": "Leerpods",
+      "children": {}
+     }
+    }
+   },
+   "salt-pro": {
+    "label": "Salt PRO",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     }
+    }
+   },
+   "elfbar-elfa-master": {
+    "label": "ELFBAR ELFA Master",
+    "children": {}
+   },
+   "al-fakher-mini-3k": {
+    "label": "Al Fakher Mini 3K",
+    "children": {
+     "sets": {
+      "label": "Sets",
+      "children": {}
+     }
+    }
+   },
+   "al-fakher-crown-switch": {
+    "label": "Al Fakher Crown Switch",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "basisgeraet": {
+      "label": "Basisgerät",
+      "children": {}
+     }
+    }
+   },
+   "187-strassenbande": {
+    "label": "187 Strassenbande",
+    "children": {}
+   },
+   "salt-cristallite-pro": {
+    "label": "Salt Cristallite Pro",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "salt-plus": {
+    "label": "Salt PLUS",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "dojo-blast-x-by-vaporesso": {
+    "label": "Dojo Blast x by Vaporesso",
+    "children": {
+     "device": {
+      "label": "Device",
+      "children": {}
+     },
+     "pod": {
+      "label": "Pod",
+      "children": {}
+     },
+     "set": {
+      "label": "Set",
+      "children": {}
+     }
+    }
+   },
+   "flerbar": {
+    "label": "Flerbar",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "hqd-cirak-2": {
+    "label": "HQD Cirak 2",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "refillable-pods": {
+      "label": "Refillable Pods",
+      "children": {}
+     },
+     "1-1-gratisaktion": {
+      "label": "1+1 Gratisaktion",
+      "children": {}
+     }
+    }
+   },
+   "lafume-aurora": {
+    "label": "Lafume Aurora",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "lafume-nova": {
+    "label": "Lafume Nova",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     }
+    }
+   },
+   "lost-mary-tappo": {
+    "label": "Lost Mary Tappo",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "luva-co": {
+    "label": "Luva & Co",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     }
+    }
+   },
+   "mevol-x-pro": {
+    "label": "Mevol X Pro",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     }
+    }
+   },
+   "mypaff-pro": {
+    "label": "MyPaff Pro",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "randm-tornado": {
+    "label": "RandM Tornado",
+    "children": {}
+   },
+   "revoltage-beam": {
+    "label": "Revoltage Beam",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "salt-nexione": {
+    "label": "Salt NEXIONE",
+    "children": {
+     "basisgeraet": {
+      "label": "Basisgerät",
+      "children": {}
+     }
+    }
+   },
+   "salt-lite": {
+    "label": "SALT+ Lite",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "salt-slim": {
+    "label": "SALT Slim",
+    "children": {
+     "akku": {
+      "label": "Akku",
+      "children": {}
+     },
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     }
+    }
+   },
+   "ske-crystal-plus-max": {
+    "label": "SKE Crystal Plus (Max)",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "crystal-plus-max-akkutraeger": {
+      "label": "Crystal Plus MAX Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "ske-crystal-pro-800": {
+    "label": "SKE Crystal Pro 800",
+    "children": {}
+   },
+   "vozol": {
+    "label": "Vozol",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   }
+  }
+ },
+ "liquids": {
+  "label": "Liquids",
+  "children": {
+   "elfliq-by-elf-bar": {
+    "label": "Elfliq by Elf Bar",
+    "children": {}
+   },
+   "al-fakher-liquid": {
+    "label": "Al Fakher Liquid",
+    "children": {}
+   },
+   "lost-mary": {
+    "label": "Lost Mary",
+    "children": {}
+   },
+   "maryliq": {
+    "label": "Maryliq",
+    "children": {}
+   },
+   "vozol": {
+    "label": "Vozol",
+    "children": {}
+   },
+   "lafume": {
+    "label": "LaFume",
+    "children": {}
+   },
+   "salt-liquid": {
+    "label": "SALT Liquid",
+    "children": {}
+   },
+   "sinq": {
+    "label": "SINQ",
+    "children": {}
+   },
+   "by-candy": {
+    "label": "By Candy",
+    "children": {}
+   },
+   "shades-liquids": {
+    "label": "Shades Liquids",
+    "children": {}
+   },
+   "os-liquid": {
+    "label": "Os Liquid",
+    "children": {}
+   },
+   "owliq": {
+    "label": "OWLIQ",
+    "children": {}
+   },
+   "adalya": {
+    "label": "Adalya",
+    "children": {}
+   },
+   "bar-juice": {
+    "label": "Bar Juice",
+    "children": {}
+   },
+   "liq-it": {
+    "label": "LIQ IT",
+    "children": {}
+   },
+   "flerbar": {
+    "label": "Flerbar",
+    "children": {}
+   },
+   "salt-cristallite": {
+    "label": "SALT Cristallite",
+    "children": {}
+   },
+   "randm-liquid": {
+    "label": "RandM Liquid",
+    "children": {}
+   },
+   "ske-crystal": {
+    "label": "SKE Crystal",
+    "children": {}
+   }
+  }
+ },
+ "einweg-vapes": {
+  "label": "Einweg Vapes",
+  "children": {
+   "elfbar-600": {
+    "label": "ELFBAR 600",
+    "children": {}
+   },
+   "salt-cristallite-einweg": {
+    "label": "Salt Cristallite Einweg",
+    "children": {}
+   },
+   "lost-mary-800": {
+    "label": "Lost Mary 800",
+    "children": {}
+   },
+   "elfbar-800": {
+    "label": "ELFBAR 800",
+    "children": {
+     "elfbar-800-mit-nikotin": {
+      "label": "Elfbar 800 mit Nikotin",
+      "children": {}
+     },
+     "elfbar-800-nikotinfrei": {
+      "label": "Elfbar 800 Nikotinfrei",
+      "children": {}
+     }
+    }
+   },
+   "lost-mary-qm600": {
+    "label": "Lost Mary QM600",
+    "children": {}
+   },
+   "lost-mary-bm600": {
+    "label": "Lost Mary BM600",
+    "children": {}
+   },
+   "elfbar-cr600": {
+    "label": "ELFBAR CR600",
+    "children": {}
+   },
+   "elfbar-t600": {
+    "label": "ELFBAR T600",
+    "children": {}
+   },
+   "flerbar-m-nikotinfrei": {
+    "label": "Flerbar M Nikotinfrei",
+    "children": {}
+   },
+   "salt-switch": {
+    "label": "SALT Switch",
+    "children": {}
+   },
+   "flerbar-m": {
+    "label": "Flerbar M",
+    "children": {}
+   },
+   "crystal-bar": {
+    "label": "Crystal Bar",
+    "children": {}
+   },
+   "al-fakher-600": {
+    "label": "Al Fakher 600",
+    "children": {}
+   },
+   "hqd-surv": {
+    "label": "HQD Surv",
+    "children": {}
+   }
+  }
+ },
+ "big-puffs": {
+  "label": "Big Puffs",
+  "children": {
+   "lost-mary-nera-max": {
+    "label": "Lost Mary Nera Max",
+    "children": {
+     "nera-fullview-device": {
+      "label": "Nera Fullview Device",
+      "children": {}
+     },
+     "nera-max-pods": {
+      "label": "Nera Max Pods",
+      "children": {}
+     },
+     "sets": {
+      "label": "Sets",
+      "children": {}
+     }
+    }
+   },
+   "ivg-air": {
+    "label": "IVG Air",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "pods-multi-editions": {
+      "label": "Pods - Multi-Editions",
+      "children": {}
+     },
+     "pods-single-flavours": {
+      "label": "Pods - Single-Flavours",
+      "children": {}
+     }
+    }
+   },
+   "starbuzz": {
+    "label": "StarBuzz",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "arcbear": {
+    "label": "Arcbear",
+    "children": {
+     "starter-set": {
+      "label": "Starter-Set",
+      "children": {}
+     },
+     "nachfuell-set": {
+      "label": "Nachfüll-Set",
+      "children": {}
+     }
+    }
+   },
+   "fumot-digital-box-pod-kit": {
+    "label": "Fumot Digital Box Pod Kit",
+    "children": {}
+   },
+   "al-fakher-15k-pro-max": {
+    "label": "Al Fakher 15K Pro Max",
+    "children": {
+     "pods-mtl": {
+      "label": "Pods MTL",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "pods-dtl": {
+      "label": "Pods DTL",
+      "children": {}
+     }
+    }
+   },
+   "ivg-pro-15k": {
+    "label": "IVG Pro 15K",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     }
+    }
+   },
+   "mevol-s": {
+    "label": "Mevol S",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "refill-container": {
+      "label": "Refill Container",
+      "children": {}
+     }
+    }
+   },
+   "elfbar-max": {
+    "label": "ELFBAR MAX",
+    "children": {
+     "sets": {
+      "label": "Sets",
+      "children": {}
+     }
+    }
+   },
+   "kiarababa": {
+    "label": "KIARABABA",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "vozol-vista-plug": {
+    "label": "Vozol Vista Plug",
+    "children": {
+     "akku": {
+      "label": "Akku",
+      "children": {}
+     },
+     "ez-pods": {
+      "label": "EZ Pods",
+      "children": {}
+     }
+    }
+   },
+   "al-fakher-cubic": {
+    "label": "Al Fakher Cubic",
+    "children": {
+     "al-fakher-cubic-pod": {
+      "label": "Al Fakher Cubic Pod",
+      "children": {}
+     },
+     "al-fakher-cubic-akkutraeger": {
+      "label": "Al Fakher Cubic Akkuträger",
+      "children": {}
+     }
+    }
+   },
+   "mevol-s7000": {
+    "label": "Mevol S7000",
+    "children": {
+     "komplettset": {
+      "label": "Komplettset",
+      "children": {}
+     }
+    }
+   },
+   "fumot-tornado-box": {
+    "label": "Fumot Tornado Box",
+    "children": {}
+   },
+   "al-fakher-hypermax-advanced": {
+    "label": "Al Fakher Hypermax Advanced",
+    "children": {
+     "sets": {
+      "label": "Sets",
+      "children": {}
+     },
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     }
+    }
+   },
+   "pixl-max-20k": {
+    "label": "PIXL MAX 20K",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     }
+    }
+   },
+   "ske-crystal-edge-10k": {
+    "label": "SKE Crystal Edge 10K",
+    "children": {
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     },
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "sets": {
+      "label": "Sets",
+      "children": {}
+     }
+    }
+   },
+   "hayati-pro-max-15k": {
+    "label": "Hayati Pro Max+ 15K",
+    "children": {
+     "pods": {
+      "label": "Pods",
+      "children": {}
+     },
+     "akkutraeger": {
+      "label": "Akkuträger",
+      "children": {}
+     }
+    }
+   }
+  }
+ },
+ "e-zigaretten-zubehoer": {
+  "label": "E-Zigaretten & Zubehör",
+  "children": {
+   "e-zigaretten-pod-kits": {
+    "label": "E-Zigaretten & Pod Kits",
+    "children": {
+     "elfbar-elfx": {
+      "label": "ELFBAR ELFX",
+      "children": {}
+     },
+     "elfbar-elfx-mini": {
+      "label": "ELFBAR ELFX MINI",
+      "children": {}
+     },
+     "fumot-digital-box": {
+      "label": "Fumot Digital Box",
+      "children": {}
+     },
+     "randm-tornado-box-pod-kit": {
+      "label": "RandM Tornado Box Pod Kit",
+      "children": {}
+     },
+     "elfbar-elfx-2": {
+      "label": "ELFBAR ELFX 2",
+      "children": {}
+     },
+     "elfbar-elfx-pro": {
+      "label": "ELFBAR ELFX Pro",
+      "children": {}
+     },
+     "elfbar-elfx-mega": {
+      "label": "ELFBAR ELFX Mega",
+      "children": {
+       "pod-kit": {
+        "label": "Pod Kit",
+        "children": {}
+       }
+      }
+     },
+     "geekvape": {
+      "label": "GeekVape",
+      "children": {
+       "geekvape-wenax-q-ultra": {
+        "label": "GeekVape Wenax Q Ultra",
+        "children": {}
+       },
+       "geek-vape-sonder-q2": {
+        "label": "Geek Vape Sonder Q2",
+        "children": {}
+       },
+       "geekvape-digi-q-vista": {
+        "label": "GeekVape Digi Q Vista",
+        "children": {}
+       }
+      }
+     },
+     "luvx-velora": {
+      "label": "LUVX Velora",
+      "children": {}
+     },
+     "oxva": {
+      "label": "OXVA",
+      "children": {
+       "oxva-xlim-sq-pro": {
+        "label": "OXVA Xlim SQ Pro",
+        "children": {}
+       }
+      }
+     },
+     "salt-pro": {
+      "label": "SALT Pro",
+      "children": {
+       "device": {
+        "label": "Device",
+        "children": {}
+       },
+       "vorgefuellte-pods": {
+        "label": "Vorgefüllte Pods",
+        "children": {}
+       },
+       "salt-bundle": {
+        "label": "Salt Bundle",
+        "children": {}
+       }
+      }
+     },
+     "revoltage-beam": {
+      "label": "Revoltage Beam",
+      "children": {}
+     },
+     "uwell": {
+      "label": "Uwell",
+      "children": {
+       "uwell-caliburn-g3-pro": {
+        "label": "Uwell Caliburn G3 Pro",
+        "children": {}
+       },
+       "uwell-caliburn-g4-pro": {
+        "label": "Uwell Caliburn G4 Pro",
+        "children": {}
+       },
+       "uwell-caliburn-g3": {
+        "label": "Uwell Caliburn G3",
+        "children": {}
+       },
+       "uwell-caliburn-gk2": {
+        "label": "Uwell Caliburn GK2",
+        "children": {}
+       }
+      }
+     },
+     "vaporesso": {
+      "label": "Vaporesso",
+      "children": {
+       "vaporesso-xros-5": {
+        "label": "Vaporesso XROS 5",
+        "children": {}
+       },
+       "vaporesso-eco-nano-plus": {
+        "label": "Vaporesso Eco Nano Plus",
+        "children": {}
+       },
+       "vaporesso-luxe-q2": {
+        "label": "Vaporesso Luxe Q2",
+        "children": {}
+       }
+      }
+     },
+     "voom": {
+      "label": "Voom",
+      "children": {
+       "voom": {
+        "label": "Voom",
+        "children": {}
+       }
+      }
+     },
+     "voopoo": {
+      "label": "VooPoo",
+      "children": {
+       "voopoo-argus-g2": {
+        "label": "VooPoo Argus G2",
+        "children": {}
+       }
+      }
+     },
+     "vozol": {
+      "label": "Vozol",
+      "children": {
+       "vozol-ace-go": {
+        "label": "Vozol Ace Go",
+        "children": {}
+       }
+      }
+     }
+    }
+   },
+   "pods-und-coils": {
+    "label": "Pods und Coils",
+    "children": {
+     "elfbar-elfx": {
+      "label": "ELFBAR ELFX",
+      "children": {}
+     },
+     "elfbar-elfx-mega": {
+      "label": "ELFBAR ELFX MEGA",
+      "children": {}
+     },
+     "elfbar-elfx-v2.0": {
+      "label": "ELFBAR ELFX V2.0",
+      "children": {}
+     },
+     "aspire": {
+      "label": "Aspire",
+      "children": {}
+     },
+     "geekvape": {
+      "label": "GeekVape",
+      "children": {
+       "geekvape-q-pods": {
+        "label": "GeekVape Q Pods",
+        "children": {}
+       }
+      }
+     },
+     "golisi": {
+      "label": "Golisi",
+      "children": {}
+     },
+     "luvx-velora-leerpod": {
+      "label": "LUVX Velora Leerpod",
+      "children": {}
+     },
+     "uwell": {
+      "label": "Uwell",
+      "children": {
+       "uwell-caliburn-g4-pods": {
+        "label": "Uwell Caliburn G4 Pods",
+        "children": {}
+       },
+       "caliburn-g-coils": {
+        "label": "Caliburn G Coils",
+        "children": {}
+       },
+       "caliburn-g3-pods": {
+        "label": "Caliburn G3 Pods",
+        "children": {}
+       }
+      }
+     },
+     "vaporesso": {
+      "label": "Vaporesso",
+      "children": {
+       "xros-corex-3.0": {
+        "label": "XROS COREX 3.0",
+        "children": {}
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "aromen": {
+  "label": "Aromen",
+  "children": {
+   "revoltage-flex": {
+    "label": "Revoltage FLEX",
+    "children": {}
+   },
+   "revoltage-aroma": {
+    "label": "Revoltage Aroma",
+    "children": {}
+   }
+  }
+ },
+ "shisha": {
+  "label": "Shisha",
+  "children": {
+   "shisha-zubehoer": {
+    "label": "Shisha Zubehör",
+    "children": {
+     "shisha-kohle": {
+      "label": "Shisha Kohle",
+      "children": {
+       "blackcoco": {
+        "label": "BLACKCOCO",
+        "children": {}
+       },
+       "cocopearls": {
+        "label": "COCOPEARLS",
+        "children": {}
+       }
+      }
+     }
+    }
+   },
+   "200g": {
+    "label": "200g",
+    "children": {
+     "true-passion": {
+      "label": "True Passion",
+      "children": {}
+     },
+     "electro-smog": {
+      "label": "Electro Smog",
+      "children": {}
+     },
+     "revoshi": {
+      "label": "Revoshi",
+      "children": {}
+     },
+     "alwaha": {
+      "label": "AlWaha",
+      "children": {}
+     },
+     "bycandy": {
+      "label": "ByCandy",
+      "children": {}
+     },
+     "smoke-island": {
+      "label": "Smoke Island",
+      "children": {}
+     },
+     "social-smoke": {
+      "label": "Social Smoke",
+      "children": {}
+     },
+     "187-tobacco": {
+      "label": "187 Tobacco",
+      "children": {}
+     },
+     "7days": {
+      "label": "7Days",
+      "children": {}
+     },
+     "adalya": {
+      "label": "Adalya",
+      "children": {}
+     },
+     "holster": {
+      "label": "Holster",
+      "children": {}
+     },
+     "al-fakher": {
+      "label": "Al Fakher",
+      "children": {}
+     },
+     "almassiva": {
+      "label": "AlMassiva",
+      "children": {}
+     },
+     "aqua-mentha": {
+      "label": "Aqua Mentha",
+      "children": {}
+     },
+     "argileh": {
+      "label": "Argileh",
+      "children": {}
+     },
+     "chaos": {
+      "label": "Chaos",
+      "children": {}
+     },
+     "chillma": {
+      "label": "Chillma",
+      "children": {}
+     },
+     "dschinni": {
+      "label": "Dschinni",
+      "children": {}
+     },
+     "hookain": {
+      "label": "Hookain",
+      "children": {}
+     },
+     "maridan": {
+      "label": "Maridan",
+      "children": {}
+     },
+     "nameless": {
+      "label": "Nameless",
+      "children": {}
+     },
+     "os-tobacco": {
+      "label": "Os Tobacco",
+      "children": {}
+     },
+     "savu": {
+      "label": "Savu",
+      "children": {}
+     },
+     "shades": {
+      "label": "Shades",
+      "children": {}
+     },
+     "start-now": {
+      "label": "Start Now",
+      "children": {}
+     }
+    }
+   }
+  }
+ },
+ "raucherbedarf": {
+  "label": "Raucherbedarf",
+  "children": {
+   "feuerzeuge": {
+    "label": "Feuerzeuge",
+    "children": {
+     "clipper": {
+      "label": "Clipper",
+      "children": {}
+     },
+     "sonstige": {
+      "label": "Sonstige",
+      "children": {}
+     }
+    }
+   },
+   "sonstiger-bedarf": {
+    "label": "Sonstiger Bedarf",
+    "children": {}
+   },
+   "ocb": {
+    "label": "OCB",
+    "children": {}
+   },
+   "gizeh": {
+    "label": "Gizeh",
+    "children": {}
+   },
+   "aschenbecher": {
+    "label": "Aschenbecher",
+    "children": {}
+   },
+   "grinder": {
+    "label": "Grinder",
+    "children": {}
+   },
+   "tabakpfeifen": {
+    "label": "Tabakpfeifen",
+    "children": {}
+   },
+   "aromakarten": {
+    "label": "Aromakarten",
+    "children": {
+     "fuer-heets": {
+      "label": "für HEETS",
+      "children": {}
+     },
+     "fuer-tabak": {
+      "label": "für Tabak",
+      "children": {}
+     }
+    }
+   },
+   "aktivkohlefilter": {
+    "label": "Aktivkohlefilter",
+    "children": {}
+   }
+  }
+ },
+ "aktionen": {
+  "label": "Aktionen",
+  "children": {}
+ },
+ "salt-produkte": {
+  "label": "Salt Produkte",
+  "children": {}
+ },
+ "sale": {
+  "label": "SALE",
+  "children": {}
+ },
+ "outlet": {
+  "label": "Outlet",
+  "children": {}
+ }
+}
