@@ -1,0 +1,12 @@
+{#
+    Mobil offcanvas menü aksiyonları.
+
+    Masaüstünde para birimi seçici header'dan kaldırıldı (Almanya B2C,
+    tek para birimi). Tutarlılık için mobil offcanvas'ta da para birimini
+    kaldırıyoruz — aksi halde masaüstünde olmayan bir seçici mobilde
+    beliriyordu. Dil seçici korunuyor: çok dilli mağazada dil değiştirmek
+    mobilde meşru ve beklenen bir eylem.
+#}
+{% sw_extends '@Storefront/storefront/layout/navigation/offcanvas/navigation.html.twig' %}
+
+{% block layout_navigation_offcanvas_navigation_action_currency %}{% endblock %}

@@ -1,0 +1,17 @@
+{#
+    Header wrapper override.
+
+    Core `base_header_inner`'ı dar bir `.container` (Bootstrap ~1320px) ile
+    sarıyordu; bu yüzden hem USP şeridinin siyah zemini hem ana header satırı
+    dar bir kutuda sıkışıp geniş ekranlarda sağda kocaman boşluk bırakıyordu.
+
+    Burada `.container`'ı KALDIRIYORUZ. USP şeridi kendi tam-genişlik zeminini
+    çizer (siyah kenardan kenara), ana satır ise `.vape-header__inner` ile
+    tam genişlikte kenar paylarıyla hizalanır. İç hizalama artık SCSS'in işi,
+    core grid'inin değil.
+#}
+{% sw_extends '@Storefront/storefront/layout/header.html.twig' %}
+
+{% block base_header_inner %}
+    {% sw_include '@Storefront/storefront/layout/header/header.html.twig' %}
+{% endblock %}

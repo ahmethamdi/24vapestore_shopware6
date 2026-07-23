@@ -1,0 +1,78 @@
+{#
+    Mega menü — 1. seviye sütun başlıklarına yuvarlak kategori görseli ekler.
+
+    Neden: 277 kategorili bir ağaçta mega menü saf metin listesiydi; kullanıcı
+    aradığı dalı tararken hiçbir görsel çıpa bulamıyordu. Küçük yuvarlak görsel
+    (aboutyou.de deseni) tarama hızını belirgin artırıyor.
+
+    Görsel PHP tarafında çözülüyor — `vape_category_image(category, context.context)`:
+      1. Kategorinin kendi medyası (NavigationRoute zaten yüklüyor, ek sorgu yok)
+      2. Yoksa alt ağaçtaki bir ürünün kapak görseli (servis, cache'li)
+      3. Hiçbiri yoksa null → twig baş harf rozetine düşer
+    Servis: VapeStoreTheme\Twig\CategoryImageExtension
+
+    MİNİMAL OVERRIDE: yalnızca `layout_navbar_categories_item_link` bloğu eziliyor
+    ve yalnızca level == 0 için. Diğer tüm seviyeler ve özyineleme (recursion)
+    core'dan {{ parent() }} ile geliyor.
+
+    NOT: Bu template SADECE masaüstü mega menüsünde kullanılıyor
+    (layout/navbar/content.html.twig). Mobil offcanvas menü ayrı bir template
+    kullanıyor, dolayısıyla mobilde bir değişiklik olmuyor.
+
+    NOT: core'un `columnCount` mantığına (navigationMedia ? 3 : 4) dokunulmadı.
+    Değişkeni burada set etmek işe yaramazdı: core özyinelemeli include'u
+    `only` ile çağırıyor, dış kapsamdaki değişkenler içeri geçmiyor.
+#}
+{% sw_extends '@Storefront/storefront/layout/navbar/categories.html.twig' %}
+
+{% block layout_navbar_categories_item_link %}
+    {% if level == 0 %}
+        {% set catImage = vape_category_image(category, context.context) %}
+
+        {#
+            Görsel + ad birlikte tek bir başlık öğesi. Görsel tamamen dekoratif:
+            hemen yanındaki metin aynı bilgiyi zaten veriyor, bu yüzden
+            aria-hidden ve boş alt — ekran okuyucuda çift okuma olmasın diye.
+        #}
+        {% set headContent %}
+            <span class="vape-flyout-thumb" aria-hidden="true">
+                {% if catImage %}
+                    <img src="{{ catImage.url }}"
+                         alt=""
+                         loading="lazy"
+                         decoding="async"
+                         width="48"
+                         height="48">
+                {% else %}
+                    {# Görseli olmayan kategori — baş harf rozeti, boşluk kalmasın #}
+                    <span class="vape-flyout-thumb__fallback">{{ name|slice(0, 1)|upper }}</span>
+                {% endif %}
+            </span>
+            <span class="vape-flyout-head__text">{{ name }}</span>
+        {% endset %}
+
+        {#
+            Core, `folder` tipindeki kategorileri link DEĞİL <div> olarak
+            render eder (tıklanacak bir sayfası yok). Bu davranış korunuyor:
+            folder'da da görsel var ama href verilmiyor — aksi halde kullanıcı
+            hiçbir yere gitmeyen bir bağlantıya tıklamış olurdu.
+        #}
+        {% if category.type == 'folder' %}
+            <div class="nav-item nav-item-{{ id|raw }} nav-link nav-item-{{ id|raw }}-link navigation-flyout-link is-level-0 vape-flyout-head"
+                 title="{{ name }}">
+                {{ headContent }}
+            </div>
+        {% else %}
+            <a class="nav-item nav-item-{{ id|raw }} nav-link nav-item-{{ id|raw }}-link navigation-flyout-link is-level-0 vape-flyout-head"
+               href="{{ link }}"
+               {% if category.shouldOpenInNewTab %}target="_blank"
+               {% if category.linkType == 'external' %}rel="noopener noreferrer"{% endif %}
+                {% endif %}
+               title="{{ name }}">
+                {{ headContent }}
+            </a>
+        {% endif %}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

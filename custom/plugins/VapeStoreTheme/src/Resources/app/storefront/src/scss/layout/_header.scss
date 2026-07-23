@@ -22,19 +22,42 @@ ama dikey alan israf edilmez.
 $vape-usp-bar-bg: $vape-neutral-950 !default;
 $vape-usp-bar-color: $vape-neutral-white !default;
 
+// Zemin TAM GENİŞLİK, içerik container'da hizalı.
+// Önceden şeridin tamamı .container içindeydi: 1800px'te kesiliyor,
+// daha geniş ekranlarda sayfanın ortasında yüzen siyah bir dikdörtgen
+// gibi duruyordu. Artık siyah kenardan kenara gider, metin ise ana
+// satırdaki logo/arama ile aynı hizada başlar.
 .vape-usp-bar {
+    width: 100%;
     background-color: $vape-usp-bar-bg;
     color: $vape-usp-bar-color;
     font-size: $vape-text-xs;
     line-height: 1;
 
+    // İçerik ana header satırıyla (__inner) aynı kenar paylarında.
+    // Siyah zemin tam genişlik, metin ise logo/arama ile aynı hizada.
+    > .container {
+        max-width: none;
+        width: 100%;
+        padding-left: $vape-container-pad-mobile;
+        padding-right: $vape-container-pad-mobile;
+
+        @media (min-width: 992px) {
+            padding-left: $vape-container-pad-desktop;
+            padding-right: $vape-container-pad-desktop;
+        }
+    }
+
     &__list {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: $vape-space-6;
+        gap: $vape-space-8;
+        // Yükseklik dikey padding yerine sabit token'dan gelir —
+        // sticky hesabı (JS header yüksekliği) böylece öngörülebilir kalır.
+        height: $vape-usp-bar-height;
         margin: 0;
-        padding: $vape-space-3 0;
+        padding: 0;
         list-style: none;
 
         // Mobilde sığmayanlar yatay kaydırılır — gizlemek yerine
@@ -48,27 +71,45 @@ $vape-usp-bar-color: $vape-neutral-white !default;
 
         @media (max-width: 767px) {
             justify-content: flex-start;
-            gap: $vape-space-4;
+            gap: $vape-space-5;
         }
     }
 
     &__item {
+        position: relative;
         display: inline-flex;
         align-items: center;
         gap: $vape-space-2;
         white-space: nowrap;
         font-weight: $vape-weight-medium;
 
+        // Öğeler arası ince dikey ayırıcı — gap'in tam ortasına oturur.
+        // Son öğeden sonra çizgi yok, yoksa şerit yarım kalmış görünür.
+        &:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: calc(#{$vape-space-8} / -2);
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: $vape-space-3;
+            background-color: $vape-usp-divider;
+
+            @media (max-width: 767px) {
+                right: calc(#{$vape-space-5} / -2);
+            }
+        }
+
         .icon {
             flex: 0 0 auto;
+            // İkon kırmızı vurgu: koyu zeminde metinden ayrışır ve
+            // şeride marka rengi taşır. Metin beyaz kalır (kontrast).
+            color: $vape-usp-icon-color;
 
             svg {
-                width: 14px;
-                height: 14px;
+                width: $vape-usp-icon-size;
+                height: $vape-usp-icon-size;
             }
-
-            // Şeritteki ikonlar metinle aynı renk
-            color: currentColor;
         }
     }
 }
@@ -77,39 +118,75 @@ $vape-usp-bar-color: $vape-neutral-white !default;
 // 2. ANA SATIR
 // ==================================================
 
+// Sayfa başındayken ince çizgi, sticky'ye geçince gölge (bkz. bölüm 5).
+// İkisi aynı anda olmaz: çizgi "sayfanın parçası", gölge "üstte yüzüyor"
+// anlamına gelir. Geçiş yumuşak olsun diye box-shadow animasyonlu.
 .header-main {
     background-color: $vape-bg-page;
     border-bottom: 1px solid $vape-border-subtle;
+    transition: box-shadow $vape-duration-base $vape-ease-out,
+                border-color $vape-duration-base $vape-ease-out;
 }
 
 .vape-header {
+    // Tam genişlik sarmalayıcı — core'un dar .container'ına bağımlı değil.
+    // İçerik sayfanın tamamını kenar paylarıyla kullanır.
+    &__inner {
+        width: 100%;
+        padding-left: $vape-container-pad-mobile;
+        padding-right: $vape-container-pad-mobile;
+
+        @media (min-width: 992px) {
+            padding-left: $vape-container-pad-desktop;
+            padding-right: $vape-container-pad-desktop;
+        }
+    }
+
+    // Üç bölge: SOL (arama) · ORTA (logo) · SAĞ (aksiyon).
+    // Logonun gerçekten ortalanması için sol ve sağ EŞİT esneklikte
+    // (flex: 1 1 0) — logo flex: 0 0 auto ile tam merkezde sabit kalır.
     &__row {
         display: flex;
         align-items: center;
         gap: $vape-space-4;
-        padding: $vape-space-4 0;
+        padding: $vape-header-row-pad-y 0;
+        transition: padding $vape-duration-base $vape-ease-out;
 
         @media (min-width: 992px) {
-            gap: $vape-space-8;
-            padding: $vape-space-5 0;
+            gap: $vape-space-6;
+            padding: $vape-header-row-pad-y-desktop 0;
         }
+    }
+
+    // Sol bölge: arama (masaüstü) / burger (mobil)
+    &__left {
+        display: flex;
+        align-items: center;
+        gap: $vape-space-3;
+        flex: 1 1 0;
+        min-width: 0;
     }
 
     &__burger {
         flex: 0 0 auto;
     }
 
+    // Orta bölge: logo. flex: 0 0 auto → merkezde sabit, sol/sağ eşit
+    // esnedikçe tam ortada kalır.
     &__logo {
         flex: 0 0 auto;
+        display: flex;
+        justify-content: center;
 
         // Core logo sarmalayıcısını sıfırla
         .header-logo-main {
             margin: 0;
             padding: 0;
-            max-width: 150px;
+            max-width: 132px;
+            transition: max-width $vape-duration-base $vape-ease-out;
 
             @media (min-width: 992px) {
-                max-width: 200px;
+                max-width: $vape-header-logo-max;
             }
         }
 
@@ -120,10 +197,28 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         }
     }
 
+    // ---------- arama kutusu ----------
+    //
+    // Yeniden yazıldı. Önceki hali üç sorunluydu:
+    //   1. Dolgusuz (şeffaf/beyaz) → beyaz zeminde kutu görünmüyordu,
+    //      kullanıcı tıklanabilir bir alan olduğunu anlamıyordu
+    //   2. Pill formundaydı → tasarım sisteminin kendi kuralını bozuyor
+    //      (_tokens.scss bölüm 5: pill YALNIZCA rozet ve slider oku için)
+    //   3. İkon sağda ve griydi → arama ikonu solda beklenir; sağdaki gri
+    //      ikon "temizle" butonuyla karışıyordu
+    //
+    // Yeni hal: hafif gri dolgu + 8px radius + solda ikon, odakta beyaza
+    // dönüp kırmızı kenarlık ve odak halkası alır.
     &__search {
+        // Sol bölgeyi doldurur; logoya kadar geniş uzanabilir ama okunur
+        // bir üst sınırla durur (çok geniş arama alanı garip görünür).
         flex: 1 1 auto;
         min-width: 0;
-        max-width: 560px;
+        max-width: $vape-search-max-width;
+
+        @media (min-width: 992px) {
+            width: 100%;
+        }
 
         // Core, arama formunu `.collapse` içine sarar ve mobilde bir butonla
         // açtırır. Masaüstünde arama her zaman görünmeli — collapse'ı burada
@@ -155,38 +250,133 @@ $vape-usp-bar-color: $vape-neutral-white !default;
             }
         }
 
+        // Bootstrap input-group yerine konumlandırma kullanıyoruz: ikon
+        // input'un ÜSTÜNE biniyor, yan yana durmuyor. Böylece tek bir
+        // bütünleşik kutu görünümü çıkıyor.
+        .input-group {
+            position: relative;
+            display: block;
+        }
+
         .header-search-input {
-            height: 46px;
-            border-radius: $vape-radius-pill;
-            border-color: $vape-border-strong;
-            padding-left: $vape-space-5;
+            height: $vape-search-height-mobile;
+            width: 100%;
+            // Sol: arama ikonu, sağ: mobil kapatma butonu için yer
+            padding-left: $vape-space-12;
+            padding-right: $vape-space-12;
+            border: 1px solid $vape-search-border;
+            border-radius: $vape-search-radius;
+            background-color: $vape-search-bg;
+            color: $vape-text-primary;
             font-size: $vape-text-sm;
+            transition: background-color $vape-duration-fast $vape-ease-out,
+                        border-color $vape-duration-fast $vape-ease-out,
+                        box-shadow $vape-duration-fast $vape-ease-out,
+                        height $vape-duration-base $vape-ease-out;
+
+            @media (min-width: 992px) {
+                height: $vape-search-height;
+            }
+
+            &::placeholder {
+                color: $vape-search-placeholder;
+                // Firefox placeholder'ı varsayılan olarak soluklaştırır;
+                // rengi zaten token'dan geliyor, ek şeffaflık kontrastı düşürür.
+                opacity: 1;
+            }
+
+            &:hover {
+                border-color: $vape-search-border-hover;
+            }
 
             &:focus {
+                background-color: $vape-search-bg-focus;
                 border-color: $vape-brand;
                 box-shadow: $vape-focus-ring;
+                outline: 0;
+            }
+
+            // WebKit'in kendi "x" düğmesi bizim kapatma butonumuzla çakışıyor
+            &::-webkit-search-cancel-button {
+                display: none;
             }
         }
 
         .header-search-btn {
-            border-radius: $vape-radius-pill;
-            color: $vape-text-muted;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: $vape-space-12;
+            height: $vape-search-height-mobile;
+            padding: 0;
+            border: 0;
+            border-radius: $vape-search-radius 0 0 $vape-search-radius;
+            background: transparent;
+            color: $vape-search-icon-color;
+            transition: color $vape-duration-fast $vape-ease-out,
+                        height $vape-duration-base $vape-ease-out;
+
+            @media (min-width: 992px) {
+                height: $vape-search-height;
+            }
+
+            .icon svg {
+                width: $vape-search-icon-size;
+                height: $vape-search-icon-size;
+            }
 
             &:hover {
-                color: $vape-brand;
+                color: $vape-text-primary;
+            }
+
+            &:focus-visible {
+                outline: 2px solid $vape-brand;
+                outline-offset: -2px;
+            }
+        }
+
+        // Input odaktayken ikon da markaya döner — kutu tek parça hissi verir
+        &:focus-within .header-search-btn {
+            color: $vape-brand;
+        }
+
+        // Core'un mobil kapatma butonu; masaüstünde collapse zaten açık
+        .header-close-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 2;
+            width: $vape-space-12;
+            height: $vape-search-height-mobile;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: $vape-search-icon-color;
+
+            @media (min-width: 992px) {
+                display: none;
             }
         }
     }
 
+    // Sağ bölge: aksiyonlar. Sol bölgeyle EŞİT esneklikte (flex: 1 1 0)
+    // ki logo tam ortada kalsın; içerik sağa yaslanır.
     &__actions {
         display: flex;
         align-items: center;
+        justify-content: flex-end;
         gap: $vape-space-1;
-        margin-left: auto;
-        flex: 0 0 auto;
+        flex: 1 1 0;
+        min-width: 0;
 
+        // Geniş ekranda da dar tutuluyor: ikonlar TEK BİR GRUP olarak
+        // okunmalı. 12px'te birbirinden kopuk üç ayrı öğe gibi duruyorlardı.
         @media (min-width: 1200px) {
-            gap: $vape-space-3;
+            gap: $vape-space-2;
         }
     }
 
@@ -201,7 +391,7 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 2px;
+        gap: $vape-space-1;
         min-width: 44px;      // dokunmatik hedef boyutu (WCAG 2.2)
         min-height: 44px;
         padding: $vape-space-1 $vape-space-2;
@@ -209,11 +399,17 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         border-radius: $vape-radius-sm;
         background: transparent;
         color: $vape-text-primary;
-        transition: color $vape-duration-fast $vape-ease-out;
+        transition: color $vape-duration-fast $vape-ease-out,
+                    background-color $vape-duration-fast $vape-ease-out;
 
+        // Hover'da KIRMIZI YOK — bilinçli.
+        // Sepet artık tek kırmızı dolgulu eleman; her ikonu hover'da
+        // kırmızıya çevirmek o vurguyu tüketir. Bunun yerine nötr bir
+        // hover zemini: geri bildirim var, hiyerarşi bozulmuyor.
         &:hover,
         &:focus {
-            color: $vape-brand;
+            background-color: $vape-bg-raised;
+            color: $vape-text-heading;
         }
 
         &:focus-visible {
@@ -222,8 +418,8 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         }
 
         .icon svg {
-            width: 22px;
-            height: 22px;
+            width: $vape-header-icon-size;
+            height: $vape-header-icon-size;
         }
     }
 
@@ -234,10 +430,16 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         line-height: 1;
     }
 
-    // Sepet: ikon + tutar yan yana, sayaç rozeti ikonun köşesinde
+    // ---------- Sepet ----------
+    //
+    // Kırmızı dolgulu kutu KALDIRILDI (kullanıcı: "iğrenç"). Sepet artık
+    // diğer aksiyon ikonlarıyla aynı sade dilde: şeffaf zemin, ikon + tutar
+    // yan yana, nötr hover. Vurgu yalnızca sayaç rozetinde (kaç ürün var)
+    // — ürün olunca kırmızı nokta belirir, o da anlamlı bir işaret.
     &__icon-btn--cart {
         flex-direction: row;
         gap: $vape-space-2;
+        padding: $vape-space-1 $vape-space-2;
 
         .header-cart-icon {
             position: relative;
@@ -255,20 +457,22 @@ $vape-usp-bar-color: $vape-neutral-white !default;
             }
         }
 
+        // Sayaç rozeti: kırmızı nokta, beyaz rakam — ikonun köşesinde.
+        // Header'daki tek kırmızı vurgu ve gerçekten bilgi taşıyor.
         .header-cart-badge,
         .badge {
             position: absolute;
-            top: -6px;
-            right: -8px;
-            min-width: 18px;
-            height: 18px;
-            padding: 0 5px;
+            top: $vape-header-badge-offset;
+            right: $vape-header-badge-offset;
+            min-width: $vape-header-badge-size;
+            height: $vape-header-badge-size;
+            padding: 0 $vape-space-1;
             border-radius: $vape-radius-pill;
             background-color: $vape-brand;
             color: $vape-text-inverse;
             font-size: $vape-text-2xs;
             font-weight: $vape-weight-bold;
-            line-height: 18px;
+            line-height: $vape-header-badge-size;
             text-align: center;
         }
     }
@@ -281,6 +485,10 @@ $vape-usp-bar-color: $vape-neutral-white !default;
 .nav-main {
     background-color: $vape-neutral-950;
     border-bottom: 0;
+    // Üstte çok ince açık çizgi: beyaz header ile siyah menü arasındaki
+    // geçişi keskin bir kesme yerine kenarlı bir katman gibi gösterir.
+    // Siyah üstünde nötr token işe yaramaz, beyaz-alfa gerekiyor.
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .main-navigation-menu {
@@ -303,13 +511,18 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     }
 }
 
-// Menü şeridi container'dan biraz taşabilsin — 12 kategori dar ekranda
-// container sınırına sıkışıyor. Kaydırma yine mümkün ama daha az gerekli.
+// Kategori menüsü de header ana satırıyla AYNI kenar payında hizalanır —
+// logo/arama full-width olduğu için nav da tam genişlik olmalı, yoksa
+// menü linkleri header içeriğinden içeride başlar ve hiza kayar.
 .nav-main .container {
-    @media (max-width: 1399px) {
-        max-width: 100%;
-        padding-left: $vape-space-3;
-        padding-right: $vape-space-3;
+    max-width: none;
+    width: 100%;
+    padding-left: $vape-container-pad-mobile;
+    padding-right: $vape-container-pad-mobile;
+
+    @media (min-width: 992px) {
+        padding-left: $vape-container-pad-desktop;
+        padding-right: $vape-container-pad-desktop;
     }
 }
 
@@ -324,7 +537,10 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     white-space: nowrap;
     transition: color $vape-duration-fast $vape-ease-out;
 
-    @media (min-width: 1400px) {
+    // Eşik 1400px → 1200px. Ölçüldüğünde 12 kategori 1200px'te 14px ile
+    // sığıyor; 1400px beklemek laptop genişliklerinde menüyü gereksiz
+    // yere 12px'te bırakıyordu (okunabilirlik kaybı).
+    @media (min-width: 1200px) {
         padding: $vape-space-4 $vape-space-3 !important;
         font-size: $vape-text-sm;
     }
@@ -459,7 +675,9 @@ $vape-usp-bar-color: $vape-neutral-white !default;
 
 .navigation-flyout-categories {
     &.is-level-0 {
-        row-gap: $vape-space-5;
+        // Görsel eklendikten sonra satırlar birbirine değiyordu; 24px
+        // yuvarlak görsellerin nefes almasına yetiyor.
+        row-gap: $vape-space-6;
     }
 }
 
@@ -504,14 +722,110 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     row-gap: $vape-space-4;
 }
 
+// ⚠️ Core bu sınıfı her satırın İLK sütunu HARİÇ tüm sütunlara veriyor
+// (`loop.index0 % columnCount != 0`). Dolayısıyla soldaki sütun dolgusuz,
+// diğerleri 20px dolgulu kalıyordu — sütunlar hizasız görünüyordu.
+// Dolguyu sıfırlıyoruz; sütun aralığı zaten Bootstrap grid gutter'ından geliyor.
 .navigation-flyout-col {
-    padding-left: $vape-space-5;
+    padding-left: 0;
 }
 
 // "Show all …" bağlantısı — menünün en üstünde, belirgin
 .navigation-flyout .is-level-0 ~ .navigation-flyout-link,
 .navigation-flyout-categories-headline {
     font-weight: $vape-weight-semibold;
+}
+
+// ---------- Mega menü sütun başlığı: yuvarlak görsel + ad ----------
+//
+// Kategori adının yanında küçük yuvarlak bir görsel. Görsel kaynağı
+// PHP tarafında çözülüyor (CategoryImageExtension): önce kategorinin
+// kendi medyası, yoksa alt ağaçtaki bir ürünün kapağı, o da yoksa null.
+// null durumunda twig baş harf rozetine düşüyor — böylece 277 kategorinin
+// hepsinde tutarlı bir görsel ritim oluşuyor, boşluk kalmıyor.
+//
+// `display: flex !important` gerekiyor: `.navigation-flyout-link.is-level-0`
+// kuralı `display: block` veriyor ve özgüllüğü daha yüksek.
+.vape-flyout-head {
+    display: flex !important;
+    align-items: center;
+    gap: $vape-flyout-thumb-gap;
+    margin-bottom: $vape-flyout-head-gap;
+    padding-bottom: $vape-space-2;
+    border-bottom: 1px solid $vape-border-subtle;
+    color: $vape-text-heading;
+    font-size: $vape-text-sm;
+    font-weight: $vape-weight-bold;
+    line-height: $vape-leading-snug;
+
+    &__text {
+        // Uzun tek kelimelik marka adları sütunu taşırmasın
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    &:hover,
+    &:focus {
+        color: $vape-brand;
+
+        .vape-flyout-thumb {
+            border-color: $vape-flyout-thumb-ring-hover;
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid $vape-brand;
+        outline-offset: 2px;
+    }
+}
+
+.vape-flyout-thumb {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $vape-flyout-thumb-size-sm;
+    height: $vape-flyout-thumb-size-sm;
+    border: 1px solid $vape-flyout-thumb-ring;
+    border-radius: $vape-radius-pill;
+    background-color: $vape-flyout-thumb-bg;
+    // Yuvarlak maskeyi görsele uygular
+    overflow: hidden;
+    transition: border-color $vape-duration-fast $vape-ease-out;
+
+    @media (min-width: 1200px) {
+        width: $vape-flyout-thumb-size;
+        height: $vape-flyout-thumb-size;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        // Ürün kapakları genelde beyaz zeminli ve kenarları dolu;
+        // içeriden 4px boşluk daireye sıkışmış görünmelerini engelliyor.
+        padding: $vape-space-1;
+        // `cover` yerine `contain`: ürün/logo kırpılmamalı
+        object-fit: contain;
+    }
+
+    // Görseli olmayan kategori — baş harf rozeti
+    &__fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background-color: $vape-flyout-fallback-bg;
+        color: $vape-flyout-fallback-fg;
+        font-size: $vape-text-md;
+        font-weight: $vape-weight-bold;
+        line-height: 1;
+        text-transform: uppercase;
+
+        @media (min-width: 1200px) {
+            font-size: $vape-text-lg;
+        }
+    }
 }
 
 // ==================================================
@@ -537,19 +851,25 @@ body.is--header-sticky {
 
     .header-main {
         top: 0;
+        // Çizgi → gölge takası: sticky'de header artık içeriğin ÜSTÜNDE
+        // yüzüyor, gölge bunu anlatır. Çizgi kalsaydı ikisi birden olurdu.
+        border-bottom-color: transparent;
         box-shadow: $vape-shadow-sm;
 
         // Sticky'de daha ince
         .vape-header__row {
-            padding: $vape-space-2 0;
+            padding: $vape-header-row-pad-y-sticky 0;
         }
 
         .vape-header__logo .header-logo-main {
-            max-width: 130px;
+            max-width: $vape-header-logo-max-sticky;
         }
 
-        .vape-header__search .header-search-input {
-            height: 40px;
+        .vape-header__search {
+            .header-search-input,
+            .header-search-btn {
+                height: $vape-search-height-sticky;
+            }
         }
     }
 
@@ -559,11 +879,44 @@ body.is--header-sticky {
     }
 
     .nav-main {
-        top: var(--vape-header-height, 68px);
-        box-shadow: $vape-shadow-sm;
+        // Sabit token. JS'in ölçtüğü `--vape-header-height` değişkenine
+        // GÜVENMİYORUZ: sticky küçülmesi bir CSS geçişi olduğu için ölçüm
+        // animasyon ortasında yapılıp fazla büyük çıkabiliyor ve header ile
+        // nav arasında koyu bir boşluk bırakıyordu. Sabit değer bu yarışı
+        // ortadan kaldırır. (JS yalnızca spacer yüksekliği için ölçmeye
+        // devam eder; oradaki küçük hata görünmez, boşluk yaratmaz.)
+        top: $vape-header-sticky-height;
+        // Header'dan daha güçlü gölge: menü şeridi en altta duran
+        // katman, altındaki içerikten net ayrılmalı.
+        box-shadow: $vape-shadow-md;
 
         @media (max-width: 991px) {
             display: none;   // mobilde menü zaten offcanvas
         }
+    }
+}
+
+// ==================================================
+// 6. HAREKET AZALTMA (WCAG 2.3.3 — Animation from Interactions)
+//
+// Sticky geçişinde logo, arama kutusu ve satır dolgusu aynı anda
+// yeniden boyutlanıyor. Vestibüler duyarlılığı olan kullanıcılar için
+// bu rahatsız edici olabilir; işletim sistemi ayarı açıksa geçişleri
+// tamamen kaldırıyoruz. Son durum aynı, sadece anında oluyor.
+// ==================================================
+
+@media (prefers-reduced-motion: reduce) {
+    .header-main,
+    .vape-header__row,
+    .vape-header__logo .header-logo-main,
+    .vape-header__search .header-search-input,
+    .vape-header__search .header-search-btn,
+    .vape-header__icon-btn,
+    .vape-header__icon-btn--cart,
+    .vape-flyout-thumb,
+    .main-navigation-link,
+    .main-navigation-link::after,
+    .navigation-flyout-link {
+        transition: none;
     }
 }

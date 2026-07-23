@@ -14,6 +14,35 @@
             <tag name="shopware.cms.data_resolver"/>
         </service>
 
+        <!--
+            Mega menü kategori görseli.
+
+            Kategorinin kendi medyası yoksa, alt ağacındaki bir ürünün kapak
+            görseline düşer. Tüm kategoriler TEK sorguda çözülür ve sonuç
+            `cache.object` havuzunda tag'li olarak saklanır.
+        -->
+        <service id="VapeStoreTheme\Service\CategoryImageResolver">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="media.repository"/>
+            <!-- cache.object: tag destekli havuz, Shopware'in kendi invalidator'ı da bunu kullanır -->
+            <argument type="service" id="cache.object"/>
+        </service>
+
+        <!-- `vape_category_image()` / `vape_category_images()` twig fonksiyonları -->
+        <service id="VapeStoreTheme\Twig\CategoryImageExtension">
+            <argument type="service" id="VapeStoreTheme\Service\CategoryImageResolver"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <!--
+            Ürünler yeniden indexlendiğinde kategori görsel cache'ini düşürür.
+            Yalnızca kendi tag'imizi temizler, core cache'lerine dokunmaz.
+        -->
+        <service id="VapeStoreTheme\Subscriber\CategoryImageCacheInvalidationSubscriber">
+            <argument type="service" id="Shopware\Core\Framework\Adapter\Cache\CacheInvalidator"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <!-- Tek seferlik kurulum komutu: kategori ağacını içe aktarır -->
         <service id="VapeStoreTheme\Command\ImportCategoriesCommand">
             <argument type="service" id="category.repository"/>

@@ -61,6 +61,15 @@ export default class VapeStickyHeaderPlugin extends Plugin {
         // değil (0px kutu, threshold 0 ile hemen "kesişmiyor" sayılabilir).
         // Kaydırma eşiği kadar yükseklik veriyoruz: bu blok tamamen ekrandan
         // çıktığında sticky devreye girer.
+        //
+        // ÖNEMLİ: sentinel akıştan ÇIKARILIR (position: absolute), yoksa
+        // header'ın üstünde 10px'lik gerçek bir boşluk bırakıyordu (USP
+        // şeridinin üstünde görünen boşluk buydu). Absolute + top:0 ile
+        // sayfanın en tepesine biner, yer kaplamaz, observer yine çalışır.
+        this.sentinel.style.position = 'absolute';
+        this.sentinel.style.top = '0';
+        this.sentinel.style.left = '0';
+        this.sentinel.style.width = '100%';
         this.sentinel.style.height = `${this.options.offset}px`;
         this.sentinel.style.pointerEvents = 'none';
 
@@ -95,8 +104,14 @@ export default class VapeStickyHeaderPlugin extends Plugin {
         document.body.classList.toggle(this.options.stickyClass, sticky);
 
         if (sticky) {
-            this._applyHeights();
+            // Yükseklik ölçümü bir sonraki frame'e ertelenir. `stickyClass`
+            // eklenince header küçülüyor (logo/arama/padding daralıyor) ama
+            // bu boyut değişikliği HENÜZ reflow olmadan offsetHeight okunursa
+            // ESKİ (kalın) yükseklik ölçülür. O zaman nav `top` değeri fazla
+            // büyük olur ve header ile nav arasında boşluk kalır (koyu bant).
+            // rAF ile küçülme uygulandıktan SONRA ölçüyoruz.
             this.spacer.style.display = 'block';
+            window.requestAnimationFrame(() => this._applyHeights());
         } else {
             this.spacer.style.display = 'none';
         }
@@ -107,6 +122,11 @@ export default class VapeStickyHeaderPlugin extends Plugin {
      * yer tutucu için CSS değişkenine yazar.
      */
     _applyHeights() {
+        // Küçülmenin bittiğinden emin olmak için sticky değilse ölçme.
+        if (!this.isSticky) {
+            return;
+        }
+
         const headerHeight = this.header.offsetHeight;
         const navHeight = this.nav ? this.nav.offsetHeight : 0;
 

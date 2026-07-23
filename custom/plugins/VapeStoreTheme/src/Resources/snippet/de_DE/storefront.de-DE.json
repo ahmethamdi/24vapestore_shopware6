@@ -1,4 +1,7 @@
 {
+  "header": {
+    "searchPlaceholder": "Liquids, Pods, Geräte suchen …"
+  },
   "vapeHero": {
     "slideNavigation": "Slide-Navigation",
     "goToSlide": "Zu Slide %number% springen",

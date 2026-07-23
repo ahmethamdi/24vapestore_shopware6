@@ -232,7 +232,9 @@ $vape-header-utility-height: 32px;   // üst yardımcı bar
 $vape-header-main-height:    64px;   // ana bar (sticky, z-index 100)
 $vape-header-nav-height:     52px;   // kategori nav
 $vape-header-total-height:   148px;
-$vape-usp-bar-height:        40px;   // header'ın ALTINDA, siyah zemin
+// USP şeridi: 40px → 36px. Şerit yalnızca tek satır 12px metin taşıyor;
+// 40px'te header'ın toplam yüksekliğinde gereksiz yer kaplıyordu.
+$vape-usp-bar-height:        36px;   // header'ın ALTINDA, siyah zemin
 
 // Ürün grid — ölçülen kolon sayıları (viewport → kolon)
 // 1920→4, 1440→4, 1024→3, 768→2, 375→2
@@ -254,3 +256,72 @@ $vape-badge-radius:      0 $vape-radius-sm $vape-radius-sm 0;
 // Buton — ölçüldü
 $vape-btn-height:    48px;
 $vape-btn-padding-x: $vape-space-6;  // 24px
+
+// ==================================================
+// 10. HEADER
+//
+// Header'a özel token'lar. Header üç katman (USP şeridi / ana satır /
+// kategori navigasyonu) + sticky varyantı taşıyor; her ölçü üç yerde
+// (mobil, masaüstü, sticky) tekrar ettiği için hepsi burada isimlendirildi.
+// Böylece sticky'de "arama 40px olsun" gibi bir karar tek yerden değişir.
+// ==================================================
+
+// ---------- Arama kutusu ----------
+// Ana satırdaki en kritik eleman. Yükseklik sepet butonuyla eşitlenir
+// ($vape-search-height = sepet CTA yüksekliği) — ikisi aynı optik satırda durur.
+$vape-search-height:        48px;   // ≥992px
+$vape-search-height-sticky: 40px;   // sticky'de incelir
+$vape-search-height-mobile: 44px;   // dokunmatik hedef minimumu (WCAG 2.2)
+
+// Beyaz zeminde beyaz input görünmez. Hafif gri dolgu kutuyu "tıklanabilir
+// alan" olarak okutur, odakta beyaza dönüp öne çıkar.
+$vape-search-bg:            $vape-neutral-50;
+$vape-search-bg-focus:      $vape-neutral-white;
+$vape-search-border:        $vape-neutral-200;
+$vape-search-border-hover:  $vape-neutral-300;
+$vape-search-radius:        $vape-radius-md;
+$vape-search-icon-size:     20px;
+$vape-search-icon-color:    $vape-neutral-500;
+$vape-search-max-width:     640px;
+$vape-search-placeholder:   $vape-neutral-500;
+
+// ---------- USP şeridi ----------
+// Koyu zemin üzerinde ayırıcı; nötr token'lar açık zemin için
+// tasarlandığından burada beyaz-alfa kullanılıyor.
+$vape-usp-divider:    rgba(255, 255, 255, 0.16);
+$vape-usp-icon-size:  14px;
+$vape-usp-icon-color: $vape-red-400;   // koyu zeminde 500 yerine 400 — kontrast
+
+// ---------- Ana satır ----------
+$vape-header-row-pad-y:         $vape-space-4;
+$vape-header-row-pad-y-desktop: $vape-space-5;
+$vape-header-row-pad-y-sticky:  $vape-space-2;
+$vape-header-logo-max:          176px;
+$vape-header-logo-max-sticky:   128px;
+$vape-header-icon-size:         22px;
+$vape-header-badge-size:        18px;
+$vape-header-badge-offset:      -6px;
+
+// Sticky moddaki header'ın SABİT yüksekliği. Sticky'de header ve nav ayrı
+// ayrı `position:fixed`; nav bu değer kadar aşağıdan başlar. Önceden JS
+// header'ı ölçüp `--vape-header-height`'e yazıyordu, ama sticky küçülmesi
+// (logo/arama daralması) bir CSS geçişi (200ms) olduğu için ölçüm çoğu
+// zaman ANİMASYON ORTASINDA yapılıyor ve fazla büyük çıkıyordu → nav çok
+// aşağıda başlıyor, header ile nav arasında koyu bir boşluk kalıyordu.
+// Değer sabit olduğu için ölçüm/animasyon yarışı ortadan kalkar.
+// Hesap: dikey padding (8px×2) + aksiyon ikonu min-height (44px) +
+// alt kenarlık ≈ 61px; gerçek tarayıcı ölçümü 67px (icon-btn iç boşluğu
+// dahil). Ölçülen değer alındı.
+$vape-header-sticky-height:     67px;
+
+// ---------- Mega menü kategori görseli ----------
+$vape-flyout-thumb-size:      48px;   // ≥1200px
+$vape-flyout-thumb-size-sm:   40px;
+$vape-flyout-thumb-gap:       $vape-space-3;
+$vape-flyout-thumb-bg:        $vape-neutral-100;
+$vape-flyout-thumb-ring:      $vape-neutral-200;
+$vape-flyout-thumb-ring-hover: $vape-brand;
+// Görseli olmayan kategoride baş harf rozeti — koyu daire, beyaz harf
+$vape-flyout-fallback-bg:     $vape-neutral-900;
+$vape-flyout-fallback-fg:     $vape-neutral-white;
+$vape-flyout-head-gap:        $vape-space-3;

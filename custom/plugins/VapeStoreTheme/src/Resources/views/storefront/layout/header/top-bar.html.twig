@@ -1,5 +1,5 @@
 {#
-    Üst şerit — USP mesajları + dil/para birimi.
+    Üst şerit — yalnızca USP mesajları.
 
     USP metinleri ve ikonları theme.json'dan gelir, yönetici admin'den
     (Themes → 24VapeStore Theme → Header) düzenleyebilir. Metni boş bırakılan
@@ -34,5 +34,21 @@
         </div>
     {% endif %}
 
-    {{ parent() }}
+    {#
+        Core'un yardımcı şeridi (dil seçici + para birimi seçici) BİLİNÇLİ
+        OLARAK kaldırıldı — burada {{ parent() }} çağrılmıyor.
+
+        Gerekçe:
+          • Mağaza Almanya B2C, tek para birimi (EUR). Para birimi seçici
+            tek seçenekli bir açılır menü olarak render oluyordu; kullanıcıya
+            hiçbir karar sunmadan tıklama hedefi ve görsel gürültü ekliyordu.
+          • Şerit ~40px dikey alan tüketiyor ve neredeyse boş render oluyordu;
+            bu alan header'ın ilk ekranda kapladığı yerin dörtte biri kadar.
+          • Tek dilli mağazada dil seçici de aynı durumda.
+
+        İleride ikinci bir dil veya para birimi eklenirse: seçici footer'a
+        taşınmalı (aboutyou.de de böyle yapıyor), header'a geri konmamalı.
+        Core bloğu ezildiği için ek bir şey silmek gerekmez — burada
+        {{ parent() }} eklemek yeterli.
+    #}
 {% endblock %}

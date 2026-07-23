@@ -1,109 +1,122 @@
 {#
     Header ana satırı.
 
-    Core'un Bootstrap grid düzeni yerine flexbox kullanıyoruz — logo / arama /
-    aksiyonlar arasındaki oranı daha net kontrol edebilmek ve aramaya
-    hak ettiği genişliği verebilmek için.
+    Düzen (2026-07-23, kullanıcı isteği): ARAMA sol · LOGO orta · AKSİYON sağ.
+    Logo görsel merkez, arama en solda, hesap/sepet sağda. Simetrik.
 
-    Core'un `layout_header_actions` bloğundaki widget include'ları korunuyor;
-    yalnızca sarmalayıcı yapı ve sınıflar değişiyor. Böylece sepet/hesap/
-    istek listesi davranışı (offcanvas, live region, aria) core'dan gelmeye
-    devam ediyor.
+    Core'un Bootstrap grid düzeni yerine flexbox kullanıyoruz — üç bölgeyi
+    (sol/orta/sağ) net konumlandırmak için. Logonun gerçekten ortalanması
+    için sol ve sağ bölgeler EŞİT esneklikte (flex: 1) tutulur; logo
+    flex: 0 0 auto ile ortada sabit kalır.
+
+    `.vape-header__inner` kendi tam-genişlik sarmalayıcısıdır: core'un dar
+    `.container`'ına (Bootstrap ~1320px) bağımlı DEĞİL, sayfanın tamamını
+    kenar paylarıyla kullanır. Header'ın dar bir kutuda sıkışıp sağda kocaman
+    boşluk bırakması bu yüzden çözüldü.
+
+    Core'un widget include'ları (sepet/hesap/istek listesi) korunuyor;
+    yalnızca sarmalayıcı yapı ve sınıflar değişiyor.
 #}
 {% sw_extends '@Storefront/storefront/layout/header/header.html.twig' %}
 
 {% block layout_header_navigation %}
-    <div class="vape-header__row">
+    <div class="vape-header__inner">
+        <div class="vape-header__row">
 
-        {# ---------- mobil: menü butonu ---------- #}
-        {% block layout_header_navigation_toggle %}
-            <div class="vape-header__burger d-lg-none">
-                <button class="btn vape-header__icon-btn"
-                        type="button"
-                        data-off-canvas-menu="true"
-                        aria-label="{{ 'general.menuLink'|trans|striptags }}">
-                    {% sw_icon 'stack' %}
-                </button>
-            </div>
-        {% endblock %}
+            {# ========== SOL: mobil menü + arama ========== #}
+            <div class="vape-header__left">
 
-        {# ---------- logo ---------- #}
-        {% block layout_header_logo %}
-            <div class="vape-header__logo">
-                {% sw_include '@Storefront/storefront/layout/header/logo.html.twig' %}
-            </div>
-        {% endblock %}
-
-        {# ---------- arama ---------- #}
-        {% block layout_header_search %}
-            <div class="vape-header__search">
-                {% sw_include '@Storefront/storefront/layout/header/search.html.twig' %}
-            </div>
-        {% endblock %}
-
-        {# ---------- aksiyonlar ---------- #}
-        {% block layout_header_actions %}
-            <div class="vape-header__actions">
-
-                {% block layout_header_search_toggle %}
-                    <div class="vape-header__action d-lg-none">
-                        <button class="btn vape-header__icon-btn js-search-toggle-btn collapsed"
+                {# mobil: menü butonu #}
+                {% block layout_header_navigation_toggle %}
+                    <div class="vape-header__burger d-lg-none">
+                        <button class="btn vape-header__icon-btn"
                                 type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#searchCollapse"
-                                aria-expanded="false"
-                                aria-controls="searchCollapse"
-                                aria-label="{{ 'header.searchButton'|trans|striptags }}">
-                            {% sw_icon 'search' %}
+                                data-off-canvas-menu="true"
+                                aria-label="{{ 'general.menuLink'|trans|striptags }}">
+                            {% sw_icon 'stack' %}
                         </button>
                     </div>
                 {% endblock %}
 
-                {% if config('core.cart.wishlistEnabled') %}
-                    {% block layout_header_actions_wishlist %}
-                        <div class="vape-header__action">
-                            <a class="btn vape-header__icon-btn"
-                               href="{{ path('frontend.wishlist.page') }}"
-                               title="{{ 'header.wishlist'|trans|striptags }}"
-                               aria-labelledby="wishlist-basket-live-area">
-                                {% sw_include '@Storefront/storefront/layout/header/actions/wishlist-widget.html.twig' %}
-                                <span class="vape-header__icon-label d-none d-xl-inline">
-                                    {{ 'header.wishlist'|trans|striptags }}
-                                </span>
-                            </a>
+                {# arama — masaüstünde solda geniş #}
+                {% block layout_header_search %}
+                    <div class="vape-header__search">
+                        {% sw_include '@Storefront/storefront/layout/header/search.html.twig' %}
+                    </div>
+                {% endblock %}
+            </div>
+
+            {# ========== ORTA: logo ========== #}
+            {% block layout_header_logo %}
+                <div class="vape-header__logo">
+                    {% sw_include '@Storefront/storefront/layout/header/logo.html.twig' %}
+                </div>
+            {% endblock %}
+
+            {# ========== SAĞ: aksiyonlar ========== #}
+            {% block layout_header_actions %}
+                <div class="vape-header__actions">
+
+                    {% block layout_header_search_toggle %}
+                        <div class="vape-header__action d-lg-none">
+                            <button class="btn vape-header__icon-btn js-search-toggle-btn collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#searchCollapse"
+                                    aria-expanded="false"
+                                    aria-controls="searchCollapse"
+                                    aria-label="{{ 'header.searchButton'|trans|striptags }}">
+                                {% sw_icon 'search' %}
+                            </button>
                         </div>
                     {% endblock %}
-                {% endif %}
 
-                {% block layout_header_actions_account %}
-                    <div class="vape-header__action">
-                        <div class="account-menu">
-                            {% sw_include '@Storefront/storefront/layout/header/actions/account-widget.html.twig' %}
+                    {% if config('core.cart.wishlistEnabled') %}
+                        {% block layout_header_actions_wishlist %}
+                            <div class="vape-header__action">
+                                <a class="btn vape-header__icon-btn"
+                                   href="{{ path('frontend.wishlist.page') }}"
+                                   title="{{ 'header.wishlist'|trans|striptags }}"
+                                   aria-labelledby="wishlist-basket-live-area">
+                                    {% sw_include '@Storefront/storefront/layout/header/actions/wishlist-widget.html.twig' %}
+                                    <span class="vape-header__icon-label d-none d-xl-inline">
+                                        {{ 'header.wishlist'|trans|striptags }}
+                                    </span>
+                                </a>
+                            </div>
+                        {% endblock %}
+                    {% endif %}
+
+                    {% block layout_header_actions_account %}
+                        <div class="vape-header__action">
+                            <div class="account-menu">
+                                {% sw_include '@Storefront/storefront/layout/header/actions/account-widget.html.twig' %}
+                            </div>
                         </div>
-                    </div>
-                {% endblock %}
+                    {% endblock %}
 
-                {% set offcanvasCartOptions = { autoFocus: true } %}
+                    {% set offcanvasCartOptions = { autoFocus: true } %}
 
-                {% block layout_header_actions_cart %}
-                    <div class="vape-header__action">
-                        <div class="header-cart"
-                             data-off-canvas-cart="true"
-                             data-off-canvas-cart-options="{{ offcanvasCartOptions|json_encode }}">
-                            <a class="btn vape-header__icon-btn vape-header__icon-btn--cart"
-                               href="{{ path('frontend.checkout.cart.page') }}"
-                               data-cart-widget="true"
-                               title="{{ 'checkout.cartTitle'|trans|striptags }}"
-                               aria-labelledby="cart-widget-aria-label"
-                               aria-haspopup="dialog">
-                                {% sw_include '@Storefront/storefront/layout/header/actions/cart-widget.html.twig' %}
-                            </a>
+                    {% block layout_header_actions_cart %}
+                        <div class="vape-header__action">
+                            <div class="header-cart"
+                                 data-off-canvas-cart="true"
+                                 data-off-canvas-cart-options="{{ offcanvasCartOptions|json_encode }}">
+                                <a class="btn vape-header__icon-btn vape-header__icon-btn--cart"
+                                   href="{{ path('frontend.checkout.cart.page') }}"
+                                   data-cart-widget="true"
+                                   title="{{ 'checkout.cartTitle'|trans|striptags }}"
+                                   aria-labelledby="cart-widget-aria-label"
+                                   aria-haspopup="dialog">
+                                    {% sw_include '@Storefront/storefront/layout/header/actions/cart-widget.html.twig' %}
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                {% endblock %}
+                    {% endblock %}
 
-            </div>
-        {% endblock %}
+                </div>
+            {% endblock %}
 
+        </div>
     </div>
 {% endblock %}
