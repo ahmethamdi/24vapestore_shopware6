@@ -1,0 +1,191 @@
+{#
+    Sekmeli ürün ızgarası — config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model
+       sw-*  (legacy)  → v-model:value  (veya :value + @update:value)
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+    ⚠️ tabs dizi olduğu için v-model doğrudan kullanılamaz;
+       her alan @update ile updateTab() çağırır.
+
+    İki sekme: İçerik (opsiyonel başlık) · Sekmeler (etiket → ürün ızgarası)
+#}
+{% block vape_cms_element_product_tabs_config %}
+<div class="vape-cms-el-config-product-tabs">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-product-tabs"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('vape-cms.elements.productTabs.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="tabs" :active-tab="active">
+                {{ $t('vape-cms.elements.productTabs.config.tab.tabs') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== İÇERİK — opsiyonel başlık ==================== #}
+            <sw-container v-if="active === 'content'">
+
+                {% block vape_cms_element_product_tabs_config_text %}
+                    <div class="vape-cms-el-config-product-tabs__field">
+                        <mt-text-field
+                            v-model="element.config.headline.value"
+                            :label="$t('vape-cms.elements.productTabs.config.headline')"
+                            :placeholder="$t('vape-cms.elements.productTabs.config.headlinePlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-product-tabs__field">
+                        <mt-text-field
+                            v-model="element.config.subline.value"
+                            :label="$t('vape-cms.elements.productTabs.config.subline')"
+                            :placeholder="$t('vape-cms.elements.productTabs.config.sublinePlaceholder')"
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== SEKMELER ==================== #}
+            <div v-if="active === 'tabs'" class="vape-cms-el-config-product-tabs__list">
+
+                {% block vape_cms_element_product_tabs_config_tabs_hint %}
+                    <mt-banner variant="info">
+                        {{ $t('vape-cms.elements.productTabs.config.tabsHint') }}
+                    </mt-banner>
+                {% endblock %}
+
+                {% block vape_cms_element_product_tabs_config_tabs_empty %}
+                    <mt-banner v-if="!tabs.length" variant="attention">
+                        {{ $t('vape-cms.elements.productTabs.config.tabsEmptyHint') }}
+                    </mt-banner>
+                {% endblock %}
+
+                {% block vape_cms_element_product_tabs_config_tabs %}
+                    <div
+                        v-for="(tab, index) in tabs"
+                        :key="index"
+                        class="vape-cms-el-config-product-tabs__item"
+                    >
+                        <div class="vape-cms-el-config-product-tabs__item-head">
+                            <span class="vape-cms-el-config-product-tabs__item-title">
+                                {{ tabLabel(tab, index) }}
+                            </span>
+
+                            <div class="vape-cms-el-config-product-tabs__item-actions">
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === 0"
+                                    @click="onMoveTab(index, -1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-left" size="12px" />
+                                </mt-button>
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === tabs.length - 1"
+                                    @click="onMoveTab(index, 1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-right" size="12px" />
+                                </mt-button>
+                                <mt-button
+                                    variant="critical"
+                                    size="small"
+                                    @click="onRemoveTab(index)"
+                                >
+                                    <mt-icon name="regular-trash" size="12px" />
+                                </mt-button>
+                            </div>
+                        </div>
+
+                        {# --- sekme etiketi --- #}
+                        <div class="vape-cms-el-config-product-tabs__field">
+                            <mt-text-field
+                                :model-value="tab.label"
+                                :label="$t('vape-cms.elements.productTabs.config.tabLabel')"
+                                :placeholder="$t('vape-cms.elements.productTabs.config.tabLabelPlaceholder')"
+                                @update:model-value="updateTab(index, { label: $event })"
+                            />
+                        </div>
+
+                        {# --- ürün kaynağı modu --- #}
+                        <div class="vape-cms-el-config-product-tabs__field">
+                            <mt-select
+                                :model-value="tab.productSource || 'static'"
+                                :options="productSourceOptions"
+                                :label="$t('vape-cms.elements.productTabs.config.tabSource')"
+                                :help-text="$t('vape-cms.elements.productTabs.config.tabSourceHelp')"
+                                @update:model-value="onTabSourceChange($event, index)"
+                            />
+                        </div>
+
+                        {# --- static: elle ürün seçimi (ID dizisi) --- #}
+                        <div
+                            v-if="(tab.productSource || 'static') === 'static'"
+                            class="vape-cms-el-config-product-tabs__field"
+                        >
+                            <sw-entity-multi-id-select
+                                :value="tab.products || []"
+                                :repository="productRepository"
+                                :criteria="productCriteria"
+                                :label="$t('vape-cms.elements.productTabs.config.tabProducts')"
+                                :placeholder="$t('vape-cms.elements.productTabs.config.tabProductsPlaceholder')"
+                                @update:value="onTabProductsChange($event, index)"
+                            />
+                        </div>
+
+                        {# --- stream: dinamik akış --- #}
+                        <div
+                            v-if="tab.productSource === 'stream'"
+                            class="vape-cms-el-config-product-tabs__field"
+                        >
+                            <sw-entity-single-select
+                                :value="tab.productStreamId"
+                                entity="product_stream"
+                                :criteria="productStreamCriteria"
+                                :label="$t('vape-cms.elements.productTabs.config.tabStream')"
+                                :placeholder="$t('vape-cms.elements.productTabs.config.tabStreamPlaceholder')"
+                                show-clearable-button
+                                @update:value="onTabStreamChange($event, index)"
+                            />
+                        </div>
+
+                        {# --- ürün sayısı (yalnızca stream için) --- #}
+                        <div
+                            v-if="tab.productSource === 'stream'"
+                            class="vape-cms-el-config-product-tabs__field"
+                        >
+                            <mt-number-field
+                                :model-value="tab.limit"
+                                :label="$t('vape-cms.elements.productTabs.config.tabLimit')"
+                                :help-text="$t('vape-cms.elements.productTabs.config.tabLimitHelp')"
+                                :min="1"
+                                :max="24"
+                                @update:model-value="onTabLimitChange($event, index)"
+                            />
+                        </div>
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_product_tabs_config_tabs_add %}
+                    <button
+                        type="button"
+                        class="vape-cms-el-config-product-tabs__add"
+                        @click="onAddTab"
+                    >
+                        <mt-icon name="regular-plus-circle" size="14px" />
+                        {{ $t('vape-cms.elements.productTabs.config.addTab') }}
+                    </button>
+                {% endblock %}
+
+            </div>
+
+        </template>
+    </sw-tabs>
+</div>
+{% endblock %}

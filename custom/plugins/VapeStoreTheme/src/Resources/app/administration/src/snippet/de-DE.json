@@ -171,6 +171,39 @@
           "showArrows": "Navigationspfeile anzeigen"
         }
       },
+      "productTabs": {
+        "label": "Produkt-Tabs (Raster)",
+        "placeholder": {
+          "tab": "Tab",
+          "storefrontNote": "Die Produkte dieses Tabs werden im Storefront als Raster angezeigt (Auswahl/Stream wird nicht im Editor aufgelöst)."
+        },
+        "config": {
+          "tab": {
+            "content": "Überschrift",
+            "tabs": "Tabs"
+          },
+          "headline": "Überschrift",
+          "headlinePlaceholder": "z. B. Unsere Highlights",
+          "subline": "Unterzeile",
+          "sublinePlaceholder": "Optionale zweite Zeile",
+          "tabsHint": "Jeder Tab zeigt ein eigenes Produkt-Raster. Beim Klick auf einen Tab wechselt das Raster darunter. 2–4 Tabs empfohlen.",
+          "tabsEmptyHint": "Noch keine Tabs. Klicke auf „Tab hinzufügen“, um den ersten Tab zu erstellen.",
+          "tabItem": "Tab",
+          "addTab": "Tab hinzufügen",
+          "tabLabel": "Tab-Text",
+          "tabLabelPlaceholder": "z. B. Bestseller",
+          "tabSource": "Produktquelle",
+          "tabSourceHelp": "Woher die Produkte dieses Tabs stammen.",
+          "sourceStatic": "Manuelle Auswahl",
+          "sourceStream": "Produkt-Stream (dynamisch)",
+          "tabProducts": "Produkte",
+          "tabProductsPlaceholder": "Produkte suchen und hinzufügen",
+          "tabStream": "Produkt-Stream",
+          "tabStreamPlaceholder": "Produkt-Stream auswählen",
+          "tabLimit": "Anzahl der Produkte",
+          "tabLimitHelp": "Maximale Anzahl der aus dem Stream angezeigten Produkte (1–24)."
+        }
+      },
       "brandSlider": {
         "label": "Marken-Slider",
         "placeholder": {
@@ -355,6 +388,75 @@
           "endDate": "Countdown-Ziel",
           "endDateHelp": "Datum/Uhrzeit, bis zu dem heruntergezählt wird."
         }
+      },
+      "showcase": {
+        "label": "Schaufenster (Banner + Produkte)",
+        "placeholder": {
+          "title": "Banner-Überschrift eingeben",
+          "empty": "Noch keine Produkte gewählt. Wähle Produkte oder einen Produkt-Stream.",
+          "streamSelected": "Ein Produkt-Stream ist gewählt. Die Produkte werden im Storefront angezeigt.",
+          "streamEmpty": "Wähle einen Produkt-Stream, um das Raster zu füllen."
+        },
+        "config": {
+          "tab": {
+            "banner": "Banner",
+            "products": "Produkte"
+          },
+          "eyebrow": "Überzeile",
+          "eyebrowPlaceholder": "z. B. KAMPAGNE",
+          "title": "Banner-Überschrift",
+          "titlePlaceholder": "z. B. Bestseller im Fokus",
+          "text": "Banner-Text",
+          "textPlaceholder": "Kurzer Werbetext",
+          "ctaText": "Button-Text",
+          "ctaTextPlaceholder": "z. B. Alle ansehen",
+          "ctaUrl": "Button-Link",
+          "ctaUrlPlaceholder": "z. B. /angebote",
+          "newTab": "Link in neuem Tab öffnen",
+          "media": "Banner-Hintergrundbild",
+          "mediaHelp": "Optional. Ohne Bild wird die Hintergrundfarbe verwendet.",
+          "bgColor": "Banner-Hintergrundfarbe",
+          "bgColorHelp": "Als Basis und hinter dem Bild verwendet.",
+          "overlayOpacity": "Overlay-Verdunklung (%)",
+          "overlayOpacityHelp": "Verdunkelt das Bild, damit der Text lesbar bleibt.",
+          "source": "Produktquelle",
+          "sourceStatic": "Manuelle Auswahl",
+          "sourceStream": "Produkt-Stream (dynamisch)",
+          "products": "Produkte",
+          "productsPlaceholder": "Produkte suchen und hinzufügen",
+          "productsHelp": "Das Raster zeigt bis zu 4 Produkte (2x2).",
+          "productStream": "Produkt-Stream",
+          "productStreamPlaceholder": "Produkt-Stream wählen",
+          "limit": "Anzahl Produkte",
+          "limitHelp": "Maximale Anzahl im Raster (empfohlen 4).",
+          "streamHint": "Das Raster füllt sich dynamisch mit Produkten des gewählten Streams."
+        }
+      },
+      "bannerGrid": {
+        "label": "Banner-Grid",
+        "placeholder": {
+          "title": "Banner-Titel"
+        },
+        "config": {
+          "emptyHint": "Noch keine Banner. Klicke auf „Banner hinzufügen“, um das erste zu erstellen.",
+          "banner": "Banner",
+          "addBanner": "Banner hinzufügen",
+          "media": "Hintergrundbild",
+          "mediaEmpty": "Kein Bild",
+          "selectMedia": "Bild wählen",
+          "removeMedia": "Entfernen",
+          "eyebrow": "Überzeile",
+          "eyebrowPlaceholder": "z. B. NEU",
+          "title": "Titel",
+          "titlePlaceholder": "z. B. Einweg E-Zigaretten",
+          "text": "Untertext",
+          "textPlaceholder": "z. B. Sofort startklar, ohne Nachfüllen",
+          "ctaText": "Button-Text",
+          "ctaTextPlaceholder": "z. B. Jetzt entdecken",
+          "url": "Link",
+          "urlPlaceholder": "z. B. /einweg",
+          "urlHelp": "Das gesamte Banner ist klickbar. Leer lassen für ein Banner ohne Link."
+        }
       }
     },
     "blocks": {
@@ -373,6 +475,9 @@
       "productRail": {
         "label": "Produktleiste"
       },
+      "productTabs": {
+        "label": "Produkt-Tabs (Raster)"
+      },
       "brandSlider": {
         "label": "Marken-Slider"
       },
@@ -390,6 +495,12 @@
       },
       "deals": {
         "label": "Deals des Tages"
+      },
+      "showcase": {
+        "label": "Schaufenster (Banner + Produkte)"
+      },
+      "bannerGrid": {
+        "label": "Banner-Grid"
       }
     }
   }

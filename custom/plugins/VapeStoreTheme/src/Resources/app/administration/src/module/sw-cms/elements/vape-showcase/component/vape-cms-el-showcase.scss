@@ -1,0 +1,160 @@
+/*
+Vitrin — editör canvas önizlemesi.
+Storefront'a görsel olarak yakın kalır ki yönetici sonucu doğru görsün.
+Admin bundle ayrı derlendiği için tema token'ları burada YOK — sabit değerler
+storefront token'larıyla eşleşecek şekilde seçildi.
+*/
+.vape-cms-el-showcase {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+
+    @media (min-width: 992px) {
+        grid-template-columns: 40% 1fr;
+        gap: 16px;
+    }
+
+    // ==================== SOL BANNER ====================
+    &__banner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 220px;
+        padding: 24px;
+        overflow: hidden;
+        border-radius: 12px;
+        background-color: #18181d;
+        background-size: cover;
+        background-position: center;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+
+    &__banner-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        color: #ffffff;
+    }
+
+    &__eyebrow {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.15;
+        color: #ffffff;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.88);
+    }
+
+    &__cta {
+        align-self: flex-start;
+        margin-top: 4px;
+        padding: 8px 20px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 600;
+        background-color: #ffffff;
+        color: #18181d;
+    }
+
+    // ==================== SAĞ IZGARA ====================
+    &__products {
+        min-width: 0;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    &__card {
+        border: 1px solid #e4e4e9;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    &__media {
+        aspect-ratio: 1 / 1;
+        background: #f0f0f3;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+
+        &--placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0a0ad;
+        }
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 8px 10px 12px;
+    }
+
+    &__name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #18181d;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__price {
+        font-size: 14px;
+        font-weight: 700;
+        color: #18181d;
+    }
+
+    &__empty,
+    &__stream {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 100%;
+        min-height: 160px;
+        padding: 32px 16px;
+        border: 1px dashed #d1d1d9;
+        border-radius: 8px;
+        color: #71717f;
+        text-align: center;
+
+        p {
+            margin: 0;
+            font-size: 13px;
+        }
+    }
+}

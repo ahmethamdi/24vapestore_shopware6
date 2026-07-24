@@ -882,6 +882,51 @@ $vape-spotlight-cta-pad-x:       $vape-space-8;
 $vape-spotlight-cta-radius:      $vape-radius-md;
 
 // ==================================================
+// 23. SEKMELİ ÜRÜN IZGARASI (vape-product-tabs CMS element)
+//
+// "Bol ürünlü, dolu görünen section": üstte 2-4 SEKME (Bestseller/Neu/Sale),
+// altında aktif sekmenin ürünlerinden responsive IZGARA (grid). Sekme geçişi
+// JS ile; JS yoksa ilk panel görünür kalır.
+//
+// Görsel dil: beyaz zemin + kırmızı vurgu. Kırmızı SADECE: aktif sekmenin alt
+// çizgisi. Ürün kartlarının KENDİSİ core product-box ile render edilir; bu
+// token'lar yalnızca başlık + sekme şeridi + ızgara boşlukları içindir.
+// ==================================================
+
+// ---------- başlık ----------
+$vape-ptabs-head-gap:          $vape-space-4;   // başlık ile sekme şeridi arası
+$vape-ptabs-headline-size:     $vape-text-2xl;  // <768px
+$vape-ptabs-headline-size-md:  $vape-text-3xl;  // ≥768px
+$vape-ptabs-headline-color:    $vape-text-heading;
+$vape-ptabs-subline-color:     $vape-text-muted;
+$vape-ptabs-subline-size:      $vape-text-sm;
+
+// ---------- sekme şeridi (tablist) ----------
+$vape-ptabs-tablist-gap:       $vape-space-2;    // sekmeler arası
+$vape-ptabs-tablist-border:    $vape-border-subtle;  // şerit altı ince çizgi
+$vape-ptabs-tab-pad-y:         $vape-space-3;
+$vape-ptabs-tab-pad-x:         $vape-space-4;
+$vape-ptabs-tab-size:          $vape-text-md;
+$vape-ptabs-tab-color:         $vape-neutral-600;
+$vape-ptabs-tab-color-hover:   $vape-text-heading;
+$vape-ptabs-tab-border-w:      2px;              // alt çizgi kalınlığı
+$vape-ptabs-tab-active-color:  $vape-text-heading;
+$vape-ptabs-tab-active-border: $vape-brand;      // AKTİF → kırmızı alt çizgi
+
+// ---------- ürün ızgarası (grid) ----------
+$vape-ptabs-grid-gap:          $vape-space-4;    // <768px kartlar arası
+$vape-ptabs-grid-gap-md:       $vape-space-5;    // ≥768px kartlar arası
+$vape-ptabs-grid-pad-top:      $vape-space-6;    // sekme şeridi ile ızgara arası
+$vape-ptabs-grid-cols-sm:      2;                // <768px  — 2 sütun
+$vape-ptabs-grid-cols-md:      3;                // ≥768px  — 3 sütun
+$vape-ptabs-grid-cols-xl:      4;                // ≥1200px — 4 sütun
+
+// ---------- boş durum (0 ürün) ----------
+$vape-ptabs-empty-pad:         $vape-space-8;
+$vape-ptabs-empty-border:      $vape-border-subtle;
+$vape-ptabs-empty-fg:          $vape-text-muted;
+
+// ==================================================
 // 22. GÜNÜN FIRSATLARI (vape-deals CMS element)
 //
 // "Deals des Tages": açık gri section + başlık; altında 3 KOYU kart yan yana.
@@ -968,3 +1013,142 @@ $vape-deals-cta-pad-y:       $vape-space-2;
 $vape-deals-cta-pad-x:       $vape-space-5;
 $vape-deals-cta-radius:      $vape-radius-md;
 $vape-deals-cta-weight:      $vape-weight-bold;
+
+// ==================================================
+// 23. BANNER GRID (vape-banner-grid CMS element)
+//
+// Yan yana 2-3 kompakt kampanya banner kartı. Her kart tıklanabilir <a>:
+// arka plan görseli üstünde koyu gradient overlay + eyebrow + başlık + alt
+// metin + CTA. aboutyou.de kategori-banner grid estetiği.
+//
+// Görsel dil: KOYU görsel üstünde beyaz metin (overlay okunabilirliği garanti
+// eder — WCAG AA). Eyebrow kırmızı vurgu (marka işareti). CTA beyaz dolgu, koyu
+// metin (kart görseli koyu olduğu için) — kırmızı DOLGU YOK (altın kural).
+// Görselsiz kart nötr gradient placeholder + kırmızı işaret çizgisi (category-
+// carousel/category-grid placeholder dili). Mobil 1 → 768px 2 → 992px 3 sütun.
+// ==================================================
+
+// ---------- ızgara ----------
+$vape-bgrid-gap:              $vape-space-4;       // <768px kartlar arası
+$vape-bgrid-gap-md:           $vape-space-4;       // ≥768px kartlar arası
+$vape-bgrid-gap-lg:           $vape-space-5;       // ≥992px kartlar arası
+
+// ---------- kart ----------
+$vape-bgrid-card-min-height:      260px;           // banner taban yüksekliği
+$vape-bgrid-card-min-height-md:   280px;           // ≥768px biraz daha yüksek
+$vape-bgrid-card-radius:          $vape-radius-lg; // 12px, kartlarla tutarlı
+$vape-bgrid-card-bg:              $vape-neutral-900;   // görsel yüklenene kadar koyu zemin
+$vape-bgrid-card-shadow:          $vape-shadow-sm;
+$vape-bgrid-card-shadow-hover:    $vape-shadow-lg;
+
+// ---------- görsel ----------
+$vape-bgrid-media-bg:             $vape-neutral-100;   // görsel arkası (contain değil cover)
+// Görselsiz nötr gradient placeholder — koyu, sakin.
+$vape-bgrid-placeholder-from:     $vape-neutral-800;
+$vape-bgrid-placeholder-to:       $vape-neutral-900;
+// Kırmızı işaret çizgisi (sol-üst) — carousel/grid placeholder diliyle aynı.
+$vape-bgrid-mark-color:           $vape-brand;
+$vape-bgrid-mark-width:           28px;
+$vape-bgrid-mark-height:          3px;
+$vape-bgrid-mark-inset:           $vape-space-4;
+
+// ---------- overlay (metin okunabilirliği için) ----------
+// Alttan yukarı koyu gradient — metnin oturduğu alt bölge yeterince koyu
+// (rgba 0.78) → beyaz metin WCAG AA üzeri kontrast.
+$vape-bgrid-overlay-bottom:       rgba(0, 0, 0, 0.78);
+$vape-bgrid-overlay-mid:          rgba(0, 0, 0, 0.35);
+$vape-bgrid-overlay-top:          rgba(0, 0, 0, 0.1);
+// Hover'da bir tık daha koyulaşır (kart tıklanabilir hissi).
+$vape-bgrid-overlay-hover-bottom: rgba(0, 0, 0, 0.85);
+
+// ---------- metin bloğu ----------
+$vape-bgrid-body-pad:             $vape-space-5;       // 20px iç boşluk
+$vape-bgrid-body-gap:             $vape-space-1;       // satır ritmi
+
+$vape-bgrid-eyebrow-size:         $vape-text-xs;       // 12px
+$vape-bgrid-eyebrow-weight:       $vape-weight-bold;
+$vape-bgrid-eyebrow-tracking:     $vape-tracking-wider;
+$vape-bgrid-eyebrow-color:        $vape-red-200;       // koyu overlay üstünde açık kırmızı — kontrast
+
+$vape-bgrid-title-size:           $vape-text-xl;       // <768px, 20px
+$vape-bgrid-title-size-md:        $vape-text-2xl;      // ≥768px, 24px
+$vape-bgrid-title-weight:         $vape-weight-bold;
+$vape-bgrid-title-color:          $vape-neutral-white;
+$vape-bgrid-title-leading:        $vape-leading-tight;
+
+$vape-bgrid-text-size:            $vape-text-sm;       // 14px
+$vape-bgrid-text-color:           rgba(255, 255, 255, 0.9);
+
+// ---------- CTA — beyaz dolgu, koyu metin (kırmızı DOLGU YOK) ----------
+$vape-bgrid-cta-gap:              $vape-space-3;       // metin ↔ CTA arası
+$vape-bgrid-cta-icon-gap:         $vape-space-1;
+$vape-bgrid-cta-size:             $vape-text-sm;
+$vape-bgrid-cta-weight:           $vape-weight-bold;
+$vape-bgrid-cta-color:            $vape-neutral-white; // metin altı satır tarzı CTA (koyu görselde beyaz)
+
+// ==================================================
+// 24. VİTRİN (vape-showcase CMS element)
+//
+// Solda büyük kampanya banner (arka plan görseli + koyu overlay + eyebrow +
+// başlık + alt metin + CTA), sağda 2x2 ürün ızgarası. "Bol banner + bol ürün"
+// tek section'da. Banner nefes/vurgu, ızgara alışverişe çağrı.
+//
+// Görsel dil: banner KOYU (görsel üstü overlay → beyaz metin WCAG AA). Banner CTA
+// beyaz dolgu koyu metin (kırmızı DOLGU YOK — altın kural). Sağ ızgara beyaz
+// zeminde core product-box kartları (fiyat/rozet core+global temadan). Eyebrow
+// koyu overlay üstünde açık kırmızı (kontrast). Mobil: banner üstte tam genişlik,
+// altında ürünler 2 sütun. ≥992px: banner ~40% + ızgara ~60% yan yana.
+// ==================================================
+
+// ---------- layout (grid) ----------
+$vape-showcase-gap:             $vape-space-4;       // <992px banner ↔ ızgara / satır arası
+$vape-showcase-gap-lg:          $vape-space-6;       // ≥992px sütunlar arası
+$vape-showcase-banner-col:      minmax(300px, 0.66fr);   // ≥992px sol banner kolonu (~40%)
+$vape-showcase-products-col:    1fr;                 // sağ ızgara kolonu (~60%)
+
+// ---------- sol banner ----------
+$vape-showcase-banner-min-height:     280px;         // <992px banner taban yüksekliği
+$vape-showcase-banner-min-height-lg:  440px;         // ≥992px — ızgara ile aynı optik ağırlık
+$vape-showcase-banner-radius:         $vape-radius-lg;   // 12px, kartlarla tutarlı
+$vape-showcase-banner-pad:            $vape-space-6;     // <992px iç boşluk
+$vape-showcase-banner-pad-lg:         $vape-space-8;     // ≥992px iç boşluk
+$vape-showcase-banner-bg:             $vape-neutral-900; // config zemin rengiyle inline ezilir
+
+$vape-showcase-banner-inner-gap:      $vape-space-3;     // banner satırları arası ritim
+$vape-showcase-banner-inner-max:      520px;             // metin bloğu genişlik sınırı
+
+// Eyebrow — koyu overlay üstünde açık kırmızı işaret (kontrast, marka vurgusu)
+$vape-showcase-eyebrow-size:          $vape-text-sm;
+$vape-showcase-eyebrow-weight:        $vape-weight-bold;
+$vape-showcase-eyebrow-tracking:      $vape-tracking-wider;
+$vape-showcase-eyebrow-color:         $vape-red-200;     // koyu zeminde açık kırmızı
+
+// Başlık — koyu banner üstünde beyaz
+$vape-showcase-title-size:            $vape-text-2xl;    // <768px, 24px
+$vape-showcase-title-size-md:         $vape-text-3xl;    // ≥768px, 36px
+$vape-showcase-title-weight:          $vape-weight-bold;
+$vape-showcase-title-color:           $vape-neutral-white;
+$vape-showcase-title-leading:         $vape-leading-tight;
+
+// Alt metin — koyu banner üstünde soluk beyaz (AA üstü)
+$vape-showcase-text-size:             $vape-text-md;
+$vape-showcase-text-color:            rgba(255, 255, 255, 0.88);
+$vape-showcase-text-max:              440px;
+
+// CTA — beyaz dolgu, koyu metin (kırmızı DOLGU YOK)
+$vape-showcase-cta-bg:                $vape-neutral-white;
+$vape-showcase-cta-bg-hover:          $vape-neutral-100;
+$vape-showcase-cta-fg:                $vape-neutral-900;
+$vape-showcase-cta-pad-y:             $vape-space-3;
+$vape-showcase-cta-pad-x:             $vape-space-6;
+$vape-showcase-cta-radius:            $vape-radius-sm;
+
+// ---------- sağ ürün ızgarası (2x2) ----------
+// Kartların KENDİSİ core product-box; bu değerler yalnızca ızgara kapsayıcısı.
+$vape-showcase-grid-gap:              $vape-space-3;     // <992px kartlar arası (2 sütun)
+$vape-showcase-grid-gap-lg:           $vape-space-4;     // ≥992px kartlar arası (2x2)
+
+// ---------- boş durum (0 ürün) ----------
+$vape-showcase-empty-color:           $vape-text-muted;
+$vape-showcase-empty-border:          $vape-border-subtle;
+$vape-showcase-empty-pad:             $vape-space-8;

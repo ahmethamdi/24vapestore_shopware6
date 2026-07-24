@@ -1,0 +1,81 @@
+{#
+    Vitrin — CMS editörü önizlemesi.
+    Storefront'un sadeleştirilmiş yansıması: solda banner, sağda 2x2 ürün.
+#}
+{% block vape_cms_el_showcase %}
+<div class="vape-cms-el-showcase">
+
+    {# ==================== SOL BANNER ==================== #}
+    {% block vape_cms_el_showcase_banner %}
+        <div class="vape-cms-el-showcase__banner" :style="bannerStyles">
+            <div v-if="mediaUrl" class="vape-cms-el-showcase__overlay" :style="overlayStyles"></div>
+
+            <div class="vape-cms-el-showcase__banner-inner">
+                <span v-if="eyebrow" class="vape-cms-el-showcase__eyebrow">{{ eyebrow }}</span>
+
+                <h2 class="vape-cms-el-showcase__title">
+                    <template v-if="title">{{ title }}</template>
+                    <template v-else>{{ $t('vape-cms.elements.showcase.placeholder.title') }}</template>
+                </h2>
+
+                <p v-if="text" class="vape-cms-el-showcase__text">{{ text }}</p>
+
+                <span v-if="ctaText" class="vape-cms-el-showcase__cta">{{ ctaText }}</span>
+            </div>
+        </div>
+    {% endblock %}
+
+    {# ==================== SAĞ IZGARA ==================== #}
+    {% block vape_cms_el_showcase_products %}
+        <div class="vape-cms-el-showcase__products">
+
+            {# --- stream modda editörde ürün çözülmez: bilgi kartı --- #}
+            {% block vape_cms_el_showcase_stream_hint %}
+                <div v-if="isStream" class="vape-cms-el-showcase__stream">
+                    <mt-icon name="regular-products" size="24px" />
+                    <p v-if="hasStream">{{ $t('vape-cms.elements.showcase.placeholder.streamSelected') }}</p>
+                    <p v-else>{{ $t('vape-cms.elements.showcase.placeholder.streamEmpty') }}</p>
+                </div>
+            {% endblock %}
+
+            {# --- static mod: seçili ürünlerin 2x2 önizlemesi --- #}
+            {% block vape_cms_el_showcase_grid %}
+                <template v-if="!isStream">
+                    <div v-if="products.length" class="vape-cms-el-showcase__grid">
+                        <div
+                            v-for="(product, index) in products"
+                            :key="product.id || index"
+                            class="vape-cms-el-showcase__card"
+                        >
+                            <div class="vape-cms-el-showcase__media">
+                                <img
+                                    v-if="productImage(product)"
+                                    :src="productImage(product)"
+                                    class="vape-cms-el-showcase__image"
+                                    alt=""
+                                />
+                                <span v-else class="vape-cms-el-showcase__image vape-cms-el-showcase__image--placeholder">
+                                    <mt-icon name="regular-image" size="20px" />
+                                </span>
+                            </div>
+                            <div class="vape-cms-el-showcase__body">
+                                <span class="vape-cms-el-showcase__name">{{ productName(product) }}</span>
+                                <span v-if="productPrice(product)" class="vape-cms-el-showcase__price">
+                                    {{ productPrice(product) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else class="vape-cms-el-showcase__empty">
+                        <mt-icon name="regular-products" size="28px" />
+                        <p>{{ $t('vape-cms.elements.showcase.placeholder.empty') }}</p>
+                    </div>
+                </template>
+            {% endblock %}
+
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

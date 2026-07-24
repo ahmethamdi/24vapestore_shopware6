@@ -1,0 +1,157 @@
+/*
+Sekmeli ürün ızgarası — storefront görünümü.
+
+ÜST: opsiyonel başlık + yatay SEKME şeridi (tablist).
+ALT: aktif sekmenin ürünlerinden responsive IZGARA (grid). Her sekme bir panel;
+     yalnızca aktif panel görünür (JS diğerlerini `hidden` yapar / geri getirir).
+     JS yoksa ilk panel görünür kalır (twig yalnızca ilk paneli açık bırakır).
+
+Görsel dil: beyaz zemin + kırmızı vurgu.
+  - Aktif sekmenin alt kenarı kırmızı ($vape-brand); pasif sekme nötr.
+  - Ürün kartları core product-box'tan gelir (fiyat/indirim/wishlist core).
+
+Responsive ızgara: mobil 2, ≥768px 3, ≥1200px 4 sütun. Sekme sayısı × ~8 ürün
+= dolu görünüm. Dar ekranda sekme şeridi yatay kaydırılabilir.
+Tüm değerler token'lardan gelir; magic hex/px yok.
+Boş config (0 sekme) → hiç render etmez. 0 ürün → panelde nazik boş durum.
+*/
+
+.vape-product-tabs {
+    width: 100%;
+
+    // ==================== BAŞLIK ====================
+
+    &__head {
+        display: flex;
+        flex-direction: column;
+        gap: $vape-space-1;
+        margin-bottom: $vape-ptabs-head-gap;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: $vape-ptabs-headline-size;
+        font-weight: $vape-weight-bold;
+        line-height: $vape-leading-tight;
+        letter-spacing: $vape-tracking-tight;
+        color: $vape-ptabs-headline-color;
+
+        @media (min-width: 768px) {
+            font-size: $vape-ptabs-headline-size-md;
+        }
+    }
+
+    &__subline {
+        margin: 0;
+        font-size: $vape-ptabs-subline-size;
+        color: $vape-ptabs-subline-color;
+    }
+
+    // ==================== SEKME ŞERİDİ (tablist) ====================
+
+    &__tablist {
+        display: flex;
+        gap: $vape-ptabs-tablist-gap;
+        border-bottom: 1px solid $vape-ptabs-tablist-border;
+
+        // Dar ekranda sekmeler yatay kaydırılabilir bir şerit olur.
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__tab {
+        flex: 0 0 auto;
+        padding: $vape-ptabs-tab-pad-y $vape-ptabs-tab-pad-x;
+        border: 0;
+        border-bottom: $vape-ptabs-tab-border-w solid transparent;
+        margin-bottom: (-1px);   // alt çizgi tablist kenarlığının üstüne otursun
+        background-color: transparent;
+        white-space: nowrap;
+        font-size: $vape-ptabs-tab-size;
+        font-weight: $vape-weight-semibold;
+        color: $vape-ptabs-tab-color;
+        cursor: pointer;
+        transition:
+            color $vape-duration-fast $vape-ease-out,
+            border-color $vape-duration-fast $vape-ease-out;
+
+        &:hover {
+            color: $vape-ptabs-tab-color-hover;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+
+        // Aktif sekme: kırmızı alt çizgi
+        &.is--active {
+            color: $vape-ptabs-tab-active-color;
+            border-bottom-color: $vape-ptabs-tab-active-border;
+        }
+    }
+
+    // ==================== SEKME PANELLERİ ====================
+
+    &__panels {
+        min-width: 0;
+    }
+
+    &__panel {
+        padding-top: $vape-ptabs-grid-pad-top;
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+    }
+
+    // ---------- ürün ızgarası ----------
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat($vape-ptabs-grid-cols-sm, minmax(0, 1fr));
+        gap: $vape-ptabs-grid-gap;
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat($vape-ptabs-grid-cols-md, minmax(0, 1fr));
+            gap: $vape-ptabs-grid-gap-md;
+        }
+
+        @media (min-width: 1200px) {
+            grid-template-columns: repeat($vape-ptabs-grid-cols-xl, minmax(0, 1fr));
+        }
+    }
+
+    &__item {
+        min-width: 0;
+
+        // core product-box kart yüksekliğini eşitle — satır hizası bozulmasın
+        .card {
+            height: 100%;
+        }
+    }
+
+    // ---------- boş durum (0 ürün) ----------
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: $vape-ptabs-empty-pad;
+        border: 1px dashed $vape-ptabs-empty-border;
+        border-radius: $vape-radius-md;
+        color: $vape-ptabs-empty-fg;
+        text-align: center;
+
+        p {
+            margin: 0;
+            font-size: $vape-text-sm;
+        }
+    }
+}

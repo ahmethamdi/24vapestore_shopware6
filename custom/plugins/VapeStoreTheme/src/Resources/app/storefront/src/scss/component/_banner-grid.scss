@@ -1,0 +1,176 @@
+/*
+Banner grid (vape-banner-grid CMS element) — storefront stilleri.
+Token bölümü: abstract/_tokens.scss §23.
+
+Yan yana kompakt kampanya banner kartları (mobil 1 → 768px 2 → 992px 3, ama
+yalnızca 3+ banner varsa 3 sütun). Her kart tıklanabilir <a>: arka plan görseli +
+alttan koyu gradient overlay + eyebrow/başlık/metin/CTA. Görselsiz durumda nötr
+gradient placeholder (kırmızı işaret çizgisi).
+Magic hex/px YOK — hepsi token.
+*/
+
+.vape-banner-grid {
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: $vape-bgrid-gap;
+
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(2, 1fr);
+            gap: $vape-bgrid-gap-md;
+        }
+    }
+
+    // 3+ banner: ≥992px'te 3 sütun. 2 banner ise 992px'te de 2 kalır.
+    &.is--count-3 .vape-banner-grid__grid {
+        @media (min-width: 992px) {
+            grid-template-columns: repeat(3, 1fr);
+            gap: $vape-bgrid-gap-lg;
+        }
+    }
+
+    // ---------- kart ----------
+    &__card {
+        position: relative;
+        display: flex;
+        min-height: $vape-bgrid-card-min-height;
+        overflow: hidden;
+        border-radius: $vape-bgrid-card-radius;
+        background-color: $vape-bgrid-card-bg;
+        box-shadow: $vape-bgrid-card-shadow;
+        text-decoration: none;
+        transition:
+            box-shadow $vape-duration-base $vape-ease-out,
+            transform $vape-duration-base $vape-ease-out;
+
+        @media (min-width: 768px) {
+            min-height: $vape-bgrid-card-min-height-md;
+        }
+
+        // Yalnızca tıklanabilir (link) kartlarda hover kalkışı.
+        &[href] {
+            cursor: pointer;
+
+            &:hover,
+            &:focus-visible {
+                box-shadow: $vape-bgrid-card-shadow-hover;
+                transform: translateY(-2px);
+            }
+
+            &:hover .vape-banner-grid__overlay,
+            &:focus-visible .vape-banner-grid__overlay {
+                background: linear-gradient(
+                    to top,
+                    $vape-bgrid-overlay-hover-bottom 0%,
+                    $vape-bgrid-overlay-mid 45%,
+                    $vape-bgrid-overlay-top 100%
+                );
+            }
+        }
+    }
+
+    // ---------- görsel / placeholder ----------
+    &__media {
+        position: absolute;
+        inset: 0;
+        background-color: $vape-bgrid-media-bg;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__placeholder {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            135deg,
+            $vape-bgrid-placeholder-from 0%,
+            $vape-bgrid-placeholder-to 100%
+        );
+    }
+
+    &__mark {
+        position: absolute;
+        top: $vape-bgrid-mark-inset;
+        left: $vape-bgrid-mark-inset;
+        width: $vape-bgrid-mark-width;
+        height: $vape-bgrid-mark-height;
+        border-radius: $vape-radius-xs;
+        background-color: $vape-bgrid-mark-color;
+    }
+
+    // ---------- overlay ----------
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to top,
+            $vape-bgrid-overlay-bottom 0%,
+            $vape-bgrid-overlay-mid 45%,
+            $vape-bgrid-overlay-top 100%
+        );
+        transition: background $vape-duration-base $vape-ease-out;
+    }
+
+    // ---------- metin bloğu ----------
+    &__body {
+        position: relative;
+        z-index: $vape-z-base;
+        display: flex;
+        flex-direction: column;
+        gap: $vape-bgrid-body-gap;
+        align-self: flex-end;
+        width: 100%;
+        padding: $vape-bgrid-body-pad;
+    }
+
+    &__eyebrow {
+        font-size: $vape-bgrid-eyebrow-size;
+        font-weight: $vape-bgrid-eyebrow-weight;
+        letter-spacing: $vape-bgrid-eyebrow-tracking;
+        text-transform: uppercase;
+        color: $vape-bgrid-eyebrow-color;
+    }
+
+    &__title {
+        font-size: $vape-bgrid-title-size;
+        font-weight: $vape-bgrid-title-weight;
+        line-height: $vape-bgrid-title-leading;
+        color: $vape-bgrid-title-color;
+
+        @media (min-width: 768px) {
+            font-size: $vape-bgrid-title-size-md;
+        }
+    }
+
+    &__text {
+        font-size: $vape-bgrid-text-size;
+        color: $vape-bgrid-text-color;
+    }
+
+    &__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: $vape-bgrid-cta-icon-gap;
+        margin-top: $vape-bgrid-cta-gap;
+        font-size: $vape-bgrid-cta-size;
+        font-weight: $vape-bgrid-cta-weight;
+        color: $vape-bgrid-cta-color;
+
+        svg,
+        .icon {
+            transition: transform $vape-duration-fast $vape-ease-out;
+        }
+    }
+
+    // Kart hover'ında CTA oku hafifçe kayar (yönlendirme ipucu).
+    &__card[href]:hover &__cta svg,
+    &__card[href]:focus-visible &__cta svg {
+        transform: translateX(3px);
+    }
+}

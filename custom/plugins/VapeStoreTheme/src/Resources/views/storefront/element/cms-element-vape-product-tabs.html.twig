@@ -1,0 +1,117 @@
+{#
+    Sekmeli ürün ızgarası — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-product-tabs.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    ÜST: WAI-ARIA tablist; her sekme gerçek bir <button role="tab">.
+    ALT: her sekme için bir panel (role="tabpanel"). Panel içinde aktif
+    sekmenin ürünlerinden responsive bir IZGARA (grid) — carousel DEĞİL,
+    "dolu görünüm" için. Kartlar core'un `component/product/card/box.html.twig`
+    kutusuyla render edilir (fiyat/indirim/çeviri/wishlist hep core'dan).
+
+    Sekmelerin TÜM ürünleri PHP resolver'dan `element.data.tabs` olarak gelir
+    ve burada önceden render edilir. Yalnızca ilk panel görünür; diğerleri
+    `hidden`. Sekme geçişi client-side JS ile (vape-product-tabs plugin) —
+    sunucuya gidiş-dönüş YOK. JS yoksa ilk panel görünür kalır (graceful).
+
+    ⚠️ DB'de 0 ürün → ilgili panelde nazik boş durum; patlamaz.
+    ⚠️ Başlık (headline/subline) düz config alanı → `element.translated.config`.
+
+    Görsel dil: beyaz zemin + kırmızı vurgu. Aktif sekmenin alt kenarı kırmızı.
+#}
+{% block element_vape_product_tabs %}
+    {% set cfg = element.translated.config %}
+    {% set tabs = element.data.tabs|default([]) %}
+
+    {% set headline = cfg.headline.value|default('') %}
+    {% set subline = cfg.subline.value|default('') %}
+
+    <div class="cms-element-{{ element.type }} vape-product-tabs"
+         data-vape-product-tabs="true">
+
+        {% block element_vape_product_tabs_head %}
+            {% if headline or subline %}
+                <div class="vape-product-tabs__head">
+                    {% if headline %}
+                        <h2 class="vape-product-tabs__headline">{{ headline }}</h2>
+                    {% endif %}
+                    {% if subline %}
+                        <p class="vape-product-tabs__subline">{{ subline }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% if tabs|length > 0 %}
+
+            {% block element_vape_product_tabs_tablist %}
+                <div class="vape-product-tabs__tablist"
+                     role="tablist"
+                     aria-label="{{ headline ?: 'vapeProductTabs.tabsLabel'|trans|sw_sanitize }}">
+                    {% for tab in tabs %}
+                        {% set isActive = loop.first %}
+                        {% set tabLabel = tab.label ?: 'vapeProductTabs.tabFallback'|trans({ '%number%': loop.index })|sw_sanitize %}
+                        <button type="button"
+                                role="tab"
+                                id="{{ tab.id }}-tab"
+                                class="vape-product-tabs__tab{{ isActive ? ' is--active' : '' }}"
+                                aria-selected="{{ isActive ? 'true' : 'false' }}"
+                                aria-controls="{{ tab.id }}-panel"
+                                tabindex="{{ isActive ? '0' : '-1' }}"
+                                data-vape-product-tabs-tab>
+                            {{ tabLabel }}
+                        </button>
+                    {% endfor %}
+                </div>
+            {% endblock %}
+
+            {% block element_vape_product_tabs_panels %}
+                <div class="vape-product-tabs__panels">
+                    {% for tab in tabs %}
+                        {% set isActive = loop.first %}
+                        {% set products = tab.products.elements|default([]) %}
+
+                        {% block element_vape_product_tabs_panel %}
+                            <div class="vape-product-tabs__panel"
+                                 role="tabpanel"
+                                 id="{{ tab.id }}-panel"
+                                 aria-labelledby="{{ tab.id }}-tab"
+                                 tabindex="0"
+                                 {% if not isActive %}hidden{% endif %}
+                                 data-vape-product-tabs-panel>
+
+                                {% if products|length > 0 %}
+                                    {% block element_vape_product_tabs_grid %}
+                                        <div class="vape-product-tabs__grid">
+                                            {% for product in products %}
+                                                <div class="vape-product-tabs__item">
+                                                    {% sw_include '@Storefront/storefront/component/product/card/box.html.twig' with {
+                                                        'product': product,
+                                                        'layout': 'standard'
+                                                    } %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endblock %}
+                                {% else %}
+                                    {% block element_vape_product_tabs_empty %}
+                                        {# 0 ürün: nazik boş durum. DB'de ürün
+                                           yokken her panel güvenle görünür — patlamaz. #}
+                                        <div class="vape-product-tabs__empty">
+                                            <p>{{ 'vapeProductTabs.empty'|trans|sw_sanitize }}</p>
+                                        </div>
+                                    {% endblock %}
+                                {% endif %}
+
+                            </div>
+                        {% endblock %}
+                    {% endfor %}
+                </div>
+            {% endblock %}
+
+        {% endif %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{#
+    Banner grid block — storefront çıktısı.
+
+    ⚠️ `data-cms-element-id` olmadan admin canlı önizlemede element tıklanıp
+       seçilemez — sürükle-bırak deneyimi bozulur.
+    ⚠️ getSlot('bannerGrid') anahtarı block index.js'teki slots.bannerGrid ile
+       BİREBİR aynı.
+    ⚠️ Element tipini hardcode ETME: `~ element.type ~` ile dinamik include edilir.
+#}
+{% block block_vape_banner_grid %}
+    {% set element = block.slots.getSlot('bannerGrid') %}
+
+    <div class="col-12 vape-banner-grid-block" data-cms-element-id="{{ element.id }}">
+        {% block block_vape_banner_grid_inner %}
+            {% sw_include '@Storefront/storefront/element/cms-element-' ~ element.type ~ '.html.twig' ignore missing %}
+        {% endblock %}
+    </div>
+{% endblock %}

@@ -1,0 +1,122 @@
+/*
+Editör önizlemesi — storefront'un sadeleştirilmiş yansıması.
+Admin (Vue) ölçeğinde token dosyası import edilmediği için ham değerler;
+storefront gerçek görünümü _banner-grid.scss token'larından alır.
+*/
+.vape-cms-el-banner-grid {
+    &__empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 32px;
+        color: #71717f;
+        text-align: center;
+    }
+
+    &__grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(2, 1fr);
+
+        &--three {
+            @media (min-width: 900px) {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__card {
+        position: relative;
+        display: flex;
+        min-height: 200px;
+        overflow: hidden;
+        border-radius: 12px;
+        background-color: #18181d;
+    }
+
+    &__media {
+        position: absolute;
+        inset: 0;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    &__placeholder {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #2a2a33 0%, #18181d 100%);
+    }
+
+    &__mark {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        width: 28px;
+        height: 3px;
+        background-color: #e11122;
+        border-radius: 2px;
+    }
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.78) 0%,
+            rgba(0, 0, 0, 0.35) 45%,
+            rgba(0, 0, 0, 0.1) 100%
+        );
+    }
+
+    &__body {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-self: flex-end;
+        padding: 16px;
+        color: #ffffff;
+    }
+
+    &__eyebrow {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #ff8a94;
+    }
+
+    &__title {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    &__text {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    &__cta {
+        margin-top: 8px;
+        align-self: flex-start;
+        padding: 6px 14px;
+        background-color: #ffffff;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #18181d;
+    }
+}

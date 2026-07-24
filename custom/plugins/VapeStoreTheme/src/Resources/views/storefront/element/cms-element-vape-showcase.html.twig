@@ -1,0 +1,132 @@
+{#
+    Vitrin — storefront çıktısı. Solda büyük kampanya banner, sağda 2x2 ürün ızgarası.
+
+    ⚠️ Dosya adı `cms-element-vape-showcase.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    ⚠️ Çeviri-farkında okuma: metinler `element.translated.config.*`.
+       Sade `element.config.*` çok dilli mağazada sessizce bozulur.
+
+    İKİ VERİ KAYNAĞI (ShowcaseCmsElementResolver):
+      - element.data.products (ProductSliderStruct) → sağ ızgara ürünleri.
+        Kartlar core'un `component/product/card/box.html.twig` kutusuyla render
+        edilir (fiyat/indirim/çeviri/wishlist hep core'dan).
+      - element.data.ext.bannerMedia (MediaEntity|null) → sol banner arka planı.
+        Görsel yoksa düz `bgColor` zemin kullanılır.
+
+    Boş DB / görselsiz / seçimsiz → HATA YOK: banner metinleriyle tek başına da
+    anlamlı; ürün yoksa nazik "ürün yok" durumu; görsel yoksa düz zemin.
+#}
+{% block element_vape_showcase %}
+    {% set config = element.translated.config %}
+
+    {# --- banner alanları --- #}
+    {% set eyebrow = config.eyebrow.value|default('') %}
+    {% set title = config.title.value|default('') %}
+    {% set text = config.text.value|default('') %}
+    {% set ctaText = config.ctaText.value|default('') %}
+    {% set ctaUrl = config.ctaUrl.value|default('') %}
+    {% set newTab = config.newTab.value|default(false) %}
+    {% set bgColor = config.bgColor.value|default('#18181d') %}
+    {% set overlayOpacity = (config.overlayOpacity.value|default(45)) / 100 %}
+
+    {% set bannerMedia = element.data.ext.bannerMedia|default(null) %}
+    {% set hasMedia = bannerMedia and bannerMedia.url %}
+
+    {# --- ürünler --- #}
+    {% set products = element.data.products.elements|default([]) %}
+
+    <div class="cms-element-{{ element.type }} vape-showcase">
+
+        {# ==================== SOL BANNER ==================== #}
+        {% block element_vape_showcase_banner %}
+            <div class="vape-showcase__banner{{ hasMedia ? ' has--media' : '' }}"
+                 style="background-color: {{ bgColor }};">
+
+                {% block element_vape_showcase_banner_media %}
+                    {% if hasMedia %}
+                        <div class="vape-showcase__banner-media" aria-hidden="true">
+                            {% sw_thumbnails 'vape-showcase-thumbnails' with {
+                                media: bannerMedia,
+                                sizes: {
+                                    xs: '576px',
+                                    sm: '767px',
+                                    md: '991px',
+                                    lg: '767px',
+                                    xl: '767px'
+                                },
+                                attributes: {
+                                    class: 'vape-showcase__banner-image',
+                                    alt: (bannerMedia.translated.alt ?: title),
+                                    loading: 'lazy'
+                                }
+                            } %}
+                        </div>
+
+                        {# Görsel üstünde metin okunabilirliği için koyu overlay #}
+                        <div class="vape-showcase__banner-overlay"
+                             style="background-color: rgba(0, 0, 0, {{ overlayOpacity }});"
+                             aria-hidden="true"></div>
+                    {% endif %}
+                {% endblock %}
+
+                {% block element_vape_showcase_banner_inner %}
+                    <div class="vape-showcase__banner-inner">
+                        {% if eyebrow %}
+                            <span class="vape-showcase__eyebrow">{{ eyebrow }}</span>
+                        {% endif %}
+
+                        {% if title %}
+                            <h2 class="vape-showcase__title">{{ title }}</h2>
+                        {% endif %}
+
+                        {% if text %}
+                            <p class="vape-showcase__text">{{ text }}</p>
+                        {% endif %}
+
+                        {% if ctaText and ctaUrl %}
+                            <a href="{{ ctaUrl }}"
+                               class="btn vape-showcase__cta"
+                               {% if newTab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                                {{ ctaText }}
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endblock %}
+
+            </div>
+        {% endblock %}
+
+        {# ==================== SAĞ IZGARA ==================== #}
+        {% block element_vape_showcase_products %}
+            <div class="vape-showcase__products">
+                {% if products|length > 0 %}
+                    {% block element_vape_showcase_grid %}
+                        <div class="vape-showcase__grid">
+                            {% for product in products %}
+                                {% block element_vape_showcase_item %}
+                                    <div class="vape-showcase__item">
+                                        {% sw_include '@Storefront/storefront/component/product/card/box.html.twig' with {
+                                            'layout': 'standard'
+                                        } %}
+                                    </div>
+                                {% endblock %}
+                            {% endfor %}
+                        </div>
+                    {% endblock %}
+                {% else %}
+                    {% block element_vape_showcase_empty %}
+                        {# 0 ürün: nazik boş durum. DB'de ürün olmadığında ya da
+                           stream/seçim boş kaldığında ızgara patlamaz — banner tek
+                           başına anlamlı kalır, ızgara yerine tek satır bilgi gösterir. #}
+                        <div class="vape-showcase__empty">
+                            <p>{{ 'vapeShowcase.empty'|trans|sw_sanitize }}</p>
+                        </div>
+                    {% endblock %}
+                {% endif %}
+            </div>
+        {% endblock %}
+
+    </div>
+{% endblock %}

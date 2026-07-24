@@ -31,6 +31,11 @@
     "next": "Nächste Produkte",
     "empty": "Aktuell sind keine Produkte verfügbar."
   },
+  "vapeProductTabs": {
+    "tabsLabel": "Tabs",
+    "tabFallback": "Tab %number%",
+    "empty": "Aktuell sind keine Produkte verfügbar."
+  },
   "vapeBrandSlider": {
     "headline": "Beliebte Marken",
     "previous": "Vorherige Marken",
@@ -44,5 +49,8 @@
     "seconds": "Sekunden",
     "expired": "Abgelaufen",
     "buy": "Kaufen"
+  },
+  "vapeShowcase": {
+    "empty": "Aktuell sind keine Produkte verfügbar."
   }
 }

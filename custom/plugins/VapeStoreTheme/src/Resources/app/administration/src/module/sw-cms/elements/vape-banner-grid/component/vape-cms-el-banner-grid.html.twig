@@ -1,0 +1,55 @@
+{#
+    Banner grid — CMS editörü içindeki önizleme.
+    Storefront'un sadeleştirilmiş yansıması: yan yana kompakt banner kartları.
+    Her kart: arka plan görseli + koyu gradient overlay + eyebrow/başlık/metin/CTA.
+    Görselsiz durumda nötr gradient placeholder (kırmızı işaret çizgisi).
+#}
+{% block vape_cms_el_banner_grid %}
+<div class="vape-cms-el-banner-grid">
+
+    {% block vape_cms_el_banner_grid_empty %}
+        <div v-if="!banners.length" class="vape-cms-el-banner-grid__empty">
+            <mt-icon name="regular-image" size="28px" />
+            <p>{{ $t('vape-cms.elements.bannerGrid.config.emptyHint') }}</p>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_banner_grid_grid %}
+        <div
+            v-else
+            class="vape-cms-el-banner-grid__grid"
+            :class="gridModifierClass"
+        >
+            <div
+                v-for="(banner, index) in banners"
+                :key="index"
+                class="vape-cms-el-banner-grid__card"
+            >
+                {# --- arka plan görseli / placeholder --- #}
+                <div class="vape-cms-el-banner-grid__media">
+                    <img
+                        v-if="bannerImage(banner)"
+                        :src="bannerImage(banner)"
+                        :alt="banner.title"
+                        class="vape-cms-el-banner-grid__image"
+                    />
+                    <span v-else class="vape-cms-el-banner-grid__placeholder" aria-hidden="true">
+                        <span class="vape-cms-el-banner-grid__mark"></span>
+                    </span>
+                </div>
+
+                {# --- koyu overlay + metin --- #}
+                <div class="vape-cms-el-banner-grid__overlay"></div>
+
+                <div class="vape-cms-el-banner-grid__body">
+                    <span v-if="banner.eyebrow" class="vape-cms-el-banner-grid__eyebrow">{{ banner.eyebrow }}</span>
+                    <span class="vape-cms-el-banner-grid__title">{{ bannerTitle(banner) }}</span>
+                    <span v-if="banner.text" class="vape-cms-el-banner-grid__text">{{ banner.text }}</span>
+                    <span v-if="banner.ctaText" class="vape-cms-el-banner-grid__cta">{{ banner.ctaText }}</span>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

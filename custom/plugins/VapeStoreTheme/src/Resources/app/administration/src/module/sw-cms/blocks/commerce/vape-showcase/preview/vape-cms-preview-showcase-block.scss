@@ -1,0 +1,64 @@
+.vape-cms-preview-showcase-block {
+    display: grid;
+    grid-template-columns: 40% 1fr;
+    gap: 6px;
+    width: 100%;
+    padding: 8px;
+
+    &__banner {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        padding: 0 10px;
+        min-height: 54px;
+        overflow: hidden;
+        border-radius: 4px;
+        background: linear-gradient(120deg, #18181d 0%, #2a2a33 100%);
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 84% 40%, rgba(225, 17, 34, 0.35), transparent 55%);
+        }
+    }
+
+    &__eyebrow {
+        position: relative;
+        width: 24px;
+        height: 4px;
+        border-radius: 2px;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &__headline {
+        position: relative;
+        width: 56px;
+        height: 8px;
+        border-radius: 2px;
+        background-color: #ffffff;
+    }
+
+    &__cta {
+        position: relative;
+        width: 32px;
+        height: 9px;
+        margin-top: 2px;
+        border-radius: 2px;
+        background-color: #ffffff;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+
+    &__card {
+        min-height: 24px;
+        border-radius: 3px;
+        background: #f0f0f3;
+    }
+}

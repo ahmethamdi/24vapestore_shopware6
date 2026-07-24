@@ -30,12 +30,15 @@ import './module/sw-cms/elements/vape-category-carousel';
 import './module/sw-cms/elements/vape-featured-split';
 import './module/sw-cms/elements/vape-category-grid';
 import './module/sw-cms/elements/vape-product-rail';
+import './module/sw-cms/elements/vape-product-tabs';
 import './module/sw-cms/elements/vape-brand-slider';
 import './module/sw-cms/elements/vape-promo-banner';
 import './module/sw-cms/elements/vape-usp-strip';
 import './module/sw-cms/elements/vape-trust-bar';
 import './module/sw-cms/elements/vape-product-spotlight';
 import './module/sw-cms/elements/vape-deals';
+import './module/sw-cms/elements/vape-showcase';
+import './module/sw-cms/elements/vape-banner-grid';
 
 // ==================================================
 // CMS Blocks
@@ -45,9 +48,12 @@ import './module/sw-cms/blocks/commerce/vape-category-carousel';
 import './module/sw-cms/blocks/commerce/vape-featured-split';
 import './module/sw-cms/blocks/commerce/vape-category-grid';
 import './module/sw-cms/blocks/commerce/vape-product-rail';
+import './module/sw-cms/blocks/commerce/vape-product-tabs';
 import './module/sw-cms/blocks/commerce/vape-brand-slider';
 import './module/sw-cms/blocks/commerce/vape-promo-banner';
 import './module/sw-cms/blocks/commerce/vape-usp-strip';
 import './module/sw-cms/blocks/commerce/vape-trust-bar';
 import './module/sw-cms/blocks/commerce/vape-product-spotlight';
 import './module/sw-cms/blocks/commerce/vape-deals';
+import './module/sw-cms/blocks/commerce/vape-showcase';
+import './module/sw-cms/blocks/commerce/vape-banner-grid';

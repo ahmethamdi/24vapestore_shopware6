@@ -1,0 +1,111 @@
+{#
+    Banner grid — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-banner-grid.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    Banner verisi PHP resolver'dan `element.data.banners` olarak gelir; her eleman
+    { eyebrow, title, text, ctaText, url, media }. Görsel (media) yoksa nötr
+    gradient placeholder (kırmızı işaret çizgisi) gösterilir. Metinler config'te
+    düz alan olduğu için yönetici içeriği `element.translated.config` çeviri
+    katmanıyla (resolver metni kopyalar) okunur; burada resolver'ın döndürdüğü
+    hazır dizi kullanılır.
+
+    Her banner tıklanabilir kart: url varsa <a>, yoksa <div>. Görsel üstünde koyu
+    gradient overlay metin okunabilirliğini garanti eder (WCAG AA).
+
+    Grid: mobil 1 sütun → ≥768px 2 sütun → 3+ banner varsa ≥992px 3 sütun.
+    Sütun sayısı sınıf ile taşınır (is--count-N).
+#}
+{% block element_vape_banner_grid %}
+    {% set banners = element.data.banners|default([]) %}
+    {% set count = banners|length %}
+
+    {% if count > 0 %}
+        <div class="cms-element-{{ element.type }} vape-banner-grid is--count-{{ count >= 3 ? '3' : '2' }}">
+
+            {% block element_vape_banner_grid_grid %}
+                <div class="vape-banner-grid__grid">
+                    {% for banner in banners %}
+                        {% set eyebrow = banner.eyebrow|default('') %}
+                        {% set title = banner.title|default('') %}
+                        {% set text = banner.text|default('') %}
+                        {% set ctaText = banner.ctaText|default('') %}
+                        {% set url = banner.url|default('') %}
+                        {% set media = banner.media %}
+                        {% set hasMedia = media and media.url %}
+
+                        {% set tag = url ? 'a' : 'div' %}
+
+                        {% block element_vape_banner_grid_card %}
+                            <{{ tag }}
+                                class="vape-banner-grid__card{{ hasMedia ? ' has--media' : '' }}"
+                                {% if url %}href="{{ url }}"{% endif %}
+                                {% if url and title %}aria-label="{{ title }}"{% endif %}>
+
+                                {# --- arka plan görseli / placeholder --- #}
+                                {% block element_vape_banner_grid_media %}
+                                    <div class="vape-banner-grid__media" aria-hidden="true">
+                                        {% if hasMedia %}
+                                            {% sw_thumbnails 'vape-banner-grid-thumbnails' with {
+                                                media: media,
+                                                sizes: {
+                                                    xs: '576px',
+                                                    sm: '400px',
+                                                    md: '400px',
+                                                    lg: '600px',
+                                                    xl: '640px'
+                                                },
+                                                attributes: {
+                                                    class: 'vape-banner-grid__image',
+                                                    alt: (media.translated.alt ?: title),
+                                                    loading: 'lazy'
+                                                }
+                                            } %}
+                                        {% else %}
+                                            <span class="vape-banner-grid__placeholder">
+                                                <span class="vape-banner-grid__mark"></span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                {% endblock %}
+
+                                {# --- koyu overlay (metin okunabilirliği için) --- #}
+                                {% block element_vape_banner_grid_overlay %}
+                                    <span class="vape-banner-grid__overlay" aria-hidden="true"></span>
+                                {% endblock %}
+
+                                {# --- metin bloğu --- #}
+                                {% block element_vape_banner_grid_body %}
+                                    <div class="vape-banner-grid__body">
+                                        {% if eyebrow %}
+                                            <span class="vape-banner-grid__eyebrow">{{ eyebrow }}</span>
+                                        {% endif %}
+
+                                        {% if title %}
+                                            <span class="vape-banner-grid__title">{{ title }}</span>
+                                        {% endif %}
+
+                                        {% if text %}
+                                            <span class="vape-banner-grid__text">{{ text }}</span>
+                                        {% endif %}
+
+                                        {% if ctaText %}
+                                            <span class="vape-banner-grid__cta">
+                                                {{ ctaText }}
+                                                {% sw_icon 'arrow-medium-right' style { size: 'xs' } %}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                {% endblock %}
+
+                            </{{ tag }}>
+                        {% endblock %}
+                    {% endfor %}
+                </div>
+            {% endblock %}
+
+        </div>
+    {% endif %}
+{% endblock %}

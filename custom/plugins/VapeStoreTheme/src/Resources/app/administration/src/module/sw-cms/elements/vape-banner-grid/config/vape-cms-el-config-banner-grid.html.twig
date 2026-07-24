@@ -1,0 +1,185 @@
+{#
+    Banner grid config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model
+       sw-*  (legacy)  → v-model:value
+    ⚠️ banners bir dizi olduğu için v-model doğrudan kullanılamaz;
+       her alan @update ile updateBanner() çağırır.
+    ⚠️ Görsel seçimi için sw-media-modal-v2 (still sw-*); modal her item için
+       ayrı açılır, seçim mediaModalIndex ile doğru item'a yazılır.
+#}
+{% block vape_cms_element_banner_grid_config %}
+<div class="vape-cms-el-config-banner-grid">
+
+    {% block vape_cms_element_banner_grid_config_empty %}
+        <mt-banner
+            v-if="!banners.length"
+            variant="info"
+        >
+            {{ $t('vape-cms.elements.bannerGrid.config.emptyHint') }}
+        </mt-banner>
+    {% endblock %}
+
+    {% block vape_cms_element_banner_grid_config_list %}
+        <div class="vape-cms-el-config-banner-grid__list">
+            <div
+                v-for="(banner, index) in banners"
+                :key="index"
+                class="vape-cms-el-config-banner-grid__banner"
+            >
+                <div class="vape-cms-el-config-banner-grid__banner-head">
+                    <span class="vape-cms-el-config-banner-grid__banner-title">
+                        {{ $t('vape-cms.elements.bannerGrid.config.banner') }} {{ index + 1 }}
+                        <template v-if="banner.title">— {{ banner.title }}</template>
+                    </span>
+
+                    <div class="vape-cms-el-config-banner-grid__banner-actions">
+                        <mt-button
+                            variant="secondary"
+                            size="small"
+                            :disabled="index === 0"
+                            @click="onMoveBanner(index, -1)"
+                        >
+                            <mt-icon name="regular-long-arrow-up" size="12px" />
+                        </mt-button>
+
+                        <mt-button
+                            variant="secondary"
+                            size="small"
+                            :disabled="index === banners.length - 1"
+                            @click="onMoveBanner(index, 1)"
+                        >
+                            <mt-icon name="regular-long-arrow-down" size="12px" />
+                        </mt-button>
+
+                        <mt-button
+                            variant="critical"
+                            size="small"
+                            @click="onRemoveBanner(index)"
+                        >
+                            <mt-icon name="regular-trash" size="12px" />
+                        </mt-button>
+                    </div>
+                </div>
+
+                {# --- arka plan görseli (opsiyonel) --- #}
+                <div class="vape-cms-el-config-banner-grid__field">
+                    <span class="vape-cms-el-config-banner-grid__field-label">
+                        {{ $t('vape-cms.elements.bannerGrid.config.media') }}
+                    </span>
+
+                    <div class="vape-cms-el-config-banner-grid__media">
+                        <div
+                            v-if="bannerMedia(banner)"
+                            class="vape-cms-el-config-banner-grid__media-preview"
+                        >
+                            <img
+                                :src="bannerMedia(banner).url"
+                                :alt="banner.title"
+                            />
+                        </div>
+                        <div
+                            v-else
+                            class="vape-cms-el-config-banner-grid__media-empty"
+                        >
+                            <mt-icon name="regular-image" size="18px" />
+                            <span>{{ $t('vape-cms.elements.bannerGrid.config.mediaEmpty') }}</span>
+                        </div>
+
+                        <div class="vape-cms-el-config-banner-grid__media-actions">
+                            <mt-button
+                                variant="secondary"
+                                size="small"
+                                @click="onOpenMediaModal(index)"
+                            >
+                                {{ $t('vape-cms.elements.bannerGrid.config.selectMedia') }}
+                            </mt-button>
+                            <mt-button
+                                v-if="banner.mediaId"
+                                variant="secondary"
+                                size="small"
+                                @click="onMediaRemove(index)"
+                            >
+                                {{ $t('vape-cms.elements.bannerGrid.config.removeMedia') }}
+                            </mt-button>
+                        </div>
+                    </div>
+                </div>
+
+                {# --- eyebrow (küçük üst etiket) --- #}
+                <div class="vape-cms-el-config-banner-grid__field">
+                    <mt-text-field
+                        :model-value="banner.eyebrow"
+                        :label="$t('vape-cms.elements.bannerGrid.config.eyebrow')"
+                        :placeholder="$t('vape-cms.elements.bannerGrid.config.eyebrowPlaceholder')"
+                        @update:model-value="updateBanner(index, { eyebrow: $event })"
+                    />
+                </div>
+
+                {# --- başlık --- #}
+                <div class="vape-cms-el-config-banner-grid__field">
+                    <mt-text-field
+                        :model-value="banner.title"
+                        :label="$t('vape-cms.elements.bannerGrid.config.title')"
+                        :placeholder="$t('vape-cms.elements.bannerGrid.config.titlePlaceholder')"
+                        @update:model-value="updateBanner(index, { title: $event })"
+                    />
+                </div>
+
+                {# --- alt metin --- #}
+                <div class="vape-cms-el-config-banner-grid__field">
+                    <mt-text-field
+                        :model-value="banner.text"
+                        :label="$t('vape-cms.elements.bannerGrid.config.text')"
+                        :placeholder="$t('vape-cms.elements.bannerGrid.config.textPlaceholder')"
+                        @update:model-value="updateBanner(index, { text: $event })"
+                    />
+                </div>
+
+                {# --- CTA metni --- #}
+                <div class="vape-cms-el-config-banner-grid__field">
+                    <mt-text-field
+                        :model-value="banner.ctaText"
+                        :label="$t('vape-cms.elements.bannerGrid.config.ctaText')"
+                        :placeholder="$t('vape-cms.elements.bannerGrid.config.ctaTextPlaceholder')"
+                        @update:model-value="updateBanner(index, { ctaText: $event })"
+                    />
+                </div>
+
+                {# --- link --- #}
+                <div class="vape-cms-el-config-banner-grid__field">
+                    <mt-text-field
+                        :model-value="banner.url"
+                        :label="$t('vape-cms.elements.bannerGrid.config.url')"
+                        :placeholder="$t('vape-cms.elements.bannerGrid.config.urlPlaceholder')"
+                        :help-text="$t('vape-cms.elements.bannerGrid.config.urlHelp')"
+                        @update:model-value="updateBanner(index, { url: $event })"
+                    />
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_element_banner_grid_config_add %}
+        <button
+            type="button"
+            class="vape-cms-el-config-banner-grid__add"
+            @click="onAddBanner"
+        >
+            <mt-icon name="regular-plus-circle" size="14px" />
+            {{ $t('vape-cms.elements.bannerGrid.config.addBanner') }}
+        </button>
+    {% endblock %}
+
+    {# --- görsel seçim modal'ı (still sw-*) --- #}
+    <sw-media-modal-v2
+        v-if="mediaModalIndex !== null"
+        variant="regular"
+        :allow-multi-select="false"
+        entity-context="cms"
+        @media-modal-selection-change="onMediaSelection"
+        @modal-close="onCloseMediaModal"
+    />
+</div>
+{% endblock %}

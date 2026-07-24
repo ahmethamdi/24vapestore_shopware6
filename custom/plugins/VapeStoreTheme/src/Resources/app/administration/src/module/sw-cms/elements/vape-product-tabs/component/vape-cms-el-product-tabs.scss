@@ -1,0 +1,105 @@
+/*
+Editör içi önizleme. Storefront'un basitleştirilmiş yansıması.
+Bu dosya admin bundle'ına derlenir; storefront token'larına erişimi
+olmadığı için değerler burada literaldir (yalnızca editör görünümü).
+*/
+.vape-cms-el-product-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    background-color: #ffffff;
+
+    &__head {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #18181d;
+    }
+
+    &__subline {
+        margin: 0;
+        font-size: 14px;
+        color: #52525e;
+    }
+
+    // ---------- sekme şeridi ----------
+
+    &__tablist {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        border-bottom: 1px solid #e4e4e9;
+        padding-bottom: 8px;
+    }
+
+    &__tab {
+        padding: 8px 14px;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        background-color: transparent;
+        font-size: 14px;
+        font-weight: 600;
+        color: #3f3f4a;
+        cursor: pointer;
+
+        &:hover {
+            color: #18181d;
+        }
+
+        &.is--active {
+            border-bottom-color: #e11122;
+            color: #18181d;
+        }
+    }
+
+    // ---------- gövde bilgi kartı ----------
+
+    &__body {
+        display: flex;
+    }
+
+    &__empty,
+    &__info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 40px;
+        border: 1px dashed #d1d1d9;
+        border-radius: 8px;
+        color: #71717f;
+        text-align: center;
+    }
+
+    &__info-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #18181d;
+    }
+
+    &__info-source {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #71717f;
+    }
+
+    &__info-note {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: #52525e;
+    }
+}

@@ -46,6 +46,38 @@
             <tag name="shopware.cms.data_resolver"/>
         </service>
 
+        <!--
+            Sekmeli ürün ızgarası (vape-product-tabs) resolver'ı.
+            Her SEKME için ayrı ürün listesi çözer: static (products ID dizisi)
+            veya stream (productStreamId + limit). Sonuç aktif sekmede responsive
+            IZGARA olarak gösterilir (slider değil). Sales-channel ürün deposu ile
+            calculatedPrice doğru gelir (core product-box için şart). Sonuç
+            element.data.tabs[] = { id, label, products } yapısına yazılır;
+            DB'de 0 ürün olsa da güvenli.
+        -->
+        <service id="VapeStoreTheme\DataResolver\ProductTabsCmsElementResolver">
+            <argument type="service" id="Shopware\Core\Content\ProductStream\Service\ProductStreamBuilder"/>
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="logger"/>
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <!--
+            Vitrin (vape-showcase) resolver'ı.
+            Banner + ürün ızgarasını TEK element'te çözer:
+              1. Banner görselini (mediaId) TEK batch criteria ile MediaEntity'ye
+                 çözer (ProductSliderStruct'a `bannerMedia` extension olarak eklenir).
+              2. Ürünleri (static ID dizisi veya stream + limit; varsayılan 4) çözer.
+            Ürünler sales-channel deposundan gelir (core product-box için
+            calculatedPrice şart). DB'de 0 ürün / görsel yoksa güvenli placeholder.
+        -->
+        <service id="VapeStoreTheme\DataResolver\ShowcaseCmsElementResolver">
+            <argument type="service" id="Shopware\Core\Content\ProductStream\Service\ProductStreamBuilder"/>
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="logger"/>
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
         <service id="VapeStoreTheme\DataResolver\CategoryGridCmsElementResolver">
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <tag name="shopware.cms.data_resolver"/>
@@ -96,6 +128,18 @@
             storefront'ta JS ile endDate'ten hesaplanır — resolver'da zaman yok.
         -->
         <service id="VapeStoreTheme\DataResolver\DealsCmsElementResolver">
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <!--
+            Banner grid (vape-banner-grid) resolver'ı.
+            banners dizisindeki arka plan mediaId'lerini TEK criteria ile
+            MediaEntity olarak çözer (deals/brand-slider batch deseni; N+1 yok).
+            Sonuç element.data.banners: her biri { eyebrow, title, text, ctaText,
+            url, media }. Görsel yoksa media null → twig nötr gradient placeholder
+            basar. Tamamen boş banner atlanır; 0 banner ile hiç render etmez.
+        -->
+        <service id="VapeStoreTheme\DataResolver\BannerGridCmsElementResolver">
             <tag name="shopware.cms.data_resolver"/>
         </service>
 

@@ -1,0 +1,184 @@
+/*
+Vitrin — storefront görünümü.
+Solda büyük kampanya banner (görsel + koyu overlay + metin + CTA), sağda 2x2
+ürün ızgarası. "Bol banner + bol ürün" tek section'da.
+
+Sağ ızgaradaki ürün kartları core'un product-box'ıdır — burada yalnızca
+banner ve ızgara KAPSAYICISI biçimlendirilir. Kart içi görsel dil (fiyat koyu,
+indirim kırmızı, wishlist) core + global temadan gelir.
+
+Görsel dil: beyaz zemin + kırmızı vurgu.
+  - Banner KOYU; görsel üstü koyu overlay → beyaz metin (WCAG AA garanti).
+  - Banner CTA beyaz dolgu koyu metin. Kırmızı DOLGU YOK (altın kural).
+  - Eyebrow koyu overlay üstünde açık kırmızı işaret.
+
+Mobil-öncelikli:
+  <992px  → tek sütun: banner üstte tam genişlik, altında ürünler 2 sütun.
+  ≥992px  → banner ~40% + ızgara ~60% yan yana; ızgara 2x2.
+
+Tüm değerler token'lardan (bölüm 24) gelir; magic hex/px yok.
+Zemin rengi ve overlay opaklığı inline style ile config'ten gelir (dinamik).
+Boş config (0 ürün / görselsiz) ile de temiz render olur.
+*/
+
+.vape-showcase {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $vape-showcase-gap;
+    width: 100%;
+
+    @media (min-width: 992px) {
+        grid-template-columns: $vape-showcase-banner-col $vape-showcase-products-col;
+        gap: $vape-showcase-gap-lg;
+        align-items: stretch;
+    }
+
+    // ==================================================
+    // SOL BANNER
+    // ==================================================
+    &__banner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: $vape-showcase-banner-min-height;
+        padding: $vape-showcase-banner-pad;
+        overflow: hidden;
+        border-radius: $vape-showcase-banner-radius;
+        background-color: $vape-showcase-banner-bg;   // config zemin rengiyle inline ezilir
+        background-position: center;
+
+        @media (min-width: 992px) {
+            min-height: $vape-showcase-banner-min-height-lg;
+            padding: $vape-showcase-banner-pad-lg;
+        }
+    }
+
+    // ---------- banner arka plan görseli ----------
+    &__banner-media {
+        position: absolute;
+        inset: 0;
+        z-index: $vape-z-base;
+    }
+
+    &__banner-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    // Görsel üstünde metin okunabilirliği için koyu overlay
+    // (opaklık config'ten inline style ile gelir).
+    &__banner-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: $vape-z-base + 1;
+    }
+
+    // ---------- banner içerik ----------
+    &__banner-inner {
+        position: relative;
+        z-index: $vape-z-base + 2;
+        display: flex;
+        flex-direction: column;
+        gap: $vape-showcase-banner-inner-gap;
+        width: 100%;
+        max-width: $vape-showcase-banner-inner-max;
+    }
+
+    &__eyebrow {
+        font-size: $vape-showcase-eyebrow-size;
+        font-weight: $vape-showcase-eyebrow-weight;
+        letter-spacing: $vape-showcase-eyebrow-tracking;
+        text-transform: uppercase;
+        color: $vape-showcase-eyebrow-color;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: $vape-showcase-title-size;
+        font-weight: $vape-showcase-title-weight;
+        line-height: $vape-showcase-title-leading;
+        letter-spacing: $vape-tracking-tight;
+        color: $vape-showcase-title-color;
+
+        @media (min-width: 768px) {
+            font-size: $vape-showcase-title-size-md;
+        }
+    }
+
+    &__text {
+        margin: 0;
+        max-width: $vape-showcase-text-max;
+        font-size: $vape-showcase-text-size;
+        line-height: $vape-leading-normal;
+        color: $vape-showcase-text-color;
+    }
+
+    &__cta {
+        align-self: flex-start;
+        margin-top: $vape-space-2;
+        padding: $vape-showcase-cta-pad-y $vape-showcase-cta-pad-x;
+        border: 0;
+        border-radius: $vape-showcase-cta-radius;
+        font-weight: $vape-weight-semibold;
+        background-color: $vape-showcase-cta-bg;
+        color: $vape-showcase-cta-fg;
+
+        &:hover,
+        &:focus {
+            background-color: $vape-showcase-cta-bg-hover;
+            color: $vape-showcase-cta-fg;
+        }
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+
+    // ==================================================
+    // SAĞ ÜRÜN IZGARASI (2x2)
+    // ==================================================
+    &__products {
+        min-width: 0;   // uzun ürün adı grid satırını taşırmasın
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: $vape-showcase-grid-gap;
+
+        @media (min-width: 992px) {
+            gap: $vape-showcase-grid-gap-lg;
+        }
+    }
+
+    // core product-box kendi iç boşluk/kenarlığını taşır; ızgara içinde
+    // yükseklikler eşitlensin diye kutuyu tam yüksekliğe uzat.
+    &__item {
+        min-width: 0;
+
+        .card,
+        .product-box {
+            height: 100%;
+        }
+    }
+
+    // ---------- boş durum ----------
+    &__empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: $vape-showcase-banner-min-height;
+        padding: $vape-showcase-empty-pad;
+        border: 1px dashed $vape-showcase-empty-border;
+        border-radius: $vape-card-radius;
+        text-align: center;
+
+        p {
+            margin: 0;
+            font-size: $vape-text-sm;
+            color: $vape-showcase-empty-color;
+        }
+    }
+}

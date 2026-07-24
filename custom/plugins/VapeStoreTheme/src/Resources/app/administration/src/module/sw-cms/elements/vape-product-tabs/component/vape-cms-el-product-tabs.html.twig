@@ -1,0 +1,62 @@
+{#
+    Sekmeli ürün ızgarası — CMS editörü içindeki önizleme.
+
+    Üstte sekme şeridi + altında "ürünler storefront'ta gösterilir" bilgi kartı.
+    Ürünler editörde çözülmez (product-rail/featured-split deseni) — bu yüzden
+    burada gerçek kart render edilmez, yalnızca yapı, aktif sekme ve ürün sayısı
+    bilgisi gösterilir.
+#}
+{% block vape_cms_el_product_tabs %}
+<div class="vape-cms-el-product-tabs">
+
+    {% block vape_cms_el_product_tabs_head %}
+        <div v-if="headline || subline" class="vape-cms-el-product-tabs__head">
+            <h2 v-if="headline" class="vape-cms-el-product-tabs__headline">{{ headline }}</h2>
+            <p v-if="subline" class="vape-cms-el-product-tabs__subline">{{ subline }}</p>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_product_tabs_tablist %}
+        <div v-if="tabs.length" class="vape-cms-el-product-tabs__tablist">
+            <button
+                v-for="(tab, index) in tabs"
+                :key="index"
+                type="button"
+                class="vape-cms-el-product-tabs__tab"
+                :class="{ 'is--active': index === activeTab }"
+                @click="onSelectTab(index)"
+            >
+                {{ tabLabel(tab, index) }}
+            </button>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_product_tabs_body %}
+        <div class="vape-cms-el-product-tabs__body">
+
+            <div v-if="!tabs.length" class="vape-cms-el-product-tabs__empty">
+                <mt-icon name="regular-products" size="28px" />
+                <p>{{ $t('vape-cms.elements.productTabs.config.tabsEmptyHint') }}</p>
+            </div>
+
+            <div v-else class="vape-cms-el-product-tabs__info">
+                <mt-icon name="regular-products" size="28px" />
+                <p class="vape-cms-el-product-tabs__info-title">
+                    {{ tabLabel(tabs[activeTab], activeTab) }}
+                </p>
+                <p class="vape-cms-el-product-tabs__info-source">
+                    {{ sourceLabel(tabs[activeTab]) }}
+                    <template v-if="productCount(tabs[activeTab]) !== null">
+                        · {{ productCount(tabs[activeTab]) }}
+                    </template>
+                </p>
+                <p class="vape-cms-el-product-tabs__info-note">
+                    {{ $t('vape-cms.elements.productTabs.placeholder.storefrontNote') }}
+                </p>
+            </div>
+
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

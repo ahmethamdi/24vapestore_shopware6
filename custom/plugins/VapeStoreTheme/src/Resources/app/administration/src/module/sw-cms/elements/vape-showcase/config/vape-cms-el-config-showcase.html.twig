@@ -1,0 +1,204 @@
+{#
+    Vitrin config paneli — banner + ürün ızgarası.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)             → v-model
+       sw-*  (legacy select)      → v-model:value
+       sw-entity-multi-select     → v-model:entity-collection + @update:entity-collection
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+#}
+{% block vape_cms_element_showcase_config %}
+<div class="vape-cms-el-config-showcase">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-showcase"
+        default-item="banner"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="banner" :active-tab="active">
+                {{ $t('vape-cms.elements.showcase.config.tab.banner') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="products" :active-tab="active">
+                {{ $t('vape-cms.elements.showcase.config.tab.products') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="settings" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.settings') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== BANNER ==================== #}
+            <sw-container v-if="active === 'banner'">
+
+                {% block vape_cms_element_showcase_config_banner_text %}
+                    <div class="vape-cms-el-config-showcase__field">
+                        <mt-text-field
+                            v-model="element.config.eyebrow.value"
+                            :label="$t('vape-cms.elements.showcase.config.eyebrow')"
+                            :placeholder="$t('vape-cms.elements.showcase.config.eyebrowPlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-showcase__field">
+                        <mt-text-field
+                            v-model="element.config.title.value"
+                            :label="$t('vape-cms.elements.showcase.config.title')"
+                            :placeholder="$t('vape-cms.elements.showcase.config.titlePlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-showcase__field">
+                        <mt-textarea
+                            v-model="element.config.text.value"
+                            :label="$t('vape-cms.elements.showcase.config.text')"
+                            :placeholder="$t('vape-cms.elements.showcase.config.textPlaceholder')"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_showcase_config_banner_cta %}
+                    <sw-container columns="1fr 1fr" gap="0 24px">
+                        <div class="vape-cms-el-config-showcase__field">
+                            <mt-text-field
+                                v-model="element.config.ctaText.value"
+                                :label="$t('vape-cms.elements.showcase.config.ctaText')"
+                                :placeholder="$t('vape-cms.elements.showcase.config.ctaTextPlaceholder')"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-showcase__field">
+                            <mt-text-field
+                                v-model="element.config.ctaUrl.value"
+                                :label="$t('vape-cms.elements.showcase.config.ctaUrl')"
+                                :placeholder="$t('vape-cms.elements.showcase.config.ctaUrlPlaceholder')"
+                            />
+                        </div>
+                    </sw-container>
+
+                    <div class="vape-cms-el-config-showcase__field">
+                        <mt-switch
+                            v-model="element.config.newTab.value"
+                            :label="$t('vape-cms.elements.showcase.config.newTab')"
+                            bordered
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== ÜRÜNLER ==================== #}
+            <sw-container v-if="active === 'products'">
+
+                {% block vape_cms_element_showcase_config_source %}
+                    <div class="vape-cms-el-config-showcase__field">
+                        <mt-select
+                            v-model="element.config.productSource.value"
+                            :options="productSourceOptions"
+                            :label="$t('vape-cms.elements.showcase.config.source')"
+                            @update:model-value="onSourceChange"
+                        />
+                    </div>
+                {% endblock %}
+
+                {# --- STATIC: manuel ürün seçimi --- #}
+                {% block vape_cms_element_showcase_config_static %}
+                    <div v-if="!isStream" class="vape-cms-el-config-showcase__field">
+                        <sw-entity-multi-select
+                            v-model:entity-collection="productCollection"
+                            :criteria="productCriteria"
+                            :label="$t('vape-cms.elements.showcase.config.products')"
+                            :placeholder="$t('vape-cms.elements.showcase.config.productsPlaceholder')"
+                            :help-text="$t('vape-cms.elements.showcase.config.productsHelp')"
+                            @update:entity-collection="onProductsChange"
+                        />
+                    </div>
+                {% endblock %}
+
+                {# --- STREAM: dinamik ürün grubu --- #}
+                {% block vape_cms_element_showcase_config_stream %}
+                    <template v-if="isStream">
+                        <div class="vape-cms-el-config-showcase__field">
+                            <sw-entity-single-select
+                                :value="element.config.productStreamId.value"
+                                entity="product_stream"
+                                :criteria="productStreamCriteria"
+                                :label="$t('vape-cms.elements.showcase.config.productStream')"
+                                :placeholder="$t('vape-cms.elements.showcase.config.productStreamPlaceholder')"
+                                show-clearable-button
+                                @update:value="onStreamChange"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-showcase__field">
+                            <mt-number-field
+                                v-model="element.config.limit.value"
+                                number-type="int"
+                                :min="1"
+                                :max="12"
+                                :label="$t('vape-cms.elements.showcase.config.limit')"
+                                :help-text="$t('vape-cms.elements.showcase.config.limitHelp')"
+                            />
+                        </div>
+
+                        <mt-banner variant="info">
+                            {{ $t('vape-cms.elements.showcase.config.streamHint') }}
+                        </mt-banner>
+                    </template>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== AYARLAR (BANNER GÖRÜNÜM) ==================== #}
+            <sw-container v-if="active === 'settings'">
+
+                {% block vape_cms_element_showcase_config_media %}
+                    <div class="vape-cms-el-config-showcase__field">
+                        <sw-media-upload-v2
+                            variant="regular"
+                            :upload-tag="uploadTag"
+                            :source="mediaPreview"
+                            :allow-multi-select="false"
+                            :label="$t('vape-cms.elements.showcase.config.media')"
+                            :help-text="$t('vape-cms.elements.showcase.config.mediaHelp')"
+                            @selection-change="onMediaSelectionChange"
+                            @media-upload-remove-image="onMediaRemove"
+                        />
+                        <sw-upload-listener
+                            :upload-tag="uploadTag"
+                            auto-upload
+                            @media-upload-finish="onMediaUploadFinish"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_showcase_config_appearance %}
+                    <sw-container columns="1fr 1fr" gap="0 24px">
+                        <div class="vape-cms-el-config-showcase__field">
+                            <mt-colorpicker
+                                v-model="element.config.bgColor.value"
+                                :label="$t('vape-cms.elements.showcase.config.bgColor')"
+                                :help-text="$t('vape-cms.elements.showcase.config.bgColorHelp')"
+                                color-output="hex"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-showcase__field">
+                            <mt-number-field
+                                v-model="element.config.overlayOpacity.value"
+                                number-type="int"
+                                :min="0"
+                                :max="100"
+                                :step="5"
+                                :label="$t('vape-cms.elements.showcase.config.overlayOpacity')"
+                                :help-text="$t('vape-cms.elements.showcase.config.overlayOpacityHelp')"
+                            />
+                        </div>
+                    </sw-container>
+                {% endblock %}
+
+            </sw-container>
+
+        </template>
+    </sw-tabs>
+</div>
+{% endblock %}
