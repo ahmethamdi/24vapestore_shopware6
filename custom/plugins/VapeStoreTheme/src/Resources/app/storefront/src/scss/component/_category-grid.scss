@@ -199,23 +199,63 @@ Boş config (0 kart) ile de temiz render olur — element hiç şerit basmaz.
         object-fit: cover;
         object-position: center;
         display: block;
+        // hover'da hafif zoom — carousel ile aynı "canlı/tıklanabilir" affordance.
+        transition: transform $vape-duration-slow $vape-ease-out;
 
-        // Görseli olmayan kategori: baş harf yer tutucu (span.--placeholder)
+        // Görseli olmayan kategori: kasıtlı yer tutucu (span.--placeholder).
+        // Carousel ile AYNI görsel dil: gradient doku + sol-üst kırmızı işaret +
+        // sol-altta net kategori etiketi. "Kırık gri kutu" DEĞİL.
         &--placeholder {
+            position: relative;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: $vape-catgrid-fallback-bg;
-            color: $vape-catgrid-fallback-fg;
-            font-size: $vape-text-4xl;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: $vape-space-4;
+            background:
+                linear-gradient(150deg, $vape-neutral-100 0%, $vape-neutral-50 100%);
+            color: $vape-neutral-400;
+            font-size: $vape-catgrid-title-size;
             font-weight: $vape-weight-bold;
+            line-height: $vape-leading-snug;
+            letter-spacing: $vape-tracking-tight;
+            text-transform: none;
+            overflow: hidden;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: $vape-space-4;
+                left: $vape-space-4;
+                width: $vape-catgrid-mark-width;
+                height: $vape-catgrid-mark-height;
+                border-radius: $vape-radius-pill;
+                background: $vape-brand;
+            }
         }
 
-        // Küçük karelerdeki yer tutucu — daha küçük harf, biraz farklı ton
+        // Küçük karelerdeki yer tutucu — aynı dil, daha sıkı ölçek.
+        // Küçük karede etiket taşmasın; işaret ve padding küçültülür.
         &--tile {
-            background-color: $vape-catgrid-tile-fallback-bg;
-            font-size: $vape-text-lg;
+            padding: $vape-space-2;
+            background:
+                linear-gradient(150deg, $vape-neutral-50 0%, $vape-neutral-100 100%);
+            font-size: $vape-text-sm;
+
+            &::before {
+                top: $vape-space-2;
+                left: $vape-space-2;
+                width: $vape-catgrid-mark-width-tile;
+            }
         }
+    }
+
+    // hover: kart görselini yakınlaştır (hero/tile overflow:hidden kırpar).
+    // Placeholder zoom'lanmaz — sadece gerçek görsel.
+    &__card:hover .vape-category-grid__image {
+        transform: scale(1.05);
+    }
+    &__card:hover .vape-category-grid__image--placeholder {
+        transform: none;
     }
 
     // ---------- kart gövdesi ----------

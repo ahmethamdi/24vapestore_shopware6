@@ -48,9 +48,12 @@ $vape-neutral-950: #0b0b0f;   // koyu bölümler (footer, üst bar)
 $vape-neutral-0:   #000000;
 
 // Durum renkleri
-$vape-success: #1db954;
-$vape-info:    #2e9bff;
-$vape-warning: #ffab2e;
+// ⚠️ overrides.scss (Bootstrap $success/$info/$warning) VE theme.json ile SENKRON.
+// Üçü aynı değere sabitlendi — önceden üç dosya üç farklı ton veriyordu (özensiz
+// buton/rozet renkleri). Tek doğruluk: bu değerler. Birini değiştir → üçünü değiştir.
+$vape-success: #16a34a;
+$vape-info:    #0284c7;
+$vape-warning: #d97706;
 $vape-danger:  #e11122;
 
 // ==================================================
@@ -112,9 +115,15 @@ $vape-space-16: 64px;
 $vape-space-20: 80px;
 $vape-space-24: 96px;
 
-// Bölüm (section) dikey boşlukları
-$vape-section-gap-mobile:  $vape-space-10;
-$vape-section-gap-desktop: $vape-space-20;
+// Bölüm (section) dikey boşlukları — anasayfa ritmi.
+// Önceden CMS section'lara hiç uygulanmıyordu; 11 bölüm tek beyaz lapa akıyordu.
+// Nefes payını artırdık + xl kırılımı ekledik (editorial ritim).
+$vape-section-gap-mobile:  $vape-space-12;   // 48px
+$vape-section-gap-desktop: $vape-space-20;   // 80px
+$vape-section-gap-xl:      112px;            // ≥1200px — geniş ekranda daha çok nefes
+
+// Bölüm zemin tonu — beyaz ↔ hafif gri alternasyonu için
+$vape-section-tone-subtle: $vape-bg-subtle;  // #f7f7f9
 
 // ==================================================
 // 4. TİPOGRAFİ
@@ -131,8 +140,8 @@ $vape-text-md:  16px;   // gövde
 $vape-text-lg:  18px;
 $vape-text-xl:  20px;
 $vape-text-2xl: 24px;
-$vape-text-3xl: 32px;
-$vape-text-4xl: 40px;
+$vape-text-3xl: 36px;
+$vape-text-4xl: 44px;
 $vape-text-5xl: 56px;
 
 // Ağırlıklar
@@ -253,6 +262,45 @@ $vape-badge-height:      20px;
 $vape-badge-padding:     2px $vape-space-2 2px $vape-space-4;  // sol kenar bayrak formu
 $vape-badge-radius:      0 $vape-radius-sm $vape-radius-sm 0;
 
+// ---- Ürün kartı yeniden tasarım (aboutyou anatomisi) ----
+// 3:4 dikey görsel, marka eyebrow, 2 satır isim, koyu CTA (kırmızı DEĞİL).
+// Core box-standard'ın sabit yükseklikli ölü alanları twig'de temizlendi;
+// burada yalnızca yeni görsel dil.
+$vape-pcard-radius:           $vape-radius-lg;                    // kartlarla tutarlı yumuşak köşe
+$vape-pcard-border:           $vape-border-subtle;               // beyazı beyazdan ayır
+$vape-pcard-shadow:           $vape-shadow-sm;                   // düz "gri kutu" hissini kır
+$vape-pcard-shadow-hover:     $vape-shadow-md;
+$vape-pcard-bg:               $vape-neutral-white;
+$vape-pcard-image-bg:         $vape-neutral-50;                  // görsel/placeholder zemini
+$vape-pcard-image-ratio:      $vape-product-image-ratio;         // 3/4 — ölçülü
+$vape-pcard-body-pad:         $vape-space-4;                     // 16px iç boşluk
+$vape-pcard-body-gap:         $vape-space-1;                     // satırlar arası ritim
+
+// Marka eyebrow (isim üstü, küçük gri, aralıklı)
+$vape-pcard-brand-size:       $vape-text-2xs;                    // 10px
+$vape-pcard-brand-weight:     $vape-weight-semibold;
+$vape-pcard-brand-color:      $vape-text-muted;
+$vape-pcard-brand-tracking:   $vape-tracking-wide;
+
+// İsim — 2 satır kırpılır, sabit yükseklik yerine min ile taban
+$vape-pcard-name-size:        $vape-text-md;                     // 16px
+$vape-pcard-name-weight:      $vape-weight-medium;
+$vape-pcard-name-color:       $vape-text-heading;
+$vape-pcard-name-lines:       2;
+$vape-pcard-name-leading:     $vape-leading-snug;                // 1.3
+
+// Sepete ekle — KOYU dolgu (altın kural: kırmızı dolgulu CTA yok)
+$vape-pcard-cta-bg:           $vape-neutral-900;
+$vape-pcard-cta-bg-hover:     $vape-neutral-800;
+$vape-pcard-cta-fg:           $vape-neutral-white;
+$vape-pcard-cta-height:       40px;
+$vape-pcard-cta-radius:       $vape-radius-md;
+
+// Wishlist kalp — görselin sağ üstünde nötr daire, hover kırmızı
+$vape-pcard-wish-bg:          rgba(255, 255, 255, 0.92);
+$vape-pcard-wish-fg:          $vape-neutral-700;
+$vape-pcard-wish-fg-hover:    $vape-brand;
+
 // Buton — ölçüldü
 $vape-btn-height:    48px;
 $vape-btn-padding-x: $vape-space-6;  // 24px
@@ -327,6 +375,37 @@ $vape-flyout-fallback-fg:     $vape-neutral-white;
 $vape-flyout-head-gap:        $vape-space-3;
 
 // ==================================================
+// 12b. HERO SLIDER (vape-hero CMS element)
+//
+// Önceden magic px doluydu; site diline hizalamak için tokenize edildi.
+// Ok/kart/dot boyutları ve radius artık site geneliyle tutarlı (radius-lg,
+// carousel oklarıyla aynı ölçü). Hero ilk görülen eleman — tutarlılık kritik.
+// ==================================================
+
+$vape-hero-min-height:        520px;                // slide taban yüksekliği (desktop)
+$vape-hero-media-min-height:  240px;                // görsel taban (mobil)
+$vape-hero-panel-col:         minmax(380px, 0.95fr);  // sol panele nefes (UX P1.1)
+$vape-hero-media-col:         1.35fr;                 // görsel kolonu dengelendi
+
+$vape-hero-radius:            $vape-radius-lg;       // kartlarla tutarlı (keskin radius-sm YERİNE)
+
+// Slide noktaları — çizgi biçimli
+$vape-hero-dot-width:         24px;
+$vape-hero-dot-width-active:  40px;
+$vape-hero-dot-height:        4px;
+$vape-hero-dot-opacity:       0.4;
+
+// Ürün küçük görselleri (hero panelinde)
+$vape-hero-thumb-size:        64px;
+$vape-hero-thumb-size-lg:     80px;
+
+// Oklar — carousel/rail oklarıyla aynı ölçü ve dil
+$vape-hero-arrow-size:        44px;
+$vape-hero-arrow-bg:          rgba(255, 255, 255, 0.92);
+$vape-hero-arrow-bg-hover:    $vape-neutral-white;
+$vape-hero-arrow-fg:          $vape-neutral-900;
+
+// ==================================================
 // 13. KATEGORİ CAROUSEL (vape-category-carousel CMS element)
 //
 // Yatay kaydırılabilir kategori kartları şeridi. Beyaz zemin, nötr gri
@@ -339,8 +418,10 @@ $vape-catcar-card-width:        260px;   // ≥768px
 $vape-catcar-card-width-mobile: 200px;   // <768px, dokunmatik kaydırma
 $vape-catcar-card-gap:          $vape-space-4;
 $vape-catcar-card-radius:       $vape-radius-lg;
-$vape-catcar-card-bg:           $vape-neutral-50;
-$vape-catcar-card-bg-hover:     $vape-neutral-100;
+// Kart zemini beyaz — gri section zemininde kart öne çıksın (UX P1.4).
+// Önceden neutral-50 kart neutral-50 zeminde görünmüyordu ("kutu" hissi).
+$vape-catcar-card-bg:           $vape-neutral-white;
+$vape-catcar-card-bg-hover:     $vape-neutral-white;
 $vape-catcar-card-border:       $vape-border-subtle;
 
 // Kart görsel alanı
@@ -368,7 +449,7 @@ $vape-catcar-fallback-bg:       $vape-neutral-100;
 $vape-catcar-fallback-fg:       $vape-neutral-300;
 
 // Başlık bölümü
-$vape-catcar-eyebrow-color:     $vape-text-muted;
+$vape-catcar-eyebrow-color:     $vape-brand;   // gri yerine marka kırmızısı — ölçülü vurgu
 $vape-catcar-highlight-color:   $vape-brand;   // <mark> vurgu rengi
 
 // Ok butonları
@@ -400,10 +481,10 @@ $vape-prail-subline-color:     $vape-text-muted;
 $vape-prail-subline-size:      $vape-text-sm;
 
 // ---------- kaydırma rayı ----------
-$vape-prail-track-gap:         $vape-grid-gap;  // kartlar arası — ürün grid'iyle aynı ritim
+$vape-prail-track-gap:         $vape-space-4;   // 16px — 3:4 kartlar arası nefes
 $vape-prail-track-pad-y:       $vape-space-2;   // ok gölgesi / hover kırpılmasın
-$vape-prail-item-width:        180px;           // <768px scroll-snap kart genişliği
-$vape-prail-item-width-md:     240px;           // ≥768px
+$vape-prail-item-width:        170px;           // <768px scroll-snap kart genişliği
+$vape-prail-item-width-md:     220px;           // ≥768px (3:4 → ~293px yükseklik)
 
 // ---------- ok butonları ----------
 // Kategori carousel okları ile aynı dil; ayrı token'lar ki ray okları
@@ -440,7 +521,7 @@ $vape-fsplit-col-gap:            $vape-space-8;
 $vape-fsplit-left-width:         360px;   // ≥992px sabit sol sütun genişliği
 
 // ---------- sol sütun ----------
-$vape-fsplit-eyebrow-color:      $vape-text-muted;
+$vape-fsplit-eyebrow-color:      $vape-brand;   // gri yerine marka kırmızısı — ölçülü vurgu
 $vape-fsplit-desc-color:         $vape-text-primary;
 
 // Dikey SEKME (tab) listesi
@@ -504,8 +585,8 @@ $vape-catgrid-card-width:        340px;   // ≥768px
 $vape-catgrid-card-width-mobile: 280px;   // <768px, dokunmatik kaydırma
 $vape-catgrid-card-gap:          $vape-space-5;
 $vape-catgrid-card-radius:       $vape-radius-lg;
-$vape-catgrid-card-bg:           $vape-neutral-50;
-$vape-catgrid-card-bg-hover:     $vape-neutral-100;
+$vape-catgrid-card-bg:           $vape-neutral-white;
+$vape-catgrid-card-bg-hover:     $vape-neutral-white;
 $vape-catgrid-card-border:       $vape-border-subtle;
 
 // Mozaik — büyük hücre + 3 küçük kare
@@ -524,11 +605,17 @@ $vape-catgrid-cta-bg:            $vape-neutral-900;
 $vape-catgrid-cta-bg-hover:      $vape-neutral-800;
 $vape-catgrid-cta-fg:            $vape-neutral-white;
 
-// Görseli olmayan kategori/kare — baş harf yer tutucu
+// Görseli olmayan kategori/kare — kasıtlı yer tutucu
 // Beyaz temaya uygun yumuşak açık zemin + soluk harf (kapkara DEĞİL).
 $vape-catgrid-fallback-bg:       $vape-neutral-100;
 $vape-catgrid-fallback-fg:       $vape-neutral-300;
 $vape-catgrid-tile-fallback-bg:  $vape-neutral-50;    // küçük kareler biraz farklı ton
+
+// Kırmızı işaret çizgisi (sol-üst) — carousel yer tutucusuyla aynı görsel dil.
+// Büyük hero'da tam boy; küçük karede daralır (etiket taşmasın).
+$vape-catgrid-mark-width:        28px;
+$vape-catgrid-mark-height:       3px;
+$vape-catgrid-mark-width-tile:   18px;
 
 // Başlık bölümü
 $vape-catgrid-headline-color:    $vape-text-heading;

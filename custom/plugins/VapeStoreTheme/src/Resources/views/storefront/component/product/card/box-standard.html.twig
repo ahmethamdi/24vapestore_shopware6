@@ -1,0 +1,56 @@
+{% sw_extends '@Storefront/storefront/component/product/card/box-standard.html.twig' %}
+
+{#
+    Ürün kartı — 24VapeStore yeniden tasarımı (aboutyou anatomisi).
+
+    Core box-standard'ı MINIMAL ez. Amaç:
+      1. Boş "description" bloğunu KALDIR — core'da sabit 4.5rem yükseklik veriyordu,
+         açıklama boş olunca kart devasa boşlukla uzuyordu (asıl şişme sebebi).
+      2. Marka adını isim ÜSTÜNDE küçük gri eyebrow olarak göster (aboutyou dili).
+      3. Varyant satırını yalnızca gerçekten varyant varsa render et.
+
+    Görsel oran (3:4), tipografi, gölge, buton stili _product-card.scss'ten gelir.
+    Sepet/fiyat/wishlist/stretched-link core mantığı KORUNUR — sadece görünmeyen
+    ölü alanlar temizlenir. Golden rule etkilenmez: kart hâlâ CMS listelemeden gelir.
+#}
+
+{# Marka eyebrow — ismin hemen üstünde. Core'da name bloğunun içine giremeyiz
+   temiz şekilde, o yüzden rating bloğunu markayla birleştiriyoruz. #}
+{% block component_product_box_rating %}
+    {# `brand` core'da üst blokta {% set %} ile tanımlı; sw_extends alt bloğuna
+       taşınmaz (twig scope). Entity'den doğrudan oku — manufacturer objesi
+       resolver'da addAssociation ile yükleniyor. #}
+    {% set brandName = product.manufacturer.translated.name|default(brand|default('')) %}
+    {% if brandName %}
+        <div class="product-brand-eyebrow">{{ brandName }}</div>
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
+
+{# Varyant satırı: boşsa hiç render etme (ölü yükseklik bırakma). #}
+{% block component_product_box_variant_characteristics %}
+    {% if not displayParent and product.variation|length > 0 %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{# Açıklama: kartta göstermiyoruz. Core sabit yükseklikli boş <p> bırakıyordu —
+   dev boşluğun kaynağı buydu. Blok'u tamamen boşaltıyoruz. #}
+{% block component_product_box_description %}{% endblock %}
+
+{# Görsel yer tutucu — gerçek cover yokken "kırık gri kutu" yerine markaya göre
+   renkli, kasıtlı bir kart göster. Gerçek foto (cover.url) gelince core zaten
+   onu basar, buraya hiç düşmez. Marka adının baş harfi + tam ad, renk marka
+   adının hash'inden deterministik seçilir (data-brand-hue). #}
+{% block component_product_box_image_placeholder %}
+    {% set brandName = product.manufacturer.translated.name|default('') %}
+    {% set seed = brandName ?: product.translated.name|default('V') %}
+    {% set hue = (seed|length * 47 + seed|slice(0,1)|lower|first|default('a')|url_encode|length * 13) % 360 %}
+    <div class="product-image-placeholder product-image-placeholder--branded"
+         style="--vape-ph-hue: {{ hue }};">
+        <span class="product-image-placeholder__mark">{{ seed|slice(0, 1)|upper }}</span>
+        {% if brandName %}
+            <span class="product-image-placeholder__brand">{{ brandName }}</span>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -11,6 +11,10 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 // 1. Token'lar — her zaman ilk
 @import 'abstract/tokens';
 
+// Not: Inter @font-face core storefront'ta zaten tanımlı
+// (vendor/.../skin/shopware/vendor/_inter-fontface.scss, family adı 'Inter').
+// $vape-font-base bu adı kullanır — ayrıca yüklemeye gerek yok.
+
 // 2. Layout parçaları
 @import 'layout/header';
 // @import 'layout/footer';
@@ -24,7 +28,7 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 @import 'component/usp-strip';
 @import 'component/promo-banner';
 @import 'component/brand-slider';
-// @import 'component/product-card';
+@import 'component/product-card';
 
 // ==================================================
 // Temel tipografi ve zemin
@@ -41,6 +45,54 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+// ==================================================
+// Anasayfa bölüm ritmi (UX kritiği P0.1 — en büyük kazanç)
+//
+// Önceden CMS section'lara hiç dikey ritim uygulanmıyordu: 11 bölüm tek beyaz
+// lapa halinde akıyordu, bölüm sınırı algılanmıyordu. Burada:
+//   1. Her section'a nefes payı (mobil→desktop→xl kademeli)
+//   2. Beyaz ↔ hafif gri zemin alternasyonu → bölümler birbirinden ayrışsın
+//
+// Zemin alternasyonu pos-N ile hedeflenir (anasayfa layout sırası sabit).
+// Not: hero (pos-1) ve promo banner kendi tam-genişlik/koyu zeminini taşır,
+// onlara dokunulmaz. Yönetici section'ı taşırsa native "Hintergrund" ayarı
+// yine öncelikli — bu yalnızca varsayılan ritim.
+// ==================================================
+
+.cms-page .cms-section {
+    padding-top: $vape-section-gap-mobile;
+    padding-bottom: $vape-section-gap-mobile;
+
+    @media (min-width: 768px) {
+        padding-top: $vape-section-gap-desktop;
+        padding-bottom: $vape-section-gap-desktop;
+    }
+
+    @media (min-width: 1200px) {
+        padding-top: $vape-section-gap-xl;
+        padding-bottom: $vape-section-gap-xl;
+    }
+
+    // Hero: kendi ritmini taşır, üstten boşluk istemez
+    &.pos-0,
+    &.pos-1 {
+        padding-top: 0;
+    }
+}
+
+// Zemin alternasyonu — keşif/marka blokları hafif gri şeride geçer,
+// ürün rayları beyazda kalır. Bölüm sınırını gözle ayırır.
+.cms-page .cms-section {
+    &.pos-5,    // kategori carousel
+    &.pos-9,    // kategori grid
+    &.pos-13,   // usp güven şeridi
+    &.pos-17 {  // marka slider
+        background-color: $vape-section-tone-subtle;
+    }
+}
+
+// Başlık ölçeği — Bootstrap'ın cılız defaultları yerine tema skalası.
+// Görsel hiyerarşi boyut + ağırlık + tracking ile taşınır.
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
     color: $vape-text-heading;
@@ -48,6 +100,20 @@ h1, h2, h3, h4, h5, h6,
     font-weight: $vape-weight-bold;
     letter-spacing: $vape-tracking-tight;
     line-height: $vape-leading-tight;
+}
+
+h1, .h1 { font-size: $vape-text-4xl; }   // 40
+h2, .h2 { font-size: $vape-text-3xl; }   // 36
+h3, .h3 { font-size: $vape-text-2xl; }   // 24
+h4, .h4 { font-size: $vape-text-xl; }    // 20
+h5, .h5 { font-size: $vape-text-lg; }    // 18
+h6, .h6 {
+    font-size: $vape-text-md;            // 16
+    letter-spacing: $vape-tracking-normal;
+}
+
+@media (min-width: 768px) {
+    h1, .h1 { font-size: $vape-text-5xl; }   // 56 masaüstünde daha dramatik
 }
 
 a {

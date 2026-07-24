@@ -125,10 +125,11 @@
                                             }
                                         } %}
                                     {% else %}
-                                        <img src="{{ asset('assets/default/cms/preview_mountain_large.jpg', 'asset') }}"
-                                             class="vape-hero__image vape-hero__image--placeholder"
-                                             alt=""
-                                             loading="{{ loop.first ? 'eager' : 'lazy' }}" />
+                                        {# Görsel yokken dağ fotoğrafı yerine markaya uygun
+                                           şık gradient zemin — hero asla "yabancı stok foto"
+                                           göstermesin, tasarlanmış dursun. #}
+                                        <div class="vape-hero__image vape-hero__image--placeholder"
+                                             aria-hidden="true"></div>
                                     {% endif %}
                                 </div>
 

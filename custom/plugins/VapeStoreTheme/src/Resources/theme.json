@@ -115,21 +115,21 @@
       },
       "sw-color-success": {
         "type": "color",
-        "value": "#1db954",
+        "value": "#16a34a",
         "editable": true,
         "block": "statusColors",
         "order": 100
       },
       "sw-color-info": {
         "type": "color",
-        "value": "#2e9bff",
+        "value": "#0284c7",
         "editable": true,
         "block": "statusColors",
         "order": 200
       },
       "sw-color-warning": {
         "type": "color",
-        "value": "#ffab2e",
+        "value": "#d97706",
         "editable": true,
         "block": "statusColors",
         "order": 300

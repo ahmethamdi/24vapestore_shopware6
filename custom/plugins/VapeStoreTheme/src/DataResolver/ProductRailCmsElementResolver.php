@@ -110,6 +110,7 @@ class ProductRailCmsElementResolver extends AbstractCmsElementResolver
         $criteria = new Criteria($ids);
         $criteria->addAssociation('cover');
         $criteria->addAssociation('options.group');
+        $criteria->addAssociation('manufacturer');   // kart marka eyebrow'u için
 
         $products = $this->productRepository->search($criteria, $context)->getEntities();
 
@@ -156,6 +157,7 @@ class ProductRailCmsElementResolver extends AbstractCmsElementResolver
         $criteria->addSorting(new FieldSorting('name', FieldSorting::ASCENDING));
         $criteria->addAssociation('cover');
         $criteria->addAssociation('options.group');
+        $criteria->addAssociation('manufacturer');   // kart marka eyebrow'u için
 
         // Varyant gruplaması — aynı ana ürünün varyantları rayı doldurmasın.
         $criteria->addGroupField(new FieldGrouping('displayGroup'));

@@ -182,6 +182,7 @@ class FeaturedSplitCmsElementResolver extends AbstractCmsElementResolver
         $criteria = new Criteria($ids);
         $criteria->addAssociation('cover');
         $criteria->addAssociation('options.group');
+        $criteria->addAssociation('manufacturer');   // kart marka eyebrow'u için
 
         $products = $this->search($criteria, $context);
         $products->sortByIdArray($ids);
@@ -228,6 +229,7 @@ class FeaturedSplitCmsElementResolver extends AbstractCmsElementResolver
     {
         $criteria->addAssociation('cover');
         $criteria->addAssociation('options.group');
+        $criteria->addAssociation('manufacturer');   // kart marka eyebrow'u için
         $criteria->addGroupField(new FieldGrouping('displayGroup'));
         $criteria->addFilter(new NotEqualsFilter('displayGroup', null));
     }

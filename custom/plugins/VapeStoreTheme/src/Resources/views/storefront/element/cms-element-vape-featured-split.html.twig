@@ -133,6 +133,7 @@
                                                 {% for product in products %}
                                                     <div class="vape-featured-split__item" data-vape-featured-split-item>
                                                         {% sw_include '@Storefront/storefront/component/product/card/box.html.twig' with {
+                                                            'product': product,
                                                             'layout': 'standard'
                                                         } %}
                                                     </div>

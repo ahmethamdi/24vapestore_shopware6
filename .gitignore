@@ -49,3 +49,4 @@ npm-debug.log*
 # Playwright CLI
 .playwright-cli/
 output/
+/dev-tools/

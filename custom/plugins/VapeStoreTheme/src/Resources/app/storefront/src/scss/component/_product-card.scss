@@ -1,0 +1,249 @@
+/*
+Ürün kartı — storefront (core product-box'ın yeniden biçimlenmesi).
+
+Kartın MARKUP'ı core box-standard'dır (bizim minimal twig override'ımızla:
+boş açıklama/varyant kaldırıldı, marka eyebrow eklendi). Burada yalnızca görsel
+dil: 3:4 dikey görsel, aboutyou anatomisi, koyu CTA.
+
+Neden core'un sabit yükseklikleri sorundu:
+  - .product-image-wrapper sabit 200px → placeholder o alanı dolduramayınca boşluk
+  - .product-description sabit 4.5rem → açıklama boş olsa da yer kaplıyor
+Twig'de ölü alanlar temizlendi; burada görseli aspect-ratio'ya, ismi satır
+kırpmaya, kartı yumuşak gölgeye bağlıyoruz.
+
+Görsel dil: beyaz kart + ince kenar + yumuşak gölge, hover'da yükselir.
+Kırmızı yalnızca indirim fiyatı, wishlist hover ve rozet'te. CTA KOYU (altın kural).
+Tüm değerler token — magic px/hex yok.
+*/
+
+.product-box.box-standard {
+    height: 100%;
+    background-color: $vape-pcard-bg;
+    border: 1px solid $vape-pcard-border;
+    border-radius: $vape-pcard-radius;
+    overflow: hidden;
+    transition:
+        border-color $vape-duration-fast $vape-ease-out,
+        box-shadow $vape-duration-base $vape-ease-out,
+        transform $vape-duration-base $vape-ease-out;
+
+    &:hover {
+        border-color: $vape-border-strong;
+        box-shadow: $vape-pcard-shadow-hover;
+        transform: translateY(-2px);
+    }
+
+    // Bootstrap .card default kenar/gölgesini nötrle (biz yönetiyoruz)
+    &.card {
+        box-shadow: $vape-pcard-shadow;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;   // görsel tam kenara otursun; metni ayrı padle
+    }
+
+    // ---------- görsel alanı: 3:4 dikey ----------
+
+    .product-image-wrapper {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: auto;                              // core'un sabit 200px'ini iptal et
+        aspect-ratio: $vape-pcard-image-ratio;     // 3/4
+        background-color: $vape-pcard-image-bg;
+        overflow: hidden;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        max-height: none;                          // core max-height 200px iptal
+        object-fit: contain;                       // vape kutusu kırpılmasın
+        object-position: center;
+        mix-blend-mode: multiply;                  // beyaz foto zemini karta karışsın
+    }
+
+    .product-image.is-cover {
+        object-fit: cover;
+    }
+
+    // Placeholder — foto yokken. Core devasa "fluid" ikon veriyordu;
+    // 3:4 alanda ortalanmış, yumuşak, ölçülü bir ikona indir.
+    .product-image-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+
+        svg,
+        .icon {
+            width: 40%;
+            max-width: 96px;
+            height: auto;
+            color: $vape-neutral-300;
+            opacity: 0.9;
+        }
+    }
+
+    // Markalı yer tutucu — gerçek foto gelene kadar "kırık gri kutu" yerine
+    // kasıtlı, renkli bir kart. Renk marka adının hash'inden (--vape-ph-hue).
+    // Düşük doygunluk + açık ton → beyaz kartla uyumlu, ucuz görünmez.
+    .product-image-placeholder--branded {
+        position: relative;
+        flex-direction: column;
+        gap: $vape-space-2;
+        background:
+            linear-gradient(
+                150deg,
+                hsl(var(--vape-ph-hue, 220), 32%, 94%) 0%,
+                hsl(var(--vape-ph-hue, 220), 26%, 88%) 100%
+            );
+        overflow: hidden;
+
+        // ince marka kırmızısı köşe işareti — marka mevcudiyeti sinyali
+        &::before {
+            content: "";
+            position: absolute;
+            top: $vape-space-3;
+            left: $vape-space-3;
+            width: 26px;
+            height: 3px;
+            border-radius: $vape-radius-pill;
+            background: $vape-brand;
+        }
+
+        .product-image-placeholder__mark {
+            font-family: $vape-font-heading;
+            font-size: $vape-text-5xl;
+            font-weight: $vape-weight-black;
+            line-height: 1;
+            letter-spacing: $vape-tracking-tight;
+            color: hsl(var(--vape-ph-hue, 220), 45%, 42%);
+            opacity: 0.55;
+        }
+
+        .product-image-placeholder__brand {
+            font-size: $vape-text-xs;
+            font-weight: $vape-weight-semibold;
+            letter-spacing: $vape-tracking-wide;
+            text-transform: uppercase;
+            color: hsl(var(--vape-ph-hue, 220), 30%, 38%);
+            opacity: 0.8;
+        }
+    }
+
+    // ---------- wishlist kalp ----------
+
+    .product-wishlist-action {
+        position: absolute;
+        top: $vape-space-2;
+        right: $vape-space-2;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: $vape-radius-pill;
+        background-color: $vape-pcard-wish-bg;
+        color: $vape-pcard-wish-fg;
+        box-shadow: $vape-shadow-xs;
+        transition: color $vape-duration-fast $vape-ease-out;
+
+        &:hover {
+            color: $vape-pcard-wish-fg-hover;
+        }
+    }
+
+    // ---------- metin gövdesi ----------
+
+    .product-info {
+        display: flex;
+        flex-direction: column;
+        gap: $vape-pcard-body-gap;
+        flex: 1 1 auto;
+        padding: $vape-pcard-body-pad;
+    }
+
+    // Marka eyebrow (twig'de eklendi)
+    .product-brand-eyebrow {
+        font-size: $vape-pcard-brand-size;
+        font-weight: $vape-pcard-brand-weight;
+        line-height: 1;
+        letter-spacing: $vape-pcard-brand-tracking;
+        text-transform: uppercase;
+        color: $vape-pcard-brand-color;
+    }
+
+    // Boş rating konteynerini yok say (yer kaplamasın)
+    .product-rating:empty {
+        display: none;
+    }
+
+    // İsim — 2 satır kırpma, sabit yükseklik yerine min
+    .product-name {
+        display: -webkit-box;
+        -webkit-line-clamp: $vape-pcard-name-lines;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: calc(#{$vape-pcard-name-size} * #{$vape-pcard-name-leading} * #{$vape-pcard-name-lines});
+        margin: 0;
+        font-size: $vape-pcard-name-size;
+        font-weight: $vape-pcard-name-weight;
+        line-height: $vape-pcard-name-leading;
+        color: $vape-pcard-name-color;
+        text-decoration: none;
+
+        &:hover {
+            color: $vape-neutral-900;
+        }
+    }
+
+    // Fiyat — mantık base.scss'ten (koyu / indirim kırmızı). Sadece boşluk ritmi.
+    .product-price-info,
+    .product-price {
+        margin-top: $vape-space-1;
+    }
+
+    // "incl. VAT / shipping" satırı — küçük, gri, ölçülü
+    .product-variant-characteristics,
+    .price-unit-content,
+    .product-price-unit {
+        font-size: $vape-text-xs;
+        color: $vape-text-muted;
+    }
+
+    // ---------- sepete ekle (KOYU dolgu — kırmızı değil) ----------
+
+    .product-action {
+        margin-top: $vape-space-3;
+    }
+
+    .btn-buy,
+    .product-action .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: $vape-pcard-cta-height;
+        padding: 0 $vape-space-4;
+        border: none;
+        border-radius: $vape-pcard-cta-radius;
+        background-color: $vape-pcard-cta-bg;
+        color: $vape-pcard-cta-fg;
+        font-size: $vape-text-sm;
+        font-weight: $vape-weight-semibold;
+        line-height: 1;
+        transition: background-color $vape-duration-fast $vape-ease-out;
+
+        &:hover,
+        &:focus {
+            background-color: $vape-pcard-cta-bg-hover;
+            color: $vape-pcard-cta-fg;
+        }
+    }
+}

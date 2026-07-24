@@ -119,10 +119,14 @@ Boş config (0 marka) ile de temiz render olur — element hiç şerit basmaz.
 
     // ---------- logosuz marka adı (fallback) ----------
 
+    // Logosuz marka: adı "logo gibi" göster — bold, aralıklı, büyük harf,
+    // kutuda ortalı. "Eksik" değil KASITLI dursun (wordmark hissi).
     &__name {
         font-size: $vape-brand-name-size;
         font-weight: $vape-weight-bold;
         line-height: $vape-leading-snug;
+        letter-spacing: $vape-tracking-wide;
+        text-transform: uppercase;
         text-align: center;
         color: $vape-brand-name-color;
         transition: color $vape-duration-base $vape-ease-out;
