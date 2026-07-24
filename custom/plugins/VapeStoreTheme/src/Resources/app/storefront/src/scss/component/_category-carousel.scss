@@ -192,40 +192,24 @@ Boş config (0 kart) ile de temiz render olur — element hiç şerit basmaz.
     }
 
     // ---------- kart gövdesi ----------
+    // Sadeleştirildi (kullanıcı referansı): sadece isim, ORTALI, buton YOK.
+    // Tüm kart zaten <a> — tıklanabilir, ekstra buton gerekmez.
 
     &__body {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: $vape-space-3;
-        padding: $vape-catcar-body-pad;
+        align-items: center;
+        justify-content: center;
+        padding: $vape-space-4 $vape-space-3;
     }
 
     &__title {
-        font-size: $vape-catcar-title-size;
-        font-weight: $vape-weight-bold;
+        font-size: $vape-text-md;
+        font-weight: $vape-weight-semibold;
         line-height: $vape-leading-snug;
+        text-align: center;
         color: $vape-text-heading;
         transition: color $vape-duration-fast $vape-ease-out;
-    }
-
-    // "İncele" — koyu dolgu buton görünümü (kırmızı DEĞİL).
-    &__cta {
-        display: inline-flex;
-        align-items: center;
-        gap: $vape-space-1;
-        padding: $vape-space-2 $vape-space-4;
-        border-radius: $vape-radius-sm;
-        background-color: $vape-catcar-cta-bg;
-        color: $vape-catcar-cta-fg;
-        font-size: $vape-text-sm;
-        font-weight: $vape-weight-semibold;
-        transition: background-color $vape-duration-fast $vape-ease-out;
-
-        svg {
-            width: 1em;
-            height: 1em;
-        }
     }
 
     // ---------- ok butonları ----------
