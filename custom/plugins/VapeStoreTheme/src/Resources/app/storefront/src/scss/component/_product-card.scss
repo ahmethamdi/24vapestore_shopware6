@@ -117,12 +117,12 @@ Tüm değerler token — magic px/hex yok.
 
         .product-image-placeholder__mark {
             font-family: $vape-font-heading;
-            font-size: $vape-text-5xl;
+            font-size: $vape-text-4xl;
             font-weight: $vape-weight-black;
             line-height: 1;
             letter-spacing: $vape-tracking-tight;
             color: hsl(var(--vape-ph-hue, 220), 45%, 42%);
-            opacity: 0.55;
+            opacity: 0.5;
         }
 
         .product-image-placeholder__brand {

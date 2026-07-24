@@ -681,8 +681,9 @@ $vape-usp-sub-color:       $vape-text-muted;
 // ==================================================
 
 // ---------- kapsayıcı ----------
-$vape-promo-min-height:          220px;   // <768px
-$vape-promo-min-height-md:       320px;   // ≥768px
+$vape-promo-min-height:          260px;   // <768px
+$vape-promo-min-height-md:       420px;   // ≥768px — uzun beyaz akıştaki tek koyu
+                                          // "nefes"; iri olması ritmi güçlendirir (UX P2.3)
 $vape-promo-fallback-bg:         $vape-neutral-900;   // config'te renk yoksa
 
 // ---------- içerik ----------
