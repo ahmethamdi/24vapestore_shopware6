@@ -1,0 +1,149 @@
+// ==================================================
+// HAFTANIN ÜRÜNÜ (vape-product-spotlight CMS element)
+//
+// TEK ürünü büyük gösteren spotlight. Token'lar bölüm 21'den.
+// Kırmızı SADECE eyebrow (işaret). CTA KOYU dolgu — kırmızı DOLGU YOK.
+// Mobil-öncelikli: tek sütun → ≥768px iki sütun (görsel sol / metin sağ).
+// ==================================================
+
+.vape-product-spotlight {
+    display: grid;
+    grid-template-columns: 1fr;              // mobil: görsel üstte, metin altta
+    gap: $vape-spotlight-gap;
+    align-items: center;
+
+    padding: $vape-spotlight-pad;
+    background: $vape-spotlight-bg;
+    border: 1px solid $vape-spotlight-border;
+    border-radius: $vape-spotlight-radius;
+
+    @media (min-width: 768px) {
+        grid-template-columns: 5fr 7fr;      // görsel biraz dar, metin geniş
+        gap: $vape-spotlight-gap-md;
+        padding: $vape-spotlight-pad-md;
+    }
+
+    // ---------- görsel ----------
+    &__media {
+        display: block;
+        position: relative;
+        aspect-ratio: $vape-spotlight-image-ratio;
+        background: $vape-spotlight-image-bg;
+        border-radius: $vape-spotlight-image-radius;
+        overflow: hidden;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    &__placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $vape-spotlight-placeholder-color;
+
+        svg,
+        .icon {
+            width: 64px;
+            height: 64px;
+        }
+    }
+
+    // ---------- içerik ----------
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: $vape-spotlight-body-gap;
+        min-width: 0;
+    }
+
+    &__eyebrow {
+        font-size: $vape-spotlight-eyebrow-size;
+        font-weight: $vape-spotlight-eyebrow-weight;
+        letter-spacing: $vape-spotlight-eyebrow-tracking;
+        text-transform: uppercase;
+        color: $vape-spotlight-eyebrow-color;   // kırmızı işaret
+    }
+
+    &__brand {
+        font-size: $vape-spotlight-brand-size;
+        letter-spacing: $vape-spotlight-brand-tracking;
+        text-transform: uppercase;
+        color: $vape-spotlight-brand-color;
+    }
+
+    &__name {
+        margin: 0;
+        font-size: $vape-spotlight-name-size;
+        font-weight: $vape-spotlight-name-weight;
+        line-height: $vape-leading-tight;
+        color: $vape-spotlight-name-color;
+
+        @media (min-width: 768px) {
+            font-size: $vape-spotlight-name-size-md;
+        }
+    }
+
+    &__name-link {
+        color: inherit;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            color: inherit;
+            text-decoration: underline;
+        }
+    }
+
+    &__desc {
+        margin: 0;
+        max-width: $vape-spotlight-desc-max;
+        font-size: $vape-spotlight-desc-size;
+        line-height: $vape-leading-normal;
+        color: $vape-spotlight-desc-color;
+    }
+
+    &__price {
+        font-size: $vape-spotlight-price-size;
+        font-weight: $vape-spotlight-price-weight;
+        color: $vape-spotlight-price-color;
+
+        // core price-unit partial nötr koyu fiyatla uyumlu
+        .product-price,
+        .price-unit-content {
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+        }
+    }
+
+    &__cta {
+        align-self: flex-start;
+        margin-top: $vape-space-2;
+        padding: $vape-spotlight-cta-pad-y $vape-spotlight-cta-pad-x;
+        border: 0;
+        border-radius: $vape-spotlight-cta-radius;
+        background-color: $vape-spotlight-cta-bg;   // KOYU dolgu — kırmızı DEĞİL
+        color: $vape-spotlight-cta-fg;
+        font-weight: $vape-weight-semibold;
+        text-decoration: none;
+
+        transition: background-color $vape-duration-base $vape-ease-out;
+
+        &:hover,
+        &:focus {
+            background-color: $vape-spotlight-cta-bg-hover;
+            color: $vape-spotlight-cta-fg;
+            text-decoration: none;
+        }
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+}

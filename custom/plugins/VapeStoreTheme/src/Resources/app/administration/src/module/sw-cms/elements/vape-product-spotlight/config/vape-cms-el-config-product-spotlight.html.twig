@@ -1,0 +1,92 @@
+{#
+    Haftanın ürünü config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model
+       sw-*  (legacy)  → v-model:value
+    sw-entity-single-select legacy → v-model:value KULLANILIR.
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+#}
+{% block vape_cms_element_product_spotlight_config %}
+<div class="vape-cms-el-config-product-spotlight">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-product-spotlight"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="settings" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.settings') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== İÇERİK ==================== #}
+            <div v-if="active === 'content'" class="vape-cms-el-config-product-spotlight__content">
+
+                {% block vape_cms_element_product_spotlight_config_product %}
+                    <div class="vape-cms-el-config-product-spotlight__field">
+                        <sw-entity-single-select
+                            v-model:value="element.config.productId.value"
+                            entity="product"
+                            :criteria="productCriteria"
+                            :label="$t('vape-cms.elements.productSpotlight.config.product')"
+                            :placeholder="$t('vape-cms.elements.productSpotlight.config.productPlaceholder')"
+                            show-clearable-button
+                            @update:value="onProductChange"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_product_spotlight_config_text %}
+                    <div class="vape-cms-el-config-product-spotlight__field">
+                        <mt-text-field
+                            v-model="element.config.eyebrow.value"
+                            :label="$t('vape-cms.elements.productSpotlight.config.eyebrow')"
+                            :placeholder="$t('vape-cms.elements.productSpotlight.config.eyebrowPlaceholder')"
+                            :help-text="$t('vape-cms.elements.productSpotlight.config.eyebrowHelp')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-product-spotlight__field">
+                        <mt-textarea
+                            v-model="element.config.description.value"
+                            :label="$t('vape-cms.elements.productSpotlight.config.description')"
+                            :placeholder="$t('vape-cms.elements.productSpotlight.config.descriptionPlaceholder')"
+                        />
+                    </div>
+                {% endblock %}
+
+            </div>
+
+            {# ==================== AYARLAR ==================== #}
+            <div v-if="active === 'settings'" class="vape-cms-el-config-product-spotlight__settings">
+
+                {% block vape_cms_element_product_spotlight_config_cta %}
+                    <div class="vape-cms-el-config-product-spotlight__field">
+                        <mt-text-field
+                            v-model="element.config.ctaText.value"
+                            :label="$t('vape-cms.elements.productSpotlight.config.ctaText')"
+                            :placeholder="$t('vape-cms.elements.productSpotlight.config.ctaTextPlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-product-spotlight__field">
+                        <mt-text-field
+                            v-model="element.config.ctaUrl.value"
+                            :label="$t('vape-cms.elements.productSpotlight.config.ctaUrl')"
+                            :placeholder="$t('vape-cms.elements.productSpotlight.config.ctaUrlPlaceholder')"
+                            :help-text="$t('vape-cms.elements.productSpotlight.config.ctaUrlHelp')"
+                        />
+                    </div>
+                {% endblock %}
+
+            </div>
+
+        </template>
+    </sw-tabs>
+</div>
+{% endblock %}

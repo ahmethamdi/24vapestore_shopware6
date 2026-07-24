@@ -1,0 +1,41 @@
+.vape-cms-preview-trust-bar-block {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    background: #f7f7f8;
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 6px 3px;
+        background: #fff;
+        border: 1px solid #e4e4e9;
+        border-radius: 3px;
+    }
+
+    &__icon {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: #1c1c28;
+        flex: 0 0 auto;
+    }
+
+    &__line {
+        display: block;
+        width: 26px;
+        height: 3px;
+        border-radius: 2px;
+        background: #43434f;
+
+        &--sub {
+            width: 18px;
+            background: #b0b0bb;
+        }
+    }
+}

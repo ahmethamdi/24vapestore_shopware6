@@ -73,6 +73,21 @@
         </service>
 
         <!--
+            Haftanın ürünü (vape-product-spotlight) resolver'ı.
+            TEK productId'yi storefront'ta ProductBoxStruct'a bağlar. Fiyat/cover
+            sales-channel deposundan (calculatedPrice için); marka adı ise ayrı
+            jenerik product.repository sorgusundan gelir — çünkü bu projede
+            sales_channel.product.repository manufacturer'ı düşürüyor.
+            Ürün yoksa struct boş kalır; twig nötr placeholder gösterir.
+        -->
+        <service id="VapeStoreTheme\DataResolver\ProductSpotlightCmsElementResolver">
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="logger"/>
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <!--
             Mega menü kategori görseli.
 
             Kategorinin kendi medyası yoksa, alt ağacındaki bir ürünün kapak

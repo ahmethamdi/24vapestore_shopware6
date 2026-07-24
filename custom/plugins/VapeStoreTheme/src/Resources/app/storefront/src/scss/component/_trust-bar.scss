@@ -1,0 +1,86 @@
+// ==================================================
+// GÜVEN ŞERİDİ (vape-trust-bar CMS element)
+//
+// vape-usp-strip'in daha zengin kardeşi. Token'lar bölüm 20'den.
+// Kırmızı YOK. Mobil-öncelikli: 1 → 2 → 4 kart. Kartlar ince kenarlıklı,
+// ortalanmış içerik. İkonlar dekoratif (twig'de aria-hidden).
+// ==================================================
+
+.vape-trust-bar {
+    background: $vape-trust-bg;
+    padding: $vape-trust-pad-y-mobile $vape-trust-pad-x;
+
+    @media (min-width: 768px) {
+        padding-top: $vape-trust-pad-y-desktop;
+        padding-bottom: $vape-trust-pad-y-desktop;
+    }
+
+    &__grid {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        display: grid;
+        grid-template-columns: 1fr;              // mobil: alt alta
+        gap: $vape-trust-grid-gap;
+
+        @media (min-width: 480px) {
+            grid-template-columns: repeat(2, 1fr); // küçük ekran: 2'li
+            gap: $vape-trust-grid-gap-md;
+        }
+
+        // Masaüstü: item sayısı kadar eşit sütun (auto-fit),
+        // 4 sütun doğal olarak tek satıra sığar.
+        @media (min-width: 900px) {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: $vape-trust-card-gap;
+
+        padding: $vape-trust-card-pad-y $vape-trust-card-pad-x;
+        background: $vape-trust-card-bg;
+        border: 1px solid $vape-trust-card-border;
+        border-radius: $vape-trust-card-radius;
+
+        transition: box-shadow $vape-duration-base $vape-ease-out;
+
+        &:hover {
+            box-shadow: $vape-trust-card-shadow-hover;
+        }
+    }
+
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        color: $vape-trust-icon-color;
+        margin-bottom: $vape-space-1;
+
+        // sw_icon <svg> boyutunu şeride sabitle
+        svg,
+        .icon {
+            width: $vape-trust-icon-size;
+            height: $vape-trust-icon-size;
+        }
+    }
+
+    &__title {
+        font-size: $vape-trust-title-size;
+        font-weight: $vape-trust-title-weight;
+        color: $vape-trust-title-color;
+        line-height: $vape-leading-snug;
+    }
+
+    &__sub {
+        font-size: $vape-trust-sub-size;
+        color: $vape-trust-sub-color;
+        line-height: $vape-leading-snug;
+    }
+}

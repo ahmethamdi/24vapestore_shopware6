@@ -1,0 +1,53 @@
+.vape-cms-el-preview-product-spotlight {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    background: #f7f7f8;
+
+    &__media {
+        aspect-ratio: 3 / 4;
+        max-height: 100%;
+        background: #fff;
+        border: 1px solid #e4e4e9;
+        border-radius: 4px;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    &__eyebrow {
+        width: 44px;
+        height: 4px;
+        border-radius: 2px;
+        background: #e11122;   // kırmızı işaret
+    }
+
+    &__name {
+        width: 78px;
+        height: 8px;
+        border-radius: 2px;
+        background: #18181d;
+    }
+
+    &__desc {
+        width: 66px;
+        height: 4px;
+        border-radius: 2px;
+        background: #b0b0bb;
+    }
+
+    &__cta {
+        margin-top: 4px;
+        width: 52px;
+        height: 12px;
+        border-radius: 3px;
+        background: #18181d;   // koyu CTA
+    }
+}

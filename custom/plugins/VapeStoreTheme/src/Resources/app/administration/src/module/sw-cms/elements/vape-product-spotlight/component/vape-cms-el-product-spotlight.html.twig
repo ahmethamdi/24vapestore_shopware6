@@ -1,0 +1,49 @@
+{#
+    Haftanın ürünü — CMS editörü içindeki önizleme.
+    Sol: büyük görsel. Sağ: kırmızı eyebrow + ürün adı + açıklama + koyu CTA.
+    Ürün seçilmemişse sakin nötr placeholder (renkli harf YOK).
+#}
+{% block vape_cms_el_product_spotlight %}
+<div class="vape-cms-el-product-spotlight">
+
+    {% block vape_cms_el_product_spotlight_media %}
+        <div class="vape-cms-el-product-spotlight__media">
+            <img
+                v-if="coverUrl"
+                :src="coverUrl"
+                :alt="productName"
+                class="vape-cms-el-product-spotlight__image"
+            />
+            <div v-else class="vape-cms-el-product-spotlight__placeholder">
+                <mt-icon name="regular-image" size="40px" />
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_product_spotlight_body %}
+        <div class="vape-cms-el-product-spotlight__body">
+            <span v-if="eyebrow" class="vape-cms-el-product-spotlight__eyebrow">
+                {{ eyebrow }}
+            </span>
+
+            <span class="vape-cms-el-product-spotlight__name">
+                <template v-if="productName">{{ productName }}</template>
+                <template v-else>{{ $t('vape-cms.elements.productSpotlight.placeholder.name') }}</template>
+            </span>
+
+            <span v-if="description" class="vape-cms-el-product-spotlight__desc">
+                {{ description }}
+            </span>
+
+            <span v-if="!product" class="vape-cms-el-product-spotlight__hint">
+                {{ $t('vape-cms.elements.productSpotlight.placeholder.hint') }}
+            </span>
+
+            <span v-if="ctaText" class="vape-cms-el-product-spotlight__cta">
+                {{ ctaText }}
+            </span>
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+.vape-cms-el-config-product-spotlight {
+    &__content,
+    &__settings {
+        padding-top: 4px;
+    }
+
+    &__field {
+        margin-bottom: 16px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}

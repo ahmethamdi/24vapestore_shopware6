@@ -261,6 +261,55 @@
           "clock": "Uhr (schnell)",
           "thumb-up": "Daumen hoch (empfohlen)"
         }
+      },
+      "trustBar": {
+        "label": "Vertrauensleiste (Karten)",
+        "config": {
+          "emptyHint": "Noch keine Einträge. Klicke auf „Eintrag hinzufügen“, um die erste Karte anzulegen.",
+          "item": "Eintrag",
+          "addItem": "Eintrag hinzufügen",
+          "icon": "Symbol",
+          "title": "Titel",
+          "titlePlaceholder": "z. B. 18+ Altersverifikation",
+          "text": "Beschreibung",
+          "textPlaceholder": "z. B. Sicher & geprüft"
+        },
+        "icons": {
+          "shield": "Schild (Schutz)",
+          "truck": "LKW (Versand)",
+          "package-open": "Offenes Paket (Rückgabe)",
+          "package-closed": "Geschlossenes Paket",
+          "package-gift": "Geschenkpaket",
+          "lock-closed": "Schloss (sichere Zahlung)",
+          "checkmark-circle": "Haken (Garantie)",
+          "money-card": "Karte (Zahlung)",
+          "star": "Stern (Bewertung)",
+          "medal": "Medaille (Qualität)",
+          "heart": "Herz (Favorit)",
+          "clock": "Uhr (schnell)",
+          "thumb-up": "Daumen hoch (empfohlen)"
+        }
+      },
+      "productSpotlight": {
+        "label": "Produkt der Woche",
+        "placeholder": {
+          "name": "Produktname",
+          "hint": "Wähle ein Produkt aus, um Bild, Name und Preis anzuzeigen."
+        },
+        "config": {
+          "product": "Produkt",
+          "productPlaceholder": "Produkt suchen und auswählen",
+          "eyebrow": "Überzeile",
+          "eyebrowPlaceholder": "z. B. PRODUKT DER WOCHE",
+          "eyebrowHelp": "Kleine Markierung über dem Produktnamen (in der Akzentfarbe).",
+          "description": "Kurzbeschreibung",
+          "descriptionPlaceholder": "Kurzer Empfehlungstext (nicht die Produktbeschreibung).",
+          "ctaText": "Button-Text",
+          "ctaTextPlaceholder": "z. B. Jetzt entdecken",
+          "ctaUrl": "Button-Link",
+          "ctaUrlPlaceholder": "Leer = Produktdetailseite",
+          "ctaUrlHelp": "Leer lassen, um automatisch auf die Produktseite zu verlinken."
+        }
       }
     },
     "blocks": {
@@ -284,6 +333,15 @@
       },
       "uspStrip": {
         "label": "USP- / Vertrauensleiste"
+      },
+      "promoBanner": {
+        "label": "Promo-Banner"
+      },
+      "trustBar": {
+        "label": "Vertrauensleiste (Karten)"
+      },
+      "productSpotlight": {
+        "label": "Produkt der Woche"
       }
     }
   }

@@ -261,6 +261,55 @@
           "clock": "Clock (fast)",
           "thumb-up": "Thumbs up (recommended)"
         }
+      },
+      "trustBar": {
+        "label": "Trust bar (cards)",
+        "config": {
+          "emptyHint": "No items yet. Click “Add item” to create the first card.",
+          "item": "Item",
+          "addItem": "Add item",
+          "icon": "Icon",
+          "title": "Title",
+          "titlePlaceholder": "e.g. 18+ age verification",
+          "text": "Description",
+          "textPlaceholder": "e.g. Safe & verified"
+        },
+        "icons": {
+          "shield": "Shield (protection)",
+          "truck": "Truck (shipping)",
+          "package-open": "Open package (returns)",
+          "package-closed": "Closed package (parcel)",
+          "package-gift": "Gift package",
+          "lock-closed": "Lock (secure payment)",
+          "checkmark-circle": "Checkmark (guarantee)",
+          "money-card": "Card (payment)",
+          "star": "Star (rating)",
+          "medal": "Medal (quality)",
+          "heart": "Heart (favourite)",
+          "clock": "Clock (fast)",
+          "thumb-up": "Thumbs up (recommended)"
+        }
+      },
+      "productSpotlight": {
+        "label": "Product of the week",
+        "placeholder": {
+          "name": "Product name",
+          "hint": "Select a product to show its image, name and price."
+        },
+        "config": {
+          "product": "Product",
+          "productPlaceholder": "Search and select a product",
+          "eyebrow": "Eyebrow",
+          "eyebrowPlaceholder": "e.g. PRODUCT OF THE WEEK",
+          "eyebrowHelp": "Small marker above the product name (in the accent colour).",
+          "description": "Short description",
+          "descriptionPlaceholder": "Short recommendation copy (not the product description).",
+          "ctaText": "Button text",
+          "ctaTextPlaceholder": "e.g. Discover now",
+          "ctaUrl": "Button link",
+          "ctaUrlPlaceholder": "Empty = product detail page",
+          "ctaUrlHelp": "Leave empty to link to the product page automatically."
+        }
       }
     },
     "blocks": {
@@ -287,6 +336,12 @@
       },
       "uspStrip": {
         "label": "USP / trust strip"
+      },
+      "trustBar": {
+        "label": "Trust bar (cards)"
+      },
+      "productSpotlight": {
+        "label": "Product of the week"
       }
     }
   }

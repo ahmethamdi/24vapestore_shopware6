@@ -33,6 +33,8 @@ import './module/sw-cms/elements/vape-product-rail';
 import './module/sw-cms/elements/vape-brand-slider';
 import './module/sw-cms/elements/vape-promo-banner';
 import './module/sw-cms/elements/vape-usp-strip';
+import './module/sw-cms/elements/vape-trust-bar';
+import './module/sw-cms/elements/vape-product-spotlight';
 
 // ==================================================
 // CMS Blocks
@@ -45,3 +47,5 @@ import './module/sw-cms/blocks/commerce/vape-product-rail';
 import './module/sw-cms/blocks/commerce/vape-brand-slider';
 import './module/sw-cms/blocks/commerce/vape-promo-banner';
 import './module/sw-cms/blocks/commerce/vape-usp-strip';
+import './module/sw-cms/blocks/commerce/vape-trust-bar';
+import './module/sw-cms/blocks/commerce/vape-product-spotlight';

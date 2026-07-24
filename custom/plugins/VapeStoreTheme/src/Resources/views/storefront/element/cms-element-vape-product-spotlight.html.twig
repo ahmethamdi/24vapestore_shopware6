@@ -1,0 +1,105 @@
+{#
+    Haftanın ürünü — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-product-spotlight.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    Ürün PHP resolver'dan `element.data.product` (ProductBoxStruct → .product)
+    olarak gelir. Fiyat/cover sales-channel deposundan; marka adı (varsa)
+    `product.extensions.vapeManufacturerName.name` olarak eklenir.
+
+    ⚠️ Çeviri-farkında okuma: yönetici metinleri `element.translated.config.*`.
+
+    Sol: büyük ürün görseli (3:4). Görselsiz durumda SAKIN nötr placeholder
+    (renkli harf YOK). Sağ: kırmızı eyebrow + büyük ürün adı + açıklama (config)
+    + fiyat + KOYU CTA. Kırmızı SADECE eyebrow'da (işaret). CTA koyu dolgu.
+
+    Ürün seçilmemişse hiç render edilmez (temiz boş render).
+#}
+{% block element_vape_product_spotlight %}
+    {% set cfg = element.translated.config %}
+    {% set product = element.data.product %}
+
+    {% set eyebrow = cfg.eyebrow.value|default('') %}
+    {% set description = cfg.description.value|default('') %}
+    {% set ctaText = cfg.ctaText.value|default('Jetzt entdecken') %}
+    {% set ctaUrl = cfg.ctaUrl.value|default('') %}
+
+    {% if product %}
+        {# CTA hedefi: config linki varsa onu kullan, yoksa ürün detay sayfası #}
+        {% set detailUrl = seoUrl('frontend.detail.page', { productId: product.id }) %}
+        {% set targetUrl = ctaUrl is not empty ? ctaUrl : detailUrl %}
+
+        {% set manufacturerName = product.extensions.vapeManufacturerName.name|default('') %}
+        {% set cover = product.cover.media %}
+        {% set productName = product.translated.name|default(product.name) %}
+
+        <div class="cms-element-{{ element.type }} vape-product-spotlight">
+
+            {% block element_vape_product_spotlight_media %}
+                <a href="{{ targetUrl }}" class="vape-product-spotlight__media" tabindex="-1" aria-hidden="true">
+                    {% if cover and cover.url %}
+                        {% sw_thumbnails 'vape-product-spotlight-thumbnails' with {
+                            media: cover,
+                            sizes: {
+                                xs: '576px',
+                                sm: '767px',
+                                md: '575px',
+                                lg: '767px',
+                                xl: '767px'
+                            },
+                            attributes: {
+                                class: 'vape-product-spotlight__image',
+                                alt: (cover.translated.alt ?: productName),
+                                loading: 'lazy'
+                            }
+                        } %}
+                    {% else %}
+                        {# Görselsiz: sakin nötr placeholder — renkli harf YOK #}
+                        <span class="vape-product-spotlight__placeholder">
+                            {% sw_icon 'products' %}
+                        </span>
+                    {% endif %}
+                </a>
+            {% endblock %}
+
+            {% block element_vape_product_spotlight_body %}
+                <div class="vape-product-spotlight__body">
+
+                    {% if eyebrow %}
+                        <span class="vape-product-spotlight__eyebrow">{{ eyebrow }}</span>
+                    {% endif %}
+
+                    {% if manufacturerName %}
+                        <span class="vape-product-spotlight__brand">{{ manufacturerName }}</span>
+                    {% endif %}
+
+                    <h2 class="vape-product-spotlight__name">
+                        <a href="{{ targetUrl }}" class="vape-product-spotlight__name-link">{{ productName }}</a>
+                    </h2>
+
+                    {% if description %}
+                        <p class="vape-product-spotlight__desc">{{ description }}</p>
+                    {% endif %}
+
+                    {% block element_vape_product_spotlight_price %}
+                        {% if product.calculatedPrice %}
+                            <div class="vape-product-spotlight__price">
+                                {% sw_include '@Storefront/storefront/component/product/card/price-unit.html.twig' %}
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+
+                    {% block element_vape_product_spotlight_cta %}
+                        <a href="{{ targetUrl }}" class="btn vape-product-spotlight__cta">
+                            {{ ctaText }}
+                        </a>
+                    {% endblock %}
+
+                </div>
+            {% endblock %}
+
+        </div>
+    {% endif %}
+{% endblock %}

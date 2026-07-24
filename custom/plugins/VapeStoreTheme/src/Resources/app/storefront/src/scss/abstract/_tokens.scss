@@ -775,3 +775,108 @@ $vape-brand-arrow-bg:            $vape-neutral-white;
 $vape-brand-arrow-fg:            $vape-neutral-900;
 $vape-brand-arrow-border:        $vape-border-strong;
 $vape-brand-arrow-shadow:        $vape-shadow-md;
+
+// ==================================================
+// 20. GÜVEN ŞERİDİ (vape-trust-bar CMS element)
+//
+// vape-usp-strip'in DAHA ZENGİN kardeşi: 4 kart tarzı kutu, her biri BÜYÜK
+// ikon + kalın başlık + alt açıklama satırı. Örn. "18+ Altersverifikation /
+// Sicher & geprüft", "Blitzversand / Versand am selben Tag".
+//
+// Görsel dil: NÖTR güven şeridi. Kırmızı YOK. Kartlar hafif gri zemin üzerinde
+// beyaz, ince kenarlıklı; ortalanmış içerik. Mobil-öncelikli: 1 → 2 → 4 sütun.
+// İkonlar dekoratif (twig'de aria-hidden), anlam başlık+metinde.
+// ==================================================
+
+// ---------- kapsayıcı ----------
+$vape-trust-bg:              $vape-bg-subtle;        // hafif gri şerit zemini
+$vape-trust-pad-y-mobile:    $vape-space-5;          // 20px
+$vape-trust-pad-y-desktop:   $vape-space-6;          // 24px
+$vape-trust-pad-x:           $vape-space-4;          // 16px yan iç boşluk
+$vape-trust-grid-gap:        $vape-space-3;          // kartlar arası
+$vape-trust-grid-gap-md:     $vape-space-4;          // ≥768px kartlar arası
+
+// ---------- kart ----------
+$vape-trust-card-bg:         $vape-bg-surface;       // beyaz kart
+$vape-trust-card-border:     $vape-border-subtle;    // ince kenarlık
+$vape-trust-card-radius:     $vape-radius-md;        // 8px
+$vape-trust-card-pad-y:      $vape-space-5;          // 20px dikey iç boşluk
+$vape-trust-card-pad-x:      $vape-space-4;          // 16px yatay iç boşluk
+$vape-trust-card-gap:        $vape-space-2;          // ikon/başlık/metin ritmi
+$vape-trust-card-shadow-hover: $vape-shadow-sm;      // hover'da hafif kalkış
+
+// ---------- ikon ----------
+$vape-trust-icon-size:       32px;                   // BÜYÜK ikon (usp'den iri)
+$vape-trust-icon-color:      $vape-neutral-800;      // nötr koyu — kırmızı DEĞİL
+
+// ---------- metin ----------
+$vape-trust-title-size:      $vape-text-md;          // 16px
+$vape-trust-title-weight:    $vape-weight-bold;      // kalın başlık
+$vape-trust-title-color:     $vape-text-heading;
+$vape-trust-sub-size:        $vape-text-sm;          // 14px
+$vape-trust-sub-color:       $vape-text-muted;
+
+// ==================================================
+// 21. HAFTANIN ÜRÜNÜ (vape-product-spotlight CMS element)
+//
+// TEK ürünü büyük gösteren spotlight (ürün rayı DEĞİL). Sol: büyük görsel
+// (3:4). Sağ: kırmızı eyebrow + büyük ürün adı + açıklama + fiyat + koyu CTA.
+//
+// Görsel dil: beyaz zemin + kırmızı vurgu. Kırmızı SADECE eyebrow'da (işaret).
+// CTA KOYU dolgu ($vape-neutral-900) — kırmızı DOLGU YOK (altın kural). Fiyat
+// nötr koyu. Görselsiz durumda sakin nötr placeholder (renkli harf YOK).
+// Mobil-öncelikli: tek sütun (görsel üstte) → ≥768px iki sütun.
+// ==================================================
+
+// ---------- kapsayıcı ----------
+$vape-spotlight-bg:           $vape-bg-surface;      // beyaz
+$vape-spotlight-border:       $vape-border-subtle;   // ince kenarlık
+$vape-spotlight-radius:       $vape-radius-lg;       // 12px
+$vape-spotlight-gap:          $vape-space-5;         // <768px sütun/satır arası
+$vape-spotlight-gap-md:       $vape-space-10;        // ≥768px sütunlar arası
+$vape-spotlight-pad:          $vape-space-5;         // <768px iç boşluk
+$vape-spotlight-pad-md:       $vape-space-10;        // ≥768px iç boşluk
+
+// ---------- görsel ----------
+$vape-spotlight-image-ratio:  3 / 4;                 // dikey ürün görseli
+$vape-spotlight-image-bg:     $vape-neutral-50;      // görsel/placeholder zemini
+$vape-spotlight-image-radius: $vape-radius-md;
+$vape-spotlight-placeholder-color: $vape-neutral-400; // sakin nötr ikon
+
+// ---------- içerik ----------
+$vape-spotlight-body-gap:     $vape-space-3;         // satırlar arası ritim
+
+// Eyebrow — kırmızı işaret (proje kuralında kırmızı SADECE rozet/işaret)
+$vape-spotlight-eyebrow-size:    $vape-text-sm;      // 14px
+$vape-spotlight-eyebrow-weight:  $vape-weight-bold;
+$vape-spotlight-eyebrow-tracking: $vape-tracking-wider;
+$vape-spotlight-eyebrow-color:   $vape-brand;        // kırmızı
+
+// Marka (opsiyonel, ad üstü küçük gri)
+$vape-spotlight-brand-size:      $vape-text-xs;      // 12px
+$vape-spotlight-brand-color:     $vape-text-muted;
+$vape-spotlight-brand-tracking:  $vape-tracking-wide;
+
+// Ürün adı — büyük
+$vape-spotlight-name-size:       $vape-text-2xl;     // <768px, 24px
+$vape-spotlight-name-size-md:    $vape-text-3xl;     // ≥768px, 36px
+$vape-spotlight-name-weight:     $vape-weight-bold;
+$vape-spotlight-name-color:      $vape-text-heading;
+
+// Açıklama
+$vape-spotlight-desc-size:       $vape-text-md;      // 16px
+$vape-spotlight-desc-color:      $vape-text-primary;
+$vape-spotlight-desc-max:        520px;
+
+// Fiyat — nötr koyu (kırmızı değil)
+$vape-spotlight-price-size:      $vape-text-xl;      // 20px
+$vape-spotlight-price-color:     $vape-price;
+$vape-spotlight-price-weight:    $vape-weight-bold;
+
+// CTA — KOYU dolgu (altın kural: kırmızı dolgulu CTA yok)
+$vape-spotlight-cta-bg:          $vape-neutral-900;
+$vape-spotlight-cta-bg-hover:    $vape-neutral-800;
+$vape-spotlight-cta-fg:          $vape-neutral-white;
+$vape-spotlight-cta-pad-y:       $vape-space-3;
+$vape-spotlight-cta-pad-x:       $vape-space-8;
+$vape-spotlight-cta-radius:      $vape-radius-md;
