@@ -17,6 +17,13 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 
 // 3. Component'ler (CMS element'leri dahil)
 @import 'component/hero';
+@import 'component/category-carousel';
+@import 'component/category-grid';
+@import 'component/featured-split';
+@import 'component/product-rail';
+@import 'component/usp-strip';
+@import 'component/promo-banner';
+@import 'component/brand-slider';
 // @import 'component/product-card';
 
 // ==================================================

@@ -7,5 +7,33 @@
     "goToSlide": "Zu Slide %number% springen",
     "previousSlide": "Vorheriger Slide",
     "nextSlide": "Nächster Slide"
+  },
+  "vapeCategoryCarousel": {
+    "cta": "Entdecken",
+    "previous": "Vorherige Kategorien",
+    "next": "Nächste Kategorien"
+  },
+  "vapeCategoryGrid": {
+    "cta": "Ansehen",
+    "productCount": "%count% Produkte",
+    "previous": "Vorherige Kategorien",
+    "next": "Nächste Kategorien"
+  },
+  "vapeFeaturedSplit": {
+    "tabsLabel": "Kategorien",
+    "tabFallback": "Tab %number%",
+    "previous": "Vorherige Produkte",
+    "next": "Nächste Produkte",
+    "empty": "Aktuell sind keine Produkte verfügbar."
+  },
+  "vapeProductRail": {
+    "previous": "Vorherige Produkte",
+    "next": "Nächste Produkte",
+    "empty": "Aktuell sind keine Produkte verfügbar."
+  },
+  "vapeBrandSlider": {
+    "headline": "Beliebte Marken",
+    "previous": "Vorherige Marken",
+    "next": "Nächste Marken"
   }
 }

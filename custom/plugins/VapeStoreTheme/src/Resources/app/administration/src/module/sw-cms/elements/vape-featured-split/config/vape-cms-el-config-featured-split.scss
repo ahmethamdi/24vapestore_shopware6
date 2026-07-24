@@ -1,0 +1,61 @@
+.vape-cms-el-config-featured-split {
+    &__field {
+        margin-bottom: 20px;
+    }
+
+    &__hint {
+        margin: 6px 0 0;
+        font-size: 12px;
+        color: #71717f;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__item {
+        padding: 16px;
+        border: 1px solid #d1d9e0;
+        border-radius: 8px;
+        background-color: #f9fafb;
+    }
+
+    &__item-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    &__item-title {
+        font-weight: 600;
+        color: #52667a;
+    }
+
+    &__item-actions {
+        display: flex;
+        gap: 4px;
+    }
+
+    &__add {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        align-self: flex-start;
+        padding: 8px 14px;
+        border: 1px dashed #a3b1c2;
+        border-radius: 6px;
+        background-color: transparent;
+        color: #189eff;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f0f7ff;
+            border-color: #189eff;
+        }
+    }
+}

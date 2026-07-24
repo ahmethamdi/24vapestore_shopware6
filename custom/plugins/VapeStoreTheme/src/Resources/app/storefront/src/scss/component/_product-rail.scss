@@ -1,0 +1,163 @@
+/*
+Ürün rayı — storefront görünümü.
+Başlık + oklar + yatay kayan ürün kartları (CSS scroll-snap).
+
+Ürün kartlarının KENDİSİ core'un product-box'ıdır — burada yalnızca ray
+kapsayıcısı (başlık, oklar, şerit) biçimlendirilir. Kart içi görsel dil
+(fiyat koyu, indirim kırmızı, wishlist) core + global temadan gelir.
+
+Görsel dil: beyaz zemin + kırmızı vurgu.
+  - Başlık koyu, alt satır nötr gri.
+  - Oklar nötr yuvarlak; hover'da kırmızı kenar. Kırmızı dolgulu CTA YOK.
+
+Tüm değerler token'lardan gelir; magic hex/px yok.
+Boş config (0 ürün) ile de temiz render olur — nazik "ürün yok" durumu.
+*/
+
+.vape-product-rail {
+    width: 100%;
+
+    // ---------- başlık bölümü ----------
+
+    &__head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: $vape-space-4;
+        margin-bottom: $vape-prail-head-gap;
+    }
+
+    &__titles {
+        min-width: 0;   // uzun başlık flex satırını taşırmasın
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: $vape-prail-headline-size;
+        font-weight: $vape-weight-bold;
+        line-height: $vape-leading-tight;
+        letter-spacing: $vape-tracking-tight;
+        color: $vape-prail-headline-color;
+
+        @media (min-width: 768px) {
+            font-size: $vape-prail-headline-size-md;
+        }
+    }
+
+    &__subline {
+        margin: $vape-space-1 0 0;
+        font-size: $vape-prail-subline-size;
+        color: $vape-prail-subline-color;
+    }
+
+    // ---------- ok butonları ----------
+    // Yalnızca kaydırmanın anlamlı olduğu geniş ekranda görünür;
+    // dar ekranda dokunmatik kaydırma yeterli.
+
+    &__arrows {
+        display: none;
+
+        @media (min-width: 992px) {
+            display: flex;
+            gap: $vape-space-2;
+            flex-shrink: 0;
+        }
+    }
+
+    &__arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: $vape-prail-arrow-size;
+        height: $vape-prail-arrow-size;
+        padding: 0;
+        border: 1px solid $vape-prail-arrow-border;
+        border-radius: $vape-radius-pill;
+        background-color: $vape-prail-arrow-bg;
+        color: $vape-prail-arrow-fg;
+        cursor: pointer;
+        transition:
+            border-color $vape-duration-fast $vape-ease-out,
+            color $vape-duration-fast $vape-ease-out,
+            box-shadow $vape-duration-fast $vape-ease-out;
+
+        &:hover {
+            border-color: $vape-prail-arrow-border-hover;
+            color: $vape-prail-arrow-border-hover;
+            box-shadow: $vape-prail-arrow-shadow;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+
+        // Şeridin başında/sonunda: pasif görünüm, JS tarafından işaretlenir.
+        &.is--disabled {
+            opacity: 0.4;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    // ---------- kaydırma rayı ----------
+    // CSS scroll-snap: JS olmadan da yatay kaydırılır. Oklar yalnızca
+    // ilerlemeli kaydırma için ek kolaylık.
+
+    &__track {
+        display: flex;
+        gap: $vape-prail-track-gap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        padding: $vape-prail-track-pad-y 0;
+        scrollbar-width: none;   // Firefox
+
+        &::-webkit-scrollbar {
+            display: none;       // WebKit
+        }
+    }
+
+    // ---------- ray içindeki ürün kartı sarmalayıcısı ----------
+    // Kart core product-box; sarmalayıcı yalnızca sabit genişlik +
+    // snap hizası verir.
+
+    &__item {
+        flex: 0 0 $vape-prail-item-width;
+        scroll-snap-align: start;
+
+        @media (min-width: 768px) {
+            flex-basis: $vape-prail-item-width-md;
+        }
+
+        // core product-box kendi iç boşluk/kenarlığını taşır; ray içinde
+        // yükseklikler eşitlensin diye kutuyu tam yüksekliğe uzat.
+        .card,
+        .product-box {
+            height: 100%;
+        }
+    }
+
+    // ---------- boş durum ----------
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: $vape-prail-empty-pad;
+        border: 1px dashed $vape-prail-empty-border;
+        border-radius: $vape-card-radius;
+        text-align: center;
+
+        p {
+            margin: 0;
+            font-size: $vape-text-sm;
+            color: $vape-prail-empty-color;
+        }
+    }
+}

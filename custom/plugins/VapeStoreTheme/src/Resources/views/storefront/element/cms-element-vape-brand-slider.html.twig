@@ -1,0 +1,102 @@
+{#
+    Marka slider — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-brand-slider.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    Marka verisi PHP resolver'dan `element.data.brands` olarak gelir; her eleman
+    { name, url, media }. Logo (media) yoksa marka adı metin olarak gösterilir.
+    Başlık config'te düz alan olduğu için `element.translated.config` çeviri
+    katmanıyla okunur; boşsa snippet default'una ("Beliebte Marken") düşer.
+
+    Carousel: CSS scroll-snap. Oklar isteğe bağlı (showArrows) ve yalnızca
+    ilerlemeli kaydırma için; JS yüklenmese de şerit yatay kaydırılabilir.
+#}
+{% block element_vape_brand_slider %}
+    {% set cfg = element.translated.config %}
+    {% set brands = element.data.brands|default([]) %}
+
+    {% set headline = cfg.headline.value|default('') %}
+    {% if headline is empty %}
+        {% set headline = 'vapeBrandSlider.headline'|trans|sw_sanitize %}
+    {% endif %}
+
+    {% set grayscale = cfg.grayscale.value|default(true) %}
+    {% set showArrows = cfg.showArrows.value|default(true) and brands|length > 1 %}
+
+    <div class="cms-element-{{ element.type }} vape-brand-slider{% if grayscale %} vape-brand-slider--grayscale{% endif %}"
+         data-vape-brand-slider="true">
+
+        {% block element_vape_brand_slider_head %}
+            {% if headline %}
+                <div class="vape-brand-slider__head">
+                    <h2 class="vape-brand-slider__headline">{{ headline }}</h2>
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block element_vape_brand_slider_viewport %}
+            {% if brands|length > 0 %}
+                <div class="vape-brand-slider__viewport">
+
+                    {% block element_vape_brand_slider_track %}
+                        <div class="vape-brand-slider__track" data-vape-brand-slider-track>
+                            {% for brand in brands %}
+                                {% set brandName = brand.name|default('') %}
+                                {% set brandUrl = brand.url|default('') %}
+                                {% set brandMedia = brand.media %}
+
+                                {% block element_vape_brand_slider_item %}
+                                    {% set tag = brandUrl ? 'a' : 'span' %}
+
+                                    <{{ tag }}
+                                        {% if brandUrl %}href="{{ brandUrl }}"{% endif %}
+                                        class="vape-brand-slider__item"
+                                        {% if brandUrl and brandName %}aria-label="{{ brandName }}"{% endif %}
+                                        data-vape-brand-slider-item>
+
+                                        {% if brandMedia and brandMedia.url %}
+                                            {% sw_thumbnails 'vape-brand-slider-thumbnails' with {
+                                                media: brandMedia,
+                                                sizes: { default: '200px' },
+                                                attributes: {
+                                                    class: 'vape-brand-slider__logo',
+                                                    alt: (brandMedia.translated.alt ?: brandName),
+                                                    loading: 'lazy'
+                                                }
+                                            } %}
+                                        {% else %}
+                                            <span class="vape-brand-slider__name">{{ brandName }}</span>
+                                        {% endif %}
+                                    </{{ tag }}>
+                                {% endblock %}
+                            {% endfor %}
+                        </div>
+                    {% endblock %}
+
+                    {% block element_vape_brand_slider_arrows %}
+                        {% if showArrows %}
+                            <div class="vape-brand-slider__arrows">
+                                <button type="button"
+                                        class="vape-brand-slider__arrow vape-brand-slider__arrow--prev"
+                                        data-vape-brand-slider-prev
+                                        aria-label="{{ 'vapeBrandSlider.previous'|trans|sw_sanitize }}">
+                                    {% sw_icon 'arrow-medium-left' %}
+                                </button>
+                                <button type="button"
+                                        class="vape-brand-slider__arrow vape-brand-slider__arrow--next"
+                                        data-vape-brand-slider-next
+                                        aria-label="{{ 'vapeBrandSlider.next'|trans|sw_sanitize }}">
+                                    {% sw_icon 'arrow-medium-right' %}
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+
+                </div>
+            {% endif %}
+        {% endblock %}
+
+    </div>
+{% endblock %}

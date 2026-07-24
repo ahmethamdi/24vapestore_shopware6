@@ -1,0 +1,108 @@
+.vape-cms-el-config-brand-slider {
+    &__field {
+        margin-bottom: 20px;
+    }
+
+    &__field-label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #52667a;
+    }
+
+    &__brands {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__brand {
+        padding: 16px;
+        border: 1px solid #d1d9e0;
+        border-radius: 8px;
+        background-color: #f9fafb;
+    }
+
+    &__brand-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    &__brand-title {
+        font-weight: 600;
+        color: #52667a;
+    }
+
+    &__brand-actions {
+        display: flex;
+        gap: 4px;
+    }
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__logo-preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 88px;
+        height: 56px;
+        padding: 6px;
+        border: 1px solid #e0e6eb;
+        border-radius: 6px;
+        background-color: #ffffff;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    &__logo-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        width: 88px;
+        height: 56px;
+        border: 1px dashed #a3b1c2;
+        border-radius: 6px;
+        color: #71717f;
+        font-size: 10px;
+        text-align: center;
+    }
+
+    &__logo-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__add {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        align-self: flex-start;
+        padding: 8px 14px;
+        border: 1px dashed #a3b1c2;
+        border-radius: 6px;
+        background-color: transparent;
+        color: #189eff;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f0f7ff;
+            border-color: #189eff;
+        }
+    }
+}

@@ -1,0 +1,109 @@
+{#
+    USP şeridi config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model  (mt-select dahil)
+       sw-*  (legacy)  → v-model:value
+    ⚠️ items bir dizi olduğu için v-model doğrudan kullanılamaz;
+       her alan @update ile updateItem() çağırır.
+    ⚠️ Tek sekmeli panel — sw-tabs'e gerek yok; içerik doğrudan item listesi.
+#}
+{% block vape_cms_element_usp_strip_config %}
+<div class="vape-cms-el-config-usp-strip">
+
+    {% block vape_cms_element_usp_strip_config_empty %}
+        <mt-banner
+            v-if="!items.length"
+            variant="info"
+        >
+            {{ $t('vape-cms.elements.uspStrip.config.emptyHint') }}
+        </mt-banner>
+    {% endblock %}
+
+    {% block vape_cms_element_usp_strip_config_list %}
+        <div
+            v-for="(item, index) in items"
+            :key="index"
+            class="vape-cms-el-config-usp-strip__item"
+        >
+            <div class="vape-cms-el-config-usp-strip__item-head">
+                <span class="vape-cms-el-config-usp-strip__item-title">
+                    <mt-icon :name="adminIcon(item)" size="14px" />
+                    {{ $t('vape-cms.elements.uspStrip.config.item') }} {{ index + 1 }}
+                    <template v-if="item.title">— {{ item.title }}</template>
+                </span>
+
+                <div class="vape-cms-el-config-usp-strip__item-actions">
+                    <mt-button
+                        variant="secondary"
+                        size="small"
+                        :disabled="index === 0"
+                        @click="onMoveItem(index, -1)"
+                    >
+                        <mt-icon name="regular-long-arrow-up" size="12px" />
+                    </mt-button>
+
+                    <mt-button
+                        variant="secondary"
+                        size="small"
+                        :disabled="index === items.length - 1"
+                        @click="onMoveItem(index, 1)"
+                    >
+                        <mt-icon name="regular-long-arrow-down" size="12px" />
+                    </mt-button>
+
+                    <mt-button
+                        variant="critical"
+                        size="small"
+                        @click="onRemoveItem(index)"
+                    >
+                        <mt-icon name="regular-trash" size="12px" />
+                    </mt-button>
+                </div>
+            </div>
+
+            {# --- ikon seçici (Meteor mt-select: v-model / :options) --- #}
+            <div class="vape-cms-el-config-usp-strip__field">
+                <mt-select
+                    :model-value="item.icon"
+                    :options="iconOptions"
+                    :label="$t('vape-cms.elements.uspStrip.config.icon')"
+                    @update:model-value="updateItem(index, { icon: $event })"
+                />
+            </div>
+
+            {# --- başlık --- #}
+            <div class="vape-cms-el-config-usp-strip__field">
+                <mt-text-field
+                    :model-value="item.title"
+                    :label="$t('vape-cms.elements.uspStrip.config.title')"
+                    :placeholder="$t('vape-cms.elements.uspStrip.config.titlePlaceholder')"
+                    @update:model-value="updateItem(index, { title: $event })"
+                />
+            </div>
+
+            {# --- kısa metin --- #}
+            <div class="vape-cms-el-config-usp-strip__field">
+                <mt-text-field
+                    :model-value="item.text"
+                    :label="$t('vape-cms.elements.uspStrip.config.text')"
+                    :placeholder="$t('vape-cms.elements.uspStrip.config.textPlaceholder')"
+                    @update:model-value="updateItem(index, { text: $event })"
+                />
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_element_usp_strip_config_add %}
+        <button
+            type="button"
+            class="vape-cms-el-config-usp-strip__add"
+            @click="onAddItem"
+        >
+            <mt-icon name="regular-plus-circle" size="14px" />
+            {{ $t('vape-cms.elements.uspStrip.config.addItem') }}
+        </button>
+    {% endblock %}
+
+</div>
+{% endblock %}

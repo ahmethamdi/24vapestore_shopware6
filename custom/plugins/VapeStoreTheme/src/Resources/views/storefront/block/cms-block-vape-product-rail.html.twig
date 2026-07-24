@@ -1,0 +1,18 @@
+{#
+    Ürün rayı block — storefront çıktısı.
+
+    ⚠️ `data-cms-element-id` olmadan admin canlı önizlemede element tıklanıp
+       seçilemez — sürükle-bırak deneyimi bozulur.
+    ⚠️ Element tipini hardcode ETME: yönetici slot'taki element'i değiştirmiş
+       olabilir, bu yüzden `~ element.type ~` ile dinamik include edilir.
+    ⚠️ slot adı `rail`, block index.js'teki slots anahtarı ile birebir aynı.
+#}
+{% block block_vape_product_rail %}
+    {% set element = block.slots.getSlot('rail') %}
+
+    <div class="col-12 vape-product-rail-block" data-cms-element-id="{{ element.id }}">
+        {% block block_vape_product_rail_inner %}
+            {% sw_include '@Storefront/storefront/element/cms-element-' ~ element.type ~ '.html.twig' ignore missing %}
+        {% endblock %}
+    </div>
+{% endblock %}

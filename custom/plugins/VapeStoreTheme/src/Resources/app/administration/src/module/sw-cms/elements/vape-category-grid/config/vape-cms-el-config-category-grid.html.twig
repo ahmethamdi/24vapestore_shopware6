@@ -1,0 +1,162 @@
+{#
+    Kategori grid config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model
+       sw-*  (legacy)  → v-model:value
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+    ⚠️ categories bir dizi olduğu için v-model doğrudan kullanılamaz;
+       her alan @update ile updateCard() çağırır.
+#}
+{% block vape_cms_element_category_grid_config %}
+<div class="vape-cms-el-config-category-grid">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-category-grid"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('vape-cms.elements.categoryGrid.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="categories" :active-tab="active">
+                {{ $t('vape-cms.elements.categoryGrid.config.tab.categories') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="settings" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.settings') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== BAŞLIK ==================== #}
+            <sw-container v-if="active === 'content'">
+
+                {% block vape_cms_element_category_grid_config_heading %}
+                    <div class="vape-cms-el-config-category-grid__field">
+                        <mt-text-field
+                            v-model="element.config.headline.value"
+                            :label="$t('vape-cms.elements.categoryGrid.config.headline')"
+                            :placeholder="$t('vape-cms.elements.categoryGrid.config.headlinePlaceholder')"
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== KATEGORİLER ==================== #}
+            <div v-if="active === 'categories'" class="vape-cms-el-config-category-grid__cards">
+
+                {% block vape_cms_element_category_grid_config_empty %}
+                    <mt-banner
+                        v-if="!cards.length"
+                        variant="info"
+                    >
+                        {{ $t('vape-cms.elements.categoryGrid.config.emptyHint') }}
+                    </mt-banner>
+                {% endblock %}
+
+                {% block vape_cms_element_category_grid_config_card_list %}
+                    <div
+                        v-for="(card, index) in cards"
+                        :key="index"
+                        class="vape-cms-el-config-category-grid__card"
+                    >
+                        <div class="vape-cms-el-config-category-grid__card-head">
+                            <span class="vape-cms-el-config-category-grid__card-title">
+                                {{ $t('vape-cms.elements.categoryGrid.config.card') }} {{ index + 1 }}
+                                <template v-if="categoryName(card)">— {{ categoryName(card) }}</template>
+                            </span>
+
+                            <div class="vape-cms-el-config-category-grid__card-actions">
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === 0"
+                                    @click="onMoveCard(index, -1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-up" size="12px" />
+                                </mt-button>
+
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === cards.length - 1"
+                                    @click="onMoveCard(index, 1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-down" size="12px" />
+                                </mt-button>
+
+                                <mt-button
+                                    variant="critical"
+                                    size="small"
+                                    @click="onRemoveCard(index)"
+                                >
+                                    <mt-icon name="regular-trash" size="12px" />
+                                </mt-button>
+                            </div>
+                        </div>
+
+                        {# --- kategori seçici (legacy sw-*: v-model:value) --- #}
+                        <div class="vape-cms-el-config-category-grid__field">
+                            <sw-entity-single-select
+                                :value="card.categoryId"
+                                entity="category"
+                                :criteria="categoryCriteria"
+                                :label="$t('vape-cms.elements.categoryGrid.config.category')"
+                                show-clearable-button
+                                @update:value="onCategoryChange($event, index)"
+                            />
+                        </div>
+
+                        {# --- CTA metni --- #}
+                        <div class="vape-cms-el-config-category-grid__field">
+                            <mt-text-field
+                                :model-value="card.ctaText"
+                                :label="$t('vape-cms.elements.categoryGrid.config.ctaText')"
+                                :placeholder="$t('vape-cms.elements.categoryGrid.config.ctaTextPlaceholder')"
+                                @update:model-value="updateCard(index, { ctaText: $event })"
+                            />
+                        </div>
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_category_grid_config_add %}
+                    <button
+                        type="button"
+                        class="vape-cms-el-config-category-grid__add"
+                        @click="onAddCard"
+                    >
+                        <mt-icon name="regular-plus-circle" size="14px" />
+                        {{ $t('vape-cms.elements.categoryGrid.config.addCard') }}
+                    </button>
+                {% endblock %}
+
+            </div>
+
+            {# ==================== AYARLAR ==================== #}
+            <sw-container v-if="active === 'settings'">
+
+                {% block vape_cms_element_category_grid_config_settings %}
+                    <div class="vape-cms-el-config-category-grid__field">
+                        <mt-switch
+                            v-model="element.config.showArrows.value"
+                            :label="$t('vape-cms.elements.categoryGrid.config.showArrows')"
+                            bordered
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-category-grid__field">
+                        <mt-switch
+                            v-model="element.config.showProductCount.value"
+                            :label="$t('vape-cms.elements.categoryGrid.config.showProductCount')"
+                            bordered
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+        </template>
+    </sw-tabs>
+</div>
+{% endblock %}

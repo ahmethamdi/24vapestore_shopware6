@@ -42,11 +42,251 @@
             "dark": "Dark (for light panels)"
           }
         }
+      },
+      "categoryCarousel": {
+        "label": "Category carousel",
+        "placeholder": {
+          "headline": "Enter a headline",
+          "category": "Select a category",
+          "cta": "Explore"
+        },
+        "config": {
+          "tab": {
+            "content": "Heading",
+            "categories": "Categories"
+          },
+          "eyebrow": "Eyebrow",
+          "eyebrowPlaceholder": "e.g. EFFORTLESS STYLE",
+          "headline": "Headline",
+          "headlinePlaceholder": "e.g. Industry-specific workwear under one roof",
+          "highlightText": "Highlighted phrase",
+          "highlightTextPlaceholder": "e.g. under one roof",
+          "highlightTextHelp": "This phrase is highlighted in the accent colour inside the headline. Must match the headline text exactly.",
+          "emptyHint": "No categories yet. Click “Add category” to create the first card.",
+          "card": "Card",
+          "addCard": "Add category",
+          "category": "Category",
+          "badge": "Badge",
+          "badgePlaceholder": "e.g. HEALTH",
+          "ctaText": "Button text",
+          "ctaTextPlaceholder": "Explore",
+          "showArrows": "Show navigation arrows"
+        }
+      },
+      "categoryGrid": {
+        "label": "Category grid",
+        "previewCount": "0 products",
+        "placeholder": {
+          "headline": "Shop by category",
+          "category": "Select a category",
+          "cta": "View"
+        },
+        "config": {
+          "tab": {
+            "content": "Heading",
+            "categories": "Categories"
+          },
+          "headline": "Headline",
+          "headlinePlaceholder": "e.g. Shop by category",
+          "emptyHint": "No categories yet. Click “Add category” to create the first card.",
+          "card": "Card",
+          "addCard": "Add category",
+          "category": "Category",
+          "ctaText": "Button text",
+          "ctaTextPlaceholder": "View",
+          "showArrows": "Show navigation arrows",
+          "showProductCount": "Show product count"
+        }
+      },
+      "featuredSplit": {
+        "label": "Featured split",
+        "placeholder": {
+          "headline": "Enter a headline",
+          "tab": "Tab",
+          "storefrontNote": "This tab's products are shown in the storefront (category/stream is not resolved in the editor)."
+        },
+        "config": {
+          "tab": {
+            "content": "Content",
+            "tabs": "Tabs"
+          },
+          "eyebrow": "Eyebrow",
+          "eyebrowPlaceholder": "e.g. SEASONAL",
+          "headline": "Headline",
+          "headlinePlaceholder": "e.g. Highlights of the season",
+          "description": "Description",
+          "descriptionPlaceholder": "Short introductory text",
+          "ctaText": "Button text",
+          "ctaTextPlaceholder": "See all products",
+          "ctaUrl": "Button link",
+          "ctaUrlPlaceholder": "e.g. /new-in",
+          "tabsHint": "Each tab is a category. Clicking a tab switches the product slider on the right to its products.",
+          "tabsEmptyHint": "No tabs yet. Click “Add tab” to create the first tab.",
+          "tabItem": "Tab",
+          "addTab": "Add tab",
+          "tabCategory": "Category",
+          "tabCategoryHelp": "The products of this category (incl. subcategories) are shown in the slider.",
+          "tabLabel": "Tab label (override)",
+          "tabLabelPlaceholder": "Empty = category name",
+          "tabSource": "Product source",
+          "tabSourceHelp": "Where this tab's products come from.",
+          "sourceCategory": "Category (recommended)",
+          "sourceStatic": "Manual selection",
+          "sourceStream": "Product stream (dynamic)",
+          "tabProducts": "Products",
+          "tabProductsPlaceholder": "Search and add products",
+          "tabStream": "Product stream",
+          "tabStreamPlaceholder": "Select a product stream",
+          "tabLimit": "Number of products",
+          "tabLimitHelp": "Maximum number of products shown (1–24)."
+        }
+      },
+      "productRail": {
+        "label": "Product rail",
+        "placeholder": {
+          "headline": "Enter a headline",
+          "empty": "No products selected yet. Choose products or a product stream.",
+          "streamSelected": "A product stream is selected. Products are shown on the storefront.",
+          "streamEmpty": "Select a product stream to fill the rail."
+        },
+        "config": {
+          "tab": {
+            "content": "Heading",
+            "products": "Products"
+          },
+          "headline": "Headline",
+          "headlinePlaceholder": "e.g. Health collection",
+          "subline": "Subline",
+          "sublinePlaceholder": "Optional secondary line",
+          "source": "Product source",
+          "sourceStatic": "Manual selection",
+          "sourceStream": "Product stream (dynamic)",
+          "products": "Products",
+          "productsPlaceholder": "Search and add products",
+          "productStream": "Product stream",
+          "productStreamPlaceholder": "Select a product stream",
+          "limit": "Number of products",
+          "limitHelp": "Maximum products shown from the stream.",
+          "streamHint": "The rail dynamically fills with products matching the selected stream.",
+          "showArrows": "Show navigation arrows"
+        }
+      },
+      "brandSlider": {
+        "label": "Brand slider",
+        "placeholder": {
+          "headline": "Popular brands",
+          "brand": "Brand name"
+        },
+        "config": {
+          "tab": {
+            "content": "Heading",
+            "brands": "Brands"
+          },
+          "headline": "Headline",
+          "headlinePlaceholder": "e.g. Popular brands",
+          "headlineHelp": "Leave empty to use the default (“Popular brands”).",
+          "emptyHint": "No brands yet. Click “Add brand” to create the first one.",
+          "brand": "Brand",
+          "addBrand": "Add brand",
+          "logo": "Logo",
+          "logoEmpty": "No logo",
+          "selectLogo": "Select logo",
+          "removeLogo": "Remove",
+          "name": "Brand name",
+          "namePlaceholder": "e.g. Elf Bar",
+          "nameHelp": "Used as the logo alt text, and shown as text when no logo is set.",
+          "url": "Link (optional)",
+          "urlPlaceholder": "e.g. /elf-bar",
+          "showArrows": "Show navigation arrows",
+          "grayscale": "Grayscale logos",
+          "grayscaleHelp": "Logos appear neutral grey and turn full colour on hover."
+        }
+      },
+      "promoBanner": {
+        "label": "Promo banner",
+        "config": {
+          "eyebrow": "Eyebrow",
+          "eyebrowPlaceholder": "e.g. NEW SEASON",
+          "headline": "Headline",
+          "headlinePlaceholder": "e.g. Up to 20% off",
+          "text": "Text",
+          "textPlaceholder": "Short promotional copy",
+          "ctaText": "Button text",
+          "ctaTextPlaceholder": "e.g. Discover now",
+          "ctaUrl": "Button link",
+          "ctaUrlPlaceholder": "e.g. /offers",
+          "newTab": "Open link in a new tab",
+          "media": "Background image",
+          "mediaHelp": "Optional. Without an image the banner uses the background colour.",
+          "bgColor": "Background colour",
+          "bgColorHelp": "Used as the base and behind the image.",
+          "overlayOpacity": "Overlay darkness (%)",
+          "overlayOpacityHelp": "Darkens the image so text stays readable.",
+          "textColor": "Text colour",
+          "alignLabel": "Alignment",
+          "tone": {
+            "light": "Light (for dark banners)",
+            "dark": "Dark (for light banners)"
+          },
+          "align": {
+            "left": "Left",
+            "center": "Centre"
+          }
+        }
+      },
+      "uspStrip": {
+        "label": "USP / trust strip",
+        "config": {
+          "emptyHint": "No items yet. Click “Add item” to create the first column.",
+          "item": "Item",
+          "addItem": "Add item",
+          "icon": "Icon",
+          "title": "Title",
+          "titlePlaceholder": "e.g. Fast shipping",
+          "text": "Text",
+          "textPlaceholder": "e.g. Free from €39"
+        },
+        "icons": {
+          "truck": "Truck (shipping)",
+          "package-open": "Open package (returns)",
+          "package-closed": "Closed package (parcel)",
+          "package-gift": "Gift package",
+          "lock-closed": "Lock (secure payment)",
+          "shield": "Shield (protection)",
+          "checkmark-circle": "Checkmark (guarantee)",
+          "money-card": "Card (payment)",
+          "star": "Star (rating)",
+          "medal": "Medal (quality)",
+          "heart": "Heart (favourite)",
+          "clock": "Clock (fast)",
+          "thumb-up": "Thumbs up (recommended)"
+        }
       }
     },
     "blocks": {
       "hero": {
         "label": "Hero slider"
+      },
+      "categoryCarousel": {
+        "label": "Category carousel"
+      },
+      "categoryGrid": {
+        "label": "Category grid"
+      },
+      "featuredSplit": {
+        "label": "Featured split"
+      },
+      "productRail": {
+        "label": "Product rail"
+      },
+      "brandSlider": {
+        "label": "Brand slider"
+      },
+      "promoBanner": {
+        "label": "Promo banner"
+      },
+      "uspStrip": {
+        "label": "USP / trust strip"
       }
     }
   }

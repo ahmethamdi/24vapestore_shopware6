@@ -1,0 +1,104 @@
+// ==================================================
+// USP / GÜVEN ŞERİDİ (vape-usp-strip CMS element)
+//
+// Anasayfa gövdesine sürüklenen nötr bilgi şeridi. Token'lar bölüm 17'den.
+// Kırmızı YOK. Mobil-öncelikli: alt alta → 2'li → yatay eşit sütun.
+// İkonlar dekoratif (twig'de aria-hidden), anlam başlık+metinde.
+// ==================================================
+
+.vape-usp-strip {
+    background: $vape-usp-bg;
+    border-top: 1px solid $vape-usp-border;
+    border-bottom: 1px solid $vape-usp-border;
+    padding: $vape-usp-pad-y-mobile $vape-usp-pad-x;
+
+    @media (min-width: 768px) {
+        padding-top: $vape-usp-pad-y-desktop;
+        padding-bottom: $vape-usp-pad-y-desktop;
+    }
+
+    &__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        display: grid;
+        grid-template-columns: 1fr;              // mobil: alt alta
+        gap: $vape-usp-row-gap;
+
+        @media (min-width: 480px) {
+            grid-template-columns: repeat(2, 1fr); // küçük ekran: 2'li
+        }
+
+        // Masaüstü: item sayısı kadar eşit sütun (auto-fit min genişlik),
+        // 3 veya 4 sütun doğal olarak tek satıra sığar.
+        @media (min-width: 768px) {
+            grid-template-columns: repeat(auto-fit, minmax($vape-usp-col-min, 1fr));
+            gap: 0;
+        }
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: $vape-usp-item-gap;
+        min-width: 0;
+
+        // Dikey ayırıcı (aboutyou tarzı) — yalnızca masaüstünde, ilk sütun hariç.
+        @media (min-width: 768px) {
+            padding: $vape-usp-divider-inset $vape-space-5;
+            position: relative;
+
+            &::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: $vape-usp-divider-inset;
+                bottom: $vape-usp-divider-inset;
+                width: 1px;
+                background: $vape-usp-divider-color;
+            }
+
+            // Grid'in ilk sütunundaki item'da ayırıcı gösterme.
+            // auto-fit ile satır başına sütun sayısı değişebildiği için
+            // "her satırın ilki" garanti edilemez; en soldaki (grid-column
+            // başlangıcı) için yaklaşık çözüm: ilk item'da gizle.
+            &:first-child::before {
+                display: none;
+            }
+        }
+    }
+
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        color: $vape-usp-icon-color;
+
+        // sw_icon <svg> boyutunu şeride sabitle
+        svg,
+        .icon {
+            width: $vape-usp-icon-size;
+            height: $vape-usp-icon-size;
+        }
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        line-height: $vape-leading-snug;
+        min-width: 0;
+    }
+
+    &__title {
+        font-size: $vape-usp-title-size;
+        font-weight: $vape-usp-title-weight;
+        color: $vape-usp-title-color;
+    }
+
+    &__sub {
+        font-size: $vape-usp-sub-size;
+        color: $vape-usp-sub-color;
+    }
+}

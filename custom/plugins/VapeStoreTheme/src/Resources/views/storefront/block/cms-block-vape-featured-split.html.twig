@@ -1,0 +1,17 @@
+{#
+    Öne çıkanlar split block — storefront çıktısı.
+
+    ⚠️ `data-cms-element-id` olmadan admin canlı önizlemede element tıklanıp
+       seçilemez — sürükle-bırak deneyimi bozulur.
+    ⚠️ Element tipini hardcode ETME: yönetici slot'taki element'i değiştirmiş
+       olabilir, bu yüzden `~ element.type ~` ile dinamik include edilir.
+#}
+{% block block_vape_featured_split %}
+    {% set element = block.slots.getSlot('featuredSplit') %}
+
+    <div class="col-12 vape-featured-split-block" data-cms-element-id="{{ element.id }}">
+        {% block block_vape_featured_split_inner %}
+            {% sw_include '@Storefront/storefront/element/cms-element-' ~ element.type ~ '.html.twig' ignore missing %}
+        {% endblock %}
+    </div>
+{% endblock %}

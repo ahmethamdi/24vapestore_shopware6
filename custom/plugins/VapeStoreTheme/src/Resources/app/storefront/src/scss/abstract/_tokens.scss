@@ -325,3 +325,366 @@ $vape-flyout-thumb-ring-hover: $vape-brand;
 $vape-flyout-fallback-bg:     $vape-neutral-900;
 $vape-flyout-fallback-fg:     $vape-neutral-white;
 $vape-flyout-head-gap:        $vape-space-3;
+
+// ==================================================
+// 13. KATEGORİ CAROUSEL (vape-category-carousel CMS element)
+//
+// Yatay kaydırılabilir kategori kartları şeridi. Beyaz zemin, nötr gri
+// kartlar, koyu metin. Kırmızı SADECE: rozet, highlight <mark>, hover
+// vurgusu. "İncele" butonu koyu dolgu — kırmızı dolgu CTA YOK.
+// ==================================================
+
+// Kart ölçüleri — scroll-snap şeridinde sabit genişlik
+$vape-catcar-card-width:        260px;   // ≥768px
+$vape-catcar-card-width-mobile: 200px;   // <768px, dokunmatik kaydırma
+$vape-catcar-card-gap:          $vape-space-4;
+$vape-catcar-card-radius:       $vape-radius-lg;
+$vape-catcar-card-bg:           $vape-neutral-50;
+$vape-catcar-card-bg-hover:     $vape-neutral-100;
+$vape-catcar-card-border:       $vape-border-subtle;
+
+// Kart görsel alanı
+$vape-catcar-media-ratio:       4 / 3;
+$vape-catcar-media-bg:          $vape-neutral-100;
+
+// Rozet — sol üst, kırmızı vurgu
+$vape-catcar-badge-bg:          $vape-brand;
+$vape-catcar-badge-fg:          $vape-neutral-white;
+$vape-catcar-badge-inset:       $vape-space-3;
+
+// Kart gövdesi
+$vape-catcar-body-pad:          $vape-space-4;
+$vape-catcar-title-size:        $vape-text-lg;
+
+// "İncele" CTA — koyu dolgu, kırmızı DEĞİL
+$vape-catcar-cta-bg:            $vape-neutral-900;
+$vape-catcar-cta-bg-hover:      $vape-neutral-800;
+$vape-catcar-cta-fg:            $vape-neutral-white;
+
+// Görseli olmayan kategori — baş harf yer tutucu
+// Beyaz temaya uygun yumuşak açık zemin + soluk harf (kapkara DEĞİL).
+// Ürünler/kategori görseli gelince gerçek görsele döner.
+$vape-catcar-fallback-bg:       $vape-neutral-100;
+$vape-catcar-fallback-fg:       $vape-neutral-300;
+
+// Başlık bölümü
+$vape-catcar-eyebrow-color:     $vape-text-muted;
+$vape-catcar-highlight-color:   $vape-brand;   // <mark> vurgu rengi
+
+// Ok butonları
+$vape-catcar-arrow-size:        40px;
+$vape-catcar-arrow-bg:          $vape-neutral-white;
+$vape-catcar-arrow-fg:          $vape-neutral-900;
+$vape-catcar-arrow-border:      $vape-border-strong;
+$vape-catcar-arrow-shadow:      $vape-shadow-md;
+
+// ==================================================
+// 15. ÜRÜN RAYI (vape-product-rail CMS element)
+//
+// Başlıklı ürün rayı: başlık (+ opsiyonel alt satır) + sağda ok navigasyon +
+// yatay kayan ÜRÜN kartları. Ürün kartlarının KENDİSİ core'un product-box'ı
+// (component/product/card/box.html.twig) ile render edilir — bu token'lar
+// yalnızca ray KAPSAYICISI (başlık, oklar, şerit boşlukları) içindir.
+// Kart içi fiyat/rozet renkleri core + global tema tarafından yönetilir.
+//
+// Görsel dil: beyaz zemin + kırmızı vurgu. Başlık koyu, oklar nötr yuvarlak
+// (hover'da kırmızı kenar). Kırmızı dolgulu CTA YOK.
+// ==================================================
+
+// ---------- başlık bölümü ----------
+$vape-prail-head-gap:          $vape-space-4;   // başlık ile ray arası
+$vape-prail-headline-size:     $vape-text-2xl;  // <768px
+$vape-prail-headline-size-md:  $vape-text-3xl;  // ≥768px
+$vape-prail-headline-color:    $vape-text-heading;
+$vape-prail-subline-color:     $vape-text-muted;
+$vape-prail-subline-size:      $vape-text-sm;
+
+// ---------- kaydırma rayı ----------
+$vape-prail-track-gap:         $vape-grid-gap;  // kartlar arası — ürün grid'iyle aynı ritim
+$vape-prail-track-pad-y:       $vape-space-2;   // ok gölgesi / hover kırpılmasın
+$vape-prail-item-width:        180px;           // <768px scroll-snap kart genişliği
+$vape-prail-item-width-md:     240px;           // ≥768px
+
+// ---------- ok butonları ----------
+// Kategori carousel okları ile aynı dil; ayrı token'lar ki ray okları
+// bağımsız ayarlanabilsin.
+$vape-prail-arrow-size:        40px;
+$vape-prail-arrow-bg:          $vape-neutral-white;
+$vape-prail-arrow-fg:          $vape-neutral-900;
+$vape-prail-arrow-border:      $vape-border-strong;
+$vape-prail-arrow-border-hover:$vape-brand;
+$vape-prail-arrow-shadow:      $vape-shadow-md;
+
+// ---------- boş durum ----------
+$vape-prail-empty-color:       $vape-text-muted;
+$vape-prail-empty-border:      $vape-border-subtle;
+$vape-prail-empty-pad:         $vape-space-8;
+
+// ==================================================
+// 16. ÖNE ÇIKANLAR SPLIT (vape-featured-split CMS element)
+//
+// SEKME (tab) tabanlı öne çıkanlar bölümü:
+//   SOL  → eyebrow + başlık + açıklama + dikey SEKME listesi + koyu CTA.
+//          Her sekme bir KATEGORİ'dir; tıklanınca sağdaki slider değişir.
+//   SAĞ  → aktif sekmenin ürünlerinden yatay kart slider'ı (core product-box).
+//          Her sekme bir panel; yalnızca aktif panel görünür.
+//
+// Görsel dil: beyaz zemin + kırmızı vurgu. Kırmızı SADECE: aktif sekme
+// sol-kenar çizgisi, hover vurgusu, gerçek indirim fiyatı (fiyat core
+// product-box'tan gelir). "Alle Produkte ansehen" KOYU dolgu — kırmızı
+// dolgulu CTA YOK.
+// ==================================================
+
+// ---------- layout ----------
+$vape-fsplit-col-gap:            $vape-space-8;
+$vape-fsplit-left-width:         360px;   // ≥992px sabit sol sütun genişliği
+
+// ---------- sol sütun ----------
+$vape-fsplit-eyebrow-color:      $vape-text-muted;
+$vape-fsplit-desc-color:         $vape-text-primary;
+
+// Dikey SEKME (tab) listesi
+$vape-fsplit-link-color:         $vape-neutral-700;
+$vape-fsplit-link-color-hover:   $vape-text-heading;
+$vape-fsplit-link-pad-y:         $vape-space-3;
+$vape-fsplit-link-pad-x:         $vape-space-4;
+$vape-fsplit-link-border-w:      3px;             // sol kenar çizgi kalınlığı
+$vape-fsplit-link-border:        $vape-border-subtle;      // pasif çizgi
+$vape-fsplit-link-active-border: $vape-brand;              // AKTİF → kırmızı
+$vape-fsplit-link-active-color:  $vape-text-heading;
+$vape-fsplit-link-active-bg:     $vape-neutral-50;
+
+// "Alle Produkte ansehen" — koyu dolgu (kırmızı DEĞİL)
+$vape-fsplit-cta-bg:             $vape-neutral-900;
+$vape-fsplit-cta-bg-hover:       $vape-neutral-800;
+$vape-fsplit-cta-fg:             $vape-neutral-white;
+$vape-fsplit-cta-pad-y:          $vape-space-3;
+$vape-fsplit-cta-pad-x:          $vape-space-6;
+
+// ---------- sağ sütun — ürün slider'ı ----------
+$vape-fsplit-track-gap:          $vape-space-4;   // kartlar arası boşluk
+$vape-fsplit-item-basis:         74%;             // mobil: ~1.3 kart görünür
+$vape-fsplit-item-basis-md:      42%;             // ≥768px: ~2.3 kart
+$vape-fsplit-item-basis-lg:      31%;             // ≥1200px: ~3 kart
+
+// Navigasyon okları (nötr yuvarlak — kırmızı DEĞİL)
+$vape-fsplit-arrows-top:                (-$vape-space-12); // slider üstüne, başlık hizası
+$vape-fsplit-arrow-size:                40px;
+$vape-fsplit-arrow-border:              $vape-border-subtle;
+$vape-fsplit-arrow-bg:                  $vape-neutral-white;
+$vape-fsplit-arrow-bg-hover:            $vape-neutral-50;
+$vape-fsplit-arrow-fg:                  $vape-text-heading;
+$vape-fsplit-arrow-disabled-opacity:    0.4;
+
+// Boş durum (0 ürün) — beyaz tema, açık nötrler (kapkara DEĞİL)
+$vape-fsplit-empty-pad:          $vape-space-8;
+$vape-fsplit-empty-border:       $vape-border-subtle;
+$vape-fsplit-empty-fg:           $vape-text-muted;
+
+// Kategori görsel fallback'i (bu element artık ürün gösteriyor; fallback
+// yalnızca teorik). AÇIK değerler — beyaz tema, kapkara olmasın.
+$vape-fsplit-fallback-bg:        $vape-neutral-100;
+$vape-fsplit-fallback-fg:        $vape-neutral-300;
+
+// ==================================================
+// 14. KATEGORİ GRID (vape-category-grid CMS element)
+//
+// "Kategoriye Göre Alışveriş" mozaik şeridi. Her kart bir mozaik: solda
+// büyük kategori görseli (2/3), sağda dikey 3 küçük kare. Kart altında
+// başlık + ürün sayısı + "İncele". Kartlar yatay scroll-snap ile kayar.
+//
+// Görsel dil bölüm 13 (carousel) ile aynı: beyaz zemin, nötr gri kart,
+// koyu metin. Kırmızı SADECE hover vurgusu. "İncele" koyu dolgu — kırmızı
+// dolgu CTA YOK. Ok butonları çerçeveli/nötr, hover'da kırmızı kenar.
+// Değerler semantik token'lardan türetilir.
+// ==================================================
+
+// Kart ölçüleri — mozaik daha geniş olduğu için carousel'den büyük
+$vape-catgrid-card-width:        340px;   // ≥768px
+$vape-catgrid-card-width-mobile: 280px;   // <768px, dokunmatik kaydırma
+$vape-catgrid-card-gap:          $vape-space-5;
+$vape-catgrid-card-radius:       $vape-radius-lg;
+$vape-catgrid-card-bg:           $vape-neutral-50;
+$vape-catgrid-card-bg-hover:     $vape-neutral-100;
+$vape-catgrid-card-border:       $vape-border-subtle;
+
+// Mozaik — büyük hücre + 3 küçük kare
+$vape-catgrid-mosaic-ratio:      3 / 2;              // kart görsel alanı oranı
+$vape-catgrid-mosaic-gap:        $vape-space-1;      // hücreler arası ince ayrım
+$vape-catgrid-mosaic-cols:       2fr 1fr;            // sol büyük / sağ küçük sütun
+$vape-catgrid-media-bg:          $vape-neutral-100;
+
+// Kart gövdesi
+$vape-catgrid-body-pad:          $vape-space-4;
+$vape-catgrid-title-size:        $vape-text-lg;
+$vape-catgrid-count-color:       $vape-text-muted;
+
+// "İncele" CTA — koyu dolgu, kırmızı DEĞİL
+$vape-catgrid-cta-bg:            $vape-neutral-900;
+$vape-catgrid-cta-bg-hover:      $vape-neutral-800;
+$vape-catgrid-cta-fg:            $vape-neutral-white;
+
+// Görseli olmayan kategori/kare — baş harf yer tutucu
+// Beyaz temaya uygun yumuşak açık zemin + soluk harf (kapkara DEĞİL).
+$vape-catgrid-fallback-bg:       $vape-neutral-100;
+$vape-catgrid-fallback-fg:       $vape-neutral-300;
+$vape-catgrid-tile-fallback-bg:  $vape-neutral-50;    // küçük kareler biraz farklı ton
+
+// Başlık bölümü
+$vape-catgrid-headline-color:    $vape-text-heading;
+
+// Ok butonları (başlığın sağında, yuvarlak çerçeveli)
+$vape-catgrid-arrow-size:        44px;
+$vape-catgrid-arrow-bg:          $vape-neutral-white;
+$vape-catgrid-arrow-fg:          $vape-neutral-900;
+$vape-catgrid-arrow-border:      $vape-border-strong;
+$vape-catgrid-arrow-border-hover: $vape-brand;
+$vape-catgrid-arrow-shadow:      $vape-shadow-md;
+
+// ==================================================
+// 17. USP / GÜVEN ŞERİDİ (vape-usp-strip CMS element)
+//
+// Anasayfa gövdesine sürüklenen bilgi şeridi. 3-4 sütun; her sütun
+// ikon + başlık + kısa metin. Header'daki top-bar USP şeridinden AYRI.
+//
+// Görsel dil: NÖTR bilgi şeridi. Kırmızı YOK — bu bir vurgu değil, güven
+// mesajı. Açık ayırıcı zemin ($vape-bg-subtle) üzerinde koyu metin, nötr
+// koyu ikon. İkonlar arası ince dikey ayırıcı (aboutyou tarzı). Mobilde
+// alt alta / 2'li; masaüstünde yatay eşit sütun.
+// ==================================================
+
+// ---------- kapsayıcı ----------
+$vape-usp-bg:              $vape-bg-subtle;        // açık ayırıcı zemin
+$vape-usp-border:          $vape-border-subtle;    // üst/alt ince çizgi
+$vape-usp-pad-y-mobile:    $vape-space-6;          // 24px
+$vape-usp-pad-y-desktop:   $vape-space-8;          // 32px
+$vape-usp-pad-x:           $vape-space-4;          // 16px yan iç boşluk
+
+// ---------- sütun (item) ----------
+$vape-usp-item-gap:        $vape-space-4;          // ikon ↔ metin arası
+$vape-usp-row-gap:         $vape-space-6;          // mobilde satırlar arası
+$vape-usp-col-min:         200px;                  // sütun min genişliği (grid)
+
+// ---------- dikey ayırıcı (masaüstü) ----------
+$vape-usp-divider-color:   $vape-border-subtle;
+$vape-usp-divider-inset:   $vape-space-3;          // ayırıcı dikey iç boşluğu
+
+// ---------- ikon ----------
+$vape-usp-icon-size:       28px;                   // ikon kutusu
+$vape-usp-icon-color:      $vape-neutral-800;      // nötr koyu — kırmızı DEĞİL
+
+// ---------- metin ----------
+$vape-usp-title-size:      $vape-text-md;          // 16px
+$vape-usp-title-weight:    $vape-weight-semibold;
+$vape-usp-title-color:     $vape-text-heading;
+$vape-usp-sub-size:        $vape-text-sm;          // 14px
+$vape-usp-sub-color:       $vape-text-muted;
+
+// ==================================================
+// 18. PROMO BANNER (vape-promo-banner CMS element)
+//
+// Tam genişlik promosyonel vurgu şeridi: arka plan görseli/rengi + koyu
+// overlay üstünde eyebrow + büyük başlık + alt metin + CTA. Kategoriler
+// arasında nefes aldıran şerit.
+//
+// Görsel dil: yönetici zemin rengini ve metin tonunu (light/dark) seçer.
+// Kırmızı DOLGU CTA YOK — buton banner tonuna göre beyaz (koyu banner) veya
+// koyu (açık banner) dolgudur; kontrast bu şekilde garanti edilir. Kırmızı
+// yalnızca gövde metnindeki indirim vurgusu için serbesttir.
+// ==================================================
+
+// ---------- kapsayıcı ----------
+$vape-promo-min-height:          220px;   // <768px
+$vape-promo-min-height-md:       320px;   // ≥768px
+$vape-promo-fallback-bg:         $vape-neutral-900;   // config'te renk yoksa
+
+// ---------- içerik ----------
+$vape-promo-inner-max:           640px;   // metin bloğu genişlik sınırı
+$vape-promo-inner-gap:           $vape-space-3;
+$vape-promo-pad-y:               $vape-space-10;   // 40px — nefes payı
+$vape-promo-pad-y-md:            $vape-space-12;   // 48px
+$vape-promo-pad-x:               $vape-container-pad-mobile;    // 16px
+$vape-promo-pad-x-md:            $vape-container-pad-desktop;   // 64px
+
+$vape-promo-eyebrow-size:        $vape-text-sm;
+$vape-promo-eyebrow-tracking:    $vape-tracking-wider;
+$vape-promo-headline-size:       $vape-text-3xl;   // <768px
+$vape-promo-headline-size-md:    $vape-text-4xl;   // ≥768px
+$vape-promo-text-size:           $vape-text-lg;
+$vape-promo-text-max:            520px;
+
+// ---------- ton: LIGHT (koyu banner üstünde beyaz metin) ----------
+$vape-promo-light-heading:       $vape-neutral-white;
+$vape-promo-light-text:          rgba(255, 255, 255, 0.88);
+$vape-promo-light-eyebrow:       rgba(255, 255, 255, 0.82);
+// CTA: beyaz dolgu, koyu metin (kırmızı DEĞİL)
+$vape-promo-light-cta-bg:        $vape-neutral-white;
+$vape-promo-light-cta-bg-hover:  $vape-neutral-100;
+$vape-promo-light-cta-fg:        $vape-neutral-900;
+
+// ---------- ton: DARK (açık banner üstünde koyu metin) ----------
+$vape-promo-dark-heading:        $vape-neutral-900;
+$vape-promo-dark-text:           $vape-neutral-700;
+$vape-promo-dark-eyebrow:        $vape-neutral-600;
+// CTA: koyu dolgu, beyaz metin (kırmızı DEĞİL)
+$vape-promo-dark-cta-bg:         $vape-neutral-900;
+$vape-promo-dark-cta-bg-hover:   $vape-neutral-800;
+$vape-promo-dark-cta-fg:         $vape-neutral-white;
+
+// ---------- CTA ölçü ----------
+$vape-promo-cta-pad-y:           $vape-space-3;
+$vape-promo-cta-pad-x:           $vape-space-8;
+$vape-promo-cta-radius:          $vape-radius-sm;
+
+// ==================================================
+// 19. MARKA SLIDER (vape-brand-slider CMS element)
+//
+// "Beliebte Marken": başlık + yatay kayan marka logoları (Elf Bar, Lost Mary,
+// Vaporesso …). Güven verir. Beyaz/açık zemin, logolar nötr.
+//
+// Görsel dil: logolar varsayılan olarak GRİ (grayscale + soluk), hover'da
+// renkli — marka slider'larında yaygın, sayfayı sakin tutar. Kırmızı YOK;
+// yalnızca ok butonu hover'ında marka vurgusu belirir. Logosu olmayan marka
+// ADI olarak nötr koyu metinde gösterilir (kapkara değil).
+// ==================================================
+
+// ---------- başlık ----------
+$vape-brand-headline-size:       $vape-text-xl;    // <768px
+$vape-brand-headline-size-md:    $vape-text-2xl;   // ≥768px
+$vape-brand-headline-color:      $vape-text-heading;
+$vape-brand-head-gap:            $vape-space-6;    // başlık ile şerit arası
+
+// ---------- şerit ----------
+$vape-brand-track-gap:           $vape-space-4;
+$vape-brand-track-pad-y:         $vape-space-2;
+
+// ---------- logo hücresi ----------
+// Sabit yükseklik + contain: farklı en-boy oranlı logolar aynı optik ağırlıkta.
+$vape-brand-item-width:          160px;   // ≥768px
+$vape-brand-item-width-mobile:   130px;   // <768px
+$vape-brand-item-height:         $vape-space-16;   // 64px — sabit logo yüksekliği
+$vape-brand-item-height-mobile:  $vape-space-12;   // 48px
+$vape-brand-item-pad:            $vape-space-4;
+$vape-brand-item-radius:         $vape-radius-lg;
+$vape-brand-item-bg:             $vape-neutral-50;
+$vape-brand-item-bg-hover:       $vape-neutral-100;
+$vape-brand-item-border:         $vape-border-subtle;
+
+// ---------- logo görseli ----------
+// grayscale=true iken gri + soluk; hover'da renkli ve tam opak.
+$vape-brand-logo-opacity:        0.65;
+$vape-brand-logo-opacity-hover:  1;
+
+// ---------- logosuz marka adı ----------
+// Nötr koyu metin — kapkara DEĞİL, sakin.
+$vape-brand-name-size:           $vape-text-md;
+$vape-brand-name-color:          $vape-neutral-600;
+$vape-brand-name-color-hover:    $vape-neutral-900;
+
+// ---------- ok butonları ----------
+// Carousel okları ile aynı görsel dil: çerçeveli, nötr, yuvarlak.
+$vape-brand-arrow-size:          40px;
+$vape-brand-arrow-bg:            $vape-neutral-white;
+$vape-brand-arrow-fg:            $vape-neutral-900;
+$vape-brand-arrow-border:        $vape-border-strong;
+$vape-brand-arrow-shadow:        $vape-shadow-md;

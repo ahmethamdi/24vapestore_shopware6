@@ -1,0 +1,270 @@
+/*
+Kategori grid ("Kategoriye Göre Alışveriş") — storefront görünümü.
+Yatay kaydırılabilir mozaik kartlar şeridi (CSS scroll-snap).
+
+Her kart bir MOZAİK: solda büyük kategori görseli (2fr), sağda dikey 3 küçük
+kare (1fr). Kart altında başlık + ürün sayısı + "İncele" butonu.
+
+Görsel dil: beyaz zemin + kırmızı vurgu.
+  - Zemin beyaz, kartlar nötr gri yüzey, metin koyu.
+  - Kırmızı SADECE hover vurgusu (başlık + ok kenarı).
+  - "İncele" butonu koyu dolgu — kırmızı dolgulu büyük CTA YOK.
+  - Yuvarlak ok butonları çerçeveli/nötr, hover'da kırmızı kenar.
+
+Tüm değerler token'lardan gelir; magic hex/px yok.
+Boş config (0 kart) ile de temiz render olur — element hiç şerit basmaz.
+*/
+
+.vape-category-grid {
+    width: 100%;
+
+    // ---------- başlık satırı (sol başlık · sağ oklar) ----------
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $vape-space-4;
+        margin-bottom: $vape-space-6;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: $vape-text-2xl;
+        font-weight: $vape-weight-bold;
+        line-height: $vape-leading-tight;
+        letter-spacing: $vape-tracking-tight;
+        color: $vape-catgrid-headline-color;
+
+        @media (min-width: 768px) {
+            font-size: $vape-text-3xl;
+        }
+
+        @media (min-width: 1200px) {
+            font-size: $vape-text-4xl;
+        }
+    }
+
+    // ---------- ok butonları (başlığın sağında) ----------
+
+    &__arrows {
+        display: none;
+
+        // Oklar yalnızca kaydırmanın anlamlı olduğu geniş ekranda görünür;
+        // dar ekranda dokunmatik kaydırma yeterli.
+        @media (min-width: 768px) {
+            display: flex;
+            gap: $vape-space-2;
+            flex-shrink: 0;
+        }
+    }
+
+    &__arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: $vape-catgrid-arrow-size;
+        height: $vape-catgrid-arrow-size;
+        padding: 0;
+        border: 1px solid $vape-catgrid-arrow-border;
+        border-radius: $vape-radius-pill;
+        background-color: $vape-catgrid-arrow-bg;
+        color: $vape-catgrid-arrow-fg;
+        cursor: pointer;
+        transition:
+            border-color $vape-duration-fast $vape-ease-out,
+            color $vape-duration-fast $vape-ease-out,
+            box-shadow $vape-duration-fast $vape-ease-out;
+
+        &:hover {
+            border-color: $vape-catgrid-arrow-border-hover;
+            color: $vape-brand;
+            box-shadow: $vape-catgrid-arrow-shadow;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+
+        &.is--disabled {
+            opacity: 0.4;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    // ---------- kaydırma rayı ----------
+    // CSS scroll-snap: JS olmadan da yatay kaydırılır. Oklar yalnızca
+    // ilerlemeli kaydırma için ek kolaylık (VapeCategoryCarousel plugin'i).
+
+    &__track {
+        display: flex;
+        gap: $vape-catgrid-card-gap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        padding: $vape-space-2 $vape-space-1 $vape-space-4;
+        scrollbar-width: none;   // Firefox: kaydırma çubuğunu gizle
+
+        &::-webkit-scrollbar {
+            display: none;       // WebKit: kaydırma çubuğunu gizle
+        }
+    }
+
+    // ---------- kart ----------
+
+    &__card {
+        flex: 0 0 $vape-catgrid-card-width-mobile;
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid $vape-catgrid-card-border;
+        border-radius: $vape-catgrid-card-radius;
+        background-color: $vape-catgrid-card-bg;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition:
+            transform $vape-duration-base $vape-ease-out,
+            border-color $vape-duration-base $vape-ease-out,
+            background-color $vape-duration-base $vape-ease-out,
+            box-shadow $vape-duration-base $vape-ease-out;
+
+        @media (min-width: 768px) {
+            flex-basis: $vape-catgrid-card-width;
+        }
+
+        &:hover,
+        &:focus-visible {
+            transform: translateY(-4px);
+            border-color: $vape-border-strong;
+            background-color: $vape-catgrid-card-bg-hover;
+            box-shadow: $vape-shadow-md;
+            text-decoration: none;
+            color: inherit;
+
+            .vape-category-grid__title {
+                color: $vape-brand;   // hover'da başlık kırmızı vurgu
+            }
+
+            .vape-category-grid__cta {
+                background-color: $vape-catgrid-cta-bg-hover;
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+    }
+
+    // ---------- mozaik: sol büyük + sağ 3 küçük ----------
+
+    &__mosaic {
+        display: grid;
+        grid-template-columns: $vape-catgrid-mosaic-cols;
+        gap: $vape-catgrid-mosaic-gap;
+        aspect-ratio: $vape-catgrid-mosaic-ratio;
+        background-color: $vape-catgrid-media-bg;
+    }
+
+    &__hero {
+        position: relative;
+        display: block;
+        overflow: hidden;
+    }
+
+    &__tiles {
+        display: grid;
+        grid-template-rows: repeat(3, 1fr);
+        gap: $vape-catgrid-mosaic-gap;
+    }
+
+    &__tile {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        background-color: $vape-catgrid-media-bg;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+
+        // Görseli olmayan kategori: baş harf yer tutucu (span.--placeholder)
+        &--placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: $vape-catgrid-fallback-bg;
+            color: $vape-catgrid-fallback-fg;
+            font-size: $vape-text-4xl;
+            font-weight: $vape-weight-bold;
+        }
+
+        // Küçük karelerdeki yer tutucu — daha küçük harf, biraz farklı ton
+        &--tile {
+            background-color: $vape-catgrid-tile-fallback-bg;
+            font-size: $vape-text-lg;
+        }
+    }
+
+    // ---------- kart gövdesi ----------
+
+    &__body {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: $vape-space-3;
+        padding: $vape-catgrid-body-pad;
+    }
+
+    &__meta {
+        display: flex;
+        flex-direction: column;
+        gap: $vape-space-1;
+        min-width: 0;
+    }
+
+    &__title {
+        font-size: $vape-catgrid-title-size;
+        font-weight: $vape-weight-bold;
+        line-height: $vape-leading-snug;
+        color: $vape-text-heading;
+        transition: color $vape-duration-fast $vape-ease-out;
+    }
+
+    &__count {
+        font-size: $vape-text-sm;
+        color: $vape-catgrid-count-color;
+    }
+
+    // "İncele" — koyu dolgu buton görünümü (kırmızı DEĞİL).
+    &__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: $vape-space-1;
+        flex-shrink: 0;
+        padding: $vape-space-2 $vape-space-4;
+        border-radius: $vape-radius-sm;
+        background-color: $vape-catgrid-cta-bg;
+        color: $vape-catgrid-cta-fg;
+        font-size: $vape-text-sm;
+        font-weight: $vape-weight-semibold;
+        transition: background-color $vape-duration-fast $vape-ease-out;
+
+        svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+}

@@ -1,0 +1,99 @@
+{#
+    Promo banner — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-promo-banner.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    ⚠️ Çeviri-farkında okuma: metinler `element.translated.config.*`.
+       Sade `element.config.*` çok dilli mağazada sessizce bozulur.
+
+    Arka plan görseli PHP resolver'dan `element.data.media` (ImageStruct) olarak
+    gelir. Görsel yoksa düz `bgColor` zemin kullanılır — struct her zaman set
+    edildiği için Twig null'a karşı güvenli.
+
+    CTA: bu bir promo banner ama proje kuralı gereği kırmızı DOLGU CTA yok.
+    Buton, banner tonuna göre beyaz (koyu banner) veya koyu (açık banner)
+    dolgudur — kontrast/erişilebilirlik SCSS'te sağlanır. Kırmızı yalnızca
+    metin içindeki indirim vurgusu için kullanılabilir.
+#}
+{% block element_vape_promo_banner %}
+    {% set config = element.translated.config %}
+
+    {% set eyebrow = config.eyebrow.value|default('') %}
+    {% set headline = config.headline.value|default('') %}
+    {% set text = config.text.value|default('') %}
+    {% set ctaText = config.ctaText.value|default('') %}
+    {% set ctaUrl = config.ctaUrl.value|default('') %}
+    {% set newTab = config.newTab.value|default(false) %}
+
+    {% set bgColor = config.bgColor.value|default('#18181d') %}
+    {% set overlayOpacity = (config.overlayOpacity.value|default(40)) / 100 %}
+    {% set textColor = config.textColor.value|default('light') %}
+    {% set align = config.align.value|default('left') %}
+
+    {% set media = element.data.media %}
+    {% set hasMedia = media and media.url %}
+
+    {% set hasContent = eyebrow or headline or text or (ctaText and ctaUrl) %}
+
+    {% if hasContent or hasMedia %}
+        <div class="cms-element-{{ element.type }} vape-promo-banner is--tone-{{ textColor }} is--align-{{ align }}{{ hasMedia ? ' has--media' : '' }}"
+             style="background-color: {{ bgColor }};">
+
+            {% block element_vape_promo_banner_media %}
+                {% if hasMedia %}
+                    <div class="vape-promo-banner__media" aria-hidden="true">
+                        {% sw_thumbnails 'vape-promo-banner-thumbnails' with {
+                            media: media,
+                            sizes: {
+                                xs: '576px',
+                                sm: '767px',
+                                md: '991px',
+                                lg: '1199px',
+                                xl: '1920px'
+                            },
+                            attributes: {
+                                class: 'vape-promo-banner__image',
+                                alt: (media.translated.alt ?: headline),
+                                loading: 'lazy'
+                            }
+                        } %}
+                    </div>
+
+                    {# Görsel üstünde metin okunabilirliği için koyu overlay #}
+                    <div class="vape-promo-banner__overlay"
+                         style="background-color: rgba(0, 0, 0, {{ overlayOpacity }});"
+                         aria-hidden="true"></div>
+                {% endif %}
+            {% endblock %}
+
+            {% block element_vape_promo_banner_inner %}
+                <div class="vape-promo-banner__inner">
+
+                    {% if eyebrow %}
+                        <span class="vape-promo-banner__eyebrow">{{ eyebrow }}</span>
+                    {% endif %}
+
+                    {% if headline %}
+                        <h2 class="vape-promo-banner__headline">{{ headline }}</h2>
+                    {% endif %}
+
+                    {% if text %}
+                        <p class="vape-promo-banner__text">{{ text }}</p>
+                    {% endif %}
+
+                    {% if ctaText and ctaUrl %}
+                        <a href="{{ ctaUrl }}"
+                           class="btn vape-promo-banner__cta"
+                           {% if newTab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                            {{ ctaText }}
+                        </a>
+                    {% endif %}
+
+                </div>
+            {% endblock %}
+
+        </div>
+    {% endif %}
+{% endblock %}

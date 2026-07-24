@@ -1,0 +1,156 @@
+{#
+    Kategori grid ("Kategoriye Göre Alışveriş") — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-category-grid.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    Kart verisi PHP resolver'dan `element.data.cards` olarak gelir; her eleman:
+      - category      → çözümlenmiş CategoryEntity (media association dahil)
+      - ctaText       → kart butonu metni (boşsa snippet'e düşer)
+      - productCount  → alt ağaç görünür ürün sayısı (resolver'da COUNT)
+
+    Başlık config'te düz alan olduğu için `element.translated.config` ile
+    çeviri katmanı üzerinden okunur.
+
+    MOZAİK: her kart CSS grid — solda büyük görsel (2fr), sağda dikey 3 küçük
+    kare (1fr). `vape_category_image(category, ctx)` tek görsel döndürdüğü için
+    büyük hücre ve küçük kareler aynı görsele düşer; kategori görseli/ürün
+    kapağı yoksa nötr baş-harf yer tutucu gösterilir (DB'de 0 ürün normal).
+
+    Carousel: `data-vape-category-carousel-*` attribute'ları ile aynı
+    storefront plugin'i (VapeCategoryCarousel) ok butonlarını bağlar — grid
+    için ayrı JS gerekmez. JS yüklenmese de şerit CSS scroll-snap ile kayar.
+#}
+{% block element_vape_category_grid %}
+    {% set cfg = element.translated.config %}
+    {% set cards = element.data.cards|default([]) %}
+
+    {% set headline = cfg.headline.value|default('') %}
+    {% set showProductCount = cfg.showProductCount.value|default(true) %}
+    {% set showArrows = cfg.showArrows.value|default(true) and cards|length > 1 %}
+
+    <div class="cms-element-{{ element.type }} vape-category-grid"
+         data-vape-category-carousel="true">
+
+        {% block element_vape_category_grid_head %}
+            {% if headline or showArrows %}
+                <div class="vape-category-grid__head">
+                    {% if headline %}
+                        <h2 class="vape-category-grid__headline">{{ headline }}</h2>
+                    {% endif %}
+
+                    {% if showArrows %}
+                        <div class="vape-category-grid__arrows">
+                            <button type="button"
+                                    class="vape-category-grid__arrow vape-category-grid__arrow--prev"
+                                    data-vape-category-carousel-prev
+                                    aria-label="{{ 'vapeCategoryGrid.previous'|trans|sw_sanitize }}">
+                                {% sw_icon 'arrow-medium-left' %}
+                            </button>
+                            <button type="button"
+                                    class="vape-category-grid__arrow vape-category-grid__arrow--next"
+                                    data-vape-category-carousel-next
+                                    aria-label="{{ 'vapeCategoryGrid.next'|trans|sw_sanitize }}">
+                                {% sw_icon 'arrow-medium-right' %}
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block element_vape_category_grid_track %}
+            {% if cards|length > 0 %}
+                <div class="vape-category-grid__track" data-vape-category-carousel-track>
+                    {% for card in cards %}
+                        {% set category = card.category %}
+                        {% set catUrl = category.seoUrl|default(seoUrl('frontend.navigation.page', { navigationId: category.id })) %}
+                        {% set catName = category.translated.name|default(category.name) %}
+                        {% set catMedia = vape_category_image(category, context.context) %}
+                        {% set ctaText = card.ctaText ?: 'vapeCategoryGrid.cta'|trans|sw_sanitize %}
+                        {% set initial = catName|slice(0, 1)|upper %}
+
+                        {% block element_vape_category_grid_card %}
+                            <a href="{{ catUrl }}"
+                               class="vape-category-grid__card"
+                               data-vape-category-carousel-card>
+
+                                {% block element_vape_category_grid_mosaic %}
+                                    <span class="vape-category-grid__mosaic">
+
+                                        {# ---- büyük görsel (solda, 2/3) ---- #}
+                                        <span class="vape-category-grid__hero">
+                                            {% if category.media %}
+                                                {% sw_thumbnails 'vape-category-grid-hero-thumbnails' with {
+                                                    media: category.media,
+                                                    sizes: { default: '360px' },
+                                                    attributes: {
+                                                        class: 'vape-category-grid__image',
+                                                        alt: (category.media.translated.alt ?: catName),
+                                                        loading: 'lazy'
+                                                    }
+                                                } %}
+                                            {% elseif catMedia and catMedia.url %}
+                                                <img src="{{ catMedia.url }}"
+                                                     class="vape-category-grid__image"
+                                                     alt="{{ catMedia.alt ?: catName }}"
+                                                     loading="lazy" />
+                                            {% else %}
+                                                <span class="vape-category-grid__image vape-category-grid__image--placeholder">
+                                                    {{ initial }}
+                                                </span>
+                                            {% endif %}
+                                        </span>
+
+                                        {# ---- dikey 3 küçük kare (sağda) ---- #}
+                                        {#
+                                            vape_category_image tek görsel döndürüyor; ayrı ürün
+                                            görselleri toplamak N+1 riski taşıdığından yan kareler
+                                            aynı görsele veya nötr baş-harf yer tutucuya düşer.
+                                        #}
+                                        <span class="vape-category-grid__tiles" aria-hidden="true">
+                                            {% for i in 1..3 %}
+                                                <span class="vape-category-grid__tile">
+                                                    {% if catMedia and catMedia.url %}
+                                                        <img src="{{ catMedia.url }}"
+                                                             class="vape-category-grid__image"
+                                                             alt=""
+                                                             loading="lazy" />
+                                                    {% else %}
+                                                        <span class="vape-category-grid__image vape-category-grid__image--placeholder vape-category-grid__image--tile">
+                                                            {{ initial }}
+                                                        </span>
+                                                    {% endif %}
+                                                </span>
+                                            {% endfor %}
+                                        </span>
+                                    </span>
+                                {% endblock %}
+
+                                {% block element_vape_category_grid_body %}
+                                    <span class="vape-category-grid__body">
+                                        <span class="vape-category-grid__meta">
+                                            <span class="vape-category-grid__title">{{ catName }}</span>
+                                            {% if showProductCount %}
+                                                <span class="vape-category-grid__count">
+                                                    {{ 'vapeCategoryGrid.productCount'|trans({ '%count%': card.productCount|default(0) })|sw_sanitize }}
+                                                </span>
+                                            {% endif %}
+                                        </span>
+
+                                        <span class="vape-category-grid__cta">
+                                            {{ ctaText }}
+                                            {% sw_icon 'arrow-medium-right' style { size: 'xs' } %}
+                                        </span>
+                                    </span>
+                                {% endblock %}
+                            </a>
+                        {% endblock %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+    </div>
+{% endblock %}

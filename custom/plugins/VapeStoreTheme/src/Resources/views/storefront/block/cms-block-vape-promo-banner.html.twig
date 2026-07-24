@@ -1,0 +1,20 @@
+{#
+    Promo banner block — storefront çıktısı.
+
+    ⚠️ `data-cms-element-id` olmadan admin canlı önizlemede element tıklanıp
+       seçilemez — sürükle-bırak deneyimi bozulur.
+    ⚠️ Element tipini hardcode ETME: yönetici slot'taki element'i değiştirmiş
+       olabilir, bu yüzden `~ element.type ~` ile dinamik include edilir.
+
+    Block sizingMode `full_width` olduğu için section sarmalayıcısı zaten tam
+    genişlik verir; element kendi içinde de tam genişlik zemin uygular.
+#}
+{% block block_vape_promo_banner %}
+    {% set element = block.slots.getSlot('promoBanner') %}
+
+    <div class="col-12 vape-promo-banner-block" data-cms-element-id="{{ element.id }}">
+        {% block block_vape_promo_banner_inner %}
+            {% sw_include '@Storefront/storefront/element/cms-element-' ~ element.type ~ '.html.twig' ignore missing %}
+        {% endblock %}
+    </div>
+{% endblock %}

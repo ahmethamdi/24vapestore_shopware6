@@ -1,0 +1,176 @@
+/*
+Promo banner — storefront görünümü.
+Tam genişlik promosyonel vurgu şeridi. Kategoriler arasında nefes aldırır.
+
+Tüm değerler token'lardan (bölüm 18) gelir; magic hex/px yok.
+Zemin rengi ve overlay opaklığı inline style ile config'ten gelir (dinamik);
+kalan her şey token.
+
+Erişilebilirlik: metin tonu (light/dark) yöneticinin seçimi. Görsel üstünde
+config'ten gelen koyu overlay kontrastı taşır; metin renkleri beyaz zeminde
+AA'yı geçen nötrlerden seçildi. CTA gerçek <a>, focus göstergesi global
+:focus-visible kuralından gelir.
+*/
+
+.vape-promo-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: $vape-promo-min-height;
+    padding: $vape-promo-pad-y $vape-promo-pad-x;
+    overflow: hidden;
+    background-color: $vape-promo-fallback-bg;   // config zemin rengiyle inline ezilir
+    background-position: center;
+
+    @media (min-width: 768px) {
+        min-height: $vape-promo-min-height-md;
+        padding: $vape-promo-pad-y-md $vape-promo-pad-x-md;
+    }
+
+    // ---------- arka plan görseli ----------
+    &__media {
+        position: absolute;
+        inset: 0;
+        z-index: $vape-z-base;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    // Görsel üstünde metin okunabilirliği için koyu overlay
+    // (opaklık config'ten inline style ile gelir).
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        z-index: $vape-z-base + 1;
+    }
+
+    // ---------- içerik ----------
+    &__inner {
+        position: relative;
+        z-index: $vape-z-base + 2;
+        display: flex;
+        flex-direction: column;
+        gap: $vape-promo-inner-gap;
+        width: 100%;
+        max-width: $vape-promo-inner-max;
+    }
+
+    &__eyebrow {
+        font-size: $vape-promo-eyebrow-size;
+        font-weight: $vape-weight-semibold;
+        letter-spacing: $vape-promo-eyebrow-tracking;
+        text-transform: uppercase;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: $vape-promo-headline-size;
+        line-height: $vape-leading-tight;
+
+        @media (min-width: 768px) {
+            font-size: $vape-promo-headline-size-md;
+        }
+    }
+
+    &__text {
+        margin: 0;
+        max-width: $vape-promo-text-max;
+        font-size: $vape-promo-text-size;
+        line-height: $vape-leading-normal;
+    }
+
+    &__cta {
+        align-self: flex-start;
+        margin-top: $vape-space-2;
+        padding: $vape-promo-cta-pad-y $vape-promo-cta-pad-x;
+        border-radius: $vape-promo-cta-radius;
+        font-weight: $vape-weight-semibold;
+        border: 0;
+
+        &:active {
+            transform: translateY(1px);
+        }
+    }
+
+    // ==================================================
+    // Ton: LIGHT — koyu banner üstünde beyaz metin
+    // ==================================================
+    &.is--tone-light {
+        .vape-promo-banner__eyebrow {
+            color: $vape-promo-light-eyebrow;
+        }
+
+        .vape-promo-banner__headline {
+            color: $vape-promo-light-heading;
+        }
+
+        .vape-promo-banner__text {
+            color: $vape-promo-light-text;
+        }
+
+        .vape-promo-banner__cta {
+            background-color: $vape-promo-light-cta-bg;
+            color: $vape-promo-light-cta-fg;
+
+            &:hover,
+            &:focus {
+                background-color: $vape-promo-light-cta-bg-hover;
+                color: $vape-promo-light-cta-fg;
+            }
+        }
+    }
+
+    // ==================================================
+    // Ton: DARK — açık banner üstünde koyu metin
+    // ==================================================
+    &.is--tone-dark {
+        .vape-promo-banner__eyebrow {
+            color: $vape-promo-dark-eyebrow;
+        }
+
+        .vape-promo-banner__headline {
+            color: $vape-promo-dark-heading;
+        }
+
+        .vape-promo-banner__text {
+            color: $vape-promo-dark-text;
+        }
+
+        .vape-promo-banner__cta {
+            background-color: $vape-promo-dark-cta-bg;
+            color: $vape-promo-dark-cta-fg;
+
+            &:hover,
+            &:focus {
+                background-color: $vape-promo-dark-cta-bg-hover;
+                color: $vape-promo-dark-cta-fg;
+            }
+        }
+    }
+
+    // ==================================================
+    // Hizalama: center
+    // ==================================================
+    &.is--align-center {
+        justify-content: center;
+        text-align: center;
+
+        .vape-promo-banner__inner {
+            align-items: center;
+        }
+
+        .vape-promo-banner__text {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .vape-promo-banner__cta {
+            align-self: center;
+        }
+    }
+}

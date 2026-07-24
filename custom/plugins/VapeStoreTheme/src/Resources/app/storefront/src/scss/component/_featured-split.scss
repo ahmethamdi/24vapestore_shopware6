@@ -1,0 +1,294 @@
+/*
+Öne çıkanlar split — storefront görünümü (SEKME tabanlı).
+
+İki sütunlu layout (CSS grid):
+  SOL  → eyebrow + başlık + açıklama + dikey SEKME listesi + koyu CTA
+  SAĞ  → aktif sekmenin ürünlerinden yatay kart slider'ı (core product-box).
+         Her sekme bir panel; yalnızca aktif panel görünür (JS diğerlerini
+         `hidden` yapar / geri getirir).
+
+Görsel dil: beyaz zemin + kırmızı vurgu.
+  - Aktif sekmenin sol kenarı kırmızı ($vape-brand); pasif sekme nötr.
+  - "Alle Produkte ansehen" KOYU dolgu — kırmızı dolgu CTA YOK.
+  - Fiyat rengi core product-box'tan gelir (sadece indirim kırmızı).
+
+Responsive: ≥992px iki sütun; altında sol sütun üstte, sağ altta. Dar ekranda
+sekme listesi yatay kaydırılabilir.
+Tüm değerler token'lardan gelir; magic hex/px yok.
+Boş config (0 sekme) ile de temiz render — boş bölümler hiç basılmaz.
+0 ürün → panelde nazik boş durum.
+*/
+
+.vape-featured-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $vape-fsplit-col-gap;
+    width: 100%;
+
+    @media (min-width: 992px) {
+        grid-template-columns: $vape-fsplit-left-width 1fr;
+        align-items: start;
+    }
+
+    // ==================== SOL SÜTUN ====================
+
+    &__left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $vape-space-4;
+        min-width: 0;
+    }
+
+    &__eyebrow {
+        font-size: $vape-text-xs;
+        font-weight: $vape-weight-bold;
+        letter-spacing: $vape-tracking-wider;
+        text-transform: uppercase;
+        color: $vape-fsplit-eyebrow-color;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: $vape-text-3xl;
+        font-weight: $vape-weight-bold;
+        line-height: $vape-leading-tight;
+        letter-spacing: $vape-tracking-tight;
+        color: $vape-text-heading;
+
+        @media (min-width: 1200px) {
+            font-size: $vape-text-4xl;
+        }
+    }
+
+    &__description {
+        margin: 0;
+        font-size: $vape-text-md;
+        line-height: $vape-leading-normal;
+        color: $vape-fsplit-desc-color;
+    }
+
+    // ---------- dikey SEKME listesi (tablist) ----------
+
+    &__tablist {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        // Dar ekranda sekmeler yatay kaydırılabilir bir şerit olur.
+        @media (max-width: 991.98px) {
+            flex-direction: row;
+            gap: $vape-space-2;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+
+    &__tab {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: $vape-fsplit-link-pad-y $vape-fsplit-link-pad-x;
+        border: 0;
+        border-left: $vape-fsplit-link-border-w solid $vape-fsplit-link-border;
+        background-color: transparent;
+        font-size: $vape-text-md;
+        font-weight: $vape-weight-semibold;
+        color: $vape-fsplit-link-color;
+        cursor: pointer;
+        transition:
+            color $vape-duration-fast $vape-ease-out,
+            border-color $vape-duration-fast $vape-ease-out,
+            background-color $vape-duration-fast $vape-ease-out;
+
+        @media (max-width: 991.98px) {
+            width: auto;
+            white-space: nowrap;
+            border-left: 0;
+            border-bottom: $vape-fsplit-link-border-w solid $vape-fsplit-link-border;
+        }
+
+        &:hover {
+            color: $vape-fsplit-link-color-hover;
+            border-left-color: $vape-border-strong;
+
+            @media (max-width: 991.98px) {
+                border-bottom-color: $vape-border-strong;
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+
+        // Aktif sekme: kırmızı sol kenar (dar ekranda alt) çizgisi
+        &.is--active {
+            border-left-color: $vape-fsplit-link-active-border;
+            background-color: $vape-fsplit-link-active-bg;
+            color: $vape-fsplit-link-active-color;
+
+            @media (max-width: 991.98px) {
+                border-bottom-color: $vape-fsplit-link-active-border;
+            }
+        }
+    }
+
+    // ---------- "Alle Produkte ansehen" — koyu dolgu ----------
+
+    &__cta {
+        display: inline-flex;
+        align-items: center;
+        gap: $vape-space-2;
+        margin-top: $vape-space-2;
+        padding: $vape-fsplit-cta-pad-y $vape-fsplit-cta-pad-x;
+        border-radius: $vape-radius-sm;
+        background-color: $vape-fsplit-cta-bg;
+        border: 1px solid $vape-fsplit-cta-bg;
+        color: $vape-fsplit-cta-fg;
+        font-size: $vape-text-sm;
+        font-weight: $vape-weight-semibold;
+        text-decoration: none;
+        transition: background-color $vape-duration-fast $vape-ease-out;
+
+        &:hover,
+        &:focus {
+            background-color: $vape-fsplit-cta-bg-hover;
+            border-color: $vape-fsplit-cta-bg-hover;
+            color: $vape-fsplit-cta-fg;
+        }
+
+        svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+
+    // ==================== SAĞ SÜTUN — sekme panelleri ====================
+
+    &__panels {
+        min-width: 0;
+    }
+
+    &__panel {
+        min-width: 0;
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+    }
+
+    // ---------- ürün slider'ı ----------
+
+    &__slider {
+        position: relative;
+        min-width: 0;
+    }
+
+    &__track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: $vape-fsplit-item-basis;
+        gap: $vape-fsplit-track-gap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: $vape-space-2;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            grid-auto-columns: $vape-fsplit-item-basis-md;
+        }
+
+        @media (min-width: 1200px) {
+            grid-auto-columns: $vape-fsplit-item-basis-lg;
+        }
+    }
+
+    &__item {
+        scroll-snap-align: start;
+        min-width: 0;
+
+        // core product-box kart yüksekliğini eşitle
+        .card {
+            height: 100%;
+        }
+    }
+
+    // ---------- navigasyon okları ----------
+
+    &__arrows {
+        position: absolute;
+        top: $vape-fsplit-arrows-top;
+        right: 0;
+        display: flex;
+        gap: $vape-space-2;
+        z-index: $vape-z-base;
+    }
+
+    &__arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: $vape-fsplit-arrow-size;
+        height: $vape-fsplit-arrow-size;
+        border: 1px solid $vape-fsplit-arrow-border;
+        border-radius: $vape-radius-pill;
+        background-color: $vape-fsplit-arrow-bg;
+        color: $vape-fsplit-arrow-fg;
+        cursor: pointer;
+        transition:
+            background-color $vape-duration-fast $vape-ease-out,
+            border-color $vape-duration-fast $vape-ease-out,
+            opacity $vape-duration-fast $vape-ease-out;
+
+        &:hover {
+            border-color: $vape-border-strong;
+            background-color: $vape-fsplit-arrow-bg-hover;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+
+        &.is--disabled {
+            opacity: $vape-fsplit-arrow-disabled-opacity;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        svg {
+            width: 1em;
+            height: 1em;
+        }
+    }
+
+    // ---------- boş durum (0 ürün) ----------
+
+    &__empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: $vape-fsplit-empty-pad;
+        border: 1px dashed $vape-fsplit-empty-border;
+        border-radius: $vape-radius-md;
+        color: $vape-fsplit-empty-fg;
+        text-align: center;
+
+        p {
+            margin: 0;
+            font-size: $vape-text-sm;
+        }
+    }
+}

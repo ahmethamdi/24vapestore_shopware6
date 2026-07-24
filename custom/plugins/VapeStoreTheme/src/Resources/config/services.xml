@@ -14,6 +14,64 @@
             <tag name="shopware.cms.data_resolver"/>
         </service>
 
+        <service id="VapeStoreTheme\DataResolver\CategoryCarouselCmsElementResolver">
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <!--
+            Ürün rayı (vape-product-rail) resolver'ı.
+            static + stream modlarını çözer; sonucu ProductSliderStruct'a yazar.
+            Sales-channel ürün deposu + core stream builder ile fiyat/çeviri
+            doğru gelir; DB'de 0 ürün olsa da boş rayı sorunsuz çözer.
+        -->
+        <service id="VapeStoreTheme\DataResolver\ProductRailCmsElementResolver">
+            <argument type="service" id="Shopware\Core\Content\ProductStream\Service\ProductStreamBuilder"/>
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="logger"/>
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <!--
+            Öne çıkanlar split (vape-featured-split) resolver'ı.
+            Sekme (tab) başına ürünleri çözer: category (alt ağaç) / static /
+            stream. Sales-channel ürün deposu ile calculatedPrice doğru gelir
+            (core product-box için şart). Kategori deposu sekme etiketi
+            fallback'i için ad getirir. DB'de 0 ürün olsa da güvenli.
+        -->
+        <service id="VapeStoreTheme\DataResolver\FeaturedSplitCmsElementResolver">
+            <argument type="service" id="Shopware\Core\Content\ProductStream\Service\ProductStreamBuilder"/>
+            <argument type="service" id="sales_channel.product.repository"/>
+            <argument type="service" id="category.repository"/>
+            <argument type="service" id="logger"/>
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <service id="VapeStoreTheme\DataResolver\CategoryGridCmsElementResolver">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <!--
+            Promo banner (vape-promo-banner) resolver'ı.
+            Tek `mediaId` alanını storefront'ta ImageStruct'a bağlar
+            (core ImageCmsElementResolver deseni). Görsel yoksa düz bgColor
+            zemine düşer; struct her zaman set edildiği için Twig null'a karşı güvenli.
+        -->
+        <service id="VapeStoreTheme\DataResolver\PromoBannerCmsElementResolver">
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <!--
+            Marka slider (vape-brand-slider) resolver'ı.
+            brands dizisindeki logo mediaId'lerini TEK criteria ile ImageStruct
+            yerine MediaEntity olarak çözer (hero medya batch deseni; N+1 yok).
+            Sonuç element.data.brands: her biri { name, url, media }. Logo yoksa
+            media null kalır ve twig marka adı metnine düşer.
+        -->
+        <service id="VapeStoreTheme\DataResolver\BrandSliderCmsElementResolver">
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
         <!--
             Mega menü kategori görseli.
 

@@ -1,0 +1,50 @@
+{#
+    Marka slider — CMS editörü içindeki önizleme.
+    Storefront'un sadeleştirilmiş bir yansıması: yönetici sonucu görebilsin diye.
+    Logo yoksa marka ADI metin olarak gösterilir (fallback).
+#}
+{% block vape_cms_el_brand_slider %}
+<div class="vape-cms-el-brand-slider">
+
+    {% block vape_cms_el_brand_slider_head %}
+        <div class="vape-cms-el-brand-slider__head">
+            <h2 class="vape-cms-el-brand-slider__headline">{{ headline }}</h2>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_brand_slider_empty %}
+        <div v-if="!brands.length" class="vape-cms-el-brand-slider__empty">
+            <mt-icon name="regular-store" size="28px" />
+            <p>{{ $t('vape-cms.elements.brandSlider.config.emptyHint') }}</p>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_brand_slider_track %}
+        <div
+            v-else
+            class="vape-cms-el-brand-slider__track"
+            :class="{ 'vape-cms-el-brand-slider__track--grayscale': grayscale }"
+        >
+            <div
+                v-for="(brand, index) in brands"
+                :key="index"
+                class="vape-cms-el-brand-slider__item"
+            >
+                <img
+                    v-if="brandLogo(brand)"
+                    :src="brandLogo(brand)"
+                    :alt="brand.name"
+                    class="vape-cms-el-brand-slider__logo"
+                />
+                <span
+                    v-else
+                    class="vape-cms-el-brand-slider__name"
+                >
+                    {{ brandName(brand) }}
+                </span>
+            </div>
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+/*
+Promo banner — editör canvas önizlemesi.
+Storefront'a görsel olarak yakın kalır ki yönetici sonucu doğru görsün.
+Admin bundle ayrı derlendiği için tema token'ları burada YOK — sabit
+değerler storefront token'larıyla eşleşecek şekilde seçildi.
+*/
+.vape-cms-el-promo-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 220px;
+    padding: 32px;
+    overflow: hidden;
+    background-color: #18181d;
+    background-size: cover;
+    background-position: center;
+
+    &__overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+
+    &__inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 640px;
+    }
+
+    &__eyebrow {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1.15;
+    }
+
+    &__text {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    &__cta {
+        align-self: flex-start;
+        margin-top: 4px;
+        padding: 10px 24px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    // ---------- ton ----------
+    &.is--tone-light {
+        color: #ffffff;
+
+        .vape-cms-el-promo-banner__eyebrow {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .vape-cms-el-promo-banner__cta {
+            background-color: #ffffff;
+            color: #18181d;
+        }
+    }
+
+    &.is--tone-dark {
+        color: #18181d;
+
+        .vape-cms-el-promo-banner__eyebrow {
+            color: rgba(24, 24, 29, 0.7);
+        }
+
+        .vape-cms-el-promo-banner__cta {
+            background-color: #18181d;
+            color: #ffffff;
+        }
+    }
+
+    // ---------- hizalama ----------
+    &.is--align-center {
+        justify-content: center;
+        text-align: center;
+
+        .vape-cms-el-promo-banner__inner {
+            align-items: center;
+        }
+
+        .vape-cms-el-promo-banner__cta {
+            align-self: center;
+        }
+    }
+}

@@ -1,0 +1,75 @@
+{#
+    Ürün rayı — CMS editörü önizlemesi.
+    Storefront'un sadeleştirilmiş yansıması: yönetici sonucu görebilsin diye.
+#}
+{% block vape_cms_el_product_rail %}
+<div class="vape-cms-el-product-rail">
+
+    {% block vape_cms_el_product_rail_head %}
+        <div class="vape-cms-el-product-rail__head">
+            <div class="vape-cms-el-product-rail__titles">
+                <h2 class="vape-cms-el-product-rail__headline">
+                    <template v-if="headline">{{ headline }}</template>
+                    <template v-else>{{ $t('vape-cms.elements.productRail.placeholder.headline') }}</template>
+                </h2>
+                <p v-if="subline" class="vape-cms-el-product-rail__subline">{{ subline }}</p>
+            </div>
+
+            <div v-if="showArrows" class="vape-cms-el-product-rail__arrows">
+                <span class="vape-cms-el-product-rail__arrow">
+                    <mt-icon name="regular-chevron-left" size="16px" />
+                </span>
+                <span class="vape-cms-el-product-rail__arrow">
+                    <mt-icon name="regular-chevron-right" size="16px" />
+                </span>
+            </div>
+        </div>
+    {% endblock %}
+
+    {# --- stream modda editörde ürün çözülmez: bilgi kartı --- #}
+    {% block vape_cms_el_product_rail_stream_hint %}
+        <div v-if="isStream" class="vape-cms-el-product-rail__stream">
+            <mt-icon name="regular-products" size="24px" />
+            <p v-if="hasStream">{{ $t('vape-cms.elements.productRail.placeholder.streamSelected') }}</p>
+            <p v-else>{{ $t('vape-cms.elements.productRail.placeholder.streamEmpty') }}</p>
+        </div>
+    {% endblock %}
+
+    {# --- static mod: seçili ürünlerin önizlemesi --- #}
+    {% block vape_cms_el_product_rail_track %}
+        <template v-if="!isStream">
+            <div v-if="products.length" class="vape-cms-el-product-rail__track">
+                <div
+                    v-for="(product, index) in products"
+                    :key="product.id || index"
+                    class="vape-cms-el-product-rail__card"
+                >
+                    <div class="vape-cms-el-product-rail__media">
+                        <img
+                            v-if="productImage(product)"
+                            :src="productImage(product)"
+                            class="vape-cms-el-product-rail__image"
+                            alt=""
+                        />
+                        <span v-else class="vape-cms-el-product-rail__image vape-cms-el-product-rail__image--placeholder">
+                            <mt-icon name="regular-image" size="24px" />
+                        </span>
+                    </div>
+                    <div class="vape-cms-el-product-rail__body">
+                        <span class="vape-cms-el-product-rail__name">{{ productName(product) }}</span>
+                        <span v-if="productPrice(product)" class="vape-cms-el-product-rail__price">
+                            {{ productPrice(product) }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div v-else class="vape-cms-el-product-rail__empty">
+                <mt-icon name="regular-products" size="28px" />
+                <p>{{ $t('vape-cms.elements.productRail.placeholder.empty') }}</p>
+            </div>
+        </template>
+    {% endblock %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,210 @@
+/*
+Marka slider — storefront görünümü.
+Başlık + yatay kaydırılabilir marka logo şeridi (CSS scroll-snap).
+
+Görsel dil: beyaz/açık zemin, logolar nötr gri (grayscale + soluk), hover'da
+renkli. Kırmızı YOK — yalnızca ok butonu hover'ında marka vurgusu. Logosu
+olmayan marka ADI olarak nötr koyu metinde gösterilir.
+
+Tüm değerler token'lardan gelir (bölüm 19); magic hex/px yok.
+Boş config (0 marka) ile de temiz render olur — element hiç şerit basmaz.
+*/
+
+.vape-brand-slider {
+    width: 100%;
+
+    // ---------- başlık ----------
+
+    &__head {
+        margin-bottom: $vape-brand-head-gap;
+        text-align: center;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: $vape-brand-headline-size;
+        font-weight: $vape-weight-bold;
+        line-height: $vape-leading-tight;
+        letter-spacing: $vape-tracking-tight;
+        color: $vape-brand-headline-color;
+
+        @media (min-width: 768px) {
+            font-size: $vape-brand-headline-size-md;
+        }
+    }
+
+    // ---------- viewport + oklar ----------
+
+    &__viewport {
+        position: relative;
+    }
+
+    // ---------- kaydırma şeridi ----------
+    // CSS scroll-snap: JS olmadan da yatay kaydırılır. Oklar yalnızca
+    // ilerlemeli kaydırma için ek kolaylık.
+
+    &__track {
+        display: flex;
+        align-items: center;
+        gap: $vape-brand-track-gap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        padding: $vape-brand-track-pad-y 0;
+        scrollbar-width: none;   // Firefox: kaydırma çubuğunu gizle
+
+        &::-webkit-scrollbar {
+            display: none;       // WebKit: kaydırma çubuğunu gizle
+        }
+
+        // Az marka varsa şeridi ortala (nefes payı), çok markada sola akar.
+        @media (min-width: 992px) {
+            justify-content: center;
+        }
+    }
+
+    // ---------- logo hücresi ----------
+
+    &__item {
+        flex: 0 0 $vape-brand-item-width-mobile;
+        scroll-snap-align: start;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: calc(#{$vape-brand-item-height-mobile} + (#{$vape-brand-item-pad} * 2));
+        padding: $vape-brand-item-pad;
+        border: 1px solid $vape-brand-item-border;
+        border-radius: $vape-brand-item-radius;
+        background-color: $vape-brand-item-bg;
+        text-decoration: none;
+        color: inherit;
+        transition:
+            background-color $vape-duration-base $vape-ease-out,
+            border-color $vape-duration-base $vape-ease-out,
+            box-shadow $vape-duration-base $vape-ease-out;
+
+        @media (min-width: 768px) {
+            flex-basis: $vape-brand-item-width;
+            height: calc(#{$vape-brand-item-height} + (#{$vape-brand-item-pad} * 2));
+        }
+
+        // <a> ise hover/focus'ta hafif yükselti
+        &[href]:hover,
+        &[href]:focus-visible {
+            border-color: $vape-border-strong;
+            background-color: $vape-brand-item-bg-hover;
+            box-shadow: $vape-shadow-md;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        &[href]:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+    }
+
+    // ---------- logo görseli ----------
+
+    &__logo {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        object-fit: contain;
+        display: block;
+        transition:
+            filter $vape-duration-base $vape-ease-out,
+            opacity $vape-duration-base $vape-ease-out;
+    }
+
+    // ---------- logosuz marka adı (fallback) ----------
+
+    &__name {
+        font-size: $vape-brand-name-size;
+        font-weight: $vape-weight-bold;
+        line-height: $vape-leading-snug;
+        text-align: center;
+        color: $vape-brand-name-color;
+        transition: color $vape-duration-base $vape-ease-out;
+    }
+
+    // ---------- grayscale modu ----------
+    // Logolar gri + soluk, hover'da renkli. Ad fallback'i de hover'da koyulaşır.
+
+    &--grayscale {
+        .vape-brand-slider__logo {
+            filter: grayscale(1);
+            opacity: $vape-brand-logo-opacity;
+        }
+
+        .vape-brand-slider__item {
+            &:hover,
+            &:focus-visible {
+                .vape-brand-slider__logo {
+                    filter: grayscale(0);
+                    opacity: $vape-brand-logo-opacity-hover;
+                }
+
+                .vape-brand-slider__name {
+                    color: $vape-brand-name-color-hover;
+                }
+            }
+        }
+    }
+
+    // ---------- ok butonları ----------
+
+    &__arrows {
+        display: none;
+
+        // Oklar yalnızca kaydırmanın mümkün olduğu geniş ekranda anlamlı;
+        // dar ekranda dokunmatik kaydırma yeterli.
+        @media (min-width: 992px) {
+            display: flex;
+            gap: $vape-space-2;
+            justify-content: center;
+            margin-top: $vape-space-4;
+        }
+    }
+
+    &__arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: $vape-brand-arrow-size;
+        height: $vape-brand-arrow-size;
+        padding: 0;
+        border: 1px solid $vape-brand-arrow-border;
+        border-radius: $vape-radius-pill;
+        background-color: $vape-brand-arrow-bg;
+        color: $vape-brand-arrow-fg;
+        cursor: pointer;
+        transition:
+            border-color $vape-duration-fast $vape-ease-out,
+            color $vape-duration-fast $vape-ease-out,
+            box-shadow $vape-duration-fast $vape-ease-out;
+
+        &:hover {
+            border-color: $vape-brand;
+            color: $vape-brand;   // kırmızı yalnızca ok hover'ında
+            box-shadow: $vape-brand-arrow-shadow;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+
+        // Şeridin başında/sonunda: pasif görünüm, JS tarafından işaretlenir.
+        &.is--disabled {
+            opacity: 0.4;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}

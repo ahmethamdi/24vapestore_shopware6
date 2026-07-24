@@ -1,0 +1,219 @@
+{#
+    Marka slider config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model
+       sw-*  (legacy)  → v-model:value
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+    ⚠️ brands bir dizi olduğu için v-model doğrudan kullanılamaz;
+       her alan @update ile updateBrand() çağırır.
+    ⚠️ Logo seçimi için sw-media-modal-v2 (still sw-*); modal her marka için
+       ayrı ayrı açılır, seçim mediaModalIndex ile doğru markaya yazılır.
+#}
+{% block vape_cms_element_brand_slider_config %}
+<div class="vape-cms-el-config-brand-slider">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-brand-slider"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('vape-cms.elements.brandSlider.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="brands" :active-tab="active">
+                {{ $t('vape-cms.elements.brandSlider.config.tab.brands') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="settings" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.settings') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== BAŞLIK ==================== #}
+            <sw-container v-if="active === 'content'">
+
+                {% block vape_cms_element_brand_slider_config_heading %}
+                    <div class="vape-cms-el-config-brand-slider__field">
+                        <mt-text-field
+                            v-model="element.config.headline.value"
+                            :label="$t('vape-cms.elements.brandSlider.config.headline')"
+                            :placeholder="$t('vape-cms.elements.brandSlider.config.headlinePlaceholder')"
+                            :help-text="$t('vape-cms.elements.brandSlider.config.headlineHelp')"
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== MARKALAR ==================== #}
+            <div v-if="active === 'brands'" class="vape-cms-el-config-brand-slider__brands">
+
+                {% block vape_cms_element_brand_slider_config_empty %}
+                    <mt-banner
+                        v-if="!brands.length"
+                        variant="info"
+                    >
+                        {{ $t('vape-cms.elements.brandSlider.config.emptyHint') }}
+                    </mt-banner>
+                {% endblock %}
+
+                {% block vape_cms_element_brand_slider_config_brand_list %}
+                    <div
+                        v-for="(brand, index) in brands"
+                        :key="index"
+                        class="vape-cms-el-config-brand-slider__brand"
+                    >
+                        <div class="vape-cms-el-config-brand-slider__brand-head">
+                            <span class="vape-cms-el-config-brand-slider__brand-title">
+                                {{ $t('vape-cms.elements.brandSlider.config.brand') }} {{ index + 1 }}
+                                <template v-if="brand.name">— {{ brand.name }}</template>
+                            </span>
+
+                            <div class="vape-cms-el-config-brand-slider__brand-actions">
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === 0"
+                                    @click="onMoveBrand(index, -1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-up" size="12px" />
+                                </mt-button>
+
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === brands.length - 1"
+                                    @click="onMoveBrand(index, 1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-down" size="12px" />
+                                </mt-button>
+
+                                <mt-button
+                                    variant="critical"
+                                    size="small"
+                                    @click="onRemoveBrand(index)"
+                                >
+                                    <mt-icon name="regular-trash" size="12px" />
+                                </mt-button>
+                            </div>
+                        </div>
+
+                        {# --- logo (opsiyonel) --- #}
+                        <div class="vape-cms-el-config-brand-slider__field">
+                            <span class="vape-cms-el-config-brand-slider__field-label">
+                                {{ $t('vape-cms.elements.brandSlider.config.logo') }}
+                            </span>
+
+                            <div class="vape-cms-el-config-brand-slider__logo">
+                                <div
+                                    v-if="brandMedia(brand)"
+                                    class="vape-cms-el-config-brand-slider__logo-preview"
+                                >
+                                    <img
+                                        :src="brandMedia(brand).url"
+                                        :alt="brand.name"
+                                    />
+                                </div>
+                                <div
+                                    v-else
+                                    class="vape-cms-el-config-brand-slider__logo-empty"
+                                >
+                                    <mt-icon name="regular-image" size="18px" />
+                                    <span>{{ $t('vape-cms.elements.brandSlider.config.logoEmpty') }}</span>
+                                </div>
+
+                                <div class="vape-cms-el-config-brand-slider__logo-actions">
+                                    <mt-button
+                                        variant="secondary"
+                                        size="small"
+                                        @click="onOpenMediaModal(index)"
+                                    >
+                                        {{ $t('vape-cms.elements.brandSlider.config.selectLogo') }}
+                                    </mt-button>
+                                    <mt-button
+                                        v-if="brand.mediaId"
+                                        variant="secondary"
+                                        size="small"
+                                        @click="onMediaRemove(index)"
+                                    >
+                                        {{ $t('vape-cms.elements.brandSlider.config.removeLogo') }}
+                                    </mt-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# --- marka adı --- #}
+                        <div class="vape-cms-el-config-brand-slider__field">
+                            <mt-text-field
+                                :model-value="brand.name"
+                                :label="$t('vape-cms.elements.brandSlider.config.name')"
+                                :placeholder="$t('vape-cms.elements.brandSlider.config.namePlaceholder')"
+                                :help-text="$t('vape-cms.elements.brandSlider.config.nameHelp')"
+                                @update:model-value="updateBrand(index, { name: $event })"
+                            />
+                        </div>
+
+                        {# --- marka linki (opsiyonel) --- #}
+                        <div class="vape-cms-el-config-brand-slider__field">
+                            <mt-text-field
+                                :model-value="brand.url"
+                                :label="$t('vape-cms.elements.brandSlider.config.url')"
+                                :placeholder="$t('vape-cms.elements.brandSlider.config.urlPlaceholder')"
+                                @update:model-value="updateBrand(index, { url: $event })"
+                            />
+                        </div>
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_brand_slider_config_add %}
+                    <button
+                        type="button"
+                        class="vape-cms-el-config-brand-slider__add"
+                        @click="onAddBrand"
+                    >
+                        <mt-icon name="regular-plus-circle" size="14px" />
+                        {{ $t('vape-cms.elements.brandSlider.config.addBrand') }}
+                    </button>
+                {% endblock %}
+
+            </div>
+
+            {# ==================== AYARLAR ==================== #}
+            <sw-container v-if="active === 'settings'">
+
+                {% block vape_cms_element_brand_slider_config_settings %}
+                    <div class="vape-cms-el-config-brand-slider__field">
+                        <mt-switch
+                            v-model="element.config.showArrows.value"
+                            :label="$t('vape-cms.elements.brandSlider.config.showArrows')"
+                            bordered
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-brand-slider__field">
+                        <mt-switch
+                            v-model="element.config.grayscale.value"
+                            :label="$t('vape-cms.elements.brandSlider.config.grayscale')"
+                            :help-text="$t('vape-cms.elements.brandSlider.config.grayscaleHelp')"
+                            bordered
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+        </template>
+    </sw-tabs>
+
+    {# --- logo seçim modal'ı (still sw-*) --- #}
+    <sw-media-modal-v2
+        v-if="mediaModalIndex !== null"
+        variant="regular"
+        :allow-multi-select="false"
+        entity-context="cms"
+        @media-modal-selection-change="onMediaSelection"
+        @modal-close="onCloseMediaModal"
+    />
+</div>
+{% endblock %}

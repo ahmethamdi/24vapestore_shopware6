@@ -42,11 +42,248 @@
             "dark": "Dunkel (für helle Panels)"
           }
         }
+      },
+      "categoryCarousel": {
+        "label": "Kategorie-Karussell",
+        "placeholder": {
+          "headline": "Überschrift eingeben",
+          "category": "Kategorie auswählen",
+          "cta": "Entdecken"
+        },
+        "config": {
+          "tab": {
+            "content": "Überschrift",
+            "categories": "Kategorien"
+          },
+          "eyebrow": "Überzeile",
+          "eyebrowPlaceholder": "z. B. MÜHELOSE ELEGANZ",
+          "headline": "Überschrift",
+          "headlinePlaceholder": "z. B. Branchenspezifische Arbeitskleidung unter einem Dach",
+          "highlightText": "Hervorgehobener Text",
+          "highlightTextPlaceholder": "z. B. unter einem Dach",
+          "highlightTextHelp": "Dieser Text wird in der Akzentfarbe innerhalb der Überschrift hervorgehoben. Muss exakt mit dem Überschriftstext übereinstimmen.",
+          "emptyHint": "Noch keine Kategorien. Klicke auf „Kategorie hinzufügen“, um die erste Karte zu erstellen.",
+          "card": "Karte",
+          "addCard": "Kategorie hinzufügen",
+          "category": "Kategorie",
+          "badge": "Badge",
+          "badgePlaceholder": "z. B. GESUNDHEIT",
+          "ctaText": "Button-Text",
+          "ctaTextPlaceholder": "Entdecken",
+          "showArrows": "Navigationspfeile anzeigen"
+        }
+      },
+      "categoryGrid": {
+        "label": "Kategorie-Grid",
+        "previewCount": "0 Produkte",
+        "placeholder": {
+          "headline": "Nach Kategorie einkaufen",
+          "category": "Kategorie auswählen",
+          "cta": "Ansehen"
+        },
+        "config": {
+          "tab": {
+            "content": "Überschrift",
+            "categories": "Kategorien"
+          },
+          "headline": "Überschrift",
+          "headlinePlaceholder": "z. B. Nach Kategorie einkaufen",
+          "emptyHint": "Noch keine Kategorien. Klicke auf „Kategorie hinzufügen“, um die erste Karte zu erstellen.",
+          "card": "Karte",
+          "addCard": "Kategorie hinzufügen",
+          "category": "Kategorie",
+          "ctaText": "Button-Text",
+          "ctaTextPlaceholder": "Ansehen",
+          "showArrows": "Navigationspfeile anzeigen",
+          "showProductCount": "Produktanzahl anzeigen"
+        }
+      },
+      "featuredSplit": {
+        "label": "Öne Çıkanlar (Split)",
+        "placeholder": {
+          "headline": "Überschrift eingeben",
+          "tab": "Tab",
+          "storefrontNote": "Die Produkte dieses Tabs werden im Storefront angezeigt (Kategorie/Stream wird nicht im Editor aufgelöst)."
+        },
+        "config": {
+          "tab": {
+            "content": "Inhalt",
+            "tabs": "Tabs"
+          },
+          "eyebrow": "Überzeile",
+          "eyebrowPlaceholder": "z. B. SAISONAL",
+          "headline": "Überschrift",
+          "headlinePlaceholder": "z. B. Highlights der Saison",
+          "description": "Beschreibung",
+          "descriptionPlaceholder": "Kurzer einleitender Text",
+          "ctaText": "Button-Text",
+          "ctaTextPlaceholder": "Alle Produkte ansehen",
+          "ctaUrl": "Button-Link",
+          "ctaUrlPlaceholder": "z. B. /neuheiten",
+          "tabsHint": "Jeder Tab ist eine Kategorie. Beim Klick auf einen Tab wechselt der Produkt-Slider rechts zu dessen Produkten.",
+          "tabsEmptyHint": "Noch keine Tabs. Klicke auf „Tab hinzufügen“, um den ersten Tab zu erstellen.",
+          "tabItem": "Tab",
+          "addTab": "Tab hinzufügen",
+          "tabCategory": "Kategorie",
+          "tabCategoryHelp": "Die Produkte dieser Kategorie (inkl. Unterkategorien) werden im Slider angezeigt.",
+          "tabLabel": "Tab-Text (Überschreibung)",
+          "tabLabelPlaceholder": "Leer = Kategoriename",
+          "tabSource": "Produktquelle",
+          "tabSourceHelp": "Woher die Produkte dieses Tabs stammen.",
+          "sourceCategory": "Kategorie (empfohlen)",
+          "sourceStatic": "Manuelle Auswahl",
+          "sourceStream": "Produkt-Stream (dynamisch)",
+          "tabProducts": "Produkte",
+          "tabProductsPlaceholder": "Produkte suchen und hinzufügen",
+          "tabStream": "Produkt-Stream",
+          "tabStreamPlaceholder": "Produkt-Stream auswählen",
+          "tabLimit": "Anzahl der Produkte",
+          "tabLimitHelp": "Maximale Anzahl der angezeigten Produkte (1–24)."
+        }
+      },
+      "productRail": {
+        "label": "Produktleiste",
+        "placeholder": {
+          "headline": "Überschrift eingeben",
+          "empty": "Noch keine Produkte ausgewählt. Wähle Produkte oder einen Produkt-Stream.",
+          "streamSelected": "Ein Produkt-Stream ist ausgewählt. Produkte werden im Storefront angezeigt.",
+          "streamEmpty": "Wähle einen Produkt-Stream, um die Leiste zu füllen."
+        },
+        "config": {
+          "tab": {
+            "content": "Überschrift",
+            "products": "Produkte"
+          },
+          "headline": "Überschrift",
+          "headlinePlaceholder": "z. B. Gesundheits-Kollektion",
+          "subline": "Unterzeile",
+          "sublinePlaceholder": "Optionale zweite Zeile",
+          "source": "Produktquelle",
+          "sourceStatic": "Manuelle Auswahl",
+          "sourceStream": "Produkt-Stream (dynamisch)",
+          "products": "Produkte",
+          "productsPlaceholder": "Produkte suchen und hinzufügen",
+          "productStream": "Produkt-Stream",
+          "productStreamPlaceholder": "Produkt-Stream auswählen",
+          "limit": "Anzahl der Produkte",
+          "limitHelp": "Maximale Anzahl der aus dem Stream angezeigten Produkte.",
+          "streamHint": "Die Leiste füllt sich dynamisch mit Produkten, die zum gewählten Stream passen.",
+          "showArrows": "Navigationspfeile anzeigen"
+        }
+      },
+      "brandSlider": {
+        "label": "Marken-Slider",
+        "placeholder": {
+          "headline": "Beliebte Marken",
+          "brand": "Markenname"
+        },
+        "config": {
+          "tab": {
+            "content": "Überschrift",
+            "brands": "Marken"
+          },
+          "headline": "Überschrift",
+          "headlinePlaceholder": "z. B. Beliebte Marken",
+          "headlineHelp": "Leer lassen, um den Standard („Beliebte Marken“) zu verwenden.",
+          "emptyHint": "Noch keine Marken. Klicke auf „Marke hinzufügen“, um die erste anzulegen.",
+          "brand": "Marke",
+          "addBrand": "Marke hinzufügen",
+          "logo": "Logo",
+          "logoEmpty": "Kein Logo",
+          "selectLogo": "Logo auswählen",
+          "removeLogo": "Entfernen",
+          "name": "Markenname",
+          "namePlaceholder": "z. B. Elf Bar",
+          "nameHelp": "Wird als Alt-Text des Logos verwendet und als Text angezeigt, wenn kein Logo gesetzt ist.",
+          "url": "Link (optional)",
+          "urlPlaceholder": "z. B. /elf-bar",
+          "showArrows": "Navigationspfeile anzeigen",
+          "grayscale": "Logos in Graustufen",
+          "grayscaleHelp": "Logos erscheinen neutral grau und werden beim Hover farbig."
+        }
+      },
+      "promoBanner": {
+        "label": "Promo-Banner",
+        "config": {
+          "eyebrow": "Kicker",
+          "eyebrowPlaceholder": "z. B. NEUE SAISON",
+          "headline": "Überschrift",
+          "headlinePlaceholder": "z. B. Bis zu 20% Rabatt",
+          "text": "Text",
+          "textPlaceholder": "Kurzer Aktionstext",
+          "ctaText": "Button-Text",
+          "ctaTextPlaceholder": "z. B. Jetzt entdecken",
+          "ctaUrl": "Button-Link",
+          "ctaUrlPlaceholder": "z. B. /angebote",
+          "newTab": "Link in neuem Tab öffnen",
+          "media": "Hintergrundbild",
+          "mediaHelp": "Optional. Ohne Bild nutzt das Banner die Hintergrundfarbe.",
+          "bgColor": "Hintergrundfarbe",
+          "bgColorHelp": "Wird als Basis und hinter dem Bild verwendet.",
+          "overlayOpacity": "Overlay-Deckkraft (%)",
+          "overlayOpacityHelp": "Verdunkelt das Bild, damit der Text lesbar bleibt.",
+          "textColor": "Textfarbe",
+          "alignLabel": "Ausrichtung",
+          "tone": {
+            "light": "Hell (für dunkle Banner)",
+            "dark": "Dunkel (für helle Banner)"
+          },
+          "align": {
+            "left": "Links",
+            "center": "Zentriert"
+          }
+        }
+      },
+      "uspStrip": {
+        "label": "USP- / Vertrauensleiste",
+        "config": {
+          "emptyHint": "Noch keine Einträge. Klicke auf „Eintrag hinzufügen“, um die erste Spalte anzulegen.",
+          "item": "Eintrag",
+          "addItem": "Eintrag hinzufügen",
+          "icon": "Symbol",
+          "title": "Titel",
+          "titlePlaceholder": "z. B. Schneller Versand",
+          "text": "Text",
+          "textPlaceholder": "z. B. Kostenlos ab 39 €"
+        },
+        "icons": {
+          "truck": "LKW (Versand)",
+          "package-open": "Offenes Paket (Rückgabe)",
+          "package-closed": "Geschlossenes Paket",
+          "package-gift": "Geschenkpaket",
+          "lock-closed": "Schloss (sichere Zahlung)",
+          "shield": "Schild (Schutz)",
+          "checkmark-circle": "Haken (Garantie)",
+          "money-card": "Karte (Zahlung)",
+          "star": "Stern (Bewertung)",
+          "medal": "Medaille (Qualität)",
+          "heart": "Herz (Favorit)",
+          "clock": "Uhr (schnell)",
+          "thumb-up": "Daumen hoch (empfohlen)"
+        }
       }
     },
     "blocks": {
       "hero": {
         "label": "Hero-Slider"
+      },
+      "categoryCarousel": {
+        "label": "Kategorie-Karussell"
+      },
+      "categoryGrid": {
+        "label": "Kategorie-Grid"
+      },
+      "featuredSplit": {
+        "label": "Öne Çıkanlar (Split)"
+      },
+      "productRail": {
+        "label": "Produktleiste"
+      },
+      "brandSlider": {
+        "label": "Marken-Slider"
+      },
+      "uspStrip": {
+        "label": "USP- / Vertrauensleiste"
       }
     }
   }

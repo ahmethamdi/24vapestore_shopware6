@@ -26,8 +26,22 @@ Shopware.Locale.extend('en-GB', enGB);
 // CMS Elements
 // ==================================================
 import './module/sw-cms/elements/vape-hero';
+import './module/sw-cms/elements/vape-category-carousel';
+import './module/sw-cms/elements/vape-featured-split';
+import './module/sw-cms/elements/vape-category-grid';
+import './module/sw-cms/elements/vape-product-rail';
+import './module/sw-cms/elements/vape-brand-slider';
+import './module/sw-cms/elements/vape-promo-banner';
+import './module/sw-cms/elements/vape-usp-strip';
 
 // ==================================================
 // CMS Blocks
 // ==================================================
 import './module/sw-cms/blocks/image/vape-hero';
+import './module/sw-cms/blocks/commerce/vape-category-carousel';
+import './module/sw-cms/blocks/commerce/vape-featured-split';
+import './module/sw-cms/blocks/commerce/vape-category-grid';
+import './module/sw-cms/blocks/commerce/vape-product-rail';
+import './module/sw-cms/blocks/commerce/vape-brand-slider';
+import './module/sw-cms/blocks/commerce/vape-promo-banner';
+import './module/sw-cms/blocks/commerce/vape-usp-strip';

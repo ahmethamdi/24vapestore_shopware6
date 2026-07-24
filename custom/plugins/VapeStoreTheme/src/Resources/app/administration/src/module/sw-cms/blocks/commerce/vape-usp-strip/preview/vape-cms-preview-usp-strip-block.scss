@@ -1,0 +1,43 @@
+.vape-cms-preview-usp-strip-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    background: #f7f7f8;
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    &__icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #1c1c28;
+        flex: 0 0 auto;
+    }
+
+    &__lines {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    &__line {
+        display: block;
+        width: 34px;
+        height: 5px;
+        border-radius: 2px;
+        background: #43434f;
+
+        &--sub {
+            width: 24px;
+            background: #b0b0bb;
+        }
+    }
+}

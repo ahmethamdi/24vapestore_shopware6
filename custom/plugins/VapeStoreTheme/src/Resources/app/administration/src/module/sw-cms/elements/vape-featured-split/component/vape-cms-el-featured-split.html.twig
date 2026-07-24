@@ -1,0 +1,77 @@
+{#
+    Öne çıkanlar split — CMS editörü içindeki önizleme.
+
+    Sekme tabanlı yapının basit yansıması: sol dikey sekme listesi + sağda
+    "ürünler storefront'ta gösterilir" bilgi kartı. Kategori/stream ürünleri
+    editörde çözülmez (product-rail deseni) — bu yüzden burada ürün render
+    edilmez, yalnızca yapı ve aktif sekme bilgisi gösterilir.
+#}
+{% block vape_cms_el_featured_split %}
+<div class="vape-cms-el-featured-split">
+
+    {# ==================== SOL SÜTUN ==================== #}
+    {% block vape_cms_el_featured_split_left %}
+        <div class="vape-cms-el-featured-split__left">
+            <span
+                v-if="eyebrow"
+                class="vape-cms-el-featured-split__eyebrow"
+            >
+                {{ eyebrow }}
+            </span>
+
+            <h2 class="vape-cms-el-featured-split__headline">
+                {{ headline || $t('vape-cms.elements.featuredSplit.placeholder.headline') }}
+            </h2>
+
+            <p v-if="description" class="vape-cms-el-featured-split__description">
+                {{ description }}
+            </p>
+
+            <ul v-if="tabs.length" class="vape-cms-el-featured-split__links">
+                <li
+                    v-for="(tab, index) in tabs"
+                    :key="index"
+                    class="vape-cms-el-featured-split__link"
+                    :class="{ 'is--active': index === activeTab }"
+                    @click="onSelectTab(index)"
+                >
+                    {{ tabLabel(tab, index) }}
+                </li>
+            </ul>
+
+            <span
+                v-if="ctaText"
+                class="vape-cms-el-featured-split__cta"
+            >
+                {{ ctaText }}
+            </span>
+        </div>
+    {% endblock %}
+
+    {# ==================== SAĞ SÜTUN — bilgi kartı ==================== #}
+    {% block vape_cms_el_featured_split_right %}
+        <div class="vape-cms-el-featured-split__right">
+
+            <div v-if="!tabs.length" class="vape-cms-el-featured-split__empty">
+                <mt-icon name="regular-products" size="28px" />
+                <p>{{ $t('vape-cms.elements.featuredSplit.config.tabsEmptyHint') }}</p>
+            </div>
+
+            <div v-else class="vape-cms-el-featured-split__info">
+                <mt-icon name="regular-products" size="28px" />
+                <p class="vape-cms-el-featured-split__info-title">
+                    {{ tabLabel(tabs[activeTab], activeTab) }}
+                </p>
+                <p class="vape-cms-el-featured-split__info-source">
+                    {{ sourceLabel(tabs[activeTab]) }}
+                </p>
+                <p class="vape-cms-el-featured-split__info-note">
+                    {{ $t('vape-cms.elements.featuredSplit.placeholder.storefrontNote') }}
+                </p>
+            </div>
+
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

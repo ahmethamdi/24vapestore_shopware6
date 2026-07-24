@@ -1,0 +1,231 @@
+{#
+    Öne çıkanlar split — config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model
+       sw-*  (legacy)  → v-model:value  (veya :value + @update:value)
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+    ⚠️ tabs dizi olduğu için v-model doğrudan kullanılamaz;
+       her alan @update ile updateTab() çağırır.
+
+    İki sekme: İçerik (metin + CTA) · Sekmeler (kategori → ürün slider'ı)
+#}
+{% block vape_cms_element_featured_split_config %}
+<div class="vape-cms-el-config-featured-split">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-featured-split"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('vape-cms.elements.featuredSplit.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="tabs" :active-tab="active">
+                {{ $t('vape-cms.elements.featuredSplit.config.tab.tabs') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== İÇERİK — metin + CTA ==================== #}
+            <sw-container v-if="active === 'content'">
+
+                {% block vape_cms_element_featured_split_config_text %}
+                    <div class="vape-cms-el-config-featured-split__field">
+                        <mt-text-field
+                            v-model="element.config.eyebrow.value"
+                            :label="$t('vape-cms.elements.featuredSplit.config.eyebrow')"
+                            :placeholder="$t('vape-cms.elements.featuredSplit.config.eyebrowPlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-featured-split__field">
+                        <mt-text-field
+                            v-model="element.config.headline.value"
+                            :label="$t('vape-cms.elements.featuredSplit.config.headline')"
+                            :placeholder="$t('vape-cms.elements.featuredSplit.config.headlinePlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-featured-split__field">
+                        <mt-textarea
+                            v-model="element.config.description.value"
+                            :label="$t('vape-cms.elements.featuredSplit.config.description')"
+                            :placeholder="$t('vape-cms.elements.featuredSplit.config.descriptionPlaceholder')"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_featured_split_config_cta %}
+                    <div class="vape-cms-el-config-featured-split__field">
+                        <mt-text-field
+                            v-model="element.config.ctaText.value"
+                            :label="$t('vape-cms.elements.featuredSplit.config.ctaText')"
+                            :placeholder="$t('vape-cms.elements.featuredSplit.config.ctaTextPlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-featured-split__field">
+                        <mt-text-field
+                            v-model="element.config.ctaUrl.value"
+                            :label="$t('vape-cms.elements.featuredSplit.config.ctaUrl')"
+                            :placeholder="$t('vape-cms.elements.featuredSplit.config.ctaUrlPlaceholder')"
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== SEKMELER ==================== #}
+            <div v-if="active === 'tabs'" class="vape-cms-el-config-featured-split__list">
+
+                {% block vape_cms_element_featured_split_config_tabs_hint %}
+                    <mt-banner variant="info">
+                        {{ $t('vape-cms.elements.featuredSplit.config.tabsHint') }}
+                    </mt-banner>
+                {% endblock %}
+
+                {% block vape_cms_element_featured_split_config_tabs_empty %}
+                    <mt-banner v-if="!tabs.length" variant="attention">
+                        {{ $t('vape-cms.elements.featuredSplit.config.tabsEmptyHint') }}
+                    </mt-banner>
+                {% endblock %}
+
+                {% block vape_cms_element_featured_split_config_tabs %}
+                    <div
+                        v-for="(tab, index) in tabs"
+                        :key="index"
+                        class="vape-cms-el-config-featured-split__item"
+                    >
+                        <div class="vape-cms-el-config-featured-split__item-head">
+                            <span class="vape-cms-el-config-featured-split__item-title">
+                                {{ $t('vape-cms.elements.featuredSplit.config.tabItem') }} {{ index + 1 }}
+                                <template v-if="tabLabel(tab)">— {{ tabLabel(tab) }}</template>
+                            </span>
+
+                            <div class="vape-cms-el-config-featured-split__item-actions">
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === 0"
+                                    @click="onMoveTab(index, -1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-up" size="12px" />
+                                </mt-button>
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === tabs.length - 1"
+                                    @click="onMoveTab(index, 1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-down" size="12px" />
+                                </mt-button>
+                                <mt-button
+                                    variant="critical"
+                                    size="small"
+                                    @click="onRemoveTab(index)"
+                                >
+                                    <mt-icon name="regular-trash" size="12px" />
+                                </mt-button>
+                            </div>
+                        </div>
+
+                        {# --- kategori (sekmenin ana ürün kaynağı) --- #}
+                        <div class="vape-cms-el-config-featured-split__field">
+                            <sw-entity-single-select
+                                :value="tab.categoryId"
+                                entity="category"
+                                :criteria="categoryCriteria"
+                                :label="$t('vape-cms.elements.featuredSplit.config.tabCategory')"
+                                :help-text="$t('vape-cms.elements.featuredSplit.config.tabCategoryHelp')"
+                                show-clearable-button
+                                @update:value="onTabCategoryChange($event, index)"
+                            />
+                        </div>
+
+                        {# --- sekme etiketi override --- #}
+                        <div class="vape-cms-el-config-featured-split__field">
+                            <mt-text-field
+                                :model-value="tab.label"
+                                :label="$t('vape-cms.elements.featuredSplit.config.tabLabel')"
+                                :placeholder="$t('vape-cms.elements.featuredSplit.config.tabLabelPlaceholder')"
+                                @update:model-value="updateTab(index, { label: $event })"
+                            />
+                        </div>
+
+                        {# --- ürün kaynağı modu --- #}
+                        <div class="vape-cms-el-config-featured-split__field">
+                            <mt-select
+                                :model-value="tab.productSource || 'category'"
+                                :options="productSourceOptions"
+                                :label="$t('vape-cms.elements.featuredSplit.config.tabSource')"
+                                :help-text="$t('vape-cms.elements.featuredSplit.config.tabSourceHelp')"
+                                @update:model-value="onTabSourceChange($event, index)"
+                            />
+                        </div>
+
+                        {# --- static: elle ürün seçimi (ID dizisi) --- #}
+                        <div
+                            v-if="tab.productSource === 'static'"
+                            class="vape-cms-el-config-featured-split__field"
+                        >
+                            <sw-entity-multi-id-select
+                                :value="tab.products || []"
+                                :repository="productRepository"
+                                :criteria="productCriteria"
+                                :label="$t('vape-cms.elements.featuredSplit.config.tabProducts')"
+                                :placeholder="$t('vape-cms.elements.featuredSplit.config.tabProductsPlaceholder')"
+                                @update:value="onTabProductsChange($event, index)"
+                            />
+                        </div>
+
+                        {# --- stream: dinamik akış --- #}
+                        <div
+                            v-if="tab.productSource === 'stream'"
+                            class="vape-cms-el-config-featured-split__field"
+                        >
+                            <sw-entity-single-select
+                                :value="tab.productStreamId"
+                                entity="product_stream"
+                                :criteria="productStreamCriteria"
+                                :label="$t('vape-cms.elements.featuredSplit.config.tabStream')"
+                                :placeholder="$t('vape-cms.elements.featuredSplit.config.tabStreamPlaceholder')"
+                                show-clearable-button
+                                @update:value="onTabStreamChange($event, index)"
+                            />
+                        </div>
+
+                        {# --- ürün sayısı (category/stream için) --- #}
+                        <div
+                            v-if="tab.productSource !== 'static'"
+                            class="vape-cms-el-config-featured-split__field"
+                        >
+                            <mt-number-field
+                                :model-value="tab.limit"
+                                :label="$t('vape-cms.elements.featuredSplit.config.tabLimit')"
+                                :help-text="$t('vape-cms.elements.featuredSplit.config.tabLimitHelp')"
+                                :min="1"
+                                :max="24"
+                                @update:model-value="onTabLimitChange($event, index)"
+                            />
+                        </div>
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_featured_split_config_tabs_add %}
+                    <button
+                        type="button"
+                        class="vape-cms-el-config-featured-split__add"
+                        @click="onAddTab"
+                    >
+                        <mt-icon name="regular-plus-circle" size="14px" />
+                        {{ $t('vape-cms.elements.featuredSplit.config.addTab') }}
+                    </button>
+                {% endblock %}
+
+            </div>
+
+        </template>
+    </sw-tabs>
+</div>
+{% endblock %}

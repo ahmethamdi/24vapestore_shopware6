@@ -1,0 +1,162 @@
+{#
+    Öne çıkanlar split — storefront çıktısı (SEKME tabanlı).
+
+    ⚠️ Dosya adı `cms-element-vape-featured-split.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    SOL SÜTUN: eyebrow / headline / description düz config alanlarıdır →
+    çeviri katmanıyla `element.translated.config.*` okunur. Sekme LİSTESİ bir
+    WAI-ARIA tablist'tir; her sekme gerçek bir <button role="tab">.
+
+    SAĞ SÜTUN: her sekme için bir panel (role="tabpanel"). Panel içinde aktif
+    sekmenin kategorisine ait ürünlerin yatay kart slider'ı; kartlar core'un
+    `component/product/card/box.html.twig` kutusuyla render edilir.
+
+    Sekmelerin TÜM ürünleri PHP resolver'dan `element.data.tabs` olarak gelir
+    ve burada önceden render edilir. Yalnızca ilk panel görünür; diğerleri
+    `hidden`. Sekme geçişi client-side JS ile (vape-featured-split plugin) —
+    sunucuya gidiş-dönüş YOK. JS yoksa ilk panel görünür kalır (graceful).
+
+    ⚠️ DB'de 0 ürün → ilgili panelde nazik "keine Produkte" durumu; patlamaz.
+    ⚠️ DEFENSIVE: eski config (links/cards) ya da tabs yoksa boş dizi varsayılır.
+
+    Görsel dil: beyaz zemin + kırmızı vurgu. Aktif sekmenin sol kenarı kırmızı;
+    "Alle Produkte ansehen" KOYU dolgu (kırmızı dolgu CTA YOK).
+#}
+{% block element_vape_featured_split %}
+    {% set cfg = element.translated.config %}
+    {% set tabs = element.data.tabs|default([]) %}
+
+    {% set eyebrow = cfg.eyebrow.value|default('') %}
+    {% set headline = cfg.headline.value|default('') %}
+    {% set description = cfg.description.value|default('') %}
+    {% set ctaText = cfg.ctaText.value|default('') %}
+    {% set ctaUrl = cfg.ctaUrl.value|default('') %}
+
+    {% set uid = element.id %}
+
+    <div class="cms-element-{{ element.type }} vape-featured-split"
+         data-vape-featured-split="true">
+
+        {# ==================== SOL SÜTUN ==================== #}
+        {% block element_vape_featured_split_left %}
+            <div class="vape-featured-split__left">
+
+                {% if eyebrow %}
+                    <span class="vape-featured-split__eyebrow">{{ eyebrow }}</span>
+                {% endif %}
+
+                {% if headline %}
+                    <h2 class="vape-featured-split__headline">{{ headline }}</h2>
+                {% endif %}
+
+                {% if description %}
+                    <p class="vape-featured-split__description">{{ description }}</p>
+                {% endif %}
+
+                {% if tabs|length > 0 %}
+                    {% block element_vape_featured_split_tablist %}
+                        <div class="vape-featured-split__tablist"
+                             role="tablist"
+                             aria-orientation="vertical"
+                             aria-label="{{ headline ?: 'vapeFeaturedSplit.tabsLabel'|trans|sw_sanitize }}">
+                            {% for tab in tabs %}
+                                {% set isActive = loop.first %}
+                                {% set tabLabel = tab.label ?: tab.categoryName ?: 'vapeFeaturedSplit.tabFallback'|trans({ '%number%': loop.index })|sw_sanitize %}
+                                <button type="button"
+                                        role="tab"
+                                        id="{{ tab.id }}-tab"
+                                        class="vape-featured-split__tab{{ isActive ? ' is--active' : '' }}"
+                                        aria-selected="{{ isActive ? 'true' : 'false' }}"
+                                        aria-controls="{{ tab.id }}-panel"
+                                        tabindex="{{ isActive ? '0' : '-1' }}"
+                                        data-vape-featured-split-tab>
+                                    {{ tabLabel }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                    {% endblock %}
+                {% endif %}
+
+                {% if ctaText %}
+                    <a href="{{ ctaUrl ?: '#' }}" class="vape-featured-split__cta btn">
+                        {{ ctaText }}
+                        {% sw_icon 'arrow-medium-right' style { size: 'xs' } %}
+                    </a>
+                {% endif %}
+
+            </div>
+        {% endblock %}
+
+        {# ==================== SAĞ SÜTUN — sekme panelleri ==================== #}
+        {% block element_vape_featured_split_right %}
+            {% if tabs|length > 0 %}
+                <div class="vape-featured-split__panels">
+                    {% for tab in tabs %}
+                        {% set isActive = loop.first %}
+                        {% set products = tab.products.elements|default([]) %}
+                        {% set showArrows = products|length > 1 %}
+
+                        {% block element_vape_featured_split_panel %}
+                            <div class="vape-featured-split__panel"
+                                 role="tabpanel"
+                                 id="{{ tab.id }}-panel"
+                                 aria-labelledby="{{ tab.id }}-tab"
+                                 tabindex="0"
+                                 {% if not isActive %}hidden{% endif %}
+                                 data-vape-featured-split-panel>
+
+                                {% if products|length > 0 %}
+                                    {% block element_vape_featured_split_slider %}
+                                        <div class="vape-featured-split__slider"
+                                             data-vape-featured-split-slider>
+
+                                            {% if showArrows %}
+                                                <div class="vape-featured-split__arrows">
+                                                    <button type="button"
+                                                            class="vape-featured-split__arrow vape-featured-split__arrow--prev"
+                                                            data-vape-featured-split-prev
+                                                            aria-label="{{ 'vapeFeaturedSplit.previous'|trans|sw_sanitize }}">
+                                                        {% sw_icon 'arrow-medium-left' %}
+                                                    </button>
+                                                    <button type="button"
+                                                            class="vape-featured-split__arrow vape-featured-split__arrow--next"
+                                                            data-vape-featured-split-next
+                                                            aria-label="{{ 'vapeFeaturedSplit.next'|trans|sw_sanitize }}">
+                                                        {% sw_icon 'arrow-medium-right' %}
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+
+                                            <div class="vape-featured-split__track" data-vape-featured-split-track>
+                                                {% for product in products %}
+                                                    <div class="vape-featured-split__item" data-vape-featured-split-item>
+                                                        {% sw_include '@Storefront/storefront/component/product/card/box.html.twig' with {
+                                                            'layout': 'standard'
+                                                        } %}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endblock %}
+                                {% else %}
+                                    {% block element_vape_featured_split_empty %}
+                                        {# 0 ürün: nazik boş durum. Mike ürünleri
+                                           yüklemeden önce her panel bu şekilde
+                                           güvenle görünür — patlamaz. #}
+                                        <div class="vape-featured-split__empty">
+                                            <p>{{ 'vapeFeaturedSplit.empty'|trans|sw_sanitize }}</p>
+                                        </div>
+                                    {% endblock %}
+                                {% endif %}
+
+                            </div>
+                        {% endblock %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% block vape_cms_element_promo_banner %}
+<div
+    class="vape-cms-el-promo-banner"
+    :class="bannerClasses"
+    :style="bannerStyles"
+>
+    <div v-if="mediaUrl" class="vape-cms-el-promo-banner__overlay" :style="overlayStyles"></div>
+
+    <div class="vape-cms-el-promo-banner__inner">
+        <span
+            v-if="config.eyebrow && config.eyebrow.value"
+            class="vape-cms-el-promo-banner__eyebrow"
+        >
+            {{ config.eyebrow.value }}
+        </span>
+
+        <h2
+            v-if="config.headline && config.headline.value"
+            class="vape-cms-el-promo-banner__headline"
+        >
+            {{ config.headline.value }}
+        </h2>
+
+        <p
+            v-if="config.text && config.text.value"
+            class="vape-cms-el-promo-banner__text"
+        >
+            {{ config.text.value }}
+        </p>
+
+        <span
+            v-if="config.ctaText && config.ctaText.value"
+            class="vape-cms-el-promo-banner__cta"
+        >
+            {{ config.ctaText.value }}
+        </span>
+    </div>
+</div>
+{% endblock %}

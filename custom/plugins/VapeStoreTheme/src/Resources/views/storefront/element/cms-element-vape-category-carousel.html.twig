@@ -1,0 +1,138 @@
+{#
+    Kategori carousel — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-category-carousel.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    Kart verisi PHP resolver'dan `element.data.cards` olarak gelir; her eleman
+    çözümlenmiş `category` entity'sini içerir. Metinler (eyebrow / headline /
+    highlight) config'te düz alan olduğu için `element.translated.config`
+    çeviri katmanıyla okunur.
+
+    Carousel: CSS scroll-snap. Oklar isteğe bağlı (showArrows) ve yalnızca
+    ilerlemeli kaydırma için; JS yüklenmese de şerit yatay kaydırılabilir.
+#}
+{% block element_vape_category_carousel %}
+    {% set cfg = element.translated.config %}
+    {% set cards = element.data.cards|default([]) %}
+
+    {% set eyebrow = cfg.eyebrow.value|default('') %}
+    {% set headline = cfg.headline.value|default('') %}
+    {% set highlight = cfg.highlightText.value|default('') %}
+    {% set showArrows = cfg.showArrows.value|default(true) and cards|length > 1 %}
+
+    <div class="cms-element-{{ element.type }} vape-category-carousel"
+         data-vape-category-carousel="true">
+
+        {% block element_vape_category_carousel_head %}
+            {% if eyebrow or headline %}
+                <div class="vape-category-carousel__head">
+                    {% if eyebrow %}
+                        <span class="vape-category-carousel__eyebrow">{{ eyebrow }}</span>
+                    {% endif %}
+
+                    {% if headline %}
+                        <h2 class="vape-category-carousel__headline">
+                            {%- if highlight and highlight|lower in headline|lower -%}
+                                {#- Vurgu öbeğini bul ve <mark> ile sar. Büyük/küçük harf
+                                    duyarsız arar ama orijinal metnin harf durumunu korur.
+                                    Konum, başlığın lowercase halinin vurgudan ÖNCEki
+                                    parçasının uzunluğudur (split ilk parçasını verir). -#}
+                                {%- set pos = (headline|lower|split(highlight|lower, 2)|first)|length -%}
+                                {%- set before = headline|slice(0, pos) -%}
+                                {%- set match = headline|slice(pos, highlight|length) -%}
+                                {%- set after = headline|slice(pos + highlight|length) -%}
+                                {{- before -}}<mark class="vape-category-carousel__mark">{{- match -}}</mark>{{- after -}}
+                            {%- else -%}
+                                {{- headline -}}
+                            {%- endif -%}
+                        </h2>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block element_vape_category_carousel_viewport %}
+            {% if cards|length > 0 %}
+                <div class="vape-category-carousel__viewport">
+
+                    {% block element_vape_category_carousel_track %}
+                        <div class="vape-category-carousel__track" data-vape-category-carousel-track>
+                            {% for card in cards %}
+                                {% set category = card.category %}
+                                {% set catUrl = category.seoUrl|default(seoUrl('frontend.navigation.page', { navigationId: category.id })) %}
+                                {% set catName = category.translated.name|default(category.name) %}
+                                {% set catMedia = vape_category_image(category, context.context) %}
+                                {% set ctaText = card.ctaText ?: 'vapeCategoryCarousel.cta'|trans|sw_sanitize %}
+
+                                {% block element_vape_category_carousel_card %}
+                                    <a href="{{ catUrl }}"
+                                       class="vape-category-carousel__card"
+                                       data-vape-category-carousel-card>
+
+                                        <span class="vape-category-carousel__media">
+                                            {% if card.badge %}
+                                                <span class="vape-category-carousel__badge">{{ card.badge }}</span>
+                                            {% endif %}
+
+                                            {% if category.media %}
+                                                {% sw_thumbnails 'vape-category-carousel-thumbnails' with {
+                                                    media: category.media,
+                                                    sizes: { default: '280px' },
+                                                    attributes: {
+                                                        class: 'vape-category-carousel__image',
+                                                        alt: (category.media.translated.alt ?: catName),
+                                                        loading: 'lazy'
+                                                    }
+                                                } %}
+                                            {% elseif catMedia and catMedia.url %}
+                                                <img src="{{ catMedia.url }}"
+                                                     class="vape-category-carousel__image"
+                                                     alt="{{ catMedia.alt ?: catName }}"
+                                                     loading="lazy" />
+                                            {% else %}
+                                                <span class="vape-category-carousel__image vape-category-carousel__image--placeholder">
+                                                    {{ catName|slice(0, 1)|upper }}
+                                                </span>
+                                            {% endif %}
+                                        </span>
+
+                                        <span class="vape-category-carousel__body">
+                                            <span class="vape-category-carousel__title">{{ catName }}</span>
+                                            <span class="vape-category-carousel__cta">
+                                                {{ ctaText }}
+                                                {% sw_icon 'arrow-medium-right' style { size: 'xs' } %}
+                                            </span>
+                                        </span>
+                                    </a>
+                                {% endblock %}
+                            {% endfor %}
+                        </div>
+                    {% endblock %}
+
+                    {% block element_vape_category_carousel_arrows %}
+                        {% if showArrows %}
+                            <div class="vape-category-carousel__arrows">
+                                <button type="button"
+                                        class="vape-category-carousel__arrow vape-category-carousel__arrow--prev"
+                                        data-vape-category-carousel-prev
+                                        aria-label="{{ 'vapeCategoryCarousel.previous'|trans|sw_sanitize }}">
+                                    {% sw_icon 'arrow-medium-left' %}
+                                </button>
+                                <button type="button"
+                                        class="vape-category-carousel__arrow vape-category-carousel__arrow--next"
+                                        data-vape-category-carousel-next
+                                        aria-label="{{ 'vapeCategoryCarousel.next'|trans|sw_sanitize }}">
+                                    {% sw_icon 'arrow-medium-right' %}
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+
+                </div>
+            {% endif %}
+        {% endblock %}
+
+    </div>
+{% endblock %}

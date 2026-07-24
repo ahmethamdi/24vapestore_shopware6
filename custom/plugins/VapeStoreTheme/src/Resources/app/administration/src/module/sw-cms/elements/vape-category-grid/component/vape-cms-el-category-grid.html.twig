@@ -1,0 +1,88 @@
+{#
+    Kategori grid — CMS editörü içindeki önizleme.
+    Storefront'un sadeleştirilmiş bir yansıması: yönetici sonucu görebilsin diye.
+
+    Her kart bir mozaik: solda büyük görsel (2/3), sağda dikey 3 küçük kare.
+    Kare görselleri editörde aynı kategori görselini yansıtır (storefront'ta
+    da yan kareler aynı `vape_category_image` sonucuna düşer).
+#}
+{% block vape_cms_el_category_grid %}
+<div class="vape-cms-el-category-grid">
+
+    {% block vape_cms_el_category_grid_head %}
+        <div class="vape-cms-el-category-grid__head">
+            <h2 class="vape-cms-el-category-grid__headline">
+                <template v-if="headline">{{ headline }}</template>
+                <template v-else>
+                    {{ $t('vape-cms.elements.categoryGrid.placeholder.headline') }}
+                </template>
+            </h2>
+
+            <div v-if="showArrows" class="vape-cms-el-category-grid__arrows">
+                <span class="vape-cms-el-category-grid__arrow">
+                    <mt-icon name="regular-chevron-left" size="16px" />
+                </span>
+                <span class="vape-cms-el-category-grid__arrow">
+                    <mt-icon name="regular-chevron-right" size="16px" />
+                </span>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_category_grid_empty %}
+        <div v-if="!cards.length" class="vape-cms-el-category-grid__empty">
+            <mt-icon name="regular-view-grid" size="28px" />
+            <p>{{ $t('vape-cms.elements.categoryGrid.config.emptyHint') }}</p>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_category_grid_track %}
+        <div v-else class="vape-cms-el-category-grid__track">
+            <div
+                v-for="(card, index) in cards"
+                :key="index"
+                class="vape-cms-el-category-grid__card"
+            >
+                {# ---- mozaik: büyük + 3 küçük ---- #}
+                <div class="vape-cms-el-category-grid__mosaic">
+                    <div class="vape-cms-el-category-grid__hero">
+                        <img
+                            :src="cardImage(card)"
+                            class="vape-cms-el-category-grid__image"
+                            alt=""
+                        />
+                    </div>
+                    <div class="vape-cms-el-category-grid__tiles">
+                        <span
+                            v-for="tile in 3"
+                            :key="tile"
+                            class="vape-cms-el-category-grid__tile"
+                        >
+                            <img
+                                :src="cardImage(card)"
+                                class="vape-cms-el-category-grid__image"
+                                alt=""
+                            />
+                        </span>
+                    </div>
+                </div>
+
+                {# ---- kart altı: başlık + sayı + CTA ---- #}
+                <div class="vape-cms-el-category-grid__body">
+                    <span class="vape-cms-el-category-grid__title">
+                        {{ cardName(card) || $t('vape-cms.elements.categoryGrid.placeholder.category') }}
+                    </span>
+                    <span
+                        v-if="showProductCount"
+                        class="vape-cms-el-category-grid__count"
+                    >
+                        {{ $t('vape-cms.elements.categoryGrid.previewCount') }}
+                    </span>
+                    <span class="vape-cms-el-category-grid__cta">{{ cardCta(card) }}</span>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

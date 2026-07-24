@@ -1,0 +1,132 @@
+{#
+    Ürün rayı config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)             → v-model
+       sw-*  (legacy select)      → v-model:value
+       sw-entity-multi-select     → v-model:entity-collection + @update:entity-collection
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+#}
+{% block vape_cms_element_product_rail_config %}
+<div class="vape-cms-el-config-product-rail">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-product-rail"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('vape-cms.elements.productRail.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="products" :active-tab="active">
+                {{ $t('vape-cms.elements.productRail.config.tab.products') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="settings" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.settings') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== BAŞLIK ==================== #}
+            <sw-container v-if="active === 'content'">
+
+                {% block vape_cms_element_product_rail_config_heading %}
+                    <div class="vape-cms-el-config-product-rail__field">
+                        <mt-text-field
+                            v-model="element.config.headline.value"
+                            :label="$t('vape-cms.elements.productRail.config.headline')"
+                            :placeholder="$t('vape-cms.elements.productRail.config.headlinePlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-product-rail__field">
+                        <mt-text-field
+                            v-model="element.config.subline.value"
+                            :label="$t('vape-cms.elements.productRail.config.subline')"
+                            :placeholder="$t('vape-cms.elements.productRail.config.sublinePlaceholder')"
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== ÜRÜNLER ==================== #}
+            <sw-container v-if="active === 'products'">
+
+                {% block vape_cms_element_product_rail_config_source %}
+                    <div class="vape-cms-el-config-product-rail__field">
+                        <mt-select
+                            v-model="element.config.productSource.value"
+                            :options="productSourceOptions"
+                            :label="$t('vape-cms.elements.productRail.config.source')"
+                            @update:model-value="onSourceChange"
+                        />
+                    </div>
+                {% endblock %}
+
+                {# --- STATIC: manuel ürün seçimi --- #}
+                {% block vape_cms_element_product_rail_config_static %}
+                    <div v-if="!isStream" class="vape-cms-el-config-product-rail__field">
+                        <sw-entity-multi-select
+                            v-model:entity-collection="productCollection"
+                            :criteria="productCriteria"
+                            :label="$t('vape-cms.elements.productRail.config.products')"
+                            :placeholder="$t('vape-cms.elements.productRail.config.productsPlaceholder')"
+                            @update:entity-collection="onProductsChange"
+                        />
+                    </div>
+                {% endblock %}
+
+                {# --- STREAM: dinamik ürün grubu --- #}
+                {% block vape_cms_element_product_rail_config_stream %}
+                    <template v-if="isStream">
+                        <div class="vape-cms-el-config-product-rail__field">
+                            <sw-entity-single-select
+                                :value="element.config.productStreamId.value"
+                                entity="product_stream"
+                                :criteria="productStreamCriteria"
+                                :label="$t('vape-cms.elements.productRail.config.productStream')"
+                                :placeholder="$t('vape-cms.elements.productRail.config.productStreamPlaceholder')"
+                                show-clearable-button
+                                @update:value="onStreamChange"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-product-rail__field">
+                            <mt-number-field
+                                v-model="element.config.limit.value"
+                                number-type="int"
+                                :min="1"
+                                :max="50"
+                                :label="$t('vape-cms.elements.productRail.config.limit')"
+                                :help-text="$t('vape-cms.elements.productRail.config.limitHelp')"
+                            />
+                        </div>
+
+                        <mt-banner variant="info">
+                            {{ $t('vape-cms.elements.productRail.config.streamHint') }}
+                        </mt-banner>
+                    </template>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== AYARLAR ==================== #}
+            <sw-container v-if="active === 'settings'">
+
+                {% block vape_cms_element_product_rail_config_settings %}
+                    <div class="vape-cms-el-config-product-rail__field">
+                        <mt-switch
+                            v-model="element.config.showArrows.value"
+                            :label="$t('vape-cms.elements.productRail.config.showArrows')"
+                            bordered
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+        </template>
+    </sw-tabs>
+</div>
+{% endblock %}

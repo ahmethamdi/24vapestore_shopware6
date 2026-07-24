@@ -1,0 +1,128 @@
+/*
+Editör içi önizleme. Storefront'un basitleştirilmiş yansıması.
+Bu dosya admin bundle'ına derlenir; storefront token'larına erişimi
+olmadığı için değerler burada literaldir (yalnızca editör görünümü).
+*/
+.vape-cms-el-featured-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+    background-color: #ffffff;
+
+    @media (min-width: 900px) {
+        grid-template-columns: 320px 1fr;
+    }
+
+    // ---------- sol sütun ----------
+
+    &__left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    &__eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #71717f;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #18181d;
+    }
+
+    &__description {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #52525e;
+    }
+
+    &__links {
+        list-style: none;
+        margin: 8px 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    &__link {
+        padding: 8px 12px;
+        border-left: 3px solid transparent;
+        font-size: 14px;
+        font-weight: 600;
+        color: #3f3f4a;
+        cursor: pointer;
+
+        &:hover {
+            color: #18181d;
+            border-left-color: #d1d1d9;
+        }
+
+        &.is--active {
+            border-left-color: #e11122;
+            color: #18181d;
+        }
+    }
+
+    &__cta {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 10px 20px;
+        border-radius: 4px;
+        background-color: #18181d;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    // ---------- sağ sütun ----------
+
+    &__right {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__empty,
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 40px;
+        border: 1px dashed #d1d1d9;
+        border-radius: 8px;
+        color: #71717f;
+        text-align: center;
+    }
+
+    &__info-title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #18181d;
+    }
+
+    &__info-source {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #71717f;
+    }
+
+    &__info-note {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: #52525e;
+    }
+}

@@ -1,0 +1,53 @@
+.vape-cms-el-preview-promo-banner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+    min-height: 80px;
+    padding: 0 18px;
+    overflow: hidden;
+    background: linear-gradient(120deg, #18181d 0%, #2a2a33 100%);
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 82% 30%, rgba(225, 17, 34, 0.35), transparent 55%);
+    }
+
+    &__eyebrow {
+        position: relative;
+        width: 34px;
+        height: 4px;
+        border-radius: 2px;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &__headline {
+        position: relative;
+        width: 78px;
+        height: 9px;
+        border-radius: 2px;
+        background-color: #ffffff;
+    }
+
+    &__text {
+        position: relative;
+        width: 60px;
+        height: 5px;
+        border-radius: 2px;
+        background-color: rgba(255, 255, 255, 0.45);
+    }
+
+    &__cta {
+        position: relative;
+        width: 40px;
+        height: 11px;
+        margin-top: 3px;
+        border-radius: 2px;
+        background-color: #ffffff;
+    }
+}

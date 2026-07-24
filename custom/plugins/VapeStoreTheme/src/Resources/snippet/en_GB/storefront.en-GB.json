@@ -7,5 +7,33 @@
     "goToSlide": "Go to slide %number%",
     "previousSlide": "Previous slide",
     "nextSlide": "Next slide"
+  },
+  "vapeCategoryCarousel": {
+    "cta": "Explore",
+    "previous": "Previous categories",
+    "next": "Next categories"
+  },
+  "vapeCategoryGrid": {
+    "cta": "View",
+    "productCount": "%count% products",
+    "previous": "Previous categories",
+    "next": "Next categories"
+  },
+  "vapeFeaturedSplit": {
+    "tabsLabel": "Categories",
+    "tabFallback": "Tab %number%",
+    "previous": "Previous products",
+    "next": "Next products",
+    "empty": "No products are available right now."
+  },
+  "vapeProductRail": {
+    "previous": "Previous products",
+    "next": "Next products",
+    "empty": "No products are available right now."
+  },
+  "vapeBrandSlider": {
+    "headline": "Popular brands",
+    "previous": "Previous brands",
+    "next": "Next brands"
   }
 }

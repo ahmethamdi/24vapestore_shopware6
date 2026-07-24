@@ -1,0 +1,52 @@
+{#
+    USP / güven şeridi — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-usp-strip.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    Bu element entity yüklemez — PHP resolver YOK. Tüm veri config'te düz
+    durur; çeviri katmanı için `element.translated.config.items` okunur.
+
+    Her item bir sütun: ikon + başlık + kısa metin. Başlığı boş olan item
+    render EDİLMEZ. 0 item ile hiç kapsayıcı basılmaz (temiz boş render).
+
+    İkonlar dekoratif → `aria-hidden`; anlam başlık + metinde.
+    Kırmızı YOK — bilgi şeridi, vurgu değil.
+#}
+{% block element_vape_usp_strip %}
+    {% set items = element.translated.config.items.value|default([]) %}
+
+    {# Yalnızca başlığı dolu item'ları göster #}
+    {% set validItems = [] %}
+    {% for item in items %}
+        {% if item.title is defined and item.title is not empty %}
+            {% set validItems = validItems|merge([item]) %}
+        {% endif %}
+    {% endfor %}
+
+    {% if validItems|length > 0 %}
+        <div class="cms-element-{{ element.type }} vape-usp-strip"
+             data-usp-count="{{ validItems|length }}">
+            <ul class="vape-usp-strip__list" role="list">
+                {% for item in validItems %}
+                    {% set icon = item.icon|default('checkmark-circle') %}
+
+                    {% block element_vape_usp_strip_item %}
+                        <li class="vape-usp-strip__item">
+                            <span class="vape-usp-strip__icon" aria-hidden="true">
+                                {% sw_icon icon %}
+                            </span>
+                            <span class="vape-usp-strip__text">
+                                <span class="vape-usp-strip__title">{{ item.title }}</span>
+                                {% if item.text is defined and item.text is not empty %}
+                                    <span class="vape-usp-strip__sub">{{ item.text }}</span>
+                                {% endif %}
+                            </span>
+                        </li>
+                    {% endblock %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

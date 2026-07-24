@@ -1,0 +1,156 @@
+{#
+    Promo banner config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model
+       sw-*  (legacy)  → v-model:value
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+#}
+{% block vape_cms_element_promo_banner_config %}
+<div class="vape-cms-el-config-promo-banner">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-promo-banner"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="settings" :active-tab="active">
+                {{ $t('sw-cms.elements.general.config.tab.settings') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== İÇERİK ==================== #}
+            <div v-if="active === 'content'" class="vape-cms-el-config-promo-banner__content">
+
+                {% block vape_cms_element_promo_banner_config_text %}
+                    <div class="vape-cms-el-config-promo-banner__field">
+                        <mt-text-field
+                            v-model="element.config.eyebrow.value"
+                            :label="$t('vape-cms.elements.promoBanner.config.eyebrow')"
+                            :placeholder="$t('vape-cms.elements.promoBanner.config.eyebrowPlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-promo-banner__field">
+                        <mt-text-field
+                            v-model="element.config.headline.value"
+                            :label="$t('vape-cms.elements.promoBanner.config.headline')"
+                            :placeholder="$t('vape-cms.elements.promoBanner.config.headlinePlaceholder')"
+                        />
+                    </div>
+
+                    <div class="vape-cms-el-config-promo-banner__field">
+                        <mt-textarea
+                            v-model="element.config.text.value"
+                            :label="$t('vape-cms.elements.promoBanner.config.text')"
+                            :placeholder="$t('vape-cms.elements.promoBanner.config.textPlaceholder')"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_promo_banner_config_cta %}
+                    <sw-container columns="1fr 1fr" gap="0 24px">
+                        <div class="vape-cms-el-config-promo-banner__field">
+                            <mt-text-field
+                                v-model="element.config.ctaText.value"
+                                :label="$t('vape-cms.elements.promoBanner.config.ctaText')"
+                                :placeholder="$t('vape-cms.elements.promoBanner.config.ctaTextPlaceholder')"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-promo-banner__field">
+                            <mt-text-field
+                                v-model="element.config.ctaUrl.value"
+                                :label="$t('vape-cms.elements.promoBanner.config.ctaUrl')"
+                                :placeholder="$t('vape-cms.elements.promoBanner.config.ctaUrlPlaceholder')"
+                            />
+                        </div>
+                    </sw-container>
+
+                    <div class="vape-cms-el-config-promo-banner__field">
+                        <mt-switch
+                            v-model="element.config.newTab.value"
+                            :label="$t('vape-cms.elements.promoBanner.config.newTab')"
+                            bordered
+                        />
+                    </div>
+                {% endblock %}
+
+            </div>
+
+            {# ==================== AYARLAR ==================== #}
+            <div v-if="active === 'settings'" class="vape-cms-el-config-promo-banner__settings">
+
+                {% block vape_cms_element_promo_banner_config_media %}
+                    <div class="vape-cms-el-config-promo-banner__field">
+                        <sw-media-upload-v2
+                            variant="regular"
+                            :upload-tag="uploadTag"
+                            :source="mediaPreview"
+                            :allow-multi-select="false"
+                            :label="$t('vape-cms.elements.promoBanner.config.media')"
+                            :help-text="$t('vape-cms.elements.promoBanner.config.mediaHelp')"
+                            @selection-change="onMediaSelectionChange"
+                            @media-upload-remove-image="onMediaRemove"
+                        />
+                        <sw-upload-listener
+                            :upload-tag="uploadTag"
+                            auto-upload
+                            @media-upload-finish="onMediaUploadFinish"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_promo_banner_config_appearance %}
+                    <sw-container columns="1fr 1fr" gap="0 24px">
+                        <div class="vape-cms-el-config-promo-banner__field">
+                            <mt-colorpicker
+                                v-model="element.config.bgColor.value"
+                                :label="$t('vape-cms.elements.promoBanner.config.bgColor')"
+                                :help-text="$t('vape-cms.elements.promoBanner.config.bgColorHelp')"
+                                color-output="hex"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-promo-banner__field">
+                            <mt-number-field
+                                v-model="element.config.overlayOpacity.value"
+                                number-type="int"
+                                :min="0"
+                                :max="100"
+                                :step="5"
+                                :label="$t('vape-cms.elements.promoBanner.config.overlayOpacity')"
+                                :help-text="$t('vape-cms.elements.promoBanner.config.overlayOpacityHelp')"
+                            />
+                        </div>
+                    </sw-container>
+
+                    <sw-container columns="1fr 1fr" gap="0 24px">
+                        <div class="vape-cms-el-config-promo-banner__field">
+                            <mt-select
+                                v-model="element.config.textColor.value"
+                                :options="textColorOptions"
+                                :label="$t('vape-cms.elements.promoBanner.config.textColor')"
+                            />
+                        </div>
+
+                        <div class="vape-cms-el-config-promo-banner__field">
+                            <mt-select
+                                v-model="element.config.align.value"
+                                :options="alignOptions"
+                                :label="$t('vape-cms.elements.promoBanner.config.alignLabel')"
+                            />
+                        </div>
+                    </sw-container>
+                {% endblock %}
+
+            </div>
+
+        </template>
+    </sw-tabs>
+</div>
+{% endblock %}

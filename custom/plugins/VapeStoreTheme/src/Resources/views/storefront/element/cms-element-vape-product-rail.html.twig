@@ -1,0 +1,96 @@
+{#
+    Ürün rayı — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-product-rail.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    Ürünler PHP resolver'dan `element.data.products` (ProductSliderStruct)
+    olarak gelir. Kartlar core'un `component/product/card/box.html.twig`
+    kutusuyla render edilir — fiyat/indirim/çeviri/wishlist hep core'dan.
+
+    ⚠️ DB'de 0 ürün → ray hiç basılmaz, nazik "ürün yok" durumu gösterilir.
+       Placeholder kart YOK; boş ray patlamaz.
+
+    Görsel dil: beyaz zemin + kırmızı vurgu. Oklar nötr yuvarlak. Metinler
+    config'te düz alan olduğu için `element.translated.config` ile okunur.
+
+    Carousel: CSS scroll-snap. Oklar isteğe bağlı (showArrows) — JS yüklenmese
+    de şerit yatay kaydırılabilir (progressive enhancement).
+#}
+{% block element_vape_product_rail %}
+    {% set cfg = element.translated.config %}
+    {% set products = element.data.products.elements|default([]) %}
+
+    {% set headline = cfg.headline.value|default('') %}
+    {% set subline = cfg.subline.value|default('') %}
+    {% set showArrows = cfg.showArrows.value|default(true) and products|length > 1 %}
+
+    <div class="cms-element-{{ element.type }} vape-product-rail"
+         data-vape-product-rail="true">
+
+        {% block element_vape_product_rail_head %}
+            {% if headline or subline or showArrows %}
+                <div class="vape-product-rail__head">
+                    {% if headline or subline %}
+                        <div class="vape-product-rail__titles">
+                            {% if headline %}
+                                <h2 class="vape-product-rail__headline">{{ headline }}</h2>
+                            {% endif %}
+                            {% if subline %}
+                                <p class="vape-product-rail__subline">{{ subline }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% block element_vape_product_rail_arrows %}
+                        {% if showArrows %}
+                            <div class="vape-product-rail__arrows">
+                                <button type="button"
+                                        class="vape-product-rail__arrow vape-product-rail__arrow--prev"
+                                        data-vape-product-rail-prev
+                                        aria-label="{{ 'vapeProductRail.previous'|trans|sw_sanitize }}">
+                                    {% sw_icon 'arrow-medium-left' %}
+                                </button>
+                                <button type="button"
+                                        class="vape-product-rail__arrow vape-product-rail__arrow--next"
+                                        data-vape-product-rail-next
+                                        aria-label="{{ 'vapeProductRail.next'|trans|sw_sanitize }}">
+                                    {% sw_icon 'arrow-medium-right' %}
+                                </button>
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+        {% block element_vape_product_rail_body %}
+            {% if products|length > 0 %}
+                {% block element_vape_product_rail_track %}
+                    <div class="vape-product-rail__track" data-vape-product-rail-track>
+                        {% for product in products %}
+                            {% block element_vape_product_rail_item %}
+                                <div class="vape-product-rail__item" data-vape-product-rail-item>
+                                    {% sw_include '@Storefront/storefront/component/product/card/box.html.twig' with {
+                                        'layout': 'standard'
+                                    } %}
+                                </div>
+                            {% endblock %}
+                        {% endfor %}
+                    </div>
+                {% endblock %}
+            {% else %}
+                {% block element_vape_product_rail_empty %}
+                    {# 0 ürün: nazik boş durum. DB'de ürün olmadığında (Mike
+                       yüklemeden önce) ya da stream/seçim boş kaldığında ray
+                       patlamaz — sadece tek satır bilgi gösterir. #}
+                    <div class="vape-product-rail__empty">
+                        <p>{{ 'vapeProductRail.empty'|trans|sw_sanitize }}</p>
+                    </div>
+                {% endblock %}
+            {% endif %}
+        {% endblock %}
+
+    </div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{#
+    Kategori carousel — CMS editörü içindeki önizleme.
+    Storefront'un sadeleştirilmiş bir yansıması: yönetici sonucu görebilsin diye.
+#}
+{% block vape_cms_el_category_carousel %}
+<div class="vape-cms-el-category-carousel">
+
+    {% block vape_cms_el_category_carousel_head %}
+        <div class="vape-cms-el-category-carousel__head">
+            <span
+                v-if="eyebrow"
+                class="vape-cms-el-category-carousel__eyebrow"
+            >
+                {{ eyebrow }}
+            </span>
+
+            <h2 class="vape-cms-el-category-carousel__headline">
+                <template v-if="headline">
+                    <span>{{ headlineParts.before }}</span><mark v-if="headlineParts.match" class="vape-cms-el-category-carousel__mark">{{ headlineParts.match }}</mark><span>{{ headlineParts.after }}</span>
+                </template>
+                <template v-else>
+                    {{ $t('vape-cms.elements.categoryCarousel.placeholder.headline') }}
+                </template>
+            </h2>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_category_carousel_empty %}
+        <div v-if="!cards.length" class="vape-cms-el-category-carousel__empty">
+            <mt-icon name="regular-view-grid" size="28px" />
+            <p>{{ $t('vape-cms.elements.categoryCarousel.config.emptyHint') }}</p>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_category_carousel_track %}
+        <div v-else class="vape-cms-el-category-carousel__track">
+            <div
+                v-for="(card, index) in cards"
+                :key="index"
+                class="vape-cms-el-category-carousel__card"
+            >
+                <div class="vape-cms-el-category-carousel__media">
+                    <span
+                        v-if="card.badge"
+                        class="vape-cms-el-category-carousel__badge"
+                    >
+                        {{ card.badge }}
+                    </span>
+                    <img
+                        :src="cardImage(card)"
+                        class="vape-cms-el-category-carousel__image"
+                        alt=""
+                    />
+                </div>
+
+                <div class="vape-cms-el-category-carousel__body">
+                    <span class="vape-cms-el-category-carousel__title">
+                        {{ cardName(card) || $t('vape-cms.elements.categoryCarousel.placeholder.category') }}
+                    </span>
+                    <span class="vape-cms-el-category-carousel__cta">{{ cardCta(card) }}</span>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

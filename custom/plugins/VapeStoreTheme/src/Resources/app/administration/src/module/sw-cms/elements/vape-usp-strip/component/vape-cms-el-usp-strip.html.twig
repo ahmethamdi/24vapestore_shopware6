@@ -1,0 +1,35 @@
+{#
+    USP şeridi — CMS editörü içindeki önizleme.
+    Storefront'un sadeleştirilmiş yansıması: yönetici sonucu görebilsin diye.
+    İkonlar mt-icon ile (admin set); storefront gerçek sw_icon'u basar.
+#}
+{% block vape_cms_el_usp_strip %}
+<div class="vape-cms-el-usp-strip">
+
+    {% block vape_cms_el_usp_strip_empty %}
+        <div v-if="!items.length" class="vape-cms-el-usp-strip__empty">
+            <mt-icon name="regular-shield-check" size="28px" />
+            <p>{{ $t('vape-cms.elements.uspStrip.config.emptyHint') }}</p>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_usp_strip_row %}
+        <div v-else class="vape-cms-el-usp-strip__row">
+            <div
+                v-for="(item, index) in items"
+                :key="index"
+                class="vape-cms-el-usp-strip__item"
+            >
+                <span class="vape-cms-el-usp-strip__icon" aria-hidden="true">
+                    <mt-icon :name="adminIcon(item)" size="22px" />
+                </span>
+                <span class="vape-cms-el-usp-strip__text">
+                    <span class="vape-cms-el-usp-strip__title">{{ item.title }}</span>
+                    <span v-if="item.text" class="vape-cms-el-usp-strip__sub">{{ item.text }}</span>
+                </span>
+            </div>
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

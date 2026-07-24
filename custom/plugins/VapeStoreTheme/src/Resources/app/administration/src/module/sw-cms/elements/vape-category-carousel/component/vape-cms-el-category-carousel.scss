@@ -1,0 +1,116 @@
+/*
+Editör içi önizleme. Storefront'un basitleştirilmiş yansıması.
+Bu dosya admin bundle'ına derlenir; storefront token'larına erişimi
+olmadığı için değerler burada literaldir (yalnızca editör görünümü).
+*/
+.vape-cms-el-category-carousel {
+    padding: 24px;
+    background-color: #ffffff;
+
+    &__head {
+        margin-bottom: 20px;
+    }
+
+    &__eyebrow {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #71717f;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #18181d;
+    }
+
+    &__mark {
+        background: transparent;
+        color: #e11122;
+        padding: 0;
+    }
+
+    &__empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 40px;
+        border: 1px dashed #d1d1d9;
+        border-radius: 8px;
+        color: #71717f;
+        text-align: center;
+    }
+
+    &__track {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+
+    &__card {
+        flex: 0 0 220px;
+        border: 1px solid #e4e4e9;
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #f7f7f9;
+    }
+
+    &__media {
+        position: relative;
+        aspect-ratio: 4 / 3;
+        background-color: #f0f0f3;
+    }
+
+    &__badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background-color: #e11122;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    &__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 14px;
+    }
+
+    &__title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #18181d;
+    }
+
+    &__cta {
+        display: inline-block;
+        align-self: flex-start;
+        padding: 6px 14px;
+        border-radius: 4px;
+        background-color: #18181d;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 600;
+    }
+}
