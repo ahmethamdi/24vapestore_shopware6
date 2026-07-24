@@ -413,8 +413,8 @@ $vape-hero-arrow-fg:          $vape-neutral-900;
 // ==================================================
 
 // Kart ölçüleri — scroll-snap şeridinde sabit genişlik
-$vape-catcar-card-width:        260px;   // ≥768px
-$vape-catcar-card-width-mobile: 200px;   // <768px, dokunmatik kaydırma
+$vape-catcar-card-width:        190px;   // ≥768px — kompakt marka şeridi
+$vape-catcar-card-width-mobile: 150px;   // <768px, dokunmatik kaydırma
 $vape-catcar-card-gap:          $vape-space-4;
 $vape-catcar-card-radius:       $vape-radius-lg;
 // Kart zemini beyaz — gri section zemininde kart öne çıksın (UX P1.4).

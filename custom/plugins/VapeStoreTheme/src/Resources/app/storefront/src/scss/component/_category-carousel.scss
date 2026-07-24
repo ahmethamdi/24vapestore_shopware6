@@ -18,6 +18,7 @@ Boş config (0 kart) ile de temiz render olur — element hiç şerit basmaz.
 
     &__head {
         margin-bottom: $vape-space-6;
+        text-align: center;   // eyebrow + başlık ortalı
     }
 
     &__eyebrow {
@@ -67,6 +68,9 @@ Boş config (0 kart) ile de temiz render olur — element hiç şerit basmaz.
     &__track {
         display: flex;
         gap: $vape-catcar-card-gap;
+        // Kartlar container'ı doldurmuyorsa ortala; taşınca baştan kaydırılabilir
+        // kalsın diye `safe` (taşmada sola hizalar, sığınca ortalar).
+        justify-content: safe center;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         scroll-behavior: smooth;
