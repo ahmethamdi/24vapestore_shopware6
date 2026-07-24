@@ -35,5 +35,14 @@
     "headline": "Beliebte Marken",
     "previous": "Vorherige Marken",
     "next": "Nächste Marken"
+  },
+  "vapeDeals": {
+    "headline": "Deals des Tages",
+    "days": "Tage",
+    "hours": "Stunden",
+    "minutes": "Minuten",
+    "seconds": "Sekunden",
+    "expired": "Abgelaufen",
+    "buy": "Kaufen"
   }
 }

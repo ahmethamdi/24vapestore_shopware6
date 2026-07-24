@@ -1,0 +1,86 @@
+{#
+    Günün fırsatları — CMS editörü içindeki önizleme.
+    Storefront'un sadeleştirilmiş yansıması: açık gri section + başlık + 3 KOYU kart.
+    Her kart: canlı geri sayım (4 beyaz kutu) + kampanya görseli + marka + ad + fiyat
+    + "Kaufen" butonu. Görselsiz durumda sakin nötr placeholder.
+#}
+{% block vape_cms_el_deals %}
+<div class="vape-cms-el-deals">
+
+    {% block vape_cms_el_deals_head %}
+        <div class="vape-cms-el-deals__head">
+            <span v-if="eyebrow" class="vape-cms-el-deals__eyebrow">{{ eyebrow }}</span>
+            <h2 class="vape-cms-el-deals__headline">{{ headline }}</h2>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_deals_empty %}
+        <div v-if="!deals.length" class="vape-cms-el-deals__empty">
+            <mt-icon name="regular-bolt" size="28px" />
+            <p>{{ $t('vape-cms.elements.deals.config.emptyHint') }}</p>
+        </div>
+    {% endblock %}
+
+    {% block vape_cms_el_deals_grid %}
+        <div v-else class="vape-cms-el-deals__grid">
+            <div
+                v-for="(deal, index) in deals"
+                :key="index"
+                class="vape-cms-el-deals__card"
+            >
+                {# --- geri sayım --- #}
+                <div class="vape-cms-el-deals__count">
+                    <template v-if="remaining(deal).expired">
+                        <span class="vape-cms-el-deals__expired">
+                            {{ $t('vape-cms.elements.deals.expired') }}
+                        </span>
+                    </template>
+                    <template v-else>
+                        <div class="vape-cms-el-deals__count-box">
+                            <span class="vape-cms-el-deals__count-num">{{ pad(remaining(deal).days) }}</span>
+                            <span class="vape-cms-el-deals__count-label">{{ $t('vape-cms.elements.deals.unit.days') }}</span>
+                        </div>
+                        <div class="vape-cms-el-deals__count-box">
+                            <span class="vape-cms-el-deals__count-num">{{ pad(remaining(deal).hours) }}</span>
+                            <span class="vape-cms-el-deals__count-label">{{ $t('vape-cms.elements.deals.unit.hours') }}</span>
+                        </div>
+                        <div class="vape-cms-el-deals__count-box">
+                            <span class="vape-cms-el-deals__count-num">{{ pad(remaining(deal).minutes) }}</span>
+                            <span class="vape-cms-el-deals__count-label">{{ $t('vape-cms.elements.deals.unit.minutes') }}</span>
+                        </div>
+                        <div class="vape-cms-el-deals__count-box">
+                            <span class="vape-cms-el-deals__count-num">{{ pad(remaining(deal).seconds) }}</span>
+                            <span class="vape-cms-el-deals__count-label">{{ $t('vape-cms.elements.deals.unit.seconds') }}</span>
+                        </div>
+                    </template>
+                </div>
+
+                {# --- kampanya görseli --- #}
+                <div class="vape-cms-el-deals__media">
+                    <img
+                        v-if="dealImage(deal)"
+                        :src="dealImage(deal)"
+                        :alt="deal.title"
+                        class="vape-cms-el-deals__image"
+                    />
+                    <span v-else class="vape-cms-el-deals__placeholder">
+                        <mt-icon name="regular-image" size="28px" />
+                    </span>
+                </div>
+
+                {# --- alt bölüm --- #}
+                <div class="vape-cms-el-deals__body">
+                    <span v-if="deal.brandLabel" class="vape-cms-el-deals__brand">{{ deal.brandLabel }}</span>
+                    <span class="vape-cms-el-deals__title">{{ dealTitle(deal) }}</span>
+
+                    <div class="vape-cms-el-deals__foot">
+                        <span v-if="deal.price" class="vape-cms-el-deals__price">{{ deal.price }}</span>
+                        <span class="vape-cms-el-deals__cta">{{ $t('vape-cms.elements.deals.buy') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+</div>
+{% endblock %}

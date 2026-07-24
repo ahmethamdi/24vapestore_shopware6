@@ -424,7 +424,7 @@ $vape-catcar-card-bg-hover:     $vape-neutral-white;
 $vape-catcar-card-border:       $vape-border-subtle;
 
 // Kart görsel alanı
-$vape-catcar-media-ratio:       4 / 3;
+$vape-catcar-media-ratio:       1 / 1;   // kare — referans marka şeridi (kompakt, temiz)
 $vape-catcar-media-bg:          $vape-neutral-100;
 
 // Rozet — sol üst, kırmızı vurgu
@@ -880,3 +880,91 @@ $vape-spotlight-cta-fg:          $vape-neutral-white;
 $vape-spotlight-cta-pad-y:       $vape-space-3;
 $vape-spotlight-cta-pad-x:       $vape-space-8;
 $vape-spotlight-cta-radius:      $vape-radius-md;
+
+// ==================================================
+// 22. GÜNÜN FIRSATLARI (vape-deals CMS element)
+//
+// "Deals des Tages": açık gri section + başlık; altında 3 KOYU kart yan yana.
+// Her kart: ÜST canlı geri sayım (4 beyaz kutu: Tage/Stunden/Minuten/Sekunden)
+// · ORTA beyaz yuvarlak alanda kampanya görseli · ALT gri marka etiketi +
+// kalın ürün adı + fiyat + "Kaufen" butonu.
+//
+// Görsel dil: KOYU kart, beyaz sayaç kutuları, koyu (kırmızı DEĞİL) Kaufen
+// butonu. Fiyat nötr koyu değil — kart koyu olduğu için burada AÇIK metin
+// (beyaz) kullanılır; kırmızı yalnızca sayaç son dakikada değil, hiç kullanılmaz.
+// Geri sayım JS ile canlı (data-vape-deals-end); süre bitince "Abgelaufen".
+// Mobil-öncelikli: 1 → 2 → 3 sütun.
+// ==================================================
+
+// ---------- section kapsayıcı ----------
+$vape-deals-bg:              $vape-bg-subtle;        // açık gri section zemini
+$vape-deals-head-gap:        $vape-space-6;          // başlık ile kart ızgarası arası
+$vape-deals-headline-size:   $vape-text-xl;          // <768px
+$vape-deals-headline-size-md:$vape-text-2xl;         // ≥768px
+$vape-deals-headline-color:  $vape-text-heading;
+$vape-deals-eyebrow-color:   $vape-brand;            // küçük kırmızı işaret (opsiyonel eyebrow)
+$vape-deals-eyebrow-size:    $vape-text-sm;
+$vape-deals-eyebrow-tracking:$vape-tracking-wider;
+
+// ---------- ızgara ----------
+$vape-deals-grid-gap:        $vape-space-4;          // <768px kartlar arası
+$vape-deals-grid-gap-md:     $vape-space-5;          // ≥768px kartlar arası
+
+// ---------- koyu kart ----------
+$vape-deals-card-bg:         $vape-neutral-900;      // KOYU kart
+$vape-deals-card-bg-hover:   $vape-neutral-950;
+$vape-deals-card-border:     $vape-neutral-800;      // kartı koyu section'da hafif ayır
+$vape-deals-card-radius:     $vape-radius-lg;        // 12px
+$vape-deals-card-pad:        $vape-space-5;          // 20px iç boşluk
+$vape-deals-card-gap:        $vape-space-4;          // sayaç/görsel/alt bölüm ritmi
+$vape-deals-card-shadow:     $vape-shadow-sm;
+$vape-deals-card-shadow-hover: $vape-shadow-md;
+
+// ---------- geri sayım (beyaz kutular koyu zeminde) ----------
+$vape-deals-count-gap:       $vape-space-2;          // kutular arası
+$vape-deals-count-box-bg:    $vape-neutral-white;    // beyaz kutu
+$vape-deals-count-box-radius:$vape-radius-md;
+$vape-deals-count-box-pad-y: $vape-space-2;
+$vape-deals-count-num-size:  $vape-text-2xl;         // büyük rakam, 24px
+$vape-deals-count-num-size-md: $vape-text-3xl;       // ≥768px, 36px
+$vape-deals-count-num-weight:$vape-weight-black;
+$vape-deals-count-num-color: $vape-neutral-900;      // koyu rakam beyaz kutuda
+$vape-deals-count-label-size:$vape-text-2xs;         // 10px küçük etiket
+$vape-deals-count-label-weight: $vape-weight-semibold;
+$vape-deals-count-label-color: $vape-neutral-500;    // gri etiket
+$vape-deals-count-label-tracking: $vape-tracking-wide;
+// Süre bitmiş durumu — koyu kart üzerinde soluk beyaz metin
+$vape-deals-expired-color:   rgba(255, 255, 255, 0.72);
+$vape-deals-expired-size:    $vape-text-sm;
+
+// ---------- kampanya görseli (beyaz yuvarlak alan) ----------
+$vape-deals-media-bg:        $vape-neutral-white;    // beyaz görsel yüzeyi
+$vape-deals-media-radius:    $vape-radius-md;
+$vape-deals-media-ratio:     16 / 9;                 // banner oranı
+$vape-deals-media-pad:       $vape-space-3;          // görselin beyaz alan içi payı
+$vape-deals-media-placeholder-color: $vape-neutral-300; // görselsiz sakin ikon
+
+// ---------- alt bölüm (marka + ad + fiyat + CTA) ----------
+$vape-deals-brand-size:      $vape-text-2xs;         // 10px küçük gri marka etiketi
+$vape-deals-brand-weight:    $vape-weight-semibold;
+$vape-deals-brand-color:     rgba(255, 255, 255, 0.55); // koyu kartta soluk gri
+$vape-deals-brand-tracking:  $vape-tracking-wide;
+$vape-deals-title-size:      $vape-text-md;          // 16px kalın ürün adı
+$vape-deals-title-weight:    $vape-weight-bold;
+$vape-deals-title-color:     $vape-neutral-white;    // koyu kartta beyaz
+$vape-deals-title-lines:     2;
+$vape-deals-title-leading:   $vape-leading-snug;
+$vape-deals-price-size:      $vape-text-xl;          // 20px fiyat
+$vape-deals-price-weight:    $vape-weight-black;
+$vape-deals-price-color:     $vape-neutral-white;    // koyu kartta beyaz fiyat
+$vape-deals-foot-gap:        $vape-space-3;          // fiyat ↔ CTA arası
+
+// ---------- "Kaufen" CTA — KOYU dolgu değil, koyu kartta AÇIK dolgu ----------
+// Kart zaten koyu; kontrast için buton BEYAZ dolgu + koyu metin. Kırmızı DEĞİL.
+$vape-deals-cta-bg:          $vape-neutral-white;
+$vape-deals-cta-bg-hover:    $vape-neutral-100;
+$vape-deals-cta-fg:          $vape-neutral-900;
+$vape-deals-cta-pad-y:       $vape-space-2;
+$vape-deals-cta-pad-x:       $vape-space-5;
+$vape-deals-cta-radius:      $vape-radius-md;
+$vape-deals-cta-weight:      $vape-weight-bold;

@@ -310,6 +310,51 @@
           "ctaUrlPlaceholder": "Empty = product detail page",
           "ctaUrlHelp": "Leave empty to link to the product page automatically."
         }
+      },
+      "deals": {
+        "label": "Deals of the day",
+        "placeholder": {
+          "headline": "Deals of the day",
+          "title": "Offer title"
+        },
+        "expired": "Expired",
+        "buy": "Buy",
+        "unit": {
+          "days": "Days",
+          "hours": "Hours",
+          "minutes": "Minutes",
+          "seconds": "Seconds"
+        },
+        "config": {
+          "tab": {
+            "content": "Heading",
+            "deals": "Offers"
+          },
+          "eyebrow": "Eyebrow",
+          "eyebrowPlaceholder": "e.g. TODAY ONLY",
+          "eyebrowHelp": "Small marker above the headline (in the accent colour).",
+          "headline": "Headline",
+          "headlinePlaceholder": "e.g. Deals of the day",
+          "headlineHelp": "Leave empty to use the default (“Deals of the day”).",
+          "emptyHint": "No offers yet. Click “Add offer” to create the first one.",
+          "deal": "Offer",
+          "addDeal": "Add offer",
+          "media": "Campaign image",
+          "mediaEmpty": "No image",
+          "selectMedia": "Select image",
+          "removeMedia": "Remove",
+          "brandLabel": "Brand",
+          "brandLabelPlaceholder": "e.g. Elf Bar",
+          "title": "Title",
+          "titlePlaceholder": "e.g. Elf Bar 600 – Blueberry",
+          "titleHelp": "Without a title the card is not rendered in the storefront.",
+          "price": "Price",
+          "pricePlaceholder": "e.g. 6,99 €",
+          "url": "Button link",
+          "urlPlaceholder": "e.g. /elf-bar-600",
+          "endDate": "Countdown target",
+          "endDateHelp": "Date/time to count down to."
+        }
       }
     },
     "blocks": {
@@ -342,6 +387,9 @@
       },
       "productSpotlight": {
         "label": "Product of the week"
+      },
+      "deals": {
+        "label": "Deals of the day"
       }
     }
   }

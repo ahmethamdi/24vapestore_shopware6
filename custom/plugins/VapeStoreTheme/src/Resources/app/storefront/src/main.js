@@ -14,6 +14,7 @@ import VapeCategoryCarouselPlugin from './plugin/vape-category-carousel/vape-cat
 import VapeProductRailPlugin from './plugin/vape-product-rail/vape-product-rail.plugin';
 import VapeFeaturedSplitPlugin from './plugin/vape-featured-split/vape-featured-split.plugin';
 import VapeBrandSliderPlugin from './plugin/vape-brand-slider/vape-brand-slider.plugin';
+import VapeDealsCountdownPlugin from './plugin/vape-deals-countdown/vape-deals-countdown.plugin';
 
 const registry = window.PluginManager;
 
@@ -23,3 +24,4 @@ registry.register('VapeCategoryCarousel', VapeCategoryCarouselPlugin, '[data-vap
 registry.register('VapeProductRail', VapeProductRailPlugin, '[data-vape-product-rail]');
 registry.register('VapeFeaturedSplit', VapeFeaturedSplitPlugin, '[data-vape-featured-split]');
 registry.register('VapeBrandSlider', VapeBrandSliderPlugin, '[data-vape-brand-slider]');
+registry.register('VapeDealsCountdown', VapeDealsCountdownPlugin, '.vape-deals');

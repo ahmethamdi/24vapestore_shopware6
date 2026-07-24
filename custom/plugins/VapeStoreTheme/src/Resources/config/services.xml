@@ -88,6 +88,18 @@
         </service>
 
         <!--
+            Günün fırsatları (vape-deals) resolver'ı.
+            deals dizisindeki kampanya mediaId'lerini TEK criteria ile MediaEntity
+            olarak çözer (brand-slider batch deseni; N+1 yok). Sonuç
+            element.data.deals: her biri { brandLabel, title, price, url, endDate,
+            media }. Görsel yoksa media null; başlıksız fırsat atlanır. Geri sayım
+            storefront'ta JS ile endDate'ten hesaplanır — resolver'da zaman yok.
+        -->
+        <service id="VapeStoreTheme\DataResolver\DealsCmsElementResolver">
+            <tag name="shopware.cms.data_resolver"/>
+        </service>
+
+        <!--
             Mega menü kategori görseli.
 
             Kategorinin kendi medyası yoksa, alt ağacındaki bir ürünün kapak

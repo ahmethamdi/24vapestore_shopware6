@@ -1,0 +1,234 @@
+{#
+    Günün fırsatları config paneli.
+
+    ⚠️ BINDING KURALI — karıştırırsan alan görünür ama KAYDETMEZ:
+       mt-*  (Meteor)  → v-model  (mt-datepicker dahil)
+       sw-*  (legacy)  → v-model:value
+    ⚠️ deals bir dizi olduğu için v-model doğrudan kullanılamaz;
+       her alan @update ile updateDeal() çağırır.
+    ⚠️ sw-tabs, position-identifier olmadan konsol hatası verir.
+    ⚠️ Görsel seçimi için sw-media-modal-v2 (still sw-*); modal her item için
+       ayrı açılır, seçim mediaModalIndex ile doğru item'a yazılır.
+#}
+{% block vape_cms_element_deals_config %}
+<div class="vape-cms-el-config-deals">
+    <sw-tabs
+        position-identifier="vape-cms-element-config-deals"
+        default-item="content"
+    >
+        <template #default="{ active }">
+            <sw-tabs-item name="content" :active-tab="active">
+                {{ $t('vape-cms.elements.deals.config.tab.content') }}
+            </sw-tabs-item>
+            <sw-tabs-item name="deals" :active-tab="active">
+                {{ $t('vape-cms.elements.deals.config.tab.deals') }}
+            </sw-tabs-item>
+        </template>
+
+        <template #content="{ active }">
+
+            {# ==================== BAŞLIK ==================== #}
+            <sw-container v-if="active === 'content'">
+
+                {% block vape_cms_element_deals_config_eyebrow %}
+                    <div class="vape-cms-el-config-deals__field">
+                        <mt-text-field
+                            v-model="element.config.eyebrow.value"
+                            :label="$t('vape-cms.elements.deals.config.eyebrow')"
+                            :placeholder="$t('vape-cms.elements.deals.config.eyebrowPlaceholder')"
+                            :help-text="$t('vape-cms.elements.deals.config.eyebrowHelp')"
+                        />
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_deals_config_headline %}
+                    <div class="vape-cms-el-config-deals__field">
+                        <mt-text-field
+                            v-model="element.config.headline.value"
+                            :label="$t('vape-cms.elements.deals.config.headline')"
+                            :placeholder="$t('vape-cms.elements.deals.config.headlinePlaceholder')"
+                            :help-text="$t('vape-cms.elements.deals.config.headlineHelp')"
+                        />
+                    </div>
+                {% endblock %}
+
+            </sw-container>
+
+            {# ==================== FIRSATLAR ==================== #}
+            <div v-if="active === 'deals'" class="vape-cms-el-config-deals__deals">
+
+                {% block vape_cms_element_deals_config_empty %}
+                    <mt-banner
+                        v-if="!deals.length"
+                        variant="info"
+                    >
+                        {{ $t('vape-cms.elements.deals.config.emptyHint') }}
+                    </mt-banner>
+                {% endblock %}
+
+                {% block vape_cms_element_deals_config_list %}
+                    <div
+                        v-for="(deal, index) in deals"
+                        :key="index"
+                        class="vape-cms-el-config-deals__deal"
+                    >
+                        <div class="vape-cms-el-config-deals__deal-head">
+                            <span class="vape-cms-el-config-deals__deal-title">
+                                {{ $t('vape-cms.elements.deals.config.deal') }} {{ index + 1 }}
+                                <template v-if="deal.title">— {{ deal.title }}</template>
+                            </span>
+
+                            <div class="vape-cms-el-config-deals__deal-actions">
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === 0"
+                                    @click="onMoveDeal(index, -1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-up" size="12px" />
+                                </mt-button>
+
+                                <mt-button
+                                    variant="secondary"
+                                    size="small"
+                                    :disabled="index === deals.length - 1"
+                                    @click="onMoveDeal(index, 1)"
+                                >
+                                    <mt-icon name="regular-long-arrow-down" size="12px" />
+                                </mt-button>
+
+                                <mt-button
+                                    variant="critical"
+                                    size="small"
+                                    @click="onRemoveDeal(index)"
+                                >
+                                    <mt-icon name="regular-trash" size="12px" />
+                                </mt-button>
+                            </div>
+                        </div>
+
+                        {# --- kampanya görseli (opsiyonel) --- #}
+                        <div class="vape-cms-el-config-deals__field">
+                            <span class="vape-cms-el-config-deals__field-label">
+                                {{ $t('vape-cms.elements.deals.config.media') }}
+                            </span>
+
+                            <div class="vape-cms-el-config-deals__media">
+                                <div
+                                    v-if="dealMedia(deal)"
+                                    class="vape-cms-el-config-deals__media-preview"
+                                >
+                                    <img
+                                        :src="dealMedia(deal).url"
+                                        :alt="deal.title"
+                                    />
+                                </div>
+                                <div
+                                    v-else
+                                    class="vape-cms-el-config-deals__media-empty"
+                                >
+                                    <mt-icon name="regular-image" size="18px" />
+                                    <span>{{ $t('vape-cms.elements.deals.config.mediaEmpty') }}</span>
+                                </div>
+
+                                <div class="vape-cms-el-config-deals__media-actions">
+                                    <mt-button
+                                        variant="secondary"
+                                        size="small"
+                                        @click="onOpenMediaModal(index)"
+                                    >
+                                        {{ $t('vape-cms.elements.deals.config.selectMedia') }}
+                                    </mt-button>
+                                    <mt-button
+                                        v-if="deal.mediaId"
+                                        variant="secondary"
+                                        size="small"
+                                        @click="onMediaRemove(index)"
+                                    >
+                                        {{ $t('vape-cms.elements.deals.config.removeMedia') }}
+                                    </mt-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# --- marka etiketi --- #}
+                        <div class="vape-cms-el-config-deals__field">
+                            <mt-text-field
+                                :model-value="deal.brandLabel"
+                                :label="$t('vape-cms.elements.deals.config.brandLabel')"
+                                :placeholder="$t('vape-cms.elements.deals.config.brandLabelPlaceholder')"
+                                @update:model-value="updateDeal(index, { brandLabel: $event })"
+                            />
+                        </div>
+
+                        {# --- ürün / kampanya adı --- #}
+                        <div class="vape-cms-el-config-deals__field">
+                            <mt-text-field
+                                :model-value="deal.title"
+                                :label="$t('vape-cms.elements.deals.config.title')"
+                                :placeholder="$t('vape-cms.elements.deals.config.titlePlaceholder')"
+                                :help-text="$t('vape-cms.elements.deals.config.titleHelp')"
+                                @update:model-value="updateDeal(index, { title: $event })"
+                            />
+                        </div>
+
+                        {# --- fiyat --- #}
+                        <div class="vape-cms-el-config-deals__field">
+                            <mt-text-field
+                                :model-value="deal.price"
+                                :label="$t('vape-cms.elements.deals.config.price')"
+                                :placeholder="$t('vape-cms.elements.deals.config.pricePlaceholder')"
+                                @update:model-value="updateDeal(index, { price: $event })"
+                            />
+                        </div>
+
+                        {# --- Kaufen linki --- #}
+                        <div class="vape-cms-el-config-deals__field">
+                            <mt-text-field
+                                :model-value="deal.url"
+                                :label="$t('vape-cms.elements.deals.config.url')"
+                                :placeholder="$t('vape-cms.elements.deals.config.urlPlaceholder')"
+                                @update:model-value="updateDeal(index, { url: $event })"
+                            />
+                        </div>
+
+                        {# --- geri sayım hedefi (ISO tarih) --- #}
+                        <div class="vape-cms-el-config-deals__field">
+                            <mt-datepicker
+                                :model-value="dealEndDate(deal)"
+                                date-type="datetime"
+                                :label="$t('vape-cms.elements.deals.config.endDate')"
+                                :help-text="$t('vape-cms.elements.deals.config.endDateHelp')"
+                                @update:model-value="updateDeal(index, { endDate: $event })"
+                            />
+                        </div>
+                    </div>
+                {% endblock %}
+
+                {% block vape_cms_element_deals_config_add %}
+                    <button
+                        type="button"
+                        class="vape-cms-el-config-deals__add"
+                        @click="onAddDeal"
+                    >
+                        <mt-icon name="regular-plus-circle" size="14px" />
+                        {{ $t('vape-cms.elements.deals.config.addDeal') }}
+                    </button>
+                {% endblock %}
+
+            </div>
+
+        </template>
+    </sw-tabs>
+
+    {# --- görsel seçim modal'ı (still sw-*) --- #}
+    <sw-media-modal-v2
+        v-if="mediaModalIndex !== null"
+        variant="regular"
+        :allow-multi-select="false"
+        entity-context="cms"
+        @media-modal-selection-change="onMediaSelection"
+        @modal-close="onCloseMediaModal"
+    />
+</div>
+{% endblock %}

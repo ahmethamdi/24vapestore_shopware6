@@ -310,6 +310,51 @@
           "ctaUrlPlaceholder": "Leer = Produktdetailseite",
           "ctaUrlHelp": "Leer lassen, um automatisch auf die Produktseite zu verlinken."
         }
+      },
+      "deals": {
+        "label": "Deals des Tages",
+        "placeholder": {
+          "headline": "Deals des Tages",
+          "title": "Angebotstitel"
+        },
+        "expired": "Abgelaufen",
+        "buy": "Kaufen",
+        "unit": {
+          "days": "Tage",
+          "hours": "Stunden",
+          "minutes": "Minuten",
+          "seconds": "Sekunden"
+        },
+        "config": {
+          "tab": {
+            "content": "Überschrift",
+            "deals": "Angebote"
+          },
+          "eyebrow": "Überzeile",
+          "eyebrowPlaceholder": "z. B. NUR HEUTE",
+          "eyebrowHelp": "Kleine Markierung über der Überschrift (in der Akzentfarbe).",
+          "headline": "Überschrift",
+          "headlinePlaceholder": "z. B. Deals des Tages",
+          "headlineHelp": "Leer lassen, um den Standard („Deals des Tages“) zu verwenden.",
+          "emptyHint": "Noch keine Angebote. Klicke auf „Angebot hinzufügen“, um das erste zu erstellen.",
+          "deal": "Angebot",
+          "addDeal": "Angebot hinzufügen",
+          "media": "Kampagnenbild",
+          "mediaEmpty": "Kein Bild",
+          "selectMedia": "Bild wählen",
+          "removeMedia": "Entfernen",
+          "brandLabel": "Marke",
+          "brandLabelPlaceholder": "z. B. Elf Bar",
+          "title": "Titel",
+          "titlePlaceholder": "z. B. Elf Bar 600 – Blueberry",
+          "titleHelp": "Ohne Titel wird die Karte im Storefront nicht angezeigt.",
+          "price": "Preis",
+          "pricePlaceholder": "z. B. 6,99 €",
+          "url": "Button-Link",
+          "urlPlaceholder": "z. B. /elf-bar-600",
+          "endDate": "Countdown-Ziel",
+          "endDateHelp": "Datum/Uhrzeit, bis zu dem heruntergezählt wird."
+        }
       }
     },
     "blocks": {
@@ -342,6 +387,9 @@
       },
       "productSpotlight": {
         "label": "Produkt der Woche"
+      },
+      "deals": {
+        "label": "Deals des Tages"
       }
     }
   }

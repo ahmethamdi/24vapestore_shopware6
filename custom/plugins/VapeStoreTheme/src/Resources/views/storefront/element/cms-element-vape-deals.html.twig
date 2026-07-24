@@ -1,0 +1,146 @@
+{#
+    Günün fırsatları — storefront çıktısı.
+
+    ⚠️ Dosya adı `cms-element-vape-deals.html.twig` OLMAK ZORUNDA.
+       Block şablonu `sw_include ... ~ element.type ~ ...` ile çağırır ve
+       `ignore missing` yüzünden yanlış isim SESSİZCE boş render eder.
+
+    Fırsat verisi PHP resolver'dan `element.data.deals` olarak gelir; her eleman
+    { brandLabel, title, price, url, endDate, media }. Görsel (media) yoksa nötr
+    placeholder gösterilir. Başlık config'te düz alan olduğu için yönetici metinleri
+    `element.translated.config` çeviri katmanıyla okunur.
+
+    Geri sayım: JS plugin (data-vape-deals-end="ISO") her saniye Tage/Stunden/
+    Minuten/Sekunden kutularını günceller. JS yüklenmese de server-side hesaplanan
+    başlangıç değerleri görünür kalır (progressive enhancement).
+#}
+{% block element_vape_deals %}
+    {% set cfg = element.translated.config %}
+    {% set deals = element.data.deals|default([]) %}
+
+    {% set headline = cfg.headline.value|default('') %}
+    {% if headline is empty %}
+        {% set headline = 'vapeDeals.headline'|trans|sw_sanitize %}
+    {% endif %}
+    {% set eyebrow = cfg.eyebrow.value|default('') %}
+
+    <div class="cms-element-{{ element.type }} vape-deals">
+
+        {% block element_vape_deals_head %}
+            <div class="vape-deals__head">
+                {% if eyebrow %}
+                    <span class="vape-deals__eyebrow">{{ eyebrow }}</span>
+                {% endif %}
+                {% if headline %}
+                    <h2 class="vape-deals__headline">{{ headline }}</h2>
+                {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block element_vape_deals_grid %}
+            {% if deals|length > 0 %}
+                <div class="vape-deals__grid">
+                    {% for deal in deals %}
+                        {% set brandLabel = deal.brandLabel|default('') %}
+                        {% set title = deal.title|default('') %}
+                        {% set price = deal.price|default('') %}
+                        {% set url = deal.url|default('') %}
+                        {% set endDate = deal.endDate|default('') %}
+                        {% set media = deal.media %}
+
+                        {% block element_vape_deals_card %}
+                            <article class="vape-deals__card"
+                                     data-vape-deals-card
+                                     {% if endDate %}data-vape-deals-end="{{ endDate }}"{% endif %}>
+
+                                {# --- geri sayım --- #}
+                                {% block element_vape_deals_countdown %}
+                                    <div class="vape-deals__count" data-vape-deals-countdown role="timer" aria-live="off">
+                                        <div class="vape-deals__count-box">
+                                            <span class="vape-deals__count-num" data-vape-deals-days>00</span>
+                                            <span class="vape-deals__count-label">{{ 'vapeDeals.days'|trans|sw_sanitize }}</span>
+                                        </div>
+                                        <div class="vape-deals__count-box">
+                                            <span class="vape-deals__count-num" data-vape-deals-hours>00</span>
+                                            <span class="vape-deals__count-label">{{ 'vapeDeals.hours'|trans|sw_sanitize }}</span>
+                                        </div>
+                                        <div class="vape-deals__count-box">
+                                            <span class="vape-deals__count-num" data-vape-deals-minutes>00</span>
+                                            <span class="vape-deals__count-label">{{ 'vapeDeals.minutes'|trans|sw_sanitize }}</span>
+                                        </div>
+                                        <div class="vape-deals__count-box">
+                                            <span class="vape-deals__count-num" data-vape-deals-seconds>00</span>
+                                            <span class="vape-deals__count-label">{{ 'vapeDeals.seconds'|trans|sw_sanitize }}</span>
+                                        </div>
+                                    </div>
+                                    {# JS süre bitince bu metni gösterir (başta gizli) #}
+                                    <div class="vape-deals__expired" data-vape-deals-expired hidden>
+                                        {{ 'vapeDeals.expired'|trans|sw_sanitize }}
+                                    </div>
+                                {% endblock %}
+
+                                {# --- kampanya görseli --- #}
+                                {% block element_vape_deals_media %}
+                                    <div class="vape-deals__media">
+                                        {% if media and media.url %}
+                                            {% sw_thumbnails 'vape-deals-thumbnails' with {
+                                                media: media,
+                                                sizes: {
+                                                    default: '400px'
+                                                },
+                                                attributes: {
+                                                    class: 'vape-deals__image',
+                                                    alt: (media.translated.alt ?: title),
+                                                    loading: 'lazy'
+                                                }
+                                            } %}
+                                        {% else %}
+                                            <span class="vape-deals__placeholder" aria-hidden="true">
+                                                {% sw_icon 'products' %}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                {% endblock %}
+
+                                {# --- alt bölüm --- #}
+                                {% block element_vape_deals_body %}
+                                    <div class="vape-deals__body">
+                                        {% if brandLabel %}
+                                            <span class="vape-deals__brand">{{ brandLabel }}</span>
+                                        {% endif %}
+
+                                        {% if title %}
+                                            <h3 class="vape-deals__title">
+                                                {% if url %}
+                                                    <a href="{{ url }}" class="vape-deals__title-link">{{ title }}</a>
+                                                {% else %}
+                                                    {{ title }}
+                                                {% endif %}
+                                            </h3>
+                                        {% endif %}
+
+                                        <div class="vape-deals__foot">
+                                            {% if price %}
+                                                <span class="vape-deals__price">{{ price }}</span>
+                                            {% endif %}
+
+                                            {% set tag = url ? 'a' : 'span' %}
+                                            <{{ tag }}
+                                                {% if url %}href="{{ url }}"{% endif %}
+                                                class="vape-deals__cta"
+                                                {% if url and title %}aria-label="{{ title }} {{ 'vapeDeals.buy'|trans|sw_sanitize }}"{% endif %}>
+                                                {{ 'vapeDeals.buy'|trans|sw_sanitize }}
+                                            </{{ tag }}>
+                                        </div>
+                                    </div>
+                                {% endblock %}
+
+                            </article>
+                        {% endblock %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+    </div>
+{% endblock %}

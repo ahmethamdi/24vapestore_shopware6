@@ -1,0 +1,169 @@
+/*
+Editör önizlemesi — storefront'un sadeleştirilmiş yansıması.
+Admin (Vue) ölçeğinde token dosyası import edilmediği için ham değerler;
+storefront gerçek görünümü _deals.scss token'larından alır.
+*/
+.vape-cms-el-deals {
+    padding: 20px;
+    background-color: #f7f7f9;
+    border-radius: 8px;
+
+    &__head {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 20px;
+    }
+
+    &__eyebrow {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #e11122;
+    }
+
+    &__headline {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: #18181d;
+    }
+
+    &__empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 32px;
+        color: #71717f;
+        text-align: center;
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        background-color: #18181d;
+        border: 1px solid #2a2a33;
+        border-radius: 12px;
+    }
+
+    // ---- geri sayım ----
+    &__count {
+        display: flex;
+        gap: 8px;
+        min-height: 56px;
+        align-items: center;
+    }
+
+    &__count-box {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 8px 4px;
+        background-color: #ffffff;
+        border-radius: 8px;
+    }
+
+    &__count-num {
+        font-size: 22px;
+        font-weight: 900;
+        line-height: 1.1;
+        color: #18181d;
+    }
+
+    &__count-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #71717f;
+    }
+
+    &__expired {
+        font-size: 14px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    // ---- kampanya görseli ----
+    &__media {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 16 / 9;
+        padding: 12px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    &__image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    &__placeholder {
+        color: #d1d1d9;
+    }
+
+    // ---- alt bölüm ----
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__brand {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.3;
+        color: #ffffff;
+    }
+
+    &__foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 4px;
+    }
+
+    &__price {
+        font-size: 20px;
+        font-weight: 900;
+        color: #ffffff;
+    }
+
+    &__cta {
+        padding: 8px 20px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #18181d;
+        white-space: nowrap;
+    }
+}

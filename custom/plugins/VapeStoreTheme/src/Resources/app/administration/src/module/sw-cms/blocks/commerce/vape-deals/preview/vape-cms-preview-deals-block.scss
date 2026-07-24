@@ -1,0 +1,51 @@
+.vape-cms-preview-deals-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    min-height: 80px;
+    padding: 12px 14px;
+    background-color: #f7f7f9;
+
+    &__headline {
+        width: 64px;
+        height: 8px;
+        border-radius: 2px;
+        background-color: #18181d;
+    }
+
+    &__cards {
+        display: flex;
+        gap: 6px;
+    }
+
+    &__card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 6px;
+        border-radius: 5px;
+        background-color: #18181d;
+    }
+
+    &__count {
+        display: flex;
+        gap: 2px;
+
+        span {
+            flex: 1;
+            height: 12px;
+            border-radius: 2px;
+            background-color: #ffffff;
+        }
+    }
+
+    &__media {
+        display: block;
+        height: 16px;
+        border-radius: 2px;
+        background-color: #ffffff;
+    }
+}
