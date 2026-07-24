@@ -127,12 +127,21 @@ Boş config (0 ürün) ile de temiz render olur — nazik "ürün yok" durumu.
     // Kart core product-box; sarmalayıcı yalnızca sabit genişlik +
     // snap hizası verir.
 
+    // Kart sayısı ekrana göre: mobil ~1.4 (sonraki kart ipucu görünsün),
+    // tablet 2, küçük masaüstü 3, geniş 4 kart. Yüzde tabanlı → container'la
+    // hizalı, kartlar geniş. gap payı calc ile düşülür.
     &__item {
-        flex: 0 0 $vape-prail-item-width;
+        flex: 0 0 calc((100% - #{$vape-prail-track-gap} * 0.4) / 1.4);   // <768: ~1.4 kart
         scroll-snap-align: start;
 
         @media (min-width: 768px) {
-            flex-basis: $vape-prail-item-width-md;
+            flex-basis: calc((100% - #{$vape-prail-track-gap}) / 2);      // 2 kart
+        }
+        @media (min-width: 992px) {
+            flex-basis: calc((100% - #{$vape-prail-track-gap} * 2) / 3);  // 3 kart
+        }
+        @media (min-width: 1200px) {
+            flex-basis: calc((100% - #{$vape-prail-track-gap} * 3) / 4);  // 4 kart
         }
 
         // core product-box kendi iç boşluk/kenarlığını taşır; ray içinde

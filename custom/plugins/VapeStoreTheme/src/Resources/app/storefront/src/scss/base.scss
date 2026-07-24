@@ -80,6 +80,43 @@ body {
     }
 }
 
+// ==================================================
+// CONTAINER — hero HARİÇ her section içeriği ortalı container'da.
+//
+// Kullanıcı isteği: "hero slider hariç her şey container içinde olsun."
+// Demo section'lar karışık (boxed/full-width) kurulmuş, içerik kenara yapışıyordu.
+// Section ZEMİNİ (gri şerit) kenardan kenara kalır; sadece İÇERİK sınırlanır.
+// Böylece hem tutarlı hizalama hem düzgün kenar payı olur.
+//
+// Hero (pos-0/1): kendi tam-genişlik mekanizmasını korur, İSTİSNA.
+// ==================================================
+
+// Shopware'in section'a koyduğu değişken davranışı (boxed → max-width 1400px +
+// sabit 100px margin; full-width → sınırsız) tek tutarlı kurala indiriyoruz:
+// section İÇERİĞİ her zaman ortalı, aynı max genişlikte, responsive padding'li.
+// Sabit 100px margin yerine auto margin → her ekranda düzgün ortalanır.
+.cms-page .cms-section:not(.pos-0):not(.pos-1) {
+    // Shopware'in boxed sabit margin/max-width'ini sıfırla, biz yönetelim
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+
+    .cms-block-container {
+        max-width: $vape-container-max;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: $vape-container-pad-mobile;
+        padding-right: $vape-container-pad-mobile;
+
+        @media (min-width: 992px) {
+            padding-left: $vape-container-pad-desktop;
+            padding-right: $vape-container-pad-desktop;
+        }
+    }
+}
+
 // Zemin alternasyonu — keşif/marka blokları hafif gri şeride geçer,
 // ürün rayları beyazda kalır. Bölüm sınırını gözle ayırır.
 .cms-page .cms-section {

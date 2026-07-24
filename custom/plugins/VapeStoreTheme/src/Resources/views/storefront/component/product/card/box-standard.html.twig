@@ -38,19 +38,11 @@
    dev boşluğun kaynağı buydu. Blok'u tamamen boşaltıyoruz. #}
 {% block component_product_box_description %}{% endblock %}
 
-{# Görsel yer tutucu — gerçek cover yokken "kırık gri kutu" yerine markaya göre
-   renkli, kasıtlı bir kart göster. Gerçek foto (cover.url) gelince core zaten
-   onu basar, buraya hiç düşmez. Marka adının baş harfi + tam ad, renk marka
-   adının hash'inden deterministik seçilir (data-brand-hue). #}
+{# Görsel yer tutucu — gerçek cover yokken sakin, nötr bir alan. Çirkin renkli
+   harf YOK (kullanıcı istedi). Sadece açık gri zemin + ince ürün ikonu.
+   Gerçek foto (cover.url) gelince core onu basar, buraya hiç düşmez. #}
 {% block component_product_box_image_placeholder %}
-    {% set brandName = product.manufacturer.translated.name|default('') %}
-    {% set seed = brandName ?: product.translated.name|default('V') %}
-    {% set hue = (seed|length * 47 + seed|slice(0,1)|lower|first|default('a')|url_encode|length * 13) % 360 %}
-    <div class="product-image-placeholder product-image-placeholder--branded"
-         style="--vape-ph-hue: {{ hue }};">
-        <span class="product-image-placeholder__mark">{{ seed|slice(0, 1)|upper }}</span>
-        {% if brandName %}
-            <span class="product-image-placeholder__brand">{{ brandName }}</span>
-        {% endif %}
+    <div class="product-image-placeholder product-image-placeholder--soft" aria-hidden="true">
+        {% sw_icon 'products' style { size: 'fluid' } %}
     </div>
 {% endblock %}

@@ -272,7 +272,7 @@ $vape-pcard-shadow:           $vape-shadow-sm;                   // düz "gri ku
 $vape-pcard-shadow-hover:     $vape-shadow-md;
 $vape-pcard-bg:               $vape-neutral-white;
 $vape-pcard-image-bg:         $vape-neutral-50;                  // görsel/placeholder zemini
-$vape-pcard-image-ratio:      $vape-product-image-ratio;         // 3/4 — ölçülü
+$vape-pcard-image-ratio:      1 / 1;   // kare — geniş 4'lü kartta dengeli, kart kısalır
 $vape-pcard-body-pad:         $vape-space-4;                     // 16px iç boşluk
 $vape-pcard-body-gap:         $vape-space-1;                     // satırlar arası ritim
 

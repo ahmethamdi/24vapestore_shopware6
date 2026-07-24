@@ -51,9 +51,15 @@ Tüm değerler token — magic px/hex yok.
         display: block;
         width: 100%;
         height: auto;                              // core'un sabit 200px'ini iptal et
-        aspect-ratio: $vape-pcard-image-ratio;     // 3/4
+        flex: 0 0 auto;                            // core flex:1 0 180px → GROW iptal
+        aspect-ratio: $vape-pcard-image-ratio;     // 1:1
         background-color: $vape-pcard-image-bg;
         overflow: hidden;
+    }
+
+    // card-body flex column; info üstte toplanır, buton dibe (varsa)
+    .card-body {
+        justify-content: flex-start;
     }
 
     .product-image {
@@ -88,49 +94,17 @@ Tüm değerler token — magic px/hex yok.
         }
     }
 
-    // Markalı yer tutucu — gerçek foto gelene kadar "kırık gri kutu" yerine
-    // kasıtlı, renkli bir kart. Renk marka adının hash'inden (--vape-ph-hue).
-    // Düşük doygunluk + açık ton → beyaz kartla uyumlu, ucuz görünmez.
-    .product-image-placeholder--branded {
-        position: relative;
-        flex-direction: column;
-        gap: $vape-space-2;
-        background:
-            linear-gradient(
-                150deg,
-                hsl(var(--vape-ph-hue, 220), 32%, 94%) 0%,
-                hsl(var(--vape-ph-hue, 220), 26%, 88%) 100%
-            );
-        overflow: hidden;
+    // Sakin yer tutucu — gerçek foto yokken sadece açık gri zemin + ince ikon.
+    // Renkli harf YOK. Nötr, sessiz; gerçek görsel gelince zaten override olur.
+    .product-image-placeholder--soft {
+        background-color: $vape-neutral-50;
 
-        // ince marka kırmızısı köşe işareti — marka mevcudiyeti sinyali
-        &::before {
-            content: "";
-            position: absolute;
-            top: $vape-space-3;
-            left: $vape-space-3;
-            width: 26px;
-            height: 3px;
-            border-radius: $vape-radius-pill;
-            background: $vape-brand;
-        }
-
-        .product-image-placeholder__mark {
-            font-family: $vape-font-heading;
-            font-size: $vape-text-4xl;
-            font-weight: $vape-weight-black;
-            line-height: 1;
-            letter-spacing: $vape-tracking-tight;
-            color: hsl(var(--vape-ph-hue, 220), 45%, 42%);
-            opacity: 0.5;
-        }
-
-        .product-image-placeholder__brand {
-            font-size: $vape-text-xs;
-            font-weight: $vape-weight-semibold;
-            letter-spacing: $vape-tracking-wide;
-            text-transform: uppercase;
-            color: hsl(var(--vape-ph-hue, 220), 30%, 38%);
+        svg,
+        .icon {
+            width: 34%;
+            max-width: 72px;
+            height: auto;
+            color: $vape-neutral-300;
             opacity: 0.8;
         }
     }
@@ -161,12 +135,21 @@ Tüm değerler token — magic px/hex yok.
 
     // ---------- metin gövdesi ----------
 
+    // product-info doğal yükseklikte — flex:1 ile YAYILMASIN (kartta isim-fiyat
+    // arası dev boşluğun ana sebebi buydu). İçerik üstte toplanır, buton hemen
+    // fiyatın altında. Kartlar arası ufak yükseklik farkı kabul edilir.
     .product-info {
         display: flex;
         flex-direction: column;
-        gap: $vape-pcard-body-gap;
-        flex: 1 1 auto;
+        gap: $vape-space-2;
+        flex: 0 0 auto;
         padding: $vape-pcard-body-pad;
+    }
+
+    // Core'un blok margin'lerini sıfırla; ritim tek yerden (info gap).
+    .product-info > * {
+        margin-top: 0;
+        margin-bottom: 0;
     }
 
     // Marka eyebrow (twig'de eklendi)
@@ -203,10 +186,28 @@ Tüm değerler token — magic px/hex yok.
         }
     }
 
-    // Fiyat — mantık base.scss'ten (koyu / indirim kırmızı). Sadece boşluk ritmi.
-    .product-price-info,
+    // Fiyat bloğu — core buna dev yükseklik veriyordu (176px ölçüldü) → kartta
+    // isim-fiyat arası kocaman boşluk. Tüm iç min-height/boşlukları ez, doğal yap.
+    .product-price-info {
+        min-height: 0;
+        margin-top: $vape-space-2;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .product-price-unit,
+    .product-price-wrapper,
+    .product-cheapest-price,
     .product-price {
-        margin-top: $vape-space-1;
+        min-height: 0;
+        margin: 0;
+        line-height: $vape-leading-snug;
+    }
+
+    // görünmez erişilebilirlik elemanları yer kaplamasın
+    .product-price-info .visually-hidden {
+        position: absolute;
     }
 
     // "incl. VAT / shipping" satırı — küçük, gri, ölçülü
@@ -218,9 +219,12 @@ Tüm değerler token — magic px/hex yok.
     }
 
     // ---------- sepete ekle (KOYU dolgu — kırmızı değil) ----------
+    // margin-top:auto → buton kartın DİBİNE iner, eşit yükseklik korunur ama
+    // isim/fiyat üstte toplanır (aradaki dev boşluk kapanır).
 
     .product-action {
-        margin-top: $vape-space-3;
+        margin-top: auto;
+        padding-top: $vape-space-3;
     }
 
     .btn-buy,
