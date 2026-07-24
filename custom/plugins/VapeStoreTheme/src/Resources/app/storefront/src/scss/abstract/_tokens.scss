@@ -115,12 +115,11 @@ $vape-space-16: 64px;
 $vape-space-20: 80px;
 $vape-space-24: 96px;
 
-// Bölüm (section) dikey boşlukları — anasayfa ritmi.
-// Önceden CMS section'lara hiç uygulanmıyordu; 11 bölüm tek beyaz lapa akıyordu.
-// Nefes payını artırdık + xl kırılımı ekledik (editorial ritim).
-$vape-section-gap-mobile:  $vape-space-12;   // 48px
-$vape-section-gap-desktop: $vape-space-20;   // 80px
-$vape-section-gap-xl:      112px;            // ≥1200px — geniş ekranda daha çok nefes
+// Bölüm (section) dikey boşlukları — SIKI ritim (kullanıcı: "boşluklar çok fazla").
+// Önce 112px vardı → iki section arası 224px, aşırı. Kompakt, dolu his için düşürüldü.
+$vape-section-gap-mobile:  $vape-space-6;    // 24px
+$vape-section-gap-desktop: $vape-space-8;    // 32px
+$vape-section-gap-xl:      $vape-space-10;   // 40px — geniş ekranda bile kompakt
 
 // Bölüm zemin tonu — beyaz ↔ hafif gri alternasyonu için
 $vape-section-tone-subtle: $vape-bg-subtle;  // #f7f7f9

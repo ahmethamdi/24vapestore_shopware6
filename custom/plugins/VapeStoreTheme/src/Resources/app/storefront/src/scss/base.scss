@@ -73,11 +73,19 @@ body {
         padding-bottom: $vape-section-gap-xl;
     }
 
-    // Hero: kendi ritmini taşır, üstten boşluk istemez
+    // Hero: kendi ritmini taşır, hiç dikey boşluk istemez (fantom pos-1
+    // 112px boşluk ekliyordu → kaldırıldı).
     &.pos-0,
     &.pos-1 {
         padding-top: 0;
+        padding-bottom: 0;
     }
+}
+
+// İçi tamamen boş section'lar dikey boşluk yaratmasın (demo layout artefaktı)
+.cms-page .cms-section:empty {
+    display: none;
+    padding: 0;
 }
 
 // ==================================================
