@@ -76,5 +76,10 @@
   },
   "vapeShowcase": {
     "empty": "Aktuell sind keine Produkte verfügbar."
+  },
+  "productDetail": {
+    "vapeTrustShipping": "Kostenloser Versand ab 50 €",
+    "vapeTrustPayment": "Sichere Zahlung",
+    "vapeTrustReturn": "14 Tage Rückgaberecht"
   }
 }

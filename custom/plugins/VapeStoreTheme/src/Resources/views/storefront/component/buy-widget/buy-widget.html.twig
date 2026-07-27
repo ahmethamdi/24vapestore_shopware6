@@ -1,0 +1,74 @@
+{% sw_extends '@Storefront/storefront/component/buy-widget/buy-widget.html.twig' %}
+
+{#
+    24VapeStore — PDP satın-alma widget'ı (buy-widget).
+
+    Core buy-widget'in MINIMAL override'ı. YALNIZCA iki GÖRÜNÜR bölüm eklenir;
+    core form mekaniği/JS (sepete ekle, adet stepper, varyant, wishlist) ve tüm
+    diğer bloklar AYNEN korunur (`{{ parent() }}`):
+
+      1. Marka eyebrow — buy container'ın en başında, fiyatın üstünde. Ürünün
+         manufacturer adı (küçük gri, aralıklı). Marka yoksa hiç basılmaz.
+      2. Güven rozetleri şeridi — satın alma formundan SONRA. Kostenloser Versand /
+         Sichere Zahlung / 14 Tage Rückgabe. Etiketler snippet'ten (productDetail.
+         vapeTrust*), ikonlar core `sw_icon` (truck / lock-closed / arrow-360-left),
+         dekoratif → aria-hidden.
+
+    Ham string YOK (snippet). Fiyat/stok/teslimat/ürün-no bölümleri core'da kalır;
+    görünümleri _product-detail.scss'te modernleştirilir.
+#}
+
+{% block buy_widget_buy_container %}
+    {% block vape_pdp_buy_widget_brand %}
+        {% if product.manufacturer and product.manufacturer.translated.name %}
+            <div class="vape-pdp-brand-eyebrow">
+                {% if product.manufacturer.link %}
+                    <a href="{{ product.manufacturer.link }}" class="vape-pdp-brand-eyebrow-link" rel="nofollow">
+                        {{ product.manufacturer.translated.name }}
+                    </a>
+                {% else %}
+                    {{ product.manufacturer.translated.name }}
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endblock %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block buy_widget_buy_form %}
+    {{ parent() }}
+
+    {% block vape_pdp_buy_widget_trust %}
+        {% if product.active %}
+            <ul class="vape-pdp-trust" role="list">
+                {% block vape_pdp_buy_widget_trust_shipping %}
+                    <li class="vape-pdp-trust-item">
+                        <span class="vape-pdp-trust-icon" aria-hidden="true">
+                            {% sw_icon 'truck' style { size: 'sm' } %}
+                        </span>
+                        <span class="vape-pdp-trust-text">{{ 'productDetail.vapeTrustShipping'|trans|sw_sanitize }}</span>
+                    </li>
+                {% endblock %}
+
+                {% block vape_pdp_buy_widget_trust_payment %}
+                    <li class="vape-pdp-trust-item">
+                        <span class="vape-pdp-trust-icon" aria-hidden="true">
+                            {% sw_icon 'lock-closed' style { size: 'sm' } %}
+                        </span>
+                        <span class="vape-pdp-trust-text">{{ 'productDetail.vapeTrustPayment'|trans|sw_sanitize }}</span>
+                    </li>
+                {% endblock %}
+
+                {% block vape_pdp_buy_widget_trust_return %}
+                    <li class="vape-pdp-trust-item">
+                        <span class="vape-pdp-trust-icon" aria-hidden="true">
+                            {% sw_icon 'arrow-360-left' style { size: 'sm' } %}
+                        </span>
+                        <span class="vape-pdp-trust-text">{{ 'productDetail.vapeTrustReturn'|trans|sw_sanitize }}</span>
+                    </li>
+                {% endblock %}
+            </ul>
+        {% endif %}
+    {% endblock %}
+{% endblock %}

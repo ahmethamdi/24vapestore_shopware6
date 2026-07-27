@@ -1485,3 +1485,139 @@ $vape-plp-grid-gap-md:          $vape-space-6;               // 24px ≥768px
 
 // ---------- mobil "Filter" tetik butonu ----------
 $vape-plp-mobile-btn-mb:        $vape-space-4;               // buton ↔ grid arası (mobil)
+
+// ==================================================
+// 26. ÜRÜN DETAY SAYFASI / PDP — GALERİ + BUY-BOX
+//
+// PDP bir CMS page (product_detail layout). Galeri (image-gallery element) ve
+// satın-alma kutusu (buy-box element) core CMS element'leridir; biz yalnızca
+// GÖRÜNÜMÜ modernleştiriyoruz — override'lar `{% sw_extends %}` ile MINIMAL blok
+// ezmesi yapar, core form/JS (sepete ekle, adet, varyant, wishlist, zoom modal)
+// AYNEN çalışır. Layout ≥lg 2 sütun (galeri ~55% / buy-box ~45%), mobilde tek
+// sütun (galeri üstte). base.scss'in `.cms-page .cms-section` container/ritim
+// mantığı bozulmasın diye PDP kuralları `.cms-page.is-ct-product_detail`
+// (product_detail layout gövde sınıfı) altında sınırlanır.
+//
+// Görsel dil: beyaz zemin + kırmızı vurgu (light-first). Kırmızı SADECE: indirim
+// fiyatı/rozeti, "%X saved" chip, birincil "Sepete ekle" CTA (PDP birincil
+// dönüşüm aksiyonu — ölçülü istisna). Marka eyebrow / ürün no / KDV notu nötr gri.
+// PLP kartı token'larıyla TUTARLI: fiyat/rozet/saved chip aynı dil, PDP için
+// ölçekli. WCAG AA: fiyat & rozet kontrast, CTA odak halkası, stok bilgisi
+// renk+metin (sadece renk değil), reduced-motion galeri zoom devre dışı.
+// ==================================================
+
+// ---------- 2 sütun layout ----------
+$vape-pdp-col-gap:              $vape-space-8;      // <xl sütunlar arası (32px)
+$vape-pdp-col-gap-xl:           $vape-space-12;     // ≥xl sütunlar arası (48px)
+$vape-pdp-gallery-col:          1.2fr;              // ≥lg sol galeri (~55%)
+$vape-pdp-buybox-col:           1fr;                // ≥lg sağ buy-box (~45%)
+$vape-pdp-buybox-max:           480px;              // buy-box aşırı genişlemesin (geniş ekran)
+$vape-pdp-buybox-sticky-top:    calc(#{$vape-header-sticky-height} + #{$vape-space-4});
+
+// ---------- galeri: ana görsel yüzeyi ----------
+// Beyaz zemin + yumuşak radius + ince kenar + hafif gölge → ürün foto "yüzer".
+$vape-pdp-gallery-bg:           $vape-neutral-white;
+$vape-pdp-gallery-border:       $vape-border-subtle;
+$vape-pdp-gallery-radius:       $vape-radius-lg;    // 12px — kart diliyle tutarlı
+$vape-pdp-gallery-shadow:       $vape-shadow-soft;  // yumuşak yüzer gölge
+$vape-pdp-gallery-pad:          $vape-space-5;      // ana görselin iç nefes payı
+$vape-pdp-gallery-ratio:        3 / 4;              // dikey ürün oranı (kart diliyle)
+$vape-pdp-gallery-zoom:         1.05;               // masaüstü hover hafif yakınlaştırma
+// Görselsiz durum — PLP placeholder dili: sakin nötr
+$vape-pdp-gallery-placeholder-color: $vape-neutral-300;
+
+// ---------- galeri: thumbnail şeridi ----------
+$vape-pdp-thumb-size:           72px;               // ≥lg thumbnail kutusu
+$vape-pdp-thumb-size-mobile:    56px;               // <768px
+$vape-pdp-thumb-gap:            $vape-space-3;       // thumb'lar arası
+$vape-pdp-thumb-radius:         $vape-radius-md;
+$vape-pdp-thumb-bg:             $vape-neutral-white;
+$vape-pdp-thumb-border:         $vape-border-subtle;
+$vape-pdp-thumb-border-active:  $vape-brand;         // aktif thumb → kırmızı kenar
+$vape-pdp-thumb-pad:            $vape-space-1;
+
+// ---------- galeri: rozet katmanı (PLP badges diliyle tutarlı) ----------
+$vape-pdp-badge-inset:          $vape-space-4;       // ana görsel kenarından
+$vape-pdp-badge-gap:            $vape-space-2;
+$vape-pdp-badge-z:              4;                   // görsel + zoom üstünde
+
+// ---------- buy-box: marka eyebrow ----------
+$vape-pdp-brand-size:           $vape-text-sm;       // 14px küçük gri
+$vape-pdp-brand-weight:         $vape-weight-semibold;
+$vape-pdp-brand-color:          $vape-text-muted;
+$vape-pdp-brand-tracking:       $vape-tracking-wide;
+$vape-pdp-brand-mb:             $vape-space-2;
+
+// ---------- buy-box: fiyat hiyerarşisi (PLP price token'larıyla tutarlı, ölçekli) ----------
+$vape-pdp-price-size:           $vape-text-3xl;      // 36px büyük güncel fiyat
+$vape-pdp-price-weight:         $vape-weight-bold;
+$vape-pdp-price-color:          $vape-price;         // nötr koyu (indirimsiz)
+$vape-pdp-price-sale-color:     $vape-price-sale;    // kırmızı (indirimli)
+$vape-pdp-price-gap:            $vape-space-3;        // fiyat ↔ eski fiyat/chip arası
+$vape-pdp-listprice-color:      $vape-text-muted;     // üstü çizili eski fiyat
+$vape-pdp-listprice-size:       $vape-text-lg;        // 18px
+// "%X saved" chip — PLP saved chip diliyle aynı (hafif kırmızı zemin, koyu kırmızı metin)
+$vape-pdp-saved-bg:             $vape-pcard-saved-bg;
+$vape-pdp-saved-fg:             $vape-pcard-saved-fg;
+$vape-pdp-saved-size:           $vape-text-sm;
+$vape-pdp-saved-weight:         $vape-weight-bold;
+$vape-pdp-saved-radius:         $vape-radius-sm;
+$vape-pdp-saved-pad:            2px $vape-space-2;
+// "inkl. MwSt." KDV notu — küçük gri
+$vape-pdp-tax-color:            $vape-text-muted;
+$vape-pdp-tax-size:             $vape-text-xs;
+
+// ---------- buy-box: adet + Sepete ekle ----------
+$vape-pdp-form-gap:             $vape-space-4;        // fiyat bloğu ↔ form arası dikey
+$vape-pdp-cta-height:           52px;                 // birincil CTA (büyük, dokunmatik)
+$vape-pdp-cta-radius:           $vape-radius-md;
+$vape-pdp-cta-size:             $vape-text-md;
+$vape-pdp-cta-weight:           $vape-weight-bold;
+// Birincil CTA KIRMIZI dolgu — PDP birincil dönüşüm aksiyonu (ölçülü istisna).
+$vape-pdp-cta-bg:               $vape-brand;
+$vape-pdp-cta-bg-hover:         $vape-brand-hover;
+$vape-pdp-cta-fg:               $vape-neutral-white;
+// Adet stepper — nötr, temiz
+$vape-pdp-qty-height:           52px;                 // CTA ile aynı optik satır
+$vape-pdp-qty-bg:               $vape-neutral-white;
+$vape-pdp-qty-border:           $vape-border-strong;
+$vape-pdp-qty-radius:           $vape-radius-md;
+$vape-pdp-qty-btn-color:        $vape-neutral-700;
+$vape-pdp-qty-btn-hover-bg:     $vape-neutral-100;
+
+// ---------- buy-box: stok / teslimat vaadi ----------
+// Renk + METİN + nokta (sadece renk değil — WCAG). Nokta core .bg-success vb.
+// sınıflarıyla gelir; burada boyut + hizalama + metin tonu.
+$vape-pdp-delivery-gap:         $vape-space-2;        // nokta ↔ metin arası
+$vape-pdp-delivery-size:        $vape-text-sm;        // 14px
+$vape-pdp-delivery-color:       $vape-text-primary;
+$vape-pdp-delivery-dot-size:    9px;                  // durum noktası çapı
+$vape-pdp-delivery-available:   $vape-success;        // yeşil (auf Lager)
+$vape-pdp-delivery-warning:     $vape-warning;        // turuncu (restock/preorder)
+$vape-pdp-delivery-danger:      $vape-danger;         // kırmızı (soldout/nicht verfügbar)
+$vape-pdp-delivery-info:        $vape-info;           // mavi (kostenloser Versand)
+$vape-pdp-delivery-pad-y:       $vape-space-3;        // teslimat bloğu dikey nefes
+$vape-pdp-delivery-border:      $vape-border-subtle;  // üst/alt ayırıcı
+
+// ---------- buy-box: güven rozetleri şeridi ----------
+// Buy-box altında küçük nötr güven ikonları (footer/trust-bar diliyle tutarlı).
+$vape-pdp-trust-mt:             $vape-space-5;        // form ↔ şerit arası
+$vape-pdp-trust-pad-y:          $vape-space-4;        // şerit dikey iç boşluk
+$vape-pdp-trust-border:         $vape-border-subtle;  // üst ayırıcı
+$vape-pdp-trust-gap:            $vape-space-3;         // satırlar arası
+$vape-pdp-trust-icon-gap:       $vape-space-3;         // ikon ↔ metin arası
+$vape-pdp-trust-icon-size:      20px;
+$vape-pdp-trust-icon-color:     $vape-neutral-700;     // nötr koyu — kırmızı DEĞİL
+$vape-pdp-trust-text-size:      $vape-text-sm;         // 14px
+$vape-pdp-trust-text-color:     $vape-text-primary;
+
+// ---------- buy-box: ürün numarası ----------
+$vape-pdp-ordernumber-size:     $vape-text-xs;         // 12px küçük gri, altta
+$vape-pdp-ordernumber-color:    $vape-text-muted;
+$vape-pdp-ordernumber-mt:       $vape-space-4;
+
+// ---------- buy-box: değerlendirme yıldızları ----------
+$vape-pdp-reviews-gap:          $vape-space-2;
+$vape-pdp-reviews-mb:           $vape-space-3;
+$vape-pdp-reviews-link-color:   $vape-text-muted;
+$vape-pdp-reviews-link-size:    $vape-text-sm;

@@ -76,5 +76,10 @@
   },
   "vapeShowcase": {
     "empty": "No products are available right now."
+  },
+  "productDetail": {
+    "vapeTrustShipping": "Free shipping from €50",
+    "vapeTrustPayment": "Secure payment",
+    "vapeTrustReturn": "14-day return policy"
   }
 }

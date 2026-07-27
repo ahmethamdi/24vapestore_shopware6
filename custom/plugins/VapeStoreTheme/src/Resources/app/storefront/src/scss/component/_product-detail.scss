@@ -1,0 +1,403 @@
+/*
+Ürün Detay Sayfası (PDP) — galeri + buy-box
+==================================================
+PDP bir CMS page (product_detail layout). Sol GALERİ core `image-gallery`
+element'i (`col-lg-7 product-detail-media`), sağ BUY-BOX core `buy-box`
+element'i (`col-lg-5 product-detail-buy`). 2 sütun layout NATİVE Bootstrap
+row + col-lg-7/5 ile gelir → mobilde otomatik alt alta yığılır. Biz yalnızca:
+  - sütun oranını PLP diline yakınlaştırır (galeri ~55% / buy-box ~45%),
+  - galeri ana görselini beyaz zemin + yumuşak radius/gölge + hover zoom yapar,
+  - thumbnail şeridini modernler,
+  - buy-box'ta marka eyebrow / fiyat hiyerarşisi / adet+CTA / stok-teslimat /
+    güven şeridi / ürün no görünümünü kurar.
+
+Scope: PDP-spesifik markup işaretleri (`.is--vape-pdp-gallery`,
+`.is--vape-pdp-buybox`) + gövde `.is-ctl-product`. base.scss'in
+`.cms-page .cms-section` container/ritim mantığına DOKUNULMAZ (PDP section'ları
+tam-genişlik değil, core gallery-buybox bloğu kendi row/col'unu taşır).
+
+Kırmızı SADECE: indirim fiyatı/rozeti, "saved" chip, birincil CTA (PDP birincil
+dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
+*/
+
+// ==================================================
+// 2 SÜTUN LAYOUT — native col-lg-7/5 rafinasyonu
+// ==================================================
+// Core row zaten sütunları kurar; burada yalnız ≥lg genişlik oranını ve
+// sütunlar arası nefesi PLP diline çekiyoruz. Mobilde (<lg) core col-12
+// davranışı → galeri üstte, buy-box altta (tek sütun) DEĞİŞMEZ.
+
+.is-ctl-product {
+    .product-detail-media {
+        @media (min-width: 992px) {
+            padding-right: $vape-pdp-col-gap;
+        }
+
+        @media (min-width: 1200px) {
+            padding-right: $vape-pdp-col-gap-xl;
+        }
+    }
+}
+
+// ==================================================
+// SOL GALERİ
+// ==================================================
+
+.is--vape-pdp-gallery {
+    position: relative;   // rozet katmanı için konumlama bağlamı
+
+    // ---- Ana görsel yüzeyi: beyaz zemin + yumuşak radius/gölge + iç pad ----
+    // Core hem tek görsel (.gallery-slider-single-image) hem çoklu slider
+    // (.gallery-slider) taşır; ikisini de aynı yüzeye oturt.
+    .gallery-slider-single-image,
+    .gallery-slider-item {
+        background-color: $vape-pdp-gallery-bg;
+        border: 1px solid $vape-pdp-gallery-border;
+        border-radius: $vape-pdp-gallery-radius;
+        box-shadow: $vape-pdp-gallery-shadow;
+        padding: $vape-pdp-gallery-pad;
+        overflow: hidden;
+    }
+
+    // Görsel dikey ürün oranında otursun, taşmasın
+    .gallery-slider-single-image {
+        aspect-ratio: $vape-pdp-gallery-ratio;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    // Görselin kendisi — hover'da hafif yakınlaştırma (masaüstü, ince his).
+    // Core zoom/magnifier JS'i AYRI çalışır (data-magnifier / zoom-modal);
+    // bu yalnızca hover'da CSS transform — JS'e dokunmaz.
+    .gallery-slider-image {
+        transition: transform $vape-duration-slow $vape-ease-out;
+    }
+
+    @media (min-width: 992px) and (hover: hover) {
+        .gallery-slider-single-image:hover .gallery-slider-image,
+        .gallery-slider-item:hover .gallery-slider-image {
+            transform: scale($vape-pdp-gallery-zoom);
+        }
+    }
+
+    // Görselsiz durum — sakin nötr placeholder (PLP dili)
+    .gallery-slider-single-image svg {
+        color: $vape-pdp-gallery-placeholder-color;
+    }
+
+    // ---- Thumbnail şeridi ----
+    .gallery-slider-thumbnails-item-inner {
+        border: 1px solid $vape-pdp-thumb-border;
+        border-radius: $vape-pdp-thumb-radius;
+        background-color: $vape-pdp-thumb-bg;
+        padding: $vape-pdp-thumb-pad;
+        overflow: hidden;
+        transition: border-color $vape-duration-fast $vape-ease-out;
+        width: $vape-pdp-thumb-size-mobile;
+        height: $vape-pdp-thumb-size-mobile;
+
+        @media (min-width: 768px) {
+            width: $vape-pdp-thumb-size;
+            height: $vape-pdp-thumb-size;
+        }
+
+        &:hover {
+            border-color: $vape-pdp-thumb-border-active;
+        }
+    }
+
+    // Aktif thumbnail — kırmızı kenar (tns aktif slide sınıfı)
+    .tns-nav-active .gallery-slider-thumbnails-item-inner,
+    .gallery-slider-thumbnails-item.tns-nav-active .gallery-slider-thumbnails-item-inner {
+        border-color: $vape-pdp-thumb-border-active;
+    }
+
+    // ---- Rozet katmanı — PLP badges diliyle TUTARLI ----
+    // Twig'de core .product-badges markup'ı basılır; konumu ve stili PLP kartıyla
+    // aynı. _product-card.scss'teki .product-badges .badge-* stilleri global
+    // olduğu için renk/gradient/gölge oradan miras alınır; burada yalnız konum.
+    .vape-pdp-gallery-badges {
+        position: absolute;
+        top: $vape-pdp-badge-inset;
+        left: $vape-pdp-badge-inset;
+        z-index: $vape-pdp-badge-z;
+        pointer-events: none;
+
+        .product-badges {
+            position: static;   // PLP'de absolute; burada zaten absolute sarmalayıcı içinde
+            top: auto;
+            left: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: $vape-pdp-badge-gap;
+        }
+    }
+}
+
+// ==================================================
+// SAĞ BUY-BOX
+// ==================================================
+
+.is--vape-pdp-buybox {
+    // Buy-box çok geniş ekranda aşırı uzamasın; sola hizalı sabit maks.
+    max-width: $vape-pdp-buybox-max;
+
+    @media (min-width: 992px) {
+        position: sticky;
+        top: $vape-pdp-buybox-sticky-top;
+    }
+
+    // ---- Marka eyebrow (fiyatın üstünde) ----
+    .vape-pdp-brand-eyebrow {
+        font-size: $vape-pdp-brand-size;
+        font-weight: $vape-pdp-brand-weight;
+        color: $vape-pdp-brand-color;
+        letter-spacing: $vape-pdp-brand-tracking;
+        text-transform: uppercase;
+        margin-bottom: $vape-pdp-brand-mb;
+
+        .vape-pdp-brand-eyebrow-link {
+            color: inherit;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                color: $vape-brand;
+            }
+        }
+    }
+
+    // ---- Fiyat hiyerarşisi ----
+    .product-detail-price-container {
+        margin-bottom: $vape-pdp-price-gap;
+    }
+
+    // Güncel fiyat — büyük. Nötr koyu; indirimliyse (.with-list-price) kırmızı.
+    .product-detail-price {
+        font-size: $vape-pdp-price-size;
+        font-weight: $vape-pdp-price-weight;
+        line-height: $vape-leading-tight;
+        color: $vape-pdp-price-color;
+        margin-bottom: 0;
+
+        &.with-list-price {
+            color: $vape-pdp-price-sale-color;
+        }
+    }
+
+    // Eski fiyat + "saved" satırı
+    .product-detail-list-price-wrapper {
+        display: inline-flex;
+        align-items: center;
+        gap: $vape-space-3;
+        margin-top: $vape-space-1;
+    }
+
+    // Üstü çizili eski fiyat
+    .list-price-price,
+    .product-detail-list-price-wrapper > span:not(.list-price-percentage):not(.list-price-badge):not(.visually-hidden) {
+        color: $vape-pdp-listprice-color;
+        font-size: $vape-pdp-listprice-size;
+        text-decoration: line-through;
+    }
+
+    // "%X saved" — core .list-price-percentage span'ini chip'e çevir (PLP diliyle)
+    .list-price-percentage {
+        display: inline-flex;
+        align-items: center;
+        background-color: $vape-pdp-saved-bg;
+        color: $vape-pdp-saved-fg;
+        font-size: $vape-pdp-saved-size;
+        font-weight: $vape-pdp-saved-weight;
+        line-height: 1;
+        padding: $vape-pdp-saved-pad;
+        border-radius: $vape-pdp-saved-radius;
+        text-decoration: none;
+    }
+
+    // Core'un çıplak "%" badge'i (list-price-badge) — chip ile çakışmasın, gizle
+    .list-price-badge {
+        display: none;
+    }
+
+    // "inkl. MwSt." KDV notu — küçük gri
+    .product-detail-tax-container {
+        margin-top: $vape-space-2;
+    }
+
+    .product-detail-tax {
+        font-size: $vape-pdp-tax-size;
+        color: $vape-pdp-tax-color;
+        margin-bottom: 0;
+    }
+
+    .product-detail-tax-link {
+        color: $vape-pdp-tax-color;
+        font-size: $vape-pdp-tax-size;
+        text-decoration: underline;
+    }
+
+    // ---- Değerlendirme yıldızları ----
+    .product-detail-reviews {
+        display: flex;
+        align-items: center;
+        gap: $vape-pdp-reviews-gap;
+        margin-bottom: $vape-pdp-reviews-mb;
+
+        .product-detail-reviews-link {
+            font-size: $vape-pdp-reviews-link-size;
+            color: $vape-pdp-reviews-link-color;
+        }
+    }
+
+    // ---- Stok / teslimat vaadi — renk + METİN + nokta (WCAG: sadece renk değil) ----
+    .product-detail-delivery-information {
+        padding: $vape-pdp-delivery-pad-y 0;
+        border-top: 1px solid $vape-pdp-delivery-border;
+        border-bottom: 1px solid $vape-pdp-delivery-border;
+        margin-top: $vape-pdp-form-gap;
+    }
+
+    .delivery-information {
+        display: flex;
+        align-items: center;
+        gap: $vape-pdp-delivery-gap;
+        font-size: $vape-pdp-delivery-size;
+        color: $vape-pdp-delivery-color;
+        margin-bottom: 0;
+    }
+
+    // Durum noktası — core .delivery-status-indicator + Bootstrap bg-*.
+    // Nokta boyutu/şekli burada; rengi core bg-success/bg-warning/bg-danger/bg-info
+    // sınıflarından (token değerleriyle senkron overrides.scss). Metin her durumda
+    // görünür olduğu için renk-körü kullanıcı da bilgiyi okur.
+    .delivery-status-indicator {
+        flex: 0 0 auto;
+        width: $vape-pdp-delivery-dot-size;
+        height: $vape-pdp-delivery-dot-size;
+        border-radius: $vape-radius-pill;
+    }
+
+    // ---- Adet + Sepete ekle ----
+    .product-detail-form-container {
+        margin-top: $vape-pdp-form-gap;
+    }
+
+    // Adet stepper — temiz, CTA ile aynı optik satır yüksekliği
+    .product-detail-quantity-group {
+        height: $vape-pdp-qty-height;
+
+        .form-control,
+        .btn {
+            height: $vape-pdp-qty-height;
+        }
+
+        .btn-minus,
+        .btn-plus {
+            background-color: $vape-pdp-qty-bg;
+            border-color: $vape-pdp-qty-border;
+            color: $vape-pdp-qty-btn-color;
+
+            &:hover,
+            &:focus {
+                background-color: $vape-pdp-qty-btn-hover-bg;
+                border-color: $vape-pdp-qty-border;
+            }
+        }
+
+        .form-control {
+            border-color: $vape-pdp-qty-border;
+        }
+    }
+
+    // Birincil CTA — büyük, kırmızı dolgu (PDP birincil dönüşüm aksiyonu).
+    // .btn-primary global tema kırmızısını taşır; burada yalnız boyut/ağırlık.
+    .btn-buy {
+        height: $vape-pdp-cta-height;
+        border-radius: $vape-pdp-cta-radius;
+        font-size: $vape-pdp-cta-size;
+        font-weight: $vape-pdp-cta-weight;
+        background-color: $vape-pdp-cta-bg;
+        border-color: $vape-pdp-cta-bg;
+        color: $vape-pdp-cta-fg;
+
+        &:hover,
+        &:focus {
+            background-color: $vape-pdp-cta-bg-hover;
+            border-color: $vape-pdp-cta-bg-hover;
+            color: $vape-pdp-cta-fg;
+        }
+
+        // Odak halkası — klavye erişilebilirliği (kırmızı zeminde görünür)
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+            box-shadow: $vape-focus-ring;
+        }
+    }
+
+    // ---- Güven rozetleri şeridi (form sonrası) ----
+    .vape-pdp-trust {
+        list-style: none;
+        margin: $vape-pdp-trust-mt 0 0;
+        padding: $vape-pdp-trust-pad-y 0 0;
+        border-top: 1px solid $vape-pdp-trust-border;
+        display: flex;
+        flex-direction: column;
+        gap: $vape-pdp-trust-gap;
+    }
+
+    .vape-pdp-trust-item {
+        display: flex;
+        align-items: center;
+        gap: $vape-pdp-trust-icon-gap;
+    }
+
+    .vape-pdp-trust-icon {
+        display: inline-flex;
+        color: $vape-pdp-trust-icon-color;
+
+        svg,
+        .icon {
+            width: $vape-pdp-trust-icon-size;
+            height: $vape-pdp-trust-icon-size;
+        }
+    }
+
+    .vape-pdp-trust-text {
+        font-size: $vape-pdp-trust-text-size;
+        color: $vape-pdp-trust-text-color;
+    }
+
+    // ---- Ürün numarası (altta, küçük gri) ----
+    .product-detail-ordernumber-container {
+        margin-top: $vape-pdp-ordernumber-mt;
+        font-size: $vape-pdp-ordernumber-size;
+        color: $vape-pdp-ordernumber-color;
+    }
+
+    .product-detail-ordernumber-label,
+    .product-detail-ordernumber {
+        font-size: $vape-pdp-ordernumber-size;
+        color: $vape-pdp-ordernumber-color;
+    }
+}
+
+// ==================================================
+// Hareket azaltma — galeri hover zoom devre dışı
+// (base.scss global reduced-motion transition'ları da yakalar; burada net.)
+// ==================================================
+@media (prefers-reduced-motion: reduce) {
+    .is--vape-pdp-gallery {
+        .gallery-slider-single-image:hover .gallery-slider-image,
+        .gallery-slider-item:hover .gallery-slider-image {
+            transform: none;
+        }
+
+        .gallery-slider-image {
+            transition: none;
+        }
+    }
+}

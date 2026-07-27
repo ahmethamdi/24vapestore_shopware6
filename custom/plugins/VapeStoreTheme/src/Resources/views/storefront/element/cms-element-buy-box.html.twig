@@ -1,0 +1,22 @@
+{% sw_extends '@Storefront/storefront/element/cms-element-buy-box.html.twig' %}
+
+{#
+    24VapeStore — PDP sağ satın-alma kutusu (buy-box).
+
+    Core buy-box element'inin MINIMAL override'ı. Amaç yalnızca GÖRÜNÜM:
+      - Buy-box kapsayıcısına `is--vape-pdp-buybox` işareti → SCSS bunu hedefler
+        (fiyat hiyerarşisi, adet + Sepete ekle CTA, stok/teslimat vaadi, güven
+        şeridi, ürün no). Core buy-widget include'u ve tüm form mekaniği/JS
+        (sepete ekle, adet stepper, varyant konfigüratör, wishlist) AYNEN korunur
+        (`{{ parent() }}`) — yalnızca dış sınıf eklenir.
+      - Marka eyebrow ve güven rozetleri şeridi buy-widget override'ında eklenir
+        (bkz. component/buy-widget/buy-widget.html.twig).
+
+    Altın kural: buy-box zaten CMS element; biz yalnızca görünümü modernleştiriyoruz.
+#}
+
+{% block element_buy_box_inner %}
+    <div class="is--vape-pdp-buybox">
+        {{ parent() }}
+    </div>
+{% endblock %}

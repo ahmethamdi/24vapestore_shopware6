@@ -1,0 +1,37 @@
+{% sw_extends '@Storefront/storefront/element/cms-element-image-gallery.html.twig' %}
+
+{#
+    24VapeStore — PDP sol görsel galeri.
+
+    Core image-gallery element'inin MINIMAL override'ı. Amaç yalnızca GÖRÜNÜM:
+      - Galeri kapsayıcısına `is--vape-pdp-gallery` işareti → SCSS bunu hedefler
+        (ana görsel beyaz zemin + yumuşak radius/gölge, thumbnail şeridi, hover
+        zoom). Core slider/thumbnail/zoom-modal markup'ı ve JS'i AYNEN korunur
+        (`{{ parent() }}`), yalnızca dış sınıf eklenir.
+      - Ana görsel üzerine rozet katmanı (indirim %, Neu) — PLP kartındaki
+        `badges.html.twig` diliyle TUTARLI (aynı .product-badges markup'ı, aynı
+        SCSS rozet stilleri). Yüzde/rozet koşulları core badges'ten gelir.
+
+    Rozet overlay yalnızca PDP (product_detail) bağlamında ve `page.product`
+    mevcutken basılır; genel CMS sayfalarında (galeri manuel görsellerle
+    kullanılınca) hiç render olmaz → altın kural: config-driven kalır, ürün
+    yoksa nötr. Zoom/lightbox JS'i core'da; buraya dokunulmaz.
+#}
+
+{% block element_image_gallery_inner %}
+    <div class="is--vape-pdp-gallery">
+        {{ parent() }}
+
+        {% block vape_pdp_gallery_badges %}
+            {% if isProduct is defined and isProduct and page is defined and page.product is defined %}
+                {% block vape_pdp_gallery_badges_inner %}
+                    <div class="vape-pdp-gallery-badges">
+                        {% sw_include '@Storefront/storefront/component/product/card/badges.html.twig' with {
+                            product: page.product
+                        } %}
+                    </div>
+                {% endblock %}
+            {% endif %}
+        {% endblock %}
+    </div>
+{% endblock %}
