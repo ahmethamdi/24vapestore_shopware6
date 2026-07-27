@@ -652,8 +652,9 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     // menünün önüne geçiyordu. z-fixed ile menü her sticky içeriğin üstünde.
     z-index: $vape-z-fixed;
 
-    // Ekranı kaplamasın — 32 alt kategorili dallar 1100px+ oluyordu
-    max-height: 60vh;
+    // Pratikte tüm kategoriler scroll'suz sığsın: sütunlar 6'lı yapıldı
+    // (aşağıda) + sınır 85vh. Scroll yalnızca aşırı uç dalda güvenlik ağı.
+    max-height: 85vh;
     overflow-y: auto;
     overscroll-behavior: contain;
 
@@ -683,6 +684,28 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         // Küçük thumb'larla (28px) sütunlar sıkışabilir; 16px yeterli nefes,
         // menü kompakt kalır (eski 24px fazla ferahtı).
         row-gap: $vape-space-4;
+
+        // Sütun sayısını 4 → 6 çıkar. Core level-0 kategoriye Bootstrap
+        // `col-3` (12/4) veriyor; columnCount twig'te `only` include yüzünden
+        // dışarıdan değiştirilemiyor, o yüzden genişliği SCSS'te eziyoruz.
+        // 6 sütun → çok markalı dallar (Big Puffs ~20 marka) 85vh'a scroll'suz
+        // sığar. Geniş ekrana özgü; dar ekranda core davranışı kalsın.
+        @media (min-width: 1200px) {
+            > [class*="col-"] {
+                flex: 0 0 auto;
+                width: 16.6667%;   // col-2 → 6 sütun
+                max-width: 16.6667%;
+            }
+        }
+
+        // Orta-geniş (992–1199): 5 sütun (biraz daha dar ekran)
+        @media (min-width: 992px) and (max-width: 1199.98px) {
+            > [class*="col-"] {
+                flex: 0 0 auto;
+                width: 20%;        // 5 sütun
+                max-width: 20%;
+            }
+        }
     }
 }
 
