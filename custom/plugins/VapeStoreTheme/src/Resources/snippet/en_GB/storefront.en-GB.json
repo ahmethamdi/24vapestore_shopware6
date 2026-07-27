@@ -2,6 +2,19 @@
   "header": {
     "searchPlaceholder": "Search liquids, pods, devices …"
   },
+  "footer": {
+    "vapeNewsletterHeadline": "Subscribe to our newsletter",
+    "vapeNewsletterText": "Sign up now and get a 10% voucher on your first order.",
+    "vapeNewsletterEmailLabel": "Email address",
+    "vapeNewsletterPlaceholder": "Your email address",
+    "vapeNewsletterSubmit": "Sign up",
+    "vapeSocialInstagram": "24VapeStore on Instagram",
+    "vapeSocialFacebook": "24VapeStore on Facebook",
+    "vapeSocialTiktok": "24VapeStore on TikTok",
+    "vapeSocialYoutube": "24VapeStore on YouTube",
+    "vapeAgeBadge": "18+",
+    "vapeAgeText": "Sold exclusively to persons aged 18 and over. Nicotine is highly addictive. Not for non-smokers, pregnant or breastfeeding women."
+  },
   "vapeHero": {
     "slideNavigation": "Slide navigation",
     "goToSlide": "Go to slide %number%",

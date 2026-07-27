@@ -60,6 +60,12 @@
           "de-DE": "Header",
           "en-GB": "Header"
         }
+      },
+      "footer": {
+        "label": {
+          "de-DE": "Footer",
+          "en-GB": "Footer"
+        }
       }
     },
     "fields": {
@@ -402,6 +408,94 @@
           "de-DE": "USP-Leiste Textfarbe",
           "en-GB": "USP bar text colour"
         }
+      },
+      "footerNewsletterHeadline": {
+        "type": "text",
+        "value": "Newsletter abonnieren",
+        "editable": true,
+        "block": "footer",
+        "order": 100,
+        "label": {
+          "de-DE": "Newsletter — Überschrift",
+          "en-GB": "Newsletter — headline"
+        },
+        "scss": false
+      },
+      "footerNewsletterText": {
+        "type": "text",
+        "value": "Jetzt anmelden und 10 % Gutschein auf die erste Bestellung sichern.",
+        "editable": true,
+        "block": "footer",
+        "order": 110,
+        "label": {
+          "de-DE": "Newsletter — Text",
+          "en-GB": "Newsletter — text"
+        },
+        "scss": false
+      },
+      "footerSocialInstagram": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "footer",
+        "order": 200,
+        "label": {
+          "de-DE": "Instagram-URL",
+          "en-GB": "Instagram URL"
+        },
+        "helpText": {
+          "de-DE": "Vollständige URL. Leer lassen, um das Icon auszublenden.",
+          "en-GB": "Full URL. Leave empty to hide the icon."
+        },
+        "scss": false
+      },
+      "footerSocialFacebook": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "footer",
+        "order": 210,
+        "label": {
+          "de-DE": "Facebook-URL",
+          "en-GB": "Facebook URL"
+        },
+        "helpText": {
+          "de-DE": "Vollständige URL. Leer lassen, um das Icon auszublenden.",
+          "en-GB": "Full URL. Leave empty to hide the icon."
+        },
+        "scss": false
+      },
+      "footerSocialTiktok": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "footer",
+        "order": 220,
+        "label": {
+          "de-DE": "TikTok-URL",
+          "en-GB": "TikTok URL"
+        },
+        "helpText": {
+          "de-DE": "Vollständige URL. Leer lassen, um das Icon auszublenden.",
+          "en-GB": "Full URL. Leave empty to hide the icon."
+        },
+        "scss": false
+      },
+      "footerSocialYoutube": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "footer",
+        "order": 230,
+        "label": {
+          "de-DE": "YouTube-URL",
+          "en-GB": "YouTube URL"
+        },
+        "helpText": {
+          "de-DE": "Vollständige URL. Leer lassen, um das Icon auszublenden.",
+          "en-GB": "Full URL. Leave empty to hide the icon."
+        },
+        "scss": false
       }
     }
   }

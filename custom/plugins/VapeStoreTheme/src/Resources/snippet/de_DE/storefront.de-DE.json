@@ -2,6 +2,19 @@
   "header": {
     "searchPlaceholder": "Liquids, Pods, Geräte suchen …"
   },
+  "footer": {
+    "vapeNewsletterHeadline": "Newsletter abonnieren",
+    "vapeNewsletterText": "Jetzt anmelden und 10 % Gutschein auf die erste Bestellung sichern.",
+    "vapeNewsletterEmailLabel": "E-Mail-Adresse",
+    "vapeNewsletterPlaceholder": "Ihre E-Mail-Adresse",
+    "vapeNewsletterSubmit": "Anmelden",
+    "vapeSocialInstagram": "24VapeStore auf Instagram",
+    "vapeSocialFacebook": "24VapeStore auf Facebook",
+    "vapeSocialTiktok": "24VapeStore auf TikTok",
+    "vapeSocialYoutube": "24VapeStore auf YouTube",
+    "vapeAgeBadge": "18+",
+    "vapeAgeText": "Verkauf ausschließlich an Personen ab 18 Jahren. Nikotin ist stark abhängig machend. Nicht für Nichtraucher, Schwangere oder Stillende."
+  },
   "vapeHero": {
     "slideNavigation": "Slide-Navigation",
     "goToSlide": "Zu Slide %number% springen",

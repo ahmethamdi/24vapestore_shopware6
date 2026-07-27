@@ -1152,3 +1152,108 @@ $vape-showcase-grid-gap-lg:           $vape-space-4;     // ≥992px kartlar ara
 $vape-showcase-empty-color:           $vape-text-muted;
 $vape-showcase-empty-border:          $vape-border-subtle;
 $vape-showcase-empty-pad:             $vape-space-8;
+
+// ==================================================
+// 24. FOOTER (layout/footer)
+//
+// Footer projenin BİLİNÇLİ koyu bölümüdür (light-first sitede tek koyu ada).
+// Zemin $vape-bg-inverse (#0b0b0f). Metin nötr açık gri, başlık beyaz.
+// Kırmızı YALNIZCA vurgu: link hover, newsletter buton, başlık aksanı, 18+ çizgi.
+// Kırmızı dolgulu dev CTA YOK (proje kuralı) — newsletter butonu ölçülü kırmızı,
+// tek küçük eylem butonu olduğu için "vurgu" sayılır, dev CTA değil.
+//
+// Koyu zeminde WCAG AA: gövde/link $vape-neutral-300 (#d1d1d9) on #0b0b0f ≈ 13:1,
+// muted $vape-neutral-400 (#a0a0ad) ≈ 7:1 — ikisi de AA gövde (4.5:1) üstünde.
+// Odak halkası koyu zeminde görünür kırmızı ($vape-focus-ring).
+// ==================================================
+
+// ---------- kapsayıcı ----------
+$vape-footer-bg:              $vape-bg-inverse;          // #0b0b0f koyu ada
+$vape-footer-color:           $vape-neutral-300;         // gövde metni (AA üstü)
+$vape-footer-heading-color:   $vape-neutral-white;       // kolon başlıkları
+$vape-footer-muted-color:     $vape-neutral-400;         // ikincil / KDV notu (AA üstü)
+$vape-footer-border:          rgba(255, 255, 255, 0.10); // koyu zeminde ayırıcı
+$vape-footer-border-strong:   rgba(255, 255, 255, 0.16); // daha belirgin ayırıcı
+$vape-footer-pad-y:           $vape-space-12;            // 48px üst/alt iç boşluk
+$vape-footer-pad-y-md:        $vape-space-16;            // 64px ≥768px
+
+// ---------- link ----------
+$vape-footer-link-color:       $vape-neutral-300;
+$vape-footer-link-color-hover: $vape-brand;              // kırmızı vurgu (hover)
+
+// ---------- newsletter bandı ----------
+$vape-footer-nl-gap:           $vape-space-6;            // intro ↔ form arası
+$vape-footer-nl-pad-y:         $vape-space-8;            // bant dikey iç boşluk
+$vape-footer-nl-border:        $vape-footer-border;      // alt ayırıcı
+$vape-footer-nl-headline-size: $vape-text-xl;            // <768px
+$vape-footer-nl-headline-size-md: $vape-text-2xl;        // ≥768px
+$vape-footer-nl-headline-color: $vape-neutral-white;
+$vape-footer-nl-text-color:    $vape-neutral-400;
+$vape-footer-nl-text-size:     $vape-text-sm;
+$vape-footer-nl-max:           420px;                    // form genişlik sınırı (desktop)
+
+// Newsletter input — koyu zeminde hafif açık dolgu, odakta beyaz kenar
+$vape-footer-nl-input-bg:        rgba(255, 255, 255, 0.06);
+$vape-footer-nl-input-bg-focus:  rgba(255, 255, 255, 0.12);
+$vape-footer-nl-input-border:    rgba(255, 255, 255, 0.18);
+$vape-footer-nl-input-color:     $vape-neutral-white;
+$vape-footer-nl-input-placeholder: $vape-neutral-400;
+$vape-footer-nl-input-height:    48px;
+$vape-footer-nl-input-radius:    $vape-radius-md;
+
+// Newsletter buton — ölçülü kırmızı vurgu (tek küçük eylem butonu)
+$vape-footer-nl-btn-bg:          $vape-brand;
+$vape-footer-nl-btn-bg-hover:    $vape-brand-hover;
+$vape-footer-nl-btn-fg:          $vape-neutral-white;
+$vape-footer-nl-btn-pad-x:       $vape-space-6;
+$vape-footer-nl-btn-radius:      $vape-radius-md;
+
+// ---------- kolon başlığı aksanı ----------
+$vape-footer-headline-size:      $vape-text-md;
+$vape-footer-headline-weight:    $vape-weight-semibold;
+$vape-footer-headline-tracking:  $vape-tracking-wide;
+
+// ---------- ödeme / kargo logoları ----------
+// Logolar çoğu beyaz/renkli; koyu zeminde okunsun diye beyaz "çip" zemin.
+$vape-footer-logo-bg:            $vape-neutral-white;
+$vape-footer-logo-radius:        $vape-radius-sm;
+$vape-footer-logo-pad:           $vape-space-2;
+$vape-footer-logo-gap:           $vape-space-3;
+$vape-footer-logo-max-h:         28px;
+
+// ---------- sosyal medya ----------
+$vape-footer-social-gap:         $vape-space-3;
+$vape-footer-social-size:        40px;                    // dokunmatik hedef
+$vape-footer-social-bg:          rgba(255, 255, 255, 0.06);
+$vape-footer-social-bg-hover:    $vape-brand;             // hover'da kırmızı çip
+$vape-footer-social-fg:          $vape-neutral-300;
+$vape-footer-social-fg-hover:    $vape-neutral-white;
+$vape-footer-social-radius:      $vape-radius-pill;
+
+// ---------- 18+ / gençlik koruması şeridi ----------
+$vape-footer-age-gap:            $vape-space-3;
+$vape-footer-age-pad-y:          $vape-space-4;
+$vape-footer-age-border:         $vape-footer-border;      // üst ayırıcı
+$vape-footer-age-accent:         $vape-brand;              // kırmızı ince aksan çizgisi
+$vape-footer-age-accent-w:       3px;
+$vape-footer-age-badge-bg:       $vape-brand;
+$vape-footer-age-badge-fg:       $vape-neutral-white;
+$vape-footer-age-badge-size:     $vape-text-sm;
+$vape-footer-age-badge-radius:   $vape-radius-sm;
+$vape-footer-age-text-color:     $vape-neutral-400;
+$vape-footer-age-text-size:      $vape-text-xs;
+$vape-footer-age-text-max:       720px;
+
+// ---------- alt bar (service menu + KDV + copyright) ----------
+$vape-footer-bottom-bg:          $vape-neutral-0;          // en alt: mutlak siyah, footer'dan bir ton koyu
+$vape-footer-bottom-border:      $vape-footer-border;
+$vape-footer-bottom-pad-y:       $vape-space-5;
+$vape-footer-bottom-gap:         $vape-space-4;
+$vape-footer-bottom-color:       $vape-neutral-400;
+$vape-footer-bottom-size:        $vape-text-sm;
+$vape-footer-service-link-color: $vape-neutral-300;
+$vape-footer-service-link-hover: $vape-brand;
+$vape-footer-service-gap:        $vape-space-4;
+
+// ---------- akordeon toggle (mobil) ----------
+$vape-footer-toggle-color:       $vape-neutral-300;

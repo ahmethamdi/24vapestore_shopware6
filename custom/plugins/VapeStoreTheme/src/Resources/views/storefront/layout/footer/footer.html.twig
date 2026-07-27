@@ -1,0 +1,122 @@
+{% sw_extends '@Storefront/storefront/layout/footer/footer.html.twig' %}
+
+{#
+    24VapeStore Footer — koyu zemin, kırmızı vurgu.
+
+    Bilinçli minimal override: yalnızca yeni bölümler eklenen bloklar ezilir,
+    korunan core mantığı için {{ parent() }} çağrılır.
+
+    Eklenen bölümler:
+      1. Newsletter kayıt bandı  → layout_footer_navigation'ın ÜSTÜNE (prepend)
+      2. Sosyal medya + 18+ şeridi → layout_footer_payment_shipping_logos ALTINA (append)
+
+    Korunanlar (dokunulmadı, otomatik miras):
+      - layout_footer_navigation_hotline (telefon + iletişim linki)
+      - layout_footer_navigation_columns (footer nav ağacı — BOŞSA hiç render olmaz,
+        core {% for %} boş koleksiyonda sessizce hiçbir şey üretmez → footer çökmez)
+      - layout_footer_payment_shipping_logos (ödeme/kargo medyaları)
+      - layout_footer_bottom (service menu + KDV + copyright + Shopware logosu)
+
+    Tüm görünen metinler snippet'ten (footer.vape*); sosyal linkler theme_config'ten.
+#}
+
+{% block layout_footer_navigation %}
+    {% block layout_footer_newsletter %}
+        {# Başlık/metin: yönetici theme.json'da özelleştirebilir; boşsa snippet varsayılanı. #}
+        {% set vapeNlHeadline = theme_config('footerNewsletterHeadline') ?: 'footer.vapeNewsletterHeadline'|trans %}
+        {% set vapeNlText = theme_config('footerNewsletterText') ?: 'footer.vapeNewsletterText'|trans %}
+
+        <div class="vape-footer-newsletter" data-vape-footer-newsletter>
+            <div class="vape-footer-newsletter__intro">
+                <p class="vape-footer-newsletter__headline">
+                    {{ vapeNlHeadline|sw_sanitize }}
+                </p>
+                <p class="vape-footer-newsletter__text">
+                    {{ vapeNlText|sw_sanitize }}
+                </p>
+            </div>
+
+            <div class="vape-footer-newsletter__form">
+                {#
+                    Native Shopware newsletter form.
+                    POST → frontend.form.newsletter.register.handle (/form/newsletter),
+                    email input name="email", hidden option=subscribe.
+                    data-form-handler → core FormAjaxSubmitPlugin bağlar (storefront JS zaten yüklü).
+                    Ek alan/salutation gizli tutulur; footer için sadece e-posta + Anmelden.
+                #}
+                <form class="vape-footer-newsletter__inner"
+                      action="{{ path('frontend.form.newsletter.register.handle') }}"
+                      method="post"
+                      data-form-handler="true"
+                      aria-label="{{ vapeNlHeadline }}">
+
+                    <input type="hidden" name="option" value="subscribe">
+
+                    <div class="vape-footer-newsletter__field">
+                        <label class="visually-hidden" for="vapeFooterNewsletterEmail">
+                            {{ 'footer.vapeNewsletterEmailLabel'|trans|sw_sanitize }}
+                        </label>
+                        <input type="email"
+                               id="vapeFooterNewsletterEmail"
+                               name="email"
+                               class="form-control vape-footer-newsletter__input"
+                               autocomplete="email"
+                               required="required"
+                               placeholder="{{ 'footer.vapeNewsletterPlaceholder'|trans }}">
+                    </div>
+
+                    <button type="submit" class="btn vape-footer-newsletter__submit">
+                        {{ 'footer.vapeNewsletterSubmit'|trans|sw_sanitize }}
+                    </button>
+
+                    <div class="form-hidden-fields">
+                        <input type="submit" class="submit--hidden d-none">
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endblock %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block layout_footer_payment_shipping_logos %}
+    {{ parent() }}
+
+    {% block layout_footer_social %}
+        {% set vapeSocials = [
+            { key: 'instagram', url: theme_config('footerSocialInstagram'), label: 'footer.vapeSocialInstagram' },
+            { key: 'facebook',  url: theme_config('footerSocialFacebook'),  label: 'footer.vapeSocialFacebook' },
+            { key: 'tiktok',    url: theme_config('footerSocialTiktok'),    label: 'footer.vapeSocialTiktok' },
+            { key: 'youtube',   url: theme_config('footerSocialYoutube'),   label: 'footer.vapeSocialYoutube' }
+        ] %}
+
+        {# Twig'de for-içi set dışarı sızmaz; boş-guard için diziyi filtrele. #}
+        {% set vapeActiveSocials = vapeSocials|filter(s => s.url) %}
+
+        {% if vapeActiveSocials|length > 0 %}
+            <div class="vape-footer-social">
+                <ul class="vape-footer-social__list list-unstyled" role="list">
+                    {% for social in vapeActiveSocials %}
+                        <li class="vape-footer-social__item">
+                            <a class="vape-footer-social__link"
+                               href="{{ social.url }}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               aria-label="{{ social.label|trans|sw_sanitize }}">
+                                {% sw_include '@Storefront/storefront/layout/footer/social-icon.html.twig' with { name: social.key } %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endblock %}
+
+    {% block layout_footer_age_notice %}
+        <div class="vape-footer-age" role="note">
+            <span class="vape-footer-age__badge">{{ 'footer.vapeAgeBadge'|trans|sw_sanitize }}</span>
+            <p class="vape-footer-age__text">{{ 'footer.vapeAgeText'|trans|sw_sanitize }}</p>
+        </div>
+    {% endblock %}
+{% endblock %}
