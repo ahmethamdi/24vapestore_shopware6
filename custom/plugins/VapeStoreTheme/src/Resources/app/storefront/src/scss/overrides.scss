@@ -85,3 +85,16 @@ $offcanvas-color: #2a2a33 !default;
 $table-color: #2a2a33 !default;
 $table-bg: transparent !default;
 $table-border-color: #e4e4e9 !default;
+
+// Container genişliği — core `.container` (PLP, PDP, footer, hesap, checkout).
+// Bootstrap 5.3 varsayılan xxl 1400px → 1600px. Diğer breakpoint'ler standart.
+// NOT: Anasayfa CMS section'ları bu map'i KULLANMAZ; onlar
+// $vape-container-max (1800px, _tokens.scss) ile yönetilir — dokunulmadı.
+// Bootstrap map'i tümüyle verilmeli (kısmi override map merge etmez).
+$container-max-widths: (
+    sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 1140px,
+    xxl: 1600px
+) !default;
