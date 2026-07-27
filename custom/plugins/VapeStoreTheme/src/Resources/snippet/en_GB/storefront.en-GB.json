@@ -13,7 +13,14 @@
     "vapeSocialTiktok": "24VapeStore on TikTok",
     "vapeSocialYoutube": "24VapeStore on YouTube",
     "vapeAgeBadge": "18+",
-    "vapeAgeText": "Sold exclusively to persons aged 18 and over. Nicotine is highly addictive. Not for non-smokers, pregnant or breastfeeding women."
+    "vapeAgeText": "Sold exclusively to persons aged 18 and over. Nicotine is highly addictive. Not for non-smokers, pregnant or breastfeeding women.",
+    "vapePaymentTitle": "Secure payment & shipping",
+    "vapePaymentVisa": "Pay with Visa",
+    "vapePaymentMastercard": "Pay with Mastercard",
+    "vapePaymentPaypal": "Pay with PayPal",
+    "vapePaymentKlarna": "Pay with Klarna",
+    "vapePaymentSepa": "Pay by SEPA direct debit",
+    "vapePaymentDhl": "Shipping with DHL"
   },
   "vapeHero": {
     "slideNavigation": "Slide navigation",

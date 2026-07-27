@@ -50,7 +50,19 @@ Tüm değerler _tokens.scss §24'ten token. Magic hex/px yok.
     @include media-breakpoint-up(lg) {
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
+        // Çok geniş footer'da (≥1600px) intro ile form arasında dev boşluk
+        // oluşmasın: intro esner, form sabit; aralarında ölçülü gap.
+        justify-content: flex-start;
+        gap: $vape-footer-nl-gap;
+    }
+}
+
+.vape-footer-newsletter__intro {
+    @include media-breakpoint-up(lg) {
+        // Intro mevcut alanı doldurur, formu makul aralıkta sağa iter —
+        // ama okunabilirlik için metin genişliği sınırlı kalır.
+        flex: 1 1 auto;
+        min-width: 0;
     }
 }
 
@@ -152,6 +164,28 @@ Tüm değerler _tokens.scss §24'ten token. Magic hex/px yok.
     color: $vape-footer-color;
 }
 
+// Kolon dengeleme — core Bootstrap `col-md-4` 4 kolonu 3'lük satıra sıkıştırıp
+// 4.'yü (Legal) alt satıra düşürüyor ve footer'ın sağ yarısını boş bırakıyordu.
+// Mobil (<md): core davranışı korunur — kolonlar tam genişlik + akordeon collapse.
+// Tablet (md 768–991): 4 kolonu 2×2 eşit yay, kimse alt satıra tek başına düşmesin.
+// Desktop (≥lg 992): 4 kolonu tek satırda EŞİT genişlikte yay, boşluk simetrik olsun.
+.footer-column {
+    @include media-breakpoint-up(md) {
+        flex: 1 1 50%;
+        max-width: 50%;
+    }
+
+    @include media-breakpoint-up(lg) {
+        flex: 1 1 0;
+        max-width: none;
+
+        // Kolonlar arası nefes; ilk kolon sola dayalı kalsın.
+        & + .footer-column {
+            padding-left: $vape-footer-col-gutter;
+        }
+    }
+}
+
 .footer-column-headline,
 .footer-headline {
     color: $vape-footer-heading-color;
@@ -219,6 +253,64 @@ Tüm değerler _tokens.scss §24'ten token. Magic hex/px yok.
 
     .footer-logo-image {
         max-height: $vape-footer-logo-max-h;
+        width: auto;
+    }
+}
+
+// ==================================================
+// 3b. ÖDEME / KARGO LOGO ŞERİDİ (config-driven inline SVG)
+//     Core payment/shipping medyası boş → kendi tanınabilir çip şeridimiz.
+//     Her logo açık zeminli çipte durur → koyu footer'da yüksek kontrast.
+// ==================================================
+
+.vape-footer-pay {
+    display: flex;
+    flex-direction: column;
+    gap: $vape-footer-pay-gap;
+    padding-top: $vape-footer-pay-pad-top;
+    margin-top: $vape-footer-pay-mt;
+    border-top: 1px solid $vape-footer-pay-border;
+}
+
+.vape-footer-pay__title {
+    margin: 0;
+    color: $vape-footer-pay-title-color;
+    font-size: $vape-footer-pay-title-size;
+    font-weight: $vape-weight-semibold;
+    letter-spacing: $vape-footer-pay-title-tracking;
+    text-transform: uppercase;
+}
+
+.vape-footer-pay__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $vape-footer-pay-item-gap;
+    margin: 0;
+    align-items: center;
+}
+
+.vape-footer-pay__item {
+    margin: 0;
+}
+
+// Açık çip: koyu footer üzerinde marka logolarını okunur kılar (aboutyou/standart
+// e-ticaret footer deseni). Sabit yükseklik → çipler hizalı durur.
+.vape-footer-pay__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: $vape-footer-pay-chip-h;
+    padding: 0 $vape-footer-pay-chip-pad-x;
+    background-color: $vape-footer-pay-chip-bg;
+    border-radius: $vape-footer-pay-chip-radius;
+}
+
+.vape-footer-pay__logo {
+    display: inline-flex;
+
+    svg {
+        display: block;
+        height: $vape-footer-pay-logo-h;
         width: auto;
     }
 }

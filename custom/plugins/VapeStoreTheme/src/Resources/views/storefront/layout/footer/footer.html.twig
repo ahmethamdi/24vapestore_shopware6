@@ -83,6 +83,46 @@
 {% block layout_footer_payment_shipping_logos %}
     {{ parent() }}
 
+    {% block layout_footer_payment_icons %}
+        {#
+            Config-driven ödeme/kargo logo şeridi.
+            DB'de payment/shipping medyası yok → core {{ parent() }} boş render oluyor.
+            Bu şerit tanınabilir markaları inline SVG çip olarak gösterir.
+            Her marka theme.json bool alanıyla açılıp kapanabilir (footerPay*/footerShip*).
+            Görünen tüm string snippet'ten (footer.vapePayment*).
+        #}
+        {% set vapePayments = [
+            { key: 'visa',       show: theme_config('footerPayVisa'),       label: 'footer.vapePaymentVisa' },
+            { key: 'mastercard', show: theme_config('footerPayMastercard'), label: 'footer.vapePaymentMastercard' },
+            { key: 'paypal',     show: theme_config('footerPayPaypal'),     label: 'footer.vapePaymentPaypal' },
+            { key: 'klarna',     show: theme_config('footerPayKlarna'),     label: 'footer.vapePaymentKlarna' },
+            { key: 'sepa',       show: theme_config('footerPaySepa'),       label: 'footer.vapePaymentSepa' },
+            { key: 'dhl',        show: theme_config('footerShipDhl'),       label: 'footer.vapePaymentDhl' }
+        ] %}
+
+        {% set vapeActivePayments = vapePayments|filter(p => p.show) %}
+
+        {% if vapeActivePayments|length > 0 %}
+            <div class="vape-footer-pay">
+                <p class="vape-footer-pay__title">
+                    {{ 'footer.vapePaymentTitle'|trans|sw_sanitize }}
+                </p>
+                <ul class="vape-footer-pay__list list-unstyled" role="list">
+                    {% for payment in vapeActivePayments %}
+                        <li class="vape-footer-pay__item">
+                            <span class="vape-footer-pay__chip">
+                                {% sw_include '@Storefront/storefront/layout/footer/payment-icon.html.twig' with {
+                                    name: payment.key,
+                                    label: payment.label|trans
+                                } %}
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endblock %}
+
     {% block layout_footer_social %}
         {% set vapeSocials = [
             { key: 'instagram', url: theme_config('footerSocialInstagram'), label: 'footer.vapeSocialInstagram' },

@@ -13,7 +13,14 @@
     "vapeSocialTiktok": "24VapeStore auf TikTok",
     "vapeSocialYoutube": "24VapeStore auf YouTube",
     "vapeAgeBadge": "18+",
-    "vapeAgeText": "Verkauf ausschließlich an Personen ab 18 Jahren. Nikotin ist stark abhängig machend. Nicht für Nichtraucher, Schwangere oder Stillende."
+    "vapeAgeText": "Verkauf ausschließlich an Personen ab 18 Jahren. Nikotin ist stark abhängig machend. Nicht für Nichtraucher, Schwangere oder Stillende.",
+    "vapePaymentTitle": "Sichere Zahlung & Versand",
+    "vapePaymentVisa": "Zahlung mit Visa",
+    "vapePaymentMastercard": "Zahlung mit Mastercard",
+    "vapePaymentPaypal": "Zahlung mit PayPal",
+    "vapePaymentKlarna": "Zahlung mit Klarna",
+    "vapePaymentSepa": "Zahlung per SEPA-Lastschrift",
+    "vapePaymentDhl": "Versand mit DHL"
   },
   "vapeHero": {
     "slideNavigation": "Slide-Navigation",

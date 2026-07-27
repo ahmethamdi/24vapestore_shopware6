@@ -1257,3 +1257,25 @@ $vape-footer-service-gap:        $vape-space-4;
 
 // ---------- akordeon toggle (mobil) ----------
 $vape-footer-toggle-color:       $vape-neutral-300;
+
+// ---------- kolon dengesi (link kolonları eşit yayılımı) ----------
+// Core col-md-4 (3'lük satır) 4. kolonu alt satıra düşürüyordu; ≥lg'de 4'ü de
+// eşit tek satırda yaymak için kolonlar arası yatay boşluk.
+$vape-footer-col-gutter:         $vape-space-8;            // ≥lg kolonlar arası nefes
+
+// ---------- ödeme / kargo logo şeridi (config-driven inline SVG) ----------
+// Core payment/shipping media BOŞ geldiği için kendi tanınabilir logo çipimiz.
+// Her marka açık zeminli çipte → koyu footer'da yüksek kontrast + tanınırlık.
+$vape-footer-pay-gap:            $vape-space-6;            // başlık ↔ çipler dikey
+$vape-footer-pay-item-gap:       $vape-space-2;            // çipler arası
+$vape-footer-pay-pad-top:        $vape-space-6;            // şerit üst iç boşluk
+$vape-footer-pay-mt:             $vape-space-6;            // şerit üst dış boşluk
+$vape-footer-pay-border:         $vape-footer-border;      // üst ayırıcı
+$vape-footer-pay-title-color:    $vape-neutral-400;        // "Sichere Zahlung" (AA üstü)
+$vape-footer-pay-title-size:     $vape-text-xs;
+$vape-footer-pay-title-tracking: $vape-tracking-wide;
+$vape-footer-pay-chip-bg:        $vape-neutral-white;      // açık çip zemin (logo okunurluğu)
+$vape-footer-pay-chip-radius:    $vape-radius-sm;
+$vape-footer-pay-chip-h:         30px;                     // sabit çip yüksekliği
+$vape-footer-pay-chip-pad-x:     $vape-space-2;
+$vape-footer-pay-logo-h:         18px;                     // çip içi logo yüksekliği

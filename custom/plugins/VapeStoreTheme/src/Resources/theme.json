@@ -496,6 +496,78 @@
           "en-GB": "Full URL. Leave empty to hide the icon."
         },
         "scss": false
+      },
+      "footerPayVisa": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "footer",
+        "order": 300,
+        "label": {
+          "de-DE": "Visa-Logo anzeigen",
+          "en-GB": "Show Visa logo"
+        },
+        "scss": false
+      },
+      "footerPayMastercard": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "footer",
+        "order": 310,
+        "label": {
+          "de-DE": "Mastercard-Logo anzeigen",
+          "en-GB": "Show Mastercard logo"
+        },
+        "scss": false
+      },
+      "footerPayPaypal": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "footer",
+        "order": 320,
+        "label": {
+          "de-DE": "PayPal-Logo anzeigen",
+          "en-GB": "Show PayPal logo"
+        },
+        "scss": false
+      },
+      "footerPayKlarna": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "footer",
+        "order": 330,
+        "label": {
+          "de-DE": "Klarna-Logo anzeigen",
+          "en-GB": "Show Klarna logo"
+        },
+        "scss": false
+      },
+      "footerPaySepa": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "footer",
+        "order": 340,
+        "label": {
+          "de-DE": "SEPA-/Lastschrift-Logo anzeigen",
+          "en-GB": "Show SEPA / direct debit logo"
+        },
+        "scss": false
+      },
+      "footerShipDhl": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "footer",
+        "order": 350,
+        "label": {
+          "de-DE": "DHL-Logo anzeigen",
+          "en-GB": "Show DHL logo"
+        },
+        "scss": false
       }
     }
   }
