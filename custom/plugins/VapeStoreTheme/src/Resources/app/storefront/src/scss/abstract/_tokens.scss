@@ -328,6 +328,17 @@ $vape-pcard-price-weight:     $vape-weight-bold;
 $vape-pcard-listprice-color:  $vape-text-muted;                  // çizili eski fiyat
 $vape-pcard-listprice-size:   $vape-text-xs;
 $vape-pcard-saved-bg:         $vape-brand-subtle;                // "%X saved" hafif kırmızı chip
+
+// ---- Ürün kartı: MOBİL ölçek (<576px, 2 sütun) ----
+// PLP mobilde 2 sütuna geçtiği için kart ~180px'e düşüyor. Masaüstü tipografisi
+// (16px isim / 18px fiyat / 16px pad) bu genişlikte kartı şişiriyor ve isim
+// 2 satıra sığmıyordu. Ölçek küçültülür, oranlar korunur.
+$vape-pcard-body-pad-mobile:  $vape-space-3;                     // 12px
+$vape-pcard-name-size-mobile: $vape-text-sm;                     // 14px
+$vape-pcard-price-size-mobile: $vape-text-md;                    // 16px
+$vape-pcard-cta-height-mobile: 36px;                             // dokunma hedefi ≥36px korunur
+$vape-pcard-image-inset-mobile: $vape-space-2;                   // 8px — dar kartta görsele yer aç
+$vape-pcard-price-min-h-mobile: 40px;                            // fiyat bloğu rezervi (küçük ölçek)
 $vape-pcard-saved-fg:         $vape-brand-active;                // koyu kırmızı — AA kontrast
 $vape-pcard-saved-size:       $vape-text-2xs;
 
@@ -1648,7 +1659,8 @@ $vape-pdp-reviews-link-size:    $vape-text-sm;
 // Kırmızı SADECE aktif sekme alt çizgisi + aktif sekme metni. Gövde tamamen nötr.
 
 // ---------- sekme bloğu kabuğu ----------
-$vape-pdp-tabs-mt:              $vape-space-16;      // buy-box ↔ sekme bloğu ayrımı (64px)
+$vape-pdp-tabs-mt:              $vape-space-16;      // ≥md buy-box ↔ sekme bloğu (64px)
+$vape-pdp-tabs-mt-mobile:       $vape-space-8;       // <md (32px) — dar ekranda dikey alan pahalı
 $vape-pdp-tabs-bg:              $vape-neutral-white;
 $vape-pdp-tabs-border:          $vape-border-subtle;
 $vape-pdp-tabs-radius:          $vape-radius-lg;     // galeri/kart diliyle tutarlı

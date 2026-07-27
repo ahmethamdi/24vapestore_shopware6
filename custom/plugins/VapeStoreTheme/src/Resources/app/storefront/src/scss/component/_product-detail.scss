@@ -475,8 +475,13 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
 .is-ctl-product {
 
     // ---- Bloğu buy-box'tan AYIR (asıl "dibe yapışmış" şikâyeti) ----
+    // Mobilde 64px fazla; dar ekranda dikey alan pahalı.
     .product-detail-tabs {
-        margin-top: $vape-pdp-tabs-mt;
+        margin-top: $vape-pdp-tabs-mt-mobile;
+
+        @media (min-width: 768px) {
+            margin-top: $vape-pdp-tabs-mt;
+        }
     }
 
     // ---- Kabuk: galeri/kart diliyle tutarlı yüzey ----
@@ -488,83 +493,92 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
         overflow: hidden;   // radius'un köşelerde kesmesi için
     }
 
-    // ---- Sekme navigasyonu: alt-çizgili modern çubuk ----
-    .product-detail-tab-navigation {
-        background-color: $vape-pdp-tabnav-bg;
-        border-bottom: 1px solid $vape-pdp-tabnav-border;
-        padding: 0 $vape-pdp-tabnav-pad-x;
-        border-radius: 0;
+    // ---- Sekme navigasyonu ----
+    // ⚠️ TÜM sekme ÇUBUĞU stilleri ≥md ile SINIRLI.
+    // Core <md'de sekmeleri çubuk DEĞİL, yığılmış akordeon listesi olarak basar:
+    // her sekme tam genişlikte `display:flex`, içinde açıklama ÖNİZLEME satırı ve
+    // sağda ">" ikonu; tıklayınca offcanvas açılır. Bu stiller breakpoint'siz
+    // yazılınca mobilde `inline-flex` + `nowrap` önizleme metnini ekrandan
+    // taşırıyor ve kırmızı alt çizgi sağa taşıyordu. Mobilde core'un kendi
+    // deseni DOKUNULMADAN bırakılır.
+    @media (min-width: 768px) {
+        .product-detail-tab-navigation {
+            background-color: $vape-pdp-tabnav-bg;
+            border-bottom: 1px solid $vape-pdp-tabnav-border;
+            padding: 0 $vape-pdp-tabnav-pad-x;
+            border-radius: 0;
 
-        @media (min-width: 992px) {
-            padding: 0 $vape-pdp-tabnav-pad-x-lg;
-        }
-    }
-
-    .product-detail-tab-navigation-list {
-        border-bottom: 0;          // Bootstrap .nav-tabs alt çizgisini kaldır
-        gap: $vape-pdp-tabnav-gap;
-        flex-wrap: nowrap;
-        overflow-x: auto;          // dar ekranda sekmeler yatay kaysın
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar { display: none; }
-    }
-
-    .product-detail-tab-navigation-link {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        padding: $vape-pdp-tab-pad-y $vape-pdp-tab-pad-x;
-        border: 0;
-        border-radius: 0;
-        background: none;
-        white-space: nowrap;
-        font-size: $vape-pdp-tab-size;
-        font-weight: $vape-pdp-tab-weight;
-        color: $vape-pdp-tab-color;
-        transition: color $vape-duration-fast $vape-ease-out;
-
-        // Aktif alt çizgi — kırmızı. Pseudo-element ile; hover'da renk
-        // değişiminde layout kaymaz (border kullanmıyoruz).
-        &::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -1px;                  // çubuğun alt hattının üstüne otur
-            height: $vape-pdp-tab-underline-h;
-            background-color: $vape-pdp-tab-underline;
-            border-radius: $vape-radius-pill $vape-radius-pill 0 0;
-            opacity: 0;
-            transition: opacity $vape-duration-fast $vape-ease-out;
-        }
-
-        &:hover,
-        &:focus {
-            border: 0;
-            background: none;
-            color: $vape-pdp-tab-color-hover;
-        }
-
-        &.active {
-            background: none;
-            border: 0;
-            color: $vape-pdp-tab-color-active;
-
-            &::after {
-                opacity: 1;
+            @media (min-width: 992px) {
+                padding: 0 $vape-pdp-tabnav-pad-x-lg;
             }
         }
 
-        &:focus-visible {
-            outline: 2px solid $vape-brand;
-            outline-offset: 2px;
-        }
-    }
+        .product-detail-tab-navigation-list {
+            border-bottom: 0;          // Bootstrap .nav-tabs alt çizgisini kaldır
+            gap: $vape-pdp-tabnav-gap;
+            flex-wrap: nowrap;
+            overflow-x: auto;          // dar ekranda sekmeler yatay kaysın
+            scrollbar-width: none;
 
-    // Core sekme başlığındaki ">" ikonu ve açıklama önizlemesi masaüstünde
-    // gereksiz (offcanvas/mobil akış için var) — düz sekme çubuğunda gizle.
-    @media (min-width: 768px) {
+            &::-webkit-scrollbar { display: none; }
+        }
+
+        .product-detail-tab-navigation-link {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            padding: $vape-pdp-tab-pad-y $vape-pdp-tab-pad-x;
+            border: 0;
+            border-radius: 0;
+            background: none;
+            white-space: nowrap;
+            font-size: $vape-pdp-tab-size;
+            font-weight: $vape-pdp-tab-weight;
+            color: $vape-pdp-tab-color;
+            transition: color $vape-duration-fast $vape-ease-out;
+
+            // Aktif alt çizgi — kırmızı. Pseudo-element ile; hover'da renk
+            // değişiminde layout kaymaz (border kullanmıyoruz).
+            &::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -1px;                  // çubuğun alt hattının üstüne otur
+                height: $vape-pdp-tab-underline-h;
+                background-color: $vape-pdp-tab-underline;
+                border-radius: $vape-radius-pill $vape-radius-pill 0 0;
+                opacity: 0;
+                transition: opacity $vape-duration-fast $vape-ease-out;
+            }
+
+            &:hover,
+            &:focus {
+                border: 0;
+                background: none;
+                color: $vape-pdp-tab-color-hover;
+            }
+
+            &.active {
+                background: none;
+                border: 0;
+                color: $vape-pdp-tab-color-active;
+
+                &::after {
+                    opacity: 1;
+                }
+            }
+
+            &:focus-visible {
+                outline: 2px solid $vape-brand;
+                outline-offset: 2px;
+            }
+        }
+
+        // Core sekme başlığındaki ">" ikonu ve açıklama önizlemesi düz sekme
+        // çubuğunda gereksiz (mobil akordeon akışı için var) — ≥md'de gizle.
         .product-detail-tab-navigation-icon,
         .product-detail-tab-preview {
             display: none;

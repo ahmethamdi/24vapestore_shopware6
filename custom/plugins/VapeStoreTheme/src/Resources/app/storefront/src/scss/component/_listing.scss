@@ -481,10 +481,15 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
     }
 
     .cms-listing-col {
-        // mobil (<576): tek sütun (core col-12 kalır — dokunma)
+        // mobil (<576): 2'li. Core col-12 (tek sütun) bırakılmıştı ama 390px
+        // telefonda bu ürün başına neredeyse tam ekran demek → 4000 SKU'lu
+        // katalogda tarama imkânsız. Mobil e-ticaret standardı (ve aboutyou
+        // referansı) 2 sütun; kart 1:1 görselle bu genişlikte rahat okunuyor.
+        flex: 0 0 auto;
+        width: 50%;
+
         // ≥576 (sm): 2'li
         @media (min-width: 576px) {
-            flex: 0 0 auto;
             width: 50%;
         }
 

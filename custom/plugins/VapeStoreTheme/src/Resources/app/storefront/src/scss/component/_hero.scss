@@ -287,6 +287,18 @@ Tüm değerler token'lardan gelir; magic hex/px yok.
 // sonra kendi konumuna göre ortalar. calc ile scrollbar payı hesaba katılır.
 // ==================================================
 
+// ⚠️ Bu satırı taşıyan Bootstrap `.row`'un NEGATİF gutter margin'i var
+// (`--bs-gutter-x: 40px` → `margin-inline: -20px`). `calc(50% - 50vw)` ortalaması
+// "kapsayıcının kenarı = viewport kenarı" varsayar; gutter bu varsayımı bozunca
+// hero her iki yandan 20px TAŞIYORDU (mobilde ölçüldü: -20px … 410px, vw 390).
+// Metin iki yandan kırpılıyor, ok butonları ekran dışına çıkıyordu.
+// Doğru çözüm vw matematiğini büyütmek değil, gutter'ı bu satırda sıfırlamak.
+.cms-block-container-row:has(> .vape-hero-block) {
+    --bs-gutter-x: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .vape-hero-block {
     padding-left: 0;
     padding-right: 0;
