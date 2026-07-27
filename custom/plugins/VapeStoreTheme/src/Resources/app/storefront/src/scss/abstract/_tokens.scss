@@ -431,16 +431,19 @@ $vape-header-badge-offset:      -6px;
 $vape-header-sticky-height:     67px;
 
 // ---------- Mega menü kategori görseli ----------
-$vape-flyout-thumb-size:      48px;   // ≥1200px
-$vape-flyout-thumb-size-sm:   40px;
-$vape-flyout-thumb-gap:       $vape-space-3;
+// Modernleştirme (2026-07-27): daireler çok iriydi ve baş-harf rozetleri
+// koyu/dominanttı → menü "büyük ve dağınık" görünüyordu. Görsel çıpa kalsın
+// ama sakin/ince olsun: küçük thumb + nötr gri fallback.
+$vape-flyout-thumb-size:      28px;   // ≥1200px (eski 48 → küçült)
+$vape-flyout-thumb-size-sm:   24px;   // (eski 40)
+$vape-flyout-thumb-gap:       $vape-space-2;   // (eski space-3)
 $vape-flyout-thumb-bg:        $vape-neutral-100;
 $vape-flyout-thumb-ring:      $vape-neutral-200;
 $vape-flyout-thumb-ring-hover: $vape-brand;
-// Görseli olmayan kategoride baş harf rozeti — koyu daire, beyaz harf
-$vape-flyout-fallback-bg:     $vape-neutral-900;
-$vape-flyout-fallback-fg:     $vape-neutral-white;
-$vape-flyout-head-gap:        $vape-space-3;
+// Görseli olmayan kategoride baş harf rozeti — SAKİN nötr (koyu daire DEĞİL)
+$vape-flyout-fallback-bg:     $vape-neutral-100;
+$vape-flyout-fallback-fg:     $vape-neutral-500;
+$vape-flyout-head-gap:        $vape-space-2;
 
 // ==================================================
 // 12b. HERO SLIDER (vape-hero CMS element)

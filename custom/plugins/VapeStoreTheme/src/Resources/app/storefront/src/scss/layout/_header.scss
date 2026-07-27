@@ -645,7 +645,7 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     border-radius: 0;
     box-shadow: $vape-shadow-lg;
     background-color: $vape-bg-page;
-    padding: $vape-space-6 $vape-space-4 !important;
+    padding: $vape-space-5 $vape-space-4 !important;   // 24→20: daha sıkı üst/alt
 
     // Mega menü sayfa içeriğinin üstünde kalmalı. Bootstrap varsayılanı
     // z-dropdown (1000) idi; PLP'nin sticky sıralama barı (z-sticky 1020)
@@ -680,9 +680,9 @@ $vape-usp-bar-color: $vape-neutral-white !default;
 
 .navigation-flyout-categories {
     &.is-level-0 {
-        // Görsel eklendikten sonra satırlar birbirine değiyordu; 24px
-        // yuvarlak görsellerin nefes almasına yetiyor.
-        row-gap: $vape-space-6;
+        // Küçük thumb'larla (28px) sütunlar sıkışabilir; 16px yeterli nefes,
+        // menü kompakt kalır (eski 24px fazla ferahtı).
+        row-gap: $vape-space-4;
     }
 }
 
@@ -756,7 +756,7 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     align-items: center;
     gap: $vape-flyout-thumb-gap;
     margin-bottom: $vape-flyout-head-gap;
-    padding-bottom: $vape-space-2;
+    padding-bottom: $vape-space-1;   // 8→4: başlık-liste arası sıkı
     border-bottom: 1px solid $vape-border-subtle;
     color: $vape-text-heading;
     font-size: $vape-text-sm;
@@ -822,13 +822,13 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         height: 100%;
         background-color: $vape-flyout-fallback-bg;
         color: $vape-flyout-fallback-fg;
-        font-size: $vape-text-md;
+        font-size: $vape-text-2xs;
         font-weight: $vape-weight-bold;
         line-height: 1;
         text-transform: uppercase;
 
         @media (min-width: 1200px) {
-            font-size: $vape-text-lg;
+            font-size: $vape-text-xs;
         }
     }
 }
