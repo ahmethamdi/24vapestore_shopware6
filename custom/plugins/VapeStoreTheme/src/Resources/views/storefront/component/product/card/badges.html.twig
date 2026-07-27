@@ -1,0 +1,36 @@
+{% sw_extends '@Storefront/storefront/component/product/card/badges.html.twig' %}
+
+{#
+    Ürün kartı rozetleri — 24VapeStore.
+
+    Core badges'in MINIMAL override'ı. Amaç:
+      - İndirim rozetinde çıplak "%" yerine GERÇEK yüzdeyi göster ("-20%").
+      - Top / New rozetlerinin markup'ı korunur; renkleri _product-card.scss'te
+        marka paletine çekilir (core'un bg-warning/bg-success'i override edilir).
+
+    Rozet metinleri core snippet'lerinden gelir (listing.boxLabel*), yüzde de
+    core'un price.listPrice.percentage değerinden — twig'de hardcode yok.
+    Core mantığı (displayParent / hasRange / listPrice koşulları) AYNEN korunur.
+#}
+
+{% block component_product_badges_discount %}
+    {% set price = product.calculatedPrice %}
+    {% if product.calculatedPrices.count > 0 %}
+        {% set price = product.calculatedPrices.last %}
+    {% endif %}
+
+    {% set listPrice = price.listPrice.percentage > 0 %}
+    {% set hasRange = product.calculatedPrices.count > 1 %}
+
+    {% set displayParent = product.variantListingConfig.displayParent and product.parentId === null %}
+    {% if displayParent %}
+        {% set displayFromVariants = displayParent and price.unitPrice !== product.calculatedCheapestPrice.unitPrice %}
+    {% endif %}
+
+    {% if listPrice and not hasRange and not displayFromVariants %}
+        <span class="badge badge-discount">
+            <span class="visually-hidden">{{ 'listing.boxLabelDiscount'|trans|sw_sanitize }}</span>
+            <span aria-hidden="true">&minus;{{ price.listPrice.percentage|round }}&#37;</span>
+        </span>
+    {% endif %}
+{% endblock %}

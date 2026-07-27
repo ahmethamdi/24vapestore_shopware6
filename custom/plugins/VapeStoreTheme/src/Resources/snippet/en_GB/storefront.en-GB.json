@@ -2,6 +2,10 @@
   "header": {
     "searchPlaceholder": "Search liquids, pods, devices …"
   },
+  "listing": {
+    "boxLabelTopseller": "Top",
+    "boxLabelNew": "New"
+  },
   "footer": {
     "vapeNewsletterHeadline": "Subscribe to our newsletter",
     "vapeNewsletterText": "Sign up now and get a 10% voucher on your first order.",

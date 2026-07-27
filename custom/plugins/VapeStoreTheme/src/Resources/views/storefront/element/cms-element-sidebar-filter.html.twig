@@ -1,0 +1,74 @@
+{% sw_extends '@Storefront/storefront/element/cms-element-sidebar-filter.html.twig' %}
+
+{#
+    24VapeStore — PLP sol sidebar filtre düzeni.
+
+    Core davranış: `sidebar` değişkeni `block.sectionPosition == 'sidebar'` ile
+    türetilir. Kategori CMS sayfamızda sidebar-filter bloğu `main` pozisyonda
+    olduğu için core `sidebar=false` verir → filtreler yatay DROPDOWN olarak
+    render olur. Biz aboutyou tarzı DİKEY AKORDEON istiyoruz.
+
+    Bu yüzden `element_sidebar_filter` bloğunu ezip `sidebar` değerini zorla
+    `true` yapıyoruz. Böylece filter-panel item'ları `d-grid` + `.collapse`
+    (akordeon) olarak çıkar. Yan yana / tek sütun yerleşimi ve responsive
+    (mobilde offcanvas) davranışı SCSS + core'un kendi kırılım kurallarıyla
+    (`media-breakpoint-down(lg)`) yürür — core storefront JS'ine dokunulmaz.
+
+    NOT: Tüm blok yeniden yazıldı (parent() ile `sidebar`'ı sonradan değiştirmek
+    mümkün değil, değişken parent gövdesinin içinde set ediliyor). Core template
+    değişirse bu dosya gözden geçirilmeli — 6.7 upgrade kontrol noktası.
+#}
+{% block element_sidebar_filter %}
+    {# Use values from cms data if context is a cmsPage, otherwise `listing` and `sidebar` must be set manually #}
+    {% if cmsPage is defined %}
+        {% set config = element.fieldConfig.elements %}
+        {% set slot = cmsPage.getFirstElementOfType('product-listing') %}
+        {% set listing = slot.data.listing %}
+
+        {# 24VapeStore: SADECE CMS bağlamında (kategori PLP) `main` pozisyonda
+           olsa bile dikey akordeon sidebar dili zorla. Arama sayfası bu
+           elementi `cmsPage` OLMADAN + `sidebar: false` ile dahil ediyor
+           (search-pagelet.html.twig) — orada yatay dropdown korunsun diye
+           gelen `sidebar` değerine dokunmuyoruz. #}
+        {% set sidebar = true %}
+    {% endif %}
+
+    {% if listing.aggregations.elements|length > 0 %}
+        <div class="cms-element-sidebar-filter is--vape-plp-filter">
+            {% block element_product_listing_filter_button %}
+                <button
+                    class="btn btn-outline-primary filter-panel-wrapper-toggle"
+                    type="button"
+                    data-off-canvas-filter="true"
+                    aria-haspopup="dialog"
+                >
+                    {% block element_product_listing_filter_button_icon %}
+                        {% sw_icon 'sliders-horizontal' style { size: 'sm' } %}
+                    {% endblock %}
+
+                    {{ 'listing.filterTitleText'|trans }}
+                </button>
+            {% endblock %}
+
+            {% block element_sidebar_filter_panel %}
+                <div
+                    id="filter-panel-wrapper"
+                    class="filter-panel-wrapper"
+                    data-off-canvas-filter-content="true"
+                >
+                    {% block element_sidebar_filter_panel_heading %}
+                        <p class="vape-plp-filter-heading filter-panel-inline-title" aria-hidden="true">
+                            {{ 'listing.filterTitleText'|trans }}
+                        </p>
+                    {% endblock %}
+
+                    {% sw_include '@Storefront/storefront/component/listing/filter-panel.html.twig' with {
+                        listing: listing,
+                        sidebar: sidebar,
+                        ariaLiveUpdates: true
+                    } %}
+                </div>
+            {% endblock %}
+        </div>
+    {% endif %}
+{% endblock %}

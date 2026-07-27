@@ -1,19 +1,18 @@
 /*
 Ürün kartı — storefront (core product-box'ın yeniden biçimlenmesi).
 
-Kartın MARKUP'ı core box-standard'dır (bizim minimal twig override'ımızla:
-boş açıklama/varyant kaldırıldı, marka eyebrow eklendi). Burada yalnızca görsel
-dil: 3:4 dikey görsel, aboutyou anatomisi, koyu CTA.
+Kartın MARKUP'ı core box-standard'dır (bizim minimal twig override'larımızla:
+boş açıklama/varyant kaldırıldı, marka eyebrow eklendi, indirim rozetine gerçek
+yüzde basıldı). Burada yalnızca görsel dil.
 
-Neden core'un sabit yükseklikleri sorundu:
-  - .product-image-wrapper sabit 200px → placeholder o alanı dolduramayınca boşluk
-  - .product-description sabit 4.5rem → açıklama boş olsa da yer kaplıyor
-Twig'de ölü alanlar temizlendi; burada görseli aspect-ratio'ya, ismi satır
-kırpmaya, kartı yumuşak gölgeye bağlıyoruz.
+Görsel: 1:1 kare, iç pad ile ürün alanı doldurur, beyaz zemin. Hover'da görsel
+zoom (scale), kart yükselir + belirgin gölge; CTA hover'da KIRMIZI (tek istisna).
+Rozetler sol üstte (discount kırmızı, Top koyu, New beyaz+kenar). İndirimli/
+indirimsiz kartlar fiyat bloğuna rezerve min-height ile aynı buton hizasında.
 
-Görsel dil: beyaz kart + ince kenar + yumuşak gölge, hover'da yükselir.
-Kırmızı yalnızca indirim fiyatı, wishlist hover ve rozet'te. CTA KOYU (altın kural).
-Tüm değerler token — magic px/hex yok.
+Kırmızı yalnızca: indirim fiyatı/rozet/"saved" chip, wishlist hover, CTA hover.
+CTA dolgusu normalde KOYU (altın kural). Tüm değerler token — magic px/hex yok.
+prefers-reduced-motion altında zoom/lift kapanır (erişilebilirlik).
 */
 
 .product-box.box-standard {
@@ -30,7 +29,14 @@ Tüm değerler token — magic px/hex yok.
     &:hover {
         border-color: $vape-border-strong;
         box-shadow: $vape-pcard-shadow-hover;
-        transform: translateY(-2px);
+        transform: translateY($vape-pcard-lift);
+    }
+
+    // Klavye erişimi: kart içindeki stretched-link odaklanınca da hover görünümü
+    // (aksi halde fare kullanıcısı ile klavye kullanıcısı farklı deneyim yaşar).
+    &:focus-within {
+        border-color: $vape-border-strong;
+        box-shadow: $vape-pcard-shadow-hover;
     }
 
     // Bootstrap .card default kenar/gölgesini nötrle (biz yönetiyoruz)
@@ -53,12 +59,18 @@ Tüm değerler token — magic px/hex yok.
         height: auto;                              // core'un sabit 200px'ini iptal et
         flex: 0 0 auto;                            // core flex:1 0 180px → GROW iptal
         aspect-ratio: $vape-pcard-image-ratio;     // 1:1
+        // İç pad → ürün foto/placeholder alanı doldurur, kare içinde nefes payı
+        // kalır ama alttaki dev gri boşluk kapanır (madde 1). Zemin beyaz.
+        padding: $vape-pcard-image-inset;
         background-color: $vape-pcard-image-bg;
-        overflow: hidden;
+        overflow: hidden;                          // hover zoom taşmasın (madde 3a)
     }
 
-    // card-body flex column; info üstte toplanır, buton dibe (varsa)
+    // card-body flex column; kartın kalan yüksekliğini doldurur ki içindeki
+    // product-info yayılıp butonu (margin-top:auto) dibe itebilsin. Görsel
+    // sabit (aspect-ratio), gövde geri kalanı kaplar → tüm kartlar eşit hiza.
     .card-body {
+        flex: 1 1 auto;
         justify-content: flex-start;
     }
 
@@ -69,10 +81,41 @@ Tüm değerler token — magic px/hex yok.
         object-fit: contain;                       // vape kutusu kırpılmasın
         object-position: center;
         mix-blend-mode: multiply;                  // beyaz foto zemini karta karışsın
+        transition: transform $vape-duration-slow $vape-ease-out;
     }
 
     .product-image.is-cover {
         object-fit: cover;
+    }
+
+    // Hover görsel zoom (madde 3a) — wrapper overflow:hidden ile kırpılır.
+    // Placeholder da birlikte ölçeklenir ki his tutarlı olsun.
+    &:hover .product-image,
+    &:hover .product-image-placeholder,
+    &:focus-within .product-image,
+    &:focus-within .product-image-placeholder {
+        transform: scale($vape-pcard-image-zoom);
+    }
+
+    // Hareket azaltma tercihi — zoom/lift kapat (erişilebilirlik).
+    @media (prefers-reduced-motion: reduce) {
+        &,
+        .product-image,
+        .product-image-placeholder {
+            transition: none;
+        }
+
+        &:hover,
+        &:focus-within {
+            transform: none;
+        }
+
+        &:hover .product-image,
+        &:hover .product-image-placeholder,
+        &:focus-within .product-image,
+        &:focus-within .product-image-placeholder {
+            transform: none;
+        }
     }
 
     // Placeholder — foto yokken. Core devasa "fluid" ikon veriyordu;
@@ -83,6 +126,7 @@ Tüm değerler token — magic px/hex yok.
         justify-content: center;
         width: 100%;
         height: 100%;
+        transition: transform $vape-duration-slow $vape-ease-out;
 
         svg,
         .icon {
@@ -97,7 +141,7 @@ Tüm değerler token — magic px/hex yok.
     // Sakin yer tutucu — gerçek foto yokken sadece açık gri zemin + ince ikon.
     // Renkli harf YOK. Nötr, sessiz; gerçek görsel gelince zaten override olur.
     .product-image-placeholder--soft {
-        background-color: $vape-neutral-50;
+        background-color: transparent;   // wrapper zaten beyaz; gri kutu görünmesin
 
         svg,
         .icon {
@@ -115,34 +159,47 @@ Tüm değerler token — magic px/hex yok.
         position: absolute;
         top: $vape-space-2;
         right: $vape-space-2;
-        z-index: 2;
+        z-index: 3;                                // rozetlerin (z2) ve görselin üstünde
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
+        width: $vape-pcard-wish-size;
+        height: $vape-pcard-wish-size;
         border: none;
         border-radius: $vape-radius-pill;
         background-color: $vape-pcard-wish-bg;
         color: $vape-pcard-wish-fg;
         box-shadow: $vape-shadow-xs;
-        transition: color $vape-duration-fast $vape-ease-out;
+        transition:
+            color $vape-duration-fast $vape-ease-out,
+            background-color $vape-duration-fast $vape-ease-out,
+            transform $vape-duration-fast $vape-ease-out;
 
-        &:hover {
+        &:hover,
+        &:focus {
             color: $vape-pcard-wish-fg-hover;
+            background-color: $vape-pcard-wish-bg-hover;
+            transform: scale(1.08);
+        }
+
+        // Aktif (istek listesinde) durum core'da .product-wishlist-action-added
+        &.product-wishlist-action-added {
+            color: $vape-pcard-wish-fg-hover;      // dolu kalp kırmızı
         }
     }
 
     // ---------- metin gövdesi ----------
 
-    // product-info doğal yükseklikte — flex:1 ile YAYILMASIN (kartta isim-fiyat
-    // arası dev boşluğun ana sebebi buydu). İçerik üstte toplanır, buton hemen
-    // fiyatın altında. Kartlar arası ufak yükseklik farkı kabul edilir.
+    // product-info card-body'yi doldurur (flex:1). İçindeki eyebrow/isim/fiyat
+    // üstte toplanır; .product-action'daki margin-top:auto butonu DİBE iter →
+    // indirimli/indirimsiz tüm kartlarda "Add to cart" aynı y hizasında.
+    // (Eski dev boşluk sorunu artık fiyat bloğunun min-height rezervi +
+    //  görsel inset ile çözülüyor, flex:0 ile değil.)
     .product-info {
         display: flex;
         flex-direction: column;
         gap: $vape-space-2;
-        flex: 0 0 auto;
+        flex: 1 1 auto;
         padding: $vape-pcard-body-pad;
     }
 
@@ -187,12 +244,16 @@ Tüm değerler token — magic px/hex yok.
     }
 
     // Fiyat bloğu — core buna dev yükseklik veriyordu (176px ölçüldü) → kartta
-    // isim-fiyat arası kocaman boşluk. Tüm iç min-height/boşlukları ez, doğal yap.
+    // isim-fiyat arası kocaman boşluk. Tüm iç min-height/boşlukları ez.
+    // AMA (madde 2) indirimli/indirimsiz kartlar buton aynı y'de dursun diye
+    // fiyat bloğuna sabit min-height rezerve ediyoruz: indirimsiz kartta "eski
+    // fiyat + %X saved" satırı yoktur, boşluk yine de korunur → hizalar tutar.
     .product-price-info {
-        min-height: 0;
         margin-top: $vape-space-2;
+        min-height: $vape-pcard-price-min-height;
         display: flex;
         flex-direction: column;
+        justify-content: flex-end;                 // fiyat alt hizada; üstteki rezerv boş kalır
         gap: 2px;
     }
 
@@ -203,6 +264,45 @@ Tüm değerler token — magic px/hex yok.
         min-height: 0;
         margin: 0;
         line-height: $vape-leading-snug;
+    }
+
+    // Ana fiyat — nötr koyu, vurgulu (madde 4c)
+    .product-price {
+        font-size: $vape-pcard-price-size;
+        font-weight: $vape-pcard-price-weight;
+        color: $vape-pcard-price-color;
+    }
+
+    // İndirimli fiyat KIRMIZI (core .with-list-price = list price mevcut)
+    .product-price.with-list-price {
+        color: $vape-pcard-price-sale-color;
+    }
+
+    // Çizili eski fiyat — küçük gri, üstü çizili
+    .product-price .list-price {
+        display: inline-flex;
+        align-items: baseline;
+        gap: $vape-space-1;
+        margin-left: $vape-space-1;
+        font-size: $vape-pcard-listprice-size;
+        font-weight: $vape-weight-regular;
+        color: $vape-pcard-listprice-color;
+    }
+
+    .product-price .list-price-price {
+        text-decoration: line-through;
+    }
+
+    // "%X saved" — hafif kırmızı chip, koyu kırmızı metin (AA kontrast)
+    .product-price .list-price-percentage {
+        padding: 1px $vape-space-1;
+        border-radius: $vape-radius-xs;
+        background-color: $vape-pcard-saved-bg;
+        color: $vape-pcard-saved-fg;
+        font-size: $vape-pcard-saved-size;
+        font-weight: $vape-weight-semibold;
+        text-decoration: none;
+        white-space: nowrap;
     }
 
     // görünmez erişilebilirlik elemanları yer kaplamasın
@@ -244,10 +344,70 @@ Tüm değerler token — magic px/hex yok.
         line-height: 1;
         transition: background-color $vape-duration-fast $vape-ease-out;
 
+        // Hover/odak: koyu → KIRMIZI (madde 3c). Golden rule istisnası: dolgu
+        // normalde koyu, yalnız etkileşimde marka kırmızısına geçer.
         &:hover,
         &:focus {
             background-color: $vape-pcard-cta-bg-hover;
             color: $vape-pcard-cta-fg;
         }
+
+        &:active {
+            background-color: $vape-pcard-cta-bg-active;
+        }
+
+        // Görünür odak halkası — beyaz kart üzerinde kırmızı buton kenarında AA.
+        &:focus-visible {
+            outline: 2px solid $vape-brand-active;
+            outline-offset: 2px;
+        }
+    }
+
+    // ---------- rozet katmanı (madde 4) ----------
+    // Core badges.html.twig .product-badges içinde gelir. Renkleri marka paletine
+    // çekiyoruz: discount kırmızı, Top koyu, New beyaz+kenar. Bootstrap bg-*
+    // sınıfları twig override'ında kaldırıldı / burada ez.
+
+    .product-badges {
+        position: absolute;
+        top: $vape-pcard-badge-inset;
+        left: $vape-pcard-badge-inset;
+        z-index: 2;                                // görselin üstünde, wishlist'in (z3) altında
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $vape-pcard-badge-gap;
+        pointer-events: none;                      // stretched-link tıklanabilir kalsın
+    }
+
+    .product-badges .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: $vape-pcard-badge-pad;
+        border-radius: $vape-pcard-badge-radius;
+        font-size: $vape-pcard-badge-size;
+        font-weight: $vape-pcard-badge-weight;
+        line-height: 1;
+        letter-spacing: $vape-pcard-badge-tracking;
+        text-transform: uppercase;
+    }
+
+    // İndirim — kırmızı (gerçek yüzde twig'de basılıyor)
+    .product-badges .badge-discount {
+        background-color: $vape-pcard-badge-discount-bg;
+        color: $vape-pcard-badge-discount-fg;
+    }
+
+    // Topseller ("Top") — koyu (core bg-warning'i ez)
+    .product-badges .badge-topseller {
+        background-color: $vape-pcard-badge-top-bg;
+        color: $vape-pcard-badge-top-fg;
+    }
+
+    // Yeni ("New") — beyaz + koyu kenar (core bg-success'i ez)
+    .product-badges .badge-new {
+        background-color: $vape-pcard-badge-new-bg;
+        color: $vape-pcard-badge-new-fg;
+        box-shadow: inset 0 0 0 1px $vape-pcard-badge-new-border;
     }
 }

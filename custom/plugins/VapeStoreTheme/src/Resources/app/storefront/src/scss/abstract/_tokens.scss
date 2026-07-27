@@ -268,9 +268,9 @@ $vape-badge-radius:      0 $vape-radius-sm $vape-radius-sm 0;
 $vape-pcard-radius:           $vape-radius-lg;                    // kartlarla tutarlı yumuşak köşe
 $vape-pcard-border:           $vape-border-subtle;               // beyazı beyazdan ayır
 $vape-pcard-shadow:           $vape-shadow-sm;                   // düz "gri kutu" hissini kır
-$vape-pcard-shadow-hover:     $vape-shadow-md;
+$vape-pcard-shadow-hover:     $vape-shadow-lg;                   // md → lg: hover net hissedilsin
 $vape-pcard-bg:               $vape-neutral-white;
-$vape-pcard-image-bg:         $vape-neutral-50;                  // görsel/placeholder zemini
+$vape-pcard-image-bg:         $vape-neutral-white;               // zemin beyaz (SVG marka temizlendi)
 $vape-pcard-image-ratio:      1 / 1;   // kare — geniş 4'lü kartta dengeli, kart kısalır
 $vape-pcard-body-pad:         $vape-space-4;                     // 16px iç boşluk
 $vape-pcard-body-gap:         $vape-space-1;                     // satırlar arası ritim
@@ -290,7 +290,8 @@ $vape-pcard-name-leading:     $vape-leading-snug;                // 1.3
 
 // Sepete ekle — KOYU dolgu (altın kural: kırmızı dolgulu CTA yok)
 $vape-pcard-cta-bg:           $vape-neutral-900;
-$vape-pcard-cta-bg-hover:     $vape-neutral-800;
+$vape-pcard-cta-bg-hover:     $vape-brand;                       // hover'da KIRMIZI vurgu (tek istisna)
+$vape-pcard-cta-bg-active:    $vape-brand-active;
 $vape-pcard-cta-fg:           $vape-neutral-white;
 $vape-pcard-cta-height:       40px;
 $vape-pcard-cta-radius:       $vape-radius-md;
@@ -299,6 +300,49 @@ $vape-pcard-cta-radius:       $vape-radius-md;
 $vape-pcard-wish-bg:          rgba(255, 255, 255, 0.92);
 $vape-pcard-wish-fg:          $vape-neutral-700;
 $vape-pcard-wish-fg-hover:    $vape-brand;
+
+// ---- Ürün kartı: iyileştirme paketi (görsel kompaktlığı, hover, rozet, fiyat) ----
+
+// Görsel: kare oranı korunur ama ürün foto/placeholder içeriden pad ile ölçeklenir
+// → ürün alanı doldurur, alttaki dev gri boşluk kapanır. Zemin beyaz kalır.
+$vape-pcard-image-inset:      $vape-space-4;                     // görselin iç nefes payı (16px)
+$vape-pcard-image-zoom:       1.04;                              // hover görsel yakınlaştırma
+
+// Hover: daha belirgin kalkış (shadow-hover token yukarıda lg'ye yükseltildi)
+$vape-pcard-lift:             -4px;
+
+// Fiyat bloğu: indirim/indirimsiz kartlar aynı y'de kalsın diye rezerve yükseklik.
+// İndirimli kartta "eski fiyat + %X saved" satırı; indirimsizde boş ama yer korunur.
+$vape-pcard-price-min-height: 44px;                              // fiyat + list-price satırı
+$vape-pcard-price-color:      $vape-price;                       // nötr koyu (indirimsiz)
+$vape-pcard-price-sale-color: $vape-price-sale;                  // kırmızı (indirimli)
+$vape-pcard-price-size:       $vape-text-lg;                     // 18px — fiyat vurgusu
+$vape-pcard-price-weight:     $vape-weight-bold;
+$vape-pcard-listprice-color:  $vape-text-muted;                  // çizili eski fiyat
+$vape-pcard-listprice-size:   $vape-text-xs;
+$vape-pcard-saved-bg:         $vape-brand-subtle;                // "%X saved" hafif kırmızı chip
+$vape-pcard-saved-fg:         $vape-brand-active;                // koyu kırmızı — AA kontrast
+$vape-pcard-saved-size:       $vape-text-2xs;
+
+// Rozetler — sol üst, kart görseli üzerinde. Discount kırmızı, Top koyu, New koyu-outline.
+$vape-pcard-badge-inset:      $vape-space-2;                     // görselin sol/üst kenarından
+$vape-pcard-badge-gap:        $vape-space-1;                     // rozetler arası
+$vape-pcard-badge-radius:     $vape-radius-sm;
+$vape-pcard-badge-size:       $vape-text-2xs;
+$vape-pcard-badge-weight:     $vape-weight-bold;
+$vape-pcard-badge-pad:        3px $vape-space-2;
+$vape-pcard-badge-tracking:   $vape-tracking-wide;
+$vape-pcard-badge-discount-bg: $vape-badge-sale-bg;              // kırmızı
+$vape-pcard-badge-discount-fg: $vape-badge-sale-fg;
+$vape-pcard-badge-top-bg:      $vape-neutral-900;                // koyu (bg-warning yerine)
+$vape-pcard-badge-top-fg:      $vape-neutral-white;
+$vape-pcard-badge-new-bg:      $vape-neutral-white;              // beyaz + koyu kenar (bg-success yerine)
+$vape-pcard-badge-new-fg:      $vape-neutral-900;
+$vape-pcard-badge-new-border:  $vape-neutral-300;
+
+// Wishlist kalp: hover'da görünürlük/animasyon iyileştirme
+$vape-pcard-wish-size:         36px;
+$vape-pcard-wish-bg-hover:     $vape-neutral-white;
 
 // Buton — ölçüldü
 $vape-btn-height:    48px;
@@ -1279,3 +1323,70 @@ $vape-footer-pay-chip-radius:    $vape-radius-sm;
 $vape-footer-pay-chip-h:         30px;                     // sabit çip yüksekliği
 $vape-footer-pay-chip-pad-x:     $vape-space-2;
 $vape-footer-pay-logo-h:         18px;                     // çip içi logo yüksekliği
+
+// ==================================================
+// 25. KATEGORİ SAYFASI / PLP — SOL SIDEBAR FİLTRE DÜZENİ
+//
+// aboutyou tarzı klasik PLP: solda dikey filtre sütunu (akordeon gruplar),
+// sağda ürün grid'i + üstte sıralama/sonuç barı. Core CMS'te sidebar-filter
+// ve product-listing AYRI bloklar (kategori CMS sayfasında `main` pozisyonda,
+// üst üste). Bu token'lar SCSS'te bu iki kardeş bloğu ≥lg'de flex ile yan yana
+// dizmek + filtre panelini beyaz-zemin/kırmızı-vurgu diline sokmak içindir.
+//
+// Görsel dil: beyaz zemin, nötr metin/kenarlık. Kırmızı SADECE: aktif filtre
+// chip'i, açık akordeon başlığı, odak halkası. Filtre item'ları core'un
+// `is--sidebar` akordeon markup'ını kullanır (dikey `.collapse`).
+//
+// Responsive: <lg'de sol sütun gizlenir, core'un "Filter" butonu + offcanvas
+// mekanizması devralır (core `_filter-panel.scss` media-breakpoint-down(lg)).
+// Sağ grid kolon sayısı burada override edilir (sidebar yer kapladığı için 3'lü).
+// ==================================================
+
+// ---------- iki sütun düzeni (≥lg) ----------
+$vape-plp-sidebar-width:        264px;              // sol filtre sütunu sabit genişliği (≥lg)
+$vape-plp-sidebar-width-xxl:    288px;              // ≥1400px biraz daha geniş
+$vape-plp-col-gap:              $vape-space-8;       // 32px — sidebar ↔ grid arası
+$vape-plp-col-gap-xxl:          $vape-space-10;      // 40px ≥1400px
+
+// ---------- sidebar filtre paneli ----------
+$vape-plp-filter-sticky-top:    $vape-space-4;       // sticky sidebar üst boşluğu
+$vape-plp-filter-heading-size:  $vape-text-sm;       // "Filter" iç başlığı (14px)
+$vape-plp-filter-heading-weight: $vape-weight-bold;
+$vape-plp-filter-heading-color: $vape-text-heading;
+$vape-plp-filter-heading-tracking: $vape-tracking-wide;
+$vape-plp-filter-heading-mb:    $vape-space-4;
+$vape-plp-filter-heading-pb:    $vape-space-3;
+$vape-plp-filter-heading-border: $vape-border-subtle;
+
+// Akordeon grup (her filtre: manufacturer, price, rating, properties)
+$vape-plp-group-border:         $vape-border-subtle;         // gruplar arası ince ayırıcı
+$vape-plp-group-pad-y:          $vape-space-2;               // grup dikey ritmi
+$vape-plp-group-toggle-size:    $vape-text-md;               // grup başlığı (16px)
+$vape-plp-group-toggle-weight:  $vape-weight-semibold;
+$vape-plp-group-toggle-color:   $vape-text-heading;
+$vape-plp-group-toggle-pad-y:   $vape-space-3;               // dokunmatik hedef
+$vape-plp-group-toggle-open-color: $vape-brand;              // açık grup başlığı → kırmızı vurgu
+
+// Akordeon içi seçenek listesi
+$vape-plp-option-pad-x:         $vape-space-1;
+$vape-plp-option-max-height:    280px;                       // uzun listelerde kaydır
+$vape-plp-option-color:         $vape-text-primary;
+
+// Aktif filtre chip'leri (seçili filtreler şeridi)
+$vape-plp-active-gap:           $vape-space-2;
+$vape-plp-active-mb:            $vape-space-4;
+
+// ---------- sağ sütun: sıralama / sonuç barı ----------
+$vape-plp-actions-mb:           $vape-space-5;               // bar ↔ grid arası
+$vape-plp-actions-pad-y:        $vape-space-3;
+$vape-plp-actions-border:       $vape-border-subtle;         // barın alt çizgisi
+
+// ---------- ürün grid'i (sağ sütun) ----------
+// Sidebar yer kapladığı için varsayılan 4→3'e düşer; çok geniş ekranda 4.
+// mobil 2, md 2, lg 3, xxl 4. Core `.cms-listing-col` Bootstrap col sınıfları
+// bu değerlerle _listing.scss'te override edilir.
+$vape-plp-grid-gap:             $vape-space-5;               // 20px — kartlar arası (mobil)
+$vape-plp-grid-gap-md:          $vape-space-6;               // 24px ≥768px
+
+// ---------- mobil "Filter" tetik butonu ----------
+$vape-plp-mobile-btn-mb:        $vape-space-4;               // buton ↔ grid arası (mobil)

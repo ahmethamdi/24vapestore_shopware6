@@ -2,6 +2,10 @@
   "header": {
     "searchPlaceholder": "Liquids, Pods, Geräte suchen …"
   },
+  "listing": {
+    "boxLabelTopseller": "Top",
+    "boxLabelNew": "Neu"
+  },
   "footer": {
     "vapeNewsletterHeadline": "Newsletter abonnieren",
     "vapeNewsletterText": "Jetzt anmelden und 10 % Gutschein auf die erste Bestellung sichern.",

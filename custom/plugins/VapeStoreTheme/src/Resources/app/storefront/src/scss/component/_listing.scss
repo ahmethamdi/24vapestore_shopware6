@@ -1,0 +1,260 @@
+/*
+Kategori sayfası / PLP — sol sidebar filtre düzeni
+==================================================
+aboutyou tarzı klasik ürün listeleme: SOLDA dikey filtre sütunu (akordeon
+gruplar), SAĞDA sıralama/sonuç barı + ürün grid'i.
+
+MEKANİZMA
+Kategori CMS sayfasında `sidebar-filter` ve `product-listing` AYRI CMS
+blokları; ikisi de `default` section'da `main` pozisyonda, DOM'da ÜST ÜSTE
+sıralı (heading → image-text → sidebar-filter → product-listing). Bunları
+şablon override'ı olmadan yan yana dizmek için section'a `:has()` ile flex
+uygularız; heading/image-text tam genişlikte kalır, filtre + grid yan yana.
+
+Filtrelerin AKORDEON (dropdown yerine) render olması twig tarafında halledildi:
+element/cms-element-sidebar-filter.html.twig `sidebar=true` zorluyor → core
+`is--sidebar` markup'ı (`.d-grid` + `.collapse`) devreye girer.
+
+RESPONSIVE
+<lg (992px): sol sütun gizlenir, core'un "Filter" butonu + offcanvas
+mekanizması devralır (core _filter-panel.scss zaten `media-breakpoint-down(lg)`
+ile butonu gösterip inline paneli gizliyor). Biz JS'e DOKUNMUYORUZ; yalnız
+görsel yerleşimi ve grid kolon sayısını yönetiyoruz.
+
+Token: abstract/_tokens.scss §24. Magic px/hex YOK.
+*/
+
+// PLP section'ını yakala: hem filtre bloğu hem listeleme bloğu içeren
+// default section. `:has()` sayesinde anasayfanın diğer default section'ları
+// etkilenmez (onlarda product-listing yok).
+.cms-page .cms-section-default:has(> .cms-block-sidebar-filter):has(> .cms-block-product-listing) {
+
+    // ---- ≥lg: iki sütunlu flex düzen ----
+    @media (min-width: 992px) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        column-gap: $vape-plp-col-gap;
+
+        // base.scss sayfa padding'ini normalde HER blok'un iç
+        // `.cms-block-container`'ına koyuyor. İki sütun düzeninde bu, filtre
+        // ile grid arasında çift padding + hizasızlık yaratır. Bunun yerine
+        // sayfa geometrisini (max-width + responsive yan padding) FLEX
+        // kapsayıcısına taşıyıp tüm blok container'larının yatay padding'ini
+        // sıfırlıyoruz — böylece tek tutarlı dış kenar payı + temiz sütun arası.
+        max-width: $vape-container-max;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: $vape-container-pad-desktop;
+        padding-right: $vape-container-pad-desktop;
+
+        > .cms-block .cms-block-container {
+            padding-left: 0;
+            padding-right: 0;
+            max-width: none;
+        }
+
+        @media (min-width: 1400px) {
+            column-gap: $vape-plp-col-gap-xxl;
+        }
+
+        // Heading + görsel/metin blokları: tam genişlik, üstte kalsın
+        > .cms-block-category-heading,
+        > .cms-block-image-text,
+        > .cms-block-text,
+        > .cms-block-image {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        // Sol filtre sütunu — sabit genişlik
+        > .cms-block-sidebar-filter {
+            flex: 0 0 $vape-plp-sidebar-width;
+            max-width: $vape-plp-sidebar-width;
+            min-width: 0;
+
+            @media (min-width: 1400px) {
+                flex-basis: $vape-plp-sidebar-width-xxl;
+                max-width: $vape-plp-sidebar-width-xxl;
+            }
+        }
+
+        // Sağ ürün sütunu — kalan alanı doldur
+        > .cms-block-product-listing {
+            flex: 1 1 0;
+            min-width: 0;   // grid taşmasını önle (flex min-width:auto tuzağı)
+        }
+    }
+}
+
+// ==================================================
+// SOL SIDEBAR — filtre paneli görünümü (≥lg inline)
+// ==================================================
+
+// NOT: filtre görünümü PLP kapsamına GÖMÜLÜ. `cms-element-sidebar-filter`
+// arama sayfasında da (search-pagelet) kullanılıyor ama orada `.cms-section-default`
+// yok — bu selector arama filtrelerine dokunmaz, onlar core dropdown kalır.
+.cms-page .cms-section-default:has(> .cms-block-sidebar-filter):has(> .cms-block-product-listing) .is--vape-plp-filter {
+
+    // Mobil "Filter" tetik butonu (core `.filter-panel-wrapper-toggle`) —
+    // yalnızca <lg'de görünür (core kuralı). Alt boşluk ekle.
+    .filter-panel-wrapper-toggle {
+        margin-bottom: $vape-plp-mobile-btn-mb;
+    }
+
+    // İnline "Filter" başlığı — yalnızca ≥lg sidebar'da anlamlı.
+    // (<lg'de panel gizli; offcanvas'ta core kendi başlığını gösterir.)
+    .filter-panel-inline-title {
+        display: none;
+    }
+
+    @media (min-width: 992px) {
+        // Sidebar sticky: uzun grid'de filtreler ekranla birlikte kalsın.
+        .filter-panel-wrapper {
+            position: sticky;
+            top: $vape-plp-filter-sticky-top;
+        }
+
+        .filter-panel-inline-title {
+            display: block;
+            margin: 0 0 $vape-plp-filter-heading-mb;
+            padding-bottom: $vape-plp-filter-heading-pb;
+            border-bottom: 1px solid $vape-plp-filter-heading-border;
+            font-size: $vape-plp-filter-heading-size;
+            font-weight: $vape-plp-filter-heading-weight;
+            letter-spacing: $vape-plp-filter-heading-tracking;
+            color: $vape-plp-filter-heading-color;
+            text-transform: uppercase;
+        }
+    }
+
+    // ---- akordeon filtre grupları ----
+    // Core `is--sidebar` her filtreyi `.filter-panel-item.d-grid` + toggle +
+    // `.collapse` olarak verir. Beyaz-zemin/kırmızı-vurgu diline uyarla.
+    .filter-panel-item {
+        width: 100%;
+        margin: 0;
+        border-bottom: 1px solid $vape-plp-group-border;
+        padding: $vape-plp-group-pad-y 0;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    // Grup başlığı (toggle) — sol hizalı, tam genişlik, ok sağda
+    .filter-panel-item-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: $vape-plp-group-toggle-pad-y 0;
+        border: 0;
+        background: transparent;
+        font-size: $vape-plp-group-toggle-size;
+        font-weight: $vape-plp-group-toggle-weight;
+        color: $vape-plp-group-toggle-color;
+        text-align: left;
+
+        &:hover {
+            color: $vape-brand;
+        }
+
+        // Açık grup → kırmızı vurgu + ok döner
+        &[aria-expanded='true'] {
+            color: $vape-plp-group-toggle-open-color;
+
+            .icon > svg {
+                transform: rotate(180deg);
+                color: $vape-plp-group-toggle-open-color;
+            }
+        }
+
+        // Erişilebilir odak göstergesi (klavye)
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+            border-radius: $vape-radius-xs;
+        }
+
+        .icon > svg {
+            transition: transform $vape-duration-base $vape-ease-out;
+        }
+    }
+
+    // Açık akordeon içeriği — çerçevesiz, sadece iç boşluk (core sidebar
+    // dropdown'ının kırmızı çerçevesini nötrle; sidebar'da daha sakin dursun)
+    .filter-panel-item-dropdown {
+        min-width: 0;
+        max-height: $vape-plp-option-max-height;
+        overflow-y: auto;
+        padding: 0 $vape-plp-option-pad-x $vape-plp-group-pad-y;
+        border: 0;
+        color: $vape-plp-option-color;
+    }
+
+    // Aktif (seçili) filtre chip şeridi — sidebar üstünde
+    .filter-panel-active-container {
+        gap: $vape-plp-active-gap;
+        margin-bottom: $vape-plp-active-mb;
+    }
+}
+
+// ==================================================
+// SAĞ SÜTUN — sıralama / sonuç barı + ürün grid'i
+// ==================================================
+
+.cms-page .cms-section-default:has(> .cms-block-sidebar-filter):has(> .cms-block-product-listing) {
+
+    // Üst aksiyon barı (sayfalama sayacı + "Sortieren nach") — sağ sütun başı
+    .cms-element-product-listing-actions {
+        align-items: center;
+        margin-bottom: $vape-plp-actions-mb;
+        padding-bottom: $vape-plp-actions-pad-y;
+        border-bottom: 1px solid $vape-plp-actions-border;
+        // NOT: bu bir Bootstrap `.row justify-content-between`; `gap` KULLANMA
+        // (BS gutter'ıyla çift boşluk yapar). Boşluğu justify-content taşır.
+    }
+
+    // ---- ürün grid'i ----
+    // Core `.cms-listing-row` bir Bootstrap `.row`; `.cms-listing-col` core'da
+    // `col-sm-6 col-lg-4 col-xl-3` (4'lü). Sidebar yer kapladığı için ≥lg'de
+    // 3'lü, ≥xxl'de 4'lü olması daha dengeli. Bootstrap col genişliklerini
+    // burada override ediyoruz (twig'e dokunmadan).
+    .cms-listing-row {
+        row-gap: $vape-plp-grid-gap;
+
+        @media (min-width: 768px) {
+            row-gap: $vape-plp-grid-gap-md;
+        }
+    }
+
+    .cms-listing-col {
+        // mobil (<576): tek sütun (core col-12 kalır — dokunma)
+        // ≥576 (sm): 2'li
+        @media (min-width: 576px) {
+            flex: 0 0 auto;
+            width: 50%;
+        }
+
+        // ≥768 (md): 2'li kalsın (sidebar henüz yok ama tablette dar)
+        @media (min-width: 768px) {
+            width: 50%;
+        }
+
+        // ≥992 (lg): 3'lü — sidebar devrede, dengeli
+        @media (min-width: 992px) {
+            width: 33.3333%;
+        }
+
+        // ≥1200 (xl): 3'lü kalsın (core xl'de 4'e geçiyordu, geri al)
+        @media (min-width: 1200px) {
+            width: 33.3333%;
+        }
+
+        // ≥1400 (xxl): 4'lü — geniş ekranda sidebar + 4 kart sığar
+        @media (min-width: 1400px) {
+            width: 25%;
+        }
+    }
+}
