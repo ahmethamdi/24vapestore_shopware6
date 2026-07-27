@@ -252,6 +252,16 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
         }
     }
 
+    // ⚠️ Bootstrap `.form-check` checkbox'ı `padding-left:1.5em` ile açtığı
+    // boşluğa `.form-check-input { margin-left:-1.5em }` ile yerleştirir.
+    // Yukarıdaki shorthand `padding` Bootstrap'ın sol padding'ini eziyordu →
+    // checkbox satır kutusunun SOLUNA taşıp kırpılıyordu ("yarısı yok" hatası).
+    // Sol padding'i 1.5em (BS negatif margin) + istediğimiz iç boşluk yaparak
+    // checkbox'ı satır içinde tut.
+    .form-check {
+        padding-left: calc(1.5em + #{$vape-plp-option-row-pad-x});
+    }
+
     // Renk/görsel swatch listesi yatay sarsın (core inline-flex list item'ları)
     .filter-property-select-list-item {
         display: inline-flex;
