@@ -213,7 +213,9 @@ Boş config (0 kart) ile de temiz render olur — element hiç şerit basmaz.
             padding: $vape-space-4;
             background:
                 linear-gradient(150deg, $vape-neutral-100 0%, $vape-neutral-50 100%);
-            color: $vape-neutral-400;
+            // WCAG AA: neutral-400 (#a1a1ac) açık gradient üzerinde 2.25:1 idi —
+            // gövde metni eşiğinin (4.5:1) çok altında. neutral-600 → 6.77:1.
+            color: $vape-neutral-600;
             font-size: $vape-catgrid-title-size;
             font-weight: $vape-weight-bold;
             line-height: $vape-leading-snug;

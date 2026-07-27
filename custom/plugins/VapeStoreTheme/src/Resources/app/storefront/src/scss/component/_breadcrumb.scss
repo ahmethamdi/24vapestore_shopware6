@@ -1,0 +1,104 @@
+/*
+Breadcrumb (kırıntı navigasyonu)
+==================================================
+277 kategorili ağaçta kullanıcının nerede olduğunu göstermek yüksek fayda
+sağlıyor; ama breadcrumb tema dışıydı (Bootstrap varsayılanı, tipografi ve
+renk temayla uyumsuz).
+
+Core markup'ı ZATEN semantik olarak doğru:
+  nav[aria-label="breadcrumb"] > ol.breadcrumb > li.breadcrumb-item[aria-current]
+→ Bu yüzden twig override YOK, salt SCSS. (Altın kural: breadcrumb CMS
+  içeriği değil, sayfa konumundan türeyen navigasyon — CMS element'e uygun değil.)
+
+Görsel dil: sakin gri yol, bulunulan sayfa koyu, ayraç ince gri.
+Kırmızı KULLANILMAZ — breadcrumb bir eylem çağrısı değil, konum bilgisi.
+Token-only.
+*/
+
+.cms-breadcrumb {
+    padding-top: $vape-breadcrumb-pad-y;
+    padding-bottom: $vape-breadcrumb-pad-y;
+}
+
+.breadcrumb {
+    // Bootstrap 5.3 ayracı `--bs-breadcrumb-divider-color` CSS değişkeninden
+    // okur; alt öğede düz `color` yazmak bunu EZEMEZ (değişken kazanır).
+    // Doğru müdahale noktası burası.
+    --bs-breadcrumb-divider-color: #{$vape-breadcrumb-divider-color};
+    --bs-breadcrumb-item-padding-x: #{$vape-breadcrumb-gap};
+
+    display: flex;
+    flex-wrap: nowrap;          // yol tek satırda kalsın
+    align-items: center;
+    margin-bottom: 0;
+    padding: 0;
+    background: none;
+    font-size: $vape-breadcrumb-size;
+    line-height: $vape-leading-normal;
+
+    // Uzun kategori yolu dar ekranda satır kırmak yerine yatay kaysın.
+    // (Sarma, altındaki içeriği aşağı iterek layout'u zıplatıyordu.)
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;        // kategori adı ortadan bölünmesin
+
+    // Ayracın rengi/boşluğu yukarıda `.breadcrumb` üzerindeki Bootstrap CSS
+    // değişkenlerinden geliyor — burada tekrar tanımlamıyoruz.
+
+    // Bulunulan sayfa (core `aria-current="page"` basar) — koyu ve vurgulu.
+    // Ekran okuyucu için bilgi aria-current'ten geliyor; renk tek başına
+    // taşıyıcı değil (ağırlık farkı da var) → WCAG 1.4.1 uyumlu.
+    &[aria-current="page"] {
+        color: $vape-breadcrumb-color-active;
+        font-weight: $vape-breadcrumb-weight-active;
+    }
+}
+
+.breadcrumb-link {
+    color: $vape-breadcrumb-color;
+    text-decoration: none;
+    transition: color $vape-duration-fast $vape-ease-out;
+
+    &:hover,
+    &:focus {
+        color: $vape-breadcrumb-color-hover;
+        text-decoration: underline;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $vape-brand;
+        outline-offset: 2px;
+        border-radius: $vape-radius-sm;
+    }
+
+    // Aktif öğedeki link — tıklanabilir ama görsel olarak "buradasın"
+    &.is-active {
+        color: $vape-breadcrumb-color-active;
+        font-weight: $vape-breadcrumb-weight-active;
+    }
+}
+
+.breadcrumb-title {
+    // Tek bir kategori adı aşırı uzunsa (ör. birleşik Almanca adlar) kırp;
+    // tam ad `title` attribute'unda (core basıyor) ve ekran okuyucuda kalır.
+    display: inline-block;
+    max-width: 22ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+
+    @media (min-width: 768px) {
+        max-width: none;        // masaüstünde yer var, kırpma
+        overflow: visible;
+    }
+}

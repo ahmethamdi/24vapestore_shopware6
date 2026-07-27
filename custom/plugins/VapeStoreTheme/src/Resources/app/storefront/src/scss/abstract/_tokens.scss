@@ -1728,3 +1728,29 @@ $vape-pdp-props-size:           $vape-text-sm;       // 14px
 $vape-pdp-empty-color:          $vape-text-muted;
 $vape-pdp-empty-size:           $vape-text-sm;
 $vape-pdp-empty-pad-y:          $vape-space-6;
+
+// ==================================================
+// 27. BREADCRUMB (kırıntı navigasyonu)
+// ==================================================
+// 277 kategorili ağaçta konum bilgisi yüksek fayda sağlıyor ama tema dışıydı
+// (Bootstrap varsayılanı). Core markup'ı zaten semantik (nav[aria-label],
+// ol.breadcrumb, aria-current="page") → SALT SCSS işi, twig override YOK.
+//
+// Görsel dil: sakin gri yol, aktif sayfa koyu ve tıklanamaz, ayraç ince gri.
+// Kırmızı YOK — breadcrumb yönlendirme değil konum bilgisi.
+
+$vape-breadcrumb-pad-y:         $vape-space-4;       // sayfa üstünden ayrım
+$vape-breadcrumb-size:          $vape-text-sm;       // 14px — ikincil bilgi
+$vape-breadcrumb-gap:           $vape-space-2;       // öğe ↔ ayraç arası
+
+$vape-breadcrumb-color:         $vape-text-muted;    // yol linkleri (pasif)
+$vape-breadcrumb-color-hover:   $vape-text-primary;  // hover'da koyulaşır
+$vape-breadcrumb-color-active:  $vape-text-primary;  // bulunulan sayfa
+$vape-breadcrumb-weight-active: $vape-weight-semibold;
+// Ayraç dekoratif (aria-hidden) ama yolun YAPISINI taşıyan görsel öğe →
+// WCAG 1.4.11 metin-dışı eşiği 3:1. neutral-400 (#a0a0ad) 2.58:1 ile altında
+// kalıyordu; neutral-500 → 4.80:1.
+$vape-breadcrumb-divider-color: $vape-neutral-500;
+
+// Mobilde uzun yol satırı taşırmasın: yatay kaydırma + kenar solma
+$vape-breadcrumb-fade-width:    $vape-space-6;

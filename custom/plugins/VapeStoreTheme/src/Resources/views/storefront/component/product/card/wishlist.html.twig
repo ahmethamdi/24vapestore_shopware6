@@ -1,0 +1,30 @@
+{% sw_extends '@Storefront/storefront/component/product/card/wishlist.html.twig' %}
+
+{#
+    24VapeStore — istek listesi butonu erişilebilirliği (A11Y-04).
+
+    SORUN: Core butonun erişilebilir adı yalnızca `title` attribute'undan geliyor.
+    İçindeki iki ikon dekoratif SVG (aria-hidden), metin ise `showText` false
+    olduğu için hiç basılmıyor → ürün kartında buton ekran okuyucuya çoğu zaman
+    adsız ("button") geliyor. `title` bazı ekran okuyucu/tarayıcı çiftlerinde
+    ad olarak okunur ama GÜVENİLİR DEĞİL, dokunmatikte hiç görünmez.
+
+    ÇÖZÜM: Metin span'ini HER ZAMAN bas; `showText` false ise görsel olarak gizle
+    (`visually-hidden` — ekranda yok, ekran okuyucuda var).
+
+    Neden statik `aria-label` DEĞİL: core'un `add-to-wishlist.plugin.js`'i ekle/
+    çıkar geçişinde `title`'ı VE `.product-wishlist-btn-content` içeriğini
+    güncelliyor — ama `aria-label`'a dokunmuyor. Statik aria-label eklersek
+    `aria-label` `title`'ı ezer ve ürün eklendikten sonra "Zur Wunschliste
+    hinzufügen" yazılı KALIR (yanlış bilgi). Span'i core zaten güncellediği için
+    bu yol otomatik senkron kalır.
+#}
+
+{% block component_product_wishlist_icon %}
+    {% sw_icon 'heart-fill' style { class: 'wishlist icon-wishlist-added', size: size } %}
+    {% sw_icon 'heart' style { class: 'wishlist icon-wishlist-not-added', size: size } %}
+
+    <span class="product-wishlist-btn-content product-wishlist-btn-content-{{ size }}{% if not showText %} visually-hidden{% endif %}">
+        {{ 'listing.addToWishlist'|trans|sw_sanitize }}
+    </span>
+{% endblock %}

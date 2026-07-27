@@ -157,13 +157,76 @@ export default class VapeHeroSliderPlugin extends Plugin {
         this.track.style.transform = `translateX(-${this.currentIndex * 100}%)`;
 
         this.slides.forEach((slide, i) => {
-            slide.setAttribute('aria-hidden', i === this.currentIndex ? 'false' : 'true');
+            const isCurrent = i === this.currentIndex;
+
+            slide.setAttribute('aria-hidden', isCurrent ? 'false' : 'true');
+
+            // Klavye odak sızıntısı: `aria-hidden` tek başına odağı ENGELLEMEZ.
+            // Görünmeyen slayttaki link/buton hâlâ Tab sırasındaydı → kullanıcı
+            // ekranda hiçbir şey olmadan "kaybolan" bir odağa düşüyordu.
+            // `inert` hem odağı hem etkileşimi kaldırır (ve aria-hidden'ı ima eder).
+            if (isCurrent) {
+                slide.removeAttribute('inert');
+            } else {
+                slide.setAttribute('inert', '');
+            }
+
+            // `inert` desteklemeyen eski tarayıcılar için yedek: odaklanabilir
+            // çocukları Tab sırasından çıkar. Orijinal tabindex'i sakla ki geri
+            // gelirken doğru değere dönebilelim.
+            if (!VapeHeroSliderPlugin._supportsInert()) {
+                this._setChildrenFocusable(slide, isCurrent);
+            }
         });
 
         this.dots.forEach((dot, i) => {
             const active = i === this.currentIndex;
             dot.classList.toggle(this.options.activeDotClass, active);
             dot.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+    }
+
+    /**
+     * `inert` tarayıcı desteği (Safari <15.5, eski Firefox yok).
+     */
+    static _supportsInert() {
+        return 'inert' in HTMLElement.prototype;
+    }
+
+    /**
+     * `inert` yedeği: slayt içindeki odaklanabilir öğeleri Tab sırasına alır/çıkarır.
+     *
+     * @param {HTMLElement} slide
+     * @param {boolean} focusable
+     */
+    _setChildrenFocusable(slide, focusable) {
+        const selector = 'a[href], button, input, select, textarea, [tabindex]';
+
+        slide.querySelectorAll(selector).forEach((node) => {
+            if (focusable) {
+                // Sakladığımız orijinal değere dön (yoksa attribute'u tamamen kaldır)
+                const original = node.dataset.vapeTabindex;
+
+                if (original === undefined) {
+                    node.removeAttribute('tabindex');
+                } else {
+                    node.setAttribute('tabindex', original);
+                    delete node.dataset.vapeTabindex;
+                }
+
+                return;
+            }
+
+            // Zaten çıkarılmışsa orijinali tekrar yazma (üzerine -1 kaydetmeyelim)
+            if (node.dataset.vapeTabindex !== undefined) {
+                return;
+            }
+
+            if (node.hasAttribute('tabindex')) {
+                node.dataset.vapeTabindex = node.getAttribute('tabindex');
+            }
+
+            node.setAttribute('tabindex', '-1');
         });
     }
 
