@@ -193,6 +193,13 @@ $vape-shadow-md: 0 4px 12px rgba(16, 16, 24, 0.08), 0 2px 4px rgba(16, 16, 24, 0
 $vape-shadow-lg: 0 12px 32px rgba(16, 16, 24, 0.12), 0 4px 8px rgba(16, 16, 24, 0.04);
 $vape-shadow-brand: 0 4px 16px rgba(225, 17, 34, 0.25);
 
+// Yumuşak panel gölgesi — gri zeminde "yüzen" beyaz kart/sidebar için. Çok
+// düşük opaklık + geniş yayılım: gri PLP zemininde beyaz yüzeyler nazikçe
+// kalksın, sert kenar vermesin (madde 1: renk & derinlik).
+$vape-shadow-soft:  0 2px 8px rgba(16, 16, 24, 0.05), 0 8px 24px rgba(16, 16, 24, 0.05);
+// Kart hover: renkli (marka) katman + nötr derinlik → premium yükseliş hissi.
+$vape-shadow-card-hover: 0 14px 34px rgba(16, 16, 24, 0.13), 0 4px 10px rgba(16, 16, 24, 0.05);
+
 // Odak halkası — erişilebilirlik için (klavye navigasyonu)
 $vape-focus-ring: 0 0 0 3px rgba(225, 17, 34, 0.35);
 
@@ -343,6 +350,24 @@ $vape-pcard-badge-new-border:  $vape-neutral-300;
 // Wishlist kalp: hover'da görünürlük/animasyon iyileştirme
 $vape-pcard-wish-size:         36px;
 $vape-pcard-wish-bg-hover:     $vape-neutral-white;
+
+// ---- Ürün kartı: modern derinlik paketi (madde 3) ----
+// Gri PLP zemininde kart daha belirgin yüzsün: hover'da daha derin/yumuşak
+// gölge + ince kırmızı üst aksan çizgisi (marka vurgusu, dolgu DEĞİL).
+$vape-pcard-shadow-modern:      $vape-shadow-soft;        // taban: yumuşak yüzer gölge
+$vape-pcard-shadow-hover-modern: $vape-shadow-card-hover; // hover: derin premium yükseliş
+$vape-pcard-border-hover:       $vape-red-100;            // hover'da ince kırmızı kenar iması
+// Üst aksan çizgisi — hover'da kartın tepesinde beliren ince kırmızı şerit.
+$vape-pcard-accent-color:       $vape-brand;
+$vape-pcard-accent-height:      3px;
+
+// İndirim rozeti — modern: hafif dikey gradient + yumuşak gölge (düz kırmızı
+// yerine derinlik). Renk marka kırmızısı kalır.
+$vape-pcard-badge-discount-grad-top:    $vape-red-400;
+$vape-pcard-badge-discount-grad-bottom: $vape-red-600;
+$vape-pcard-badge-shadow:               0 2px 6px rgba(225, 17, 34, 0.28);
+// New / Top rozet gölgesi — nötr, ölçülü kalkış.
+$vape-pcard-badge-shadow-neutral:       $vape-shadow-xs;
 
 // Buton — ölçüldü
 $vape-btn-height:    48px;
@@ -1348,8 +1373,27 @@ $vape-plp-sidebar-width-xxl:    288px;              // ≥1400px biraz daha geni
 $vape-plp-col-gap:              $vape-space-8;       // 32px — sidebar ↔ grid arası
 $vape-plp-col-gap-xxl:          $vape-space-10;      // 40px ≥1400px
 
-// ---------- sidebar filtre paneli ----------
-$vape-plp-filter-sticky-top:    $vape-space-4;       // sticky sidebar üst boşluğu
+// ---------- sayfa zemini & derinlik (madde 1: renk & derinlik) ----------
+// PLP section'ının kendi zemini çok açık gri olur (edge-to-edge). Beyaz
+// sidebar-kartı + beyaz ürün kartları bu gri üstünde "yüzer" → katmanlı
+// derinlik. base.scss'in section ritmine dokunmadan, yalnız bu section'a.
+$vape-plp-page-bg:              $vape-neutral-50;    // #f7f7f9 — PLP zemini
+$vape-plp-page-pad-y:           $vape-space-6;       // gri zemin iç dikey nefes (mobil)
+$vape-plp-page-pad-y-lg:        $vape-space-8;       // ≥lg
+
+// ---------- sidebar filtre paneli (KART) ----------
+// Çıplak sütun yerine beyaz panel-kart: gri zeminde yüzsün, "filtre paneli"
+// hissi versin (madde 2).
+$vape-plp-sidebar-card-bg:      $vape-bg-surface;    // beyaz
+$vape-plp-sidebar-card-border:  $vape-border-subtle;
+$vape-plp-sidebar-card-radius:  $vape-radius-lg;     // 12px — kart diliyle tutarlı
+$vape-plp-sidebar-card-shadow:  $vape-shadow-soft;   // yumuşak yükseliş
+$vape-plp-sidebar-card-pad-x:   $vape-space-5;       // 20px iç yatay boşluk
+$vape-plp-sidebar-card-pad-y:   $vape-space-4;       // 16px iç dikey boşluk
+
+// Sticky sidebar üst boşluğu — sticky header yüksekliğinin altına yapışsın ki
+// filtre paneli header'ın arkasına kaymasın (aksiyon barıyla aynı hiza).
+$vape-plp-filter-sticky-top:    calc(#{$vape-header-sticky-height} + #{$vape-space-2});
 $vape-plp-filter-heading-size:  $vape-text-sm;       // "Filter" iç başlığı (14px)
 $vape-plp-filter-heading-weight: $vape-weight-bold;
 $vape-plp-filter-heading-color: $vape-text-heading;
@@ -1372,14 +1416,62 @@ $vape-plp-option-pad-x:         $vape-space-1;
 $vape-plp-option-max-height:    280px;                       // uzun listelerde kaydır
 $vape-plp-option-color:         $vape-text-primary;
 
-// Aktif filtre chip'leri (seçili filtreler şeridi)
+// Seçenek satırı (checkbox / renk / marka) — ferah dokunmatik hedef, hover'da
+// hafif zemin (madde 2). Satırlar `.form-check` / `.filter-multi-select-item-label`.
+$vape-plp-option-row-pad-y:     6px;                         // satır dikey iç boşluk
+$vape-plp-option-row-pad-x:     $vape-space-2;               // hover zemini için yatay iç boşluk
+$vape-plp-option-row-radius:    $vape-radius-sm;
+$vape-plp-option-row-hover-bg:  $vape-neutral-50;            // hover'da hafif gri zemin
+$vape-plp-option-label-size:    $vape-text-sm;               // 14px — sakin seçenek metni
+$vape-plp-option-label-color:   $vape-text-primary;
+// Checkbox işaretli hali → marka kırmızısı (Bootstrap $primary zaten kırmızı ama
+// tokenle sabitle; renk swatch preview kenarı da burada).
+$vape-plp-checkbox-checked:     $vape-brand;
+$vape-plp-swatch-ring:          $vape-border-strong;         // renk/görsel swatch kenarı
+$vape-plp-swatch-ring-checked:  $vape-brand;
+
+// Aktif filtre chip'leri (seçili filtreler şeridi) — core JS `.filter-active.btn`
+// + içinde `.filter-active-preview` swatch + `×`. "Tümünü temizle" = `.filter-reset-all`.
 $vape-plp-active-gap:           $vape-space-2;
 $vape-plp-active-mb:            $vape-space-4;
+$vape-plp-chip-bg:              $vape-brand-subtle;          // hafif kırmızı zemin
+$vape-plp-chip-fg:              $vape-brand-active;          // koyu kırmızı metin — AA
+$vape-plp-chip-border:          $vape-red-100;               // ince kırmızı kenar
+$vape-plp-chip-bg-hover:        $vape-red-100;
+$vape-plp-chip-radius:          $vape-radius-pill;           // hap formu — modern chip
+$vape-plp-chip-pad-y:           $vape-space-1;
+$vape-plp-chip-pad-x:           $vape-space-3;
+$vape-plp-chip-size:            $vape-text-xs;               // 12px
+$vape-plp-chip-weight:          $vape-weight-semibold;
+$vape-plp-chip-swatch-size:     14px;                        // renk önizleme noktası
+// "Tümünü temizle" linki — sade metin-buton, kırmızı, altı çizili his
+$vape-plp-reset-fg:             $vape-brand;
+$vape-plp-reset-fg-hover:       $vape-brand-active;
+$vape-plp-reset-size:           $vape-text-xs;
 
-// ---------- sağ sütun: sıralama / sonuç barı ----------
+// ---------- fiyat aralığı (core filter-range: min/max sayı input'ları) ----------
+$vape-plp-range-input-bg:       $vape-neutral-50;
+$vape-plp-range-input-bg-focus: $vape-neutral-white;
+$vape-plp-range-input-border:   $vape-border-subtle;
+$vape-plp-range-input-border-focus: $vape-brand;
+$vape-plp-range-input-radius:   $vape-radius-md;
+$vape-plp-range-input-h:        40px;
+$vape-plp-range-divider-color:  $vape-text-muted;
+$vape-plp-range-unit-color:     $vape-text-muted;
+
+// ---------- sağ sütun: sıralama / sonuç barı (STICKY, madde 4) ----------
 $vape-plp-actions-mb:           $vape-space-5;               // bar ↔ grid arası
 $vape-plp-actions-pad-y:        $vape-space-3;
 $vape-plp-actions-border:       $vape-border-subtle;         // barın alt çizgisi
+// Sticky aksiyon barı: grid uzunken sıralama hep erişilebilir. Beyaz kart-şerit,
+// gri zeminde yüzer; header sticky yüksekliğinin altına yapışır.
+$vape-plp-actions-bg:           $vape-bg-surface;            // beyaz şerit
+$vape-plp-actions-radius:       $vape-radius-lg;
+$vape-plp-actions-shadow:       $vape-shadow-soft;
+$vape-plp-actions-pad-x:        $vape-space-4;               // şerit iç yatay boşluk
+$vape-plp-actions-sticky-top:   $vape-header-sticky-height;  // header sticky yüksekliği
+$vape-plp-actions-sticky-gap:   $vape-space-2;               // header ile şerit arası nefes
+$vape-plp-actions-count-color:  $vape-text-primary;          // "X Produkte" metni
 
 // ---------- ürün grid'i (sağ sütun) ----------
 // Sidebar yer kapladığı için varsayılan 4→3'e düşer; çok geniş ekranda 4.

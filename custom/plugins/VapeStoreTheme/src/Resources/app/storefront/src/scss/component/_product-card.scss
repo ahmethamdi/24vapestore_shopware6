@@ -16,6 +16,7 @@ prefers-reduced-motion altında zoom/lift kapanır (erişilebilirlik).
 */
 
 .product-box.box-standard {
+    position: relative;                            // üst aksan çizgisi için konumlandırma bağlamı
     height: 100%;
     background-color: $vape-pcard-bg;
     border: 1px solid $vape-pcard-border;
@@ -26,22 +27,50 @@ prefers-reduced-motion altında zoom/lift kapanır (erişilebilirlik).
         box-shadow $vape-duration-base $vape-ease-out,
         transform $vape-duration-base $vape-ease-out;
 
+    // Üst aksan çizgisi (madde 3) — normalde gizli, hover/odakta beliren ince
+    // kırmızı şerit. Kartın kendi radius'unu takip etsin diye üst köşelerde
+    // yuvarlatılır. Dolgu DEĞİL, yalnız ince marka vurgusu.
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: $vape-pcard-accent-height;
+        background-color: $vape-pcard-accent-color;
+        border-radius: $vape-pcard-radius $vape-pcard-radius 0 0;
+        opacity: 0;
+        transform: scaleX(0.6);
+        transform-origin: center;
+        transition:
+            opacity $vape-duration-base $vape-ease-out,
+            transform $vape-duration-base $vape-ease-out;
+        z-index: 4;
+        pointer-events: none;
+    }
+
     &:hover {
-        border-color: $vape-border-strong;
-        box-shadow: $vape-pcard-shadow-hover;
+        border-color: $vape-pcard-border-hover;
+        box-shadow: $vape-pcard-shadow-hover-modern;
         transform: translateY($vape-pcard-lift);
     }
 
     // Klavye erişimi: kart içindeki stretched-link odaklanınca da hover görünümü
     // (aksi halde fare kullanıcısı ile klavye kullanıcısı farklı deneyim yaşar).
     &:focus-within {
-        border-color: $vape-border-strong;
-        box-shadow: $vape-pcard-shadow-hover;
+        border-color: $vape-pcard-border-hover;
+        box-shadow: $vape-pcard-shadow-hover-modern;
+    }
+
+    &:hover::before,
+    &:focus-within::before {
+        opacity: 1;
+        transform: scaleX(1);
     }
 
     // Bootstrap .card default kenar/gölgesini nötrle (biz yönetiyoruz)
     &.card {
-        box-shadow: $vape-pcard-shadow;
+        box-shadow: $vape-pcard-shadow-modern;
     }
 
     .card-body {
@@ -97,16 +126,25 @@ prefers-reduced-motion altında zoom/lift kapanır (erişilebilirlik).
         transform: scale($vape-pcard-image-zoom);
     }
 
-    // Hareket azaltma tercihi — zoom/lift kapat (erişilebilirlik).
+    // Hareket azaltma tercihi — zoom/lift/aksan kapat (erişilebilirlik).
+    // Kart yine hover'da gölge/kenar değiştirir (görsel geri bildirim korunur),
+    // yalnız TRANSFORM'lu hareketler durur.
     @media (prefers-reduced-motion: reduce) {
         &,
         .product-image,
-        .product-image-placeholder {
+        .product-image-placeholder,
+        &::before {
             transition: none;
         }
 
         &:hover,
         &:focus-within {
+            transform: none;
+        }
+
+        // Aksan çizgisi hareketsiz belirsin (scaleX animasyonu yok)
+        &:hover::before,
+        &:focus-within::before {
             transform: none;
         }
 
@@ -392,22 +430,30 @@ prefers-reduced-motion altında zoom/lift kapanır (erişilebilirlik).
         text-transform: uppercase;
     }
 
-    // İndirim — kırmızı (gerçek yüzde twig'de basılıyor)
+    // İndirim — kırmızı, modern: hafif dikey gradient + yumuşak kırmızı gölge
+    // (düz kutu yerine derinlik). Renk marka kırmızısı kalır (madde 3).
     .product-badges .badge-discount {
-        background-color: $vape-pcard-badge-discount-bg;
+        background-color: $vape-pcard-badge-discount-bg;   // gradient desteklenmezse fallback
+        background-image: linear-gradient(
+            to bottom,
+            $vape-pcard-badge-discount-grad-top,
+            $vape-pcard-badge-discount-grad-bottom
+        );
         color: $vape-pcard-badge-discount-fg;
+        box-shadow: $vape-pcard-badge-shadow;
     }
 
-    // Topseller ("Top") — koyu (core bg-warning'i ez)
+    // Topseller ("Top") — koyu (core bg-warning'i ez), ölçülü nötr gölge
     .product-badges .badge-topseller {
         background-color: $vape-pcard-badge-top-bg;
         color: $vape-pcard-badge-top-fg;
+        box-shadow: $vape-pcard-badge-shadow-neutral;
     }
 
-    // Yeni ("New") — beyaz + koyu kenar (core bg-success'i ez)
+    // Yeni ("New") — beyaz + koyu kenar (core bg-success'i ez) + hafif kalkış
     .product-badges .badge-new {
         background-color: $vape-pcard-badge-new-bg;
         color: $vape-pcard-badge-new-fg;
-        box-shadow: inset 0 0 0 1px $vape-pcard-badge-new-border;
+        box-shadow: inset 0 0 0 1px $vape-pcard-badge-new-border, $vape-pcard-badge-shadow-neutral;
     }
 }

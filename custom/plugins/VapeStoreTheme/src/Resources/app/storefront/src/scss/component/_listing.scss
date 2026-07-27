@@ -29,6 +29,19 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
 // etkilenmez (onlarda product-listing yok).
 .cms-page .cms-section-default:has(> .cms-block-sidebar-filter):has(> .cms-block-product-listing) {
 
+    // ---- sayfa zemini & derinlik (madde 1) ----
+    // PLP section'ına çok açık gri zemin (edge-to-edge). Beyaz sidebar-kartı ve
+    // beyaz ürün kartları bu gri üstünde "yüzer" → katmanlı derinlik. base.scss
+    // section ritmi (dikey padding) korunur; burada yalnız zemin + ek iç nefes.
+    background-color: $vape-plp-page-bg;
+    padding-top: $vape-plp-page-pad-y;
+    padding-bottom: $vape-plp-page-pad-y;
+
+    @media (min-width: 992px) {
+        padding-top: $vape-plp-page-pad-y-lg;
+        padding-bottom: $vape-plp-page-pad-y-lg;
+    }
+
     // ---- ≥lg: iki sütunlu flex düzen ----
     @media (min-width: 992px) {
         display: flex;
@@ -109,10 +122,16 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
     }
 
     @media (min-width: 992px) {
-        // Sidebar sticky: uzun grid'de filtreler ekranla birlikte kalsın.
+        // Sidebar sticky + KART (madde 2): beyaz panel, yumuşak gölge, yuvarlak
+        // köşe, iç padding. Gri PLP zemininde "filtre paneli" olarak yüzer.
         .filter-panel-wrapper {
             position: sticky;
             top: $vape-plp-filter-sticky-top;
+            background-color: $vape-plp-sidebar-card-bg;
+            border: 1px solid $vape-plp-sidebar-card-border;
+            border-radius: $vape-plp-sidebar-card-radius;
+            box-shadow: $vape-plp-sidebar-card-shadow;
+            padding: $vape-plp-sidebar-card-pad-y $vape-plp-sidebar-card-pad-x;
         }
 
         .filter-panel-inline-title {
@@ -125,6 +144,25 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
             letter-spacing: $vape-plp-filter-heading-tracking;
             color: $vape-plp-filter-heading-color;
             text-transform: uppercase;
+        }
+    }
+
+    // Aktif filtre chip'lerini panelin ÜSTÜNE al (madde 2). Core `.filter-panel`
+    // bir `display:flex; flex-wrap:wrap` kapsayıcı; items-container ve
+    // active-container full-width flex çocukları. `order` ile chip şeridini
+    // grupların üstüne taşırız (twig/JS'e dokunmadan). Böylece seçili filtreler
+    // en görünür yerde durur.
+    @media (min-width: 992px) {
+        .filter-panel {
+            flex-direction: column;
+        }
+
+        .filter-panel-active-container {
+            order: -1;
+        }
+
+        .filter-panel-items-container {
+            order: 0;
         }
     }
 
@@ -193,10 +231,196 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
         color: $vape-plp-option-color;
     }
 
-    // Aktif (seçili) filtre chip şeridi — sidebar üstünde
+    // ---- seçenek satırları (checkbox / renk / marka) ----
+    // Ferah dokunmatik hedef + hover'da hafif gri zemin (madde 2). Core
+    // markup: `.form-check` (düz liste) veya `.filter-multi-select-list-item`.
+    .filter-multi-select-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .form-check,
+    .filter-multi-select-list-item {
+        margin: 0;
+        padding: $vape-plp-option-row-pad-y $vape-plp-option-row-pad-x;
+        border-radius: $vape-plp-option-row-radius;
+        transition: background-color $vape-duration-fast $vape-ease-out;
+
+        &:hover {
+            background-color: $vape-plp-option-row-hover-bg;
+        }
+    }
+
+    // Renk/görsel swatch listesi yatay sarsın (core inline-flex list item'ları)
+    .filter-property-select-list-item {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    // Seçenek etiketi — sakin 14px metin, tıklanabilir
+    .filter-multi-select-item-label,
+    .form-check-label {
+        font-size: $vape-plp-option-label-size;
+        color: $vape-plp-option-label-color;
+        cursor: pointer;
+    }
+
+    // Checkbox işaretli → marka kırmızısı (tutarlı vurgu)
+    .form-check-input:checked,
+    .filter-multi-select-checkbox:checked {
+        background-color: $vape-plp-checkbox-checked;
+        border-color: $vape-plp-checkbox-checked;
+    }
+
+    .form-check-input:focus-visible,
+    .filter-multi-select-checkbox:focus-visible {
+        outline: 2px solid $vape-brand;
+        outline-offset: 2px;
+    }
+
+    // Renk/görsel swatch önizleme — nötr kenar, seçiliyken kırmızı halka
+    .filter-property-select-preview {
+        border: 1px solid $vape-plp-swatch-ring;
+
+        .filter-property-select-checkbox:checked ~ .filter-property-select-preview-checkmark {
+            color: $vape-plp-swatch-ring-checked;
+        }
+    }
+
+    // ---- fiyat aralığı (min/max sayı input'ları — core slider değil) ----
+    .filter-range-container {
+        display: flex;
+        align-items: center;
+        gap: $vape-space-2;
+    }
+
+    .filter-range-min,
+    .filter-range-max {
+        position: relative;
+        flex: 1 1 0;
+        min-width: 0;
+        margin: 0;
+    }
+
+    .filter-range-min .form-control,
+    .filter-range-max .form-control {
+        height: $vape-plp-range-input-h;
+        background-color: $vape-plp-range-input-bg;
+        border: 1px solid $vape-plp-range-input-border;
+        border-radius: $vape-plp-range-input-radius;
+        color: $vape-text-primary;
+        transition:
+            border-color $vape-duration-fast $vape-ease-out,
+            background-color $vape-duration-fast $vape-ease-out;
+
+        &:focus {
+            background-color: $vape-plp-range-input-bg-focus;
+            border-color: $vape-plp-range-input-border-focus;
+            box-shadow: $vape-focus-ring;
+        }
+    }
+
+    .filter-range-unit {
+        color: $vape-plp-range-unit-color;
+    }
+
+    .filter-range-divider {
+        color: $vape-plp-range-divider-color;
+        flex: 0 0 auto;
+    }
+
+    // ---- aktif (seçili) filtre chip şeridi + "tümünü temizle" (madde 2) ----
+    // Core JS `.filter-panel-active-container` içine `.filter-active.btn` chip'leri
+    // ve `.filter-reset-all.btn.btn-outline-danger` butonu basar. Kaldırma "×"
+    // her chip'in içinde (`.ms-1.fs-4`). Renk swatch önizleme `.filter-active-preview`.
     .filter-panel-active-container {
         gap: $vape-plp-active-gap;
         margin-bottom: $vape-plp-active-mb;
+
+        // Hiç filtre seçili değilken (JS boş bırakır) boşluk/ayırıcı yaratmasın.
+        &:empty {
+            margin-bottom: 0;
+        }
+    }
+
+    // Chip şeridi doluyken altına ince ayırıcı → gruplardan görsel olarak ayrılsın.
+    @media (min-width: 992px) {
+        .filter-panel-active-container:not(:empty) {
+            padding-bottom: $vape-plp-active-mb;
+            border-bottom: 1px solid $vape-plp-group-border;
+        }
+    }
+
+    .filter-active.btn {
+        display: inline-flex;
+        align-items: center;
+        gap: $vape-space-1;
+        padding: $vape-plp-chip-pad-y $vape-plp-chip-pad-x;
+        border: 1px solid $vape-plp-chip-border;
+        border-radius: $vape-plp-chip-radius;
+        background-color: $vape-plp-chip-bg;
+        color: $vape-plp-chip-fg;
+        font-size: $vape-plp-chip-size;
+        font-weight: $vape-plp-chip-weight;
+        line-height: 1;
+        transition:
+            background-color $vape-duration-fast $vape-ease-out,
+            border-color $vape-duration-fast $vape-ease-out;
+
+        &:hover,
+        &:focus {
+            background-color: $vape-plp-chip-bg-hover;
+            color: $vape-plp-chip-fg;
+            border-color: $vape-plp-chip-fg;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+
+        // Kaldırma "×" — chip içinde net, biraz iri; core `.ms-1.fs-4` boyutunu
+        // sıfırla, hizala.
+        .fs-4 {
+            font-size: $vape-text-md;
+            line-height: 1;
+            margin-left: 0;
+        }
+
+        // Renk önizleme noktası (core `.filter-active-preview`)
+        .filter-active-preview {
+            width: $vape-plp-chip-swatch-size;
+            height: $vape-plp-chip-swatch-size;
+            border-radius: $vape-radius-pill;
+            border: 1px solid $vape-plp-swatch-ring;
+            background-size: cover;
+            background-position: center;
+        }
+    }
+
+    // "Tümünü temizle" — sade kırmızı metin-buton (core btn-outline-danger'i
+    // nötrle; chip'lerle karışan bir kutu yerine net bir link).
+    .filter-reset-all.btn {
+        padding: $vape-plp-chip-pad-y $vape-space-2;
+        border: 0;
+        background: transparent;
+        color: $vape-plp-reset-fg;
+        font-size: $vape-plp-reset-size;
+        font-weight: $vape-weight-semibold;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        &:hover,
+        &:focus {
+            background: transparent;
+            color: $vape-plp-reset-fg-hover;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
     }
 }
 
@@ -206,14 +430,31 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
 
 .cms-page .cms-section-default:has(> .cms-block-sidebar-filter):has(> .cms-block-product-listing) {
 
-    // Üst aksiyon barı (sayfalama sayacı + "Sortieren nach") — sağ sütun başı
+    // Üst aksiyon barı (sayfalama sayacı + "Sortieren nach") — sağ sütun başı.
+    // Modern (madde 4): beyaz kart-şerit, gri PLP zemininde yüzer; ≥lg'de STICKY
+    // → grid uzunken sıralama hep erişilebilir. Bootstrap `.row justify-content-between`
+    // olduğu için `gap` KULLANMA (BS gutter'ıyla çift boşluk). Boşluğu justify taşır.
     .cms-element-product-listing-actions {
         align-items: center;
         margin-bottom: $vape-plp-actions-mb;
-        padding-bottom: $vape-plp-actions-pad-y;
-        border-bottom: 1px solid $vape-plp-actions-border;
-        // NOT: bu bir Bootstrap `.row justify-content-between`; `gap` KULLANMA
-        // (BS gutter'ıyla çift boşluk yapar). Boşluğu justify-content taşır.
+        padding: $vape-plp-actions-pad-y $vape-plp-actions-pad-x;
+        background-color: $vape-plp-actions-bg;
+        border: 1px solid $vape-plp-actions-border;
+        border-radius: $vape-plp-actions-radius;
+        box-shadow: $vape-plp-actions-shadow;
+
+        // Sonuç sayacı ("X Produkte") — net, okunur
+        .pagination-info,
+        .filter-panel-item-count {
+            color: $vape-plp-actions-count-color;
+            font-weight: $vape-weight-medium;
+        }
+
+        @media (min-width: 992px) {
+            position: sticky;
+            top: calc(#{$vape-plp-actions-sticky-top} + #{$vape-plp-actions-sticky-gap});
+            z-index: $vape-z-sticky;
+        }
     }
 
     // ---- ürün grid'i ----
