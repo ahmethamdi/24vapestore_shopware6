@@ -647,6 +647,11 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     background-color: $vape-bg-page;
     padding: $vape-space-6 $vape-space-4 !important;
 
+    // Mega menü sayfa içeriğinin üstünde kalmalı. Bootstrap varsayılanı
+    // z-dropdown (1000) idi; PLP'nin sticky sıralama barı (z-sticky 1020)
+    // menünün önüne geçiyordu. z-fixed ile menü her sticky içeriğin üstünde.
+    z-index: $vape-z-fixed;
+
     // Ekranı kaplamasın — 32 alt kategorili dallar 1100px+ oluyordu
     max-height: 60vh;
     overflow-y: auto;
@@ -846,7 +851,9 @@ body.is--header-sticky {
         position: fixed;
         left: 0;
         right: 0;
-        z-index: $vape-z-sticky;
+        // Sticky header + mega menü, PLP sticky sıralama barının (z-sticky 1020)
+        // üstünde kalmalı. z-fixed ile sabit header her sayfa içeriğini örter.
+        z-index: $vape-z-fixed;
     }
 
     .header-main {
