@@ -54,15 +54,31 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
     // ---- Ana görsel ÖLÇÜSÜ ----
     // Container 1600px'te col-lg-7 ~840px'e çıkıyor; tek ürün fotoğrafı için
     // fazla baskın. Sütun genişliğini (ve dolayısıyla buy-box hizasını) BOZMADAN
-    // yalnız görsel yüzeyini sınırla ve sola hizala. Rozet katmanı `position:
-    // absolute` ile bu sarmalayıcıya bağlı olduğundan, sınırı sarmalayıcıya
-    // uygularsak rozet de görselle birlikte küçülür ve hizalı kalır.
-    @media (min-width: 992px) {
-        max-width: $vape-pdp-gallery-max;
+    // yalnız görsel yüzeyini sınırla ve sola hizala.
+    //
+    // DİKKAT: Sınır SARMALAYICIYA değil, GÖRSEL SÜTUNUNA (.gallery-slider-col)
+    // uygulanır. Çünkü galeri satırı ≥md'de [dikey thumb şeridi | ana görsel]
+    // şeklinde iki sütun; sarmalayıcıyı sınırlarsak thumb şeridi de bu 420px'in
+    // içine girer ve ana görsel ezilir. Tek görselli üründe thumb sütunu hiç
+    // basılmaz — o durumda da doğru çalışır.
+    .gallery-slider-col,
+    .gallery-slider-single-image {
+        @media (min-width: 992px) {
+            max-width: $vape-pdp-gallery-max;
+        }
+
+        @media (min-width: 1600px) {
+            max-width: $vape-pdp-gallery-max-xxl;
+        }
     }
 
-    @media (min-width: 1600px) {
-        max-width: $vape-pdp-gallery-max-xxl;
+    // Satırı sola topla — sütunlar kalan genişliğe yayılıp aralarında boşluk
+    // bırakmasın (kullanıcı şikâyeti: görselle içerik arası kocaman boşluk).
+    .gallery-slider-row {
+        @media (min-width: 768px) {
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+        }
     }
 
     // ---- Ana görsel yüzeyi: beyaz zemin + yumuşak radius/gölge + iç pad ----
@@ -132,10 +148,36 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
         border-color: $vape-pdp-thumb-border-active;
     }
 
+    // ---- DİKEY (SOL) thumbnail şeridi ----
+    // Core `galleryPosition: left` zaten seçili: thumb sütunu `.is-left` ile
+    // ana görselin soluna, tns `axis: vertical` ile dikey eksene geçer
+    // (<md'de `col-0` → gizli, mobilde ana görsel tek başına kalır).
+    // Burada yalnız şeridin genişliğini içeriğe sabitler ve nefes payını veririz;
+    // tns'in inline yükseklik/transform hesabına DOKUNMAYIZ.
+    .gallery-slider-thumbnails-col.is-left {
+        @media (min-width: 768px) {
+            flex: 0 0 auto;
+            width: auto;
+            padding-right: $vape-pdp-thumb-col-gap;
+        }
+    }
+
+    // Dikey eksende thumb'lar alt alta; aralarındaki boşluk margin ile
+    // (gap tns'in transform hesabını bozar).
+    .gallery-slider-thumbnails-col.is-left .gallery-slider-thumbnails-item {
+        @media (min-width: 768px) {
+            margin-bottom: $vape-pdp-thumb-stack-gap;
+        }
+    }
+
     // ---- Rozet katmanı — PLP badges diliyle TUTARLI ----
     // Twig'de core .product-badges markup'ı basılır; konumu ve stili PLP kartıyla
     // aynı. _product-card.scss'teki .product-badges .badge-* stilleri global
     // olduğu için renk/gradient/gölge oradan miras alınır; burada yalnız konum.
+    // Rozetler ANA GÖRSELİN sol üstüne oturmalı. Sarmalayıcı ≥md'de dikey thumb
+    // şeridini de kapsadığı için düz `left: 16px` rozeti şeridin üstüne düşürürdü;
+    // şerit genişliği + boşluk kadar sağa kaydır. Tek görselli üründe şerit hiç
+    // basılmadığı için <md ve tek-görsel durumunda düz inset geçerli kalır.
     .vape-pdp-gallery-badges {
         position: absolute;
         top: $vape-pdp-badge-inset;
@@ -151,6 +193,18 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
             flex-direction: column;
             align-items: flex-start;
             gap: $vape-pdp-badge-gap;
+        }
+    }
+
+    // ≥md + ÇOK görselli ürün (twig `has-thumb-strip` işareti): rozet, soldaki
+    // dikey şeridin genişliği kadar sağa kayar ki ana görselin sol üstüne otursun.
+    // Tek görselli üründe bu sınıf basılmaz → düz inset geçerli kalır.
+    &.has-thumb-strip .vape-pdp-gallery-badges {
+        @media (min-width: 768px) {
+            left: calc(
+                #{$vape-pdp-thumb-size} + #{$vape-pdp-thumb-pad} * 2 +
+                #{$vape-pdp-thumb-col-gap} + #{$vape-pdp-badge-inset}
+            );
         }
     }
 }

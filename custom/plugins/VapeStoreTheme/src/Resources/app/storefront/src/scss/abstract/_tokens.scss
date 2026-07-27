@@ -1544,6 +1544,10 @@ $vape-pdp-thumb-bg:             $vape-neutral-white;
 $vape-pdp-thumb-border:         $vape-border-subtle;
 $vape-pdp-thumb-border-active:  $vape-brand;         // aktif thumb → kırmızı kenar
 $vape-pdp-thumb-pad:            $vape-space-1;
+// Dikey (sol) thumbnail şeridi — core `galleryPosition: left` + tns
+// `axis: vertical` ile ≥md'de ana görselin SOLUNDA dikey kolon olarak gelir.
+$vape-pdp-thumb-col-gap:        $vape-space-3;      // şerit ↔ ana görsel arası
+$vape-pdp-thumb-stack-gap:      $vape-space-2;      // dikey thumb'lar arası
 
 // ---------- galeri: rozet katmanı (PLP badges diliyle tutarlı) ----------
 $vape-pdp-badge-inset:          $vape-space-4;       // ana görsel kenarından

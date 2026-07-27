@@ -19,7 +19,15 @@
 #}
 
 {% block element_image_gallery_inner %}
-    <div class="is--vape-pdp-gallery">
+    {#
+        Çok görselli üründe core ≥md'de SOLA dikey thumbnail şeridi basar
+        (galleryPosition: left). Rozet katmanı bu sarmalayıcıya göre konumlandığı
+        için, şerit varken rozetin şerit genişliği kadar sağa kayması gerekir.
+        Bunu SCSS tek başına bilemez (görsel sayısı twig'de) → sınıfla işaretle.
+    #}
+    {% set vapeHasThumbStrip = (element.data.sliderItems|default([])|length) > 1 %}
+
+    <div class="is--vape-pdp-gallery{% if vapeHasThumbStrip %} has-thumb-strip{% endif %}">
         {{ parent() }}
 
         {% block vape_pdp_gallery_badges %}
