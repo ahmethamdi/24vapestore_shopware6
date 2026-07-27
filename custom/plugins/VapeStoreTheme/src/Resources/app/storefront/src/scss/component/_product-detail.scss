@@ -36,6 +36,11 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
         @media (min-width: 1200px) {
             padding-right: $vape-pdp-col-gap-xl;
         }
+
+        // NOT: Sütun oranlarına (col-lg-7 / col-lg-5) DOKUNMA. Bir denemede
+        // galeri sütunu daraltılıp buy-box'a `flex:1` verildi → buy-box sağa
+        // yayıldı, içerik sola sıkıştı ve sağda kocaman boşluk kaldı. Görsel
+        // büyüklüğü sütunla değil, galerinin kendi max-width'iyle çözülür.
     }
 }
 
@@ -45,6 +50,20 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
 
 .is--vape-pdp-gallery {
     position: relative;   // rozet katmanı için konumlama bağlamı
+
+    // ---- Ana görsel ÖLÇÜSÜ ----
+    // Container 1600px'te col-lg-7 ~840px'e çıkıyor; tek ürün fotoğrafı için
+    // fazla baskın. Sütun genişliğini (ve dolayısıyla buy-box hizasını) BOZMADAN
+    // yalnız görsel yüzeyini sınırla ve sola hizala. Rozet katmanı `position:
+    // absolute` ile bu sarmalayıcıya bağlı olduğundan, sınırı sarmalayıcıya
+    // uygularsak rozet de görselle birlikte küçülür ve hizalı kalır.
+    @media (min-width: 992px) {
+        max-width: $vape-pdp-gallery-max;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: $vape-pdp-gallery-max-xxl;
+    }
 
     // ---- Ana görsel yüzeyi: beyaz zemin + yumuşak radius/gölge + iç pad ----
     // Core hem tek görsel (.gallery-slider-single-image) hem çoklu slider
@@ -382,6 +401,285 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
     .product-detail-ordernumber {
         font-size: $vape-pdp-ordernumber-size;
         color: $vape-pdp-ordernumber-color;
+    }
+}
+
+// ==================================================
+// AÇIKLAMA / DEĞERLENDİRME SEKMELERİ
+// ==================================================
+// Core `cms-element-product-description-reviews` şu markup'ı basar:
+//   .product-detail-tabs > .card.card-tabs
+//     > .card-header.product-detail-tab-navigation > ul.nav-tabs > li > a.nav-link
+//     > .card-body.product-detail-tabs-content > .tab-content > .tab-pane
+// Hiç tema stili yoktu → Bootstrap varsayılan kartı, buy-box'ın dibine yapışık
+// ve dar iç boşluklu. Burada kabuk + sekme çubuğu + gövde nefesi + tipografi.
+//
+// NOT: Sekme içeriği `offcanvas.html.twig`'i extend eder; masaüstünde
+// `.offcanvas-header` (kapat butonu) gizli kalmalı, `.offcanvas-body`
+// ise düz akış olmalı — core bunu yapar, biz yalnız padding sıfırlarız.
+
+.is-ctl-product {
+
+    // ---- Bloğu buy-box'tan AYIR (asıl "dibe yapışmış" şikâyeti) ----
+    .product-detail-tabs {
+        margin-top: $vape-pdp-tabs-mt;
+    }
+
+    // ---- Kabuk: galeri/kart diliyle tutarlı yüzey ----
+    .card-tabs {
+        background-color: $vape-pdp-tabs-bg;
+        border: 1px solid $vape-pdp-tabs-border;
+        border-radius: $vape-pdp-tabs-radius;
+        box-shadow: $vape-pdp-tabs-shadow;
+        overflow: hidden;   // radius'un köşelerde kesmesi için
+    }
+
+    // ---- Sekme navigasyonu: alt-çizgili modern çubuk ----
+    .product-detail-tab-navigation {
+        background-color: $vape-pdp-tabnav-bg;
+        border-bottom: 1px solid $vape-pdp-tabnav-border;
+        padding: 0 $vape-pdp-tabnav-pad-x;
+        border-radius: 0;
+
+        @media (min-width: 992px) {
+            padding: 0 $vape-pdp-tabnav-pad-x-lg;
+        }
+    }
+
+    .product-detail-tab-navigation-list {
+        border-bottom: 0;          // Bootstrap .nav-tabs alt çizgisini kaldır
+        gap: $vape-pdp-tabnav-gap;
+        flex-wrap: nowrap;
+        overflow-x: auto;          // dar ekranda sekmeler yatay kaysın
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar { display: none; }
+    }
+
+    .product-detail-tab-navigation-link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        padding: $vape-pdp-tab-pad-y $vape-pdp-tab-pad-x;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        white-space: nowrap;
+        font-size: $vape-pdp-tab-size;
+        font-weight: $vape-pdp-tab-weight;
+        color: $vape-pdp-tab-color;
+        transition: color $vape-duration-fast $vape-ease-out;
+
+        // Aktif alt çizgi — kırmızı. Pseudo-element ile; hover'da renk
+        // değişiminde layout kaymaz (border kullanmıyoruz).
+        &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;                  // çubuğun alt hattının üstüne otur
+            height: $vape-pdp-tab-underline-h;
+            background-color: $vape-pdp-tab-underline;
+            border-radius: $vape-radius-pill $vape-radius-pill 0 0;
+            opacity: 0;
+            transition: opacity $vape-duration-fast $vape-ease-out;
+        }
+
+        &:hover,
+        &:focus {
+            border: 0;
+            background: none;
+            color: $vape-pdp-tab-color-hover;
+        }
+
+        &.active {
+            background: none;
+            border: 0;
+            color: $vape-pdp-tab-color-active;
+
+            &::after {
+                opacity: 1;
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: 2px;
+        }
+    }
+
+    // Core sekme başlığındaki ">" ikonu ve açıklama önizlemesi masaüstünde
+    // gereksiz (offcanvas/mobil akış için var) — düz sekme çubuğunda gizle.
+    @media (min-width: 768px) {
+        .product-detail-tab-navigation-icon,
+        .product-detail-tab-preview {
+            display: none;
+        }
+    }
+
+    // ---- Sekme gövdesi: gerçek nefes ----
+    .product-detail-tabs-content {
+        padding: $vape-pdp-tabbody-pad-y $vape-pdp-tabbody-pad-x;
+
+        @media (min-width: 992px) {
+            padding: $vape-pdp-tabbody-pad-y-lg $vape-pdp-tabbody-pad-x-lg;
+        }
+    }
+
+    // İçerik `offcanvas.html.twig`'ten geldiği için sarmalayıcı padding'leri
+    // taşıyor; masaüstü düz akışta sıfırla (kapat butonu zaten gizli).
+    .product-detail-tabs-content {
+        .offcanvas-header {
+            display: none;
+        }
+
+        .offcanvas-body {
+            padding: 0;
+            overflow: visible;
+        }
+    }
+
+    // ==================================================
+    // AÇIKLAMA SEKMESİ İÇERİĞİ
+    // ==================================================
+
+    .product-detail-description-title {
+        font-size: $vape-pdp-desc-title-size;
+        font-weight: $vape-pdp-desc-title-weight;
+        line-height: $vape-leading-snug;
+        color: $vape-text-primary;
+        margin-bottom: $vape-pdp-desc-title-mb;
+    }
+
+    // Yönetici tarafından girilen zengin metin (WYSIWYG) — sınıfsız gelir,
+    // bu yüzden eleman seçicilerle biçimlendiriyoruz. Satır uzunluğu 72ch ile
+    // sınırlı: 1600px container'da tam genişlik metin okunmaz olurdu.
+    .product-detail-description-text {
+        max-width: $vape-pdp-desc-measure;
+        font-size: $vape-pdp-desc-size;
+        line-height: $vape-pdp-desc-leading;
+        color: $vape-pdp-desc-color;
+
+        > *:first-child { margin-top: 0; }
+        > *:last-child  { margin-bottom: 0; }
+
+        p {
+            margin-bottom: $vape-pdp-desc-para-gap;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-size: $vape-pdp-desc-h-size;
+            font-weight: $vape-pdp-desc-h-weight;
+            line-height: $vape-leading-snug;
+            color: $vape-text-primary;
+            margin-top: $vape-pdp-desc-h-mt;
+            margin-bottom: $vape-pdp-desc-h-mb;
+        }
+
+        ul,
+        ol {
+            margin-bottom: $vape-pdp-desc-para-gap;
+            padding-left: $vape-space-5;
+        }
+
+        li {
+            margin-bottom: $vape-pdp-desc-li-gap;
+
+            &::marker {
+                color: $vape-pdp-desc-marker-color;   // ince kırmızı vurgu
+            }
+        }
+
+        strong,
+        b {
+            font-weight: $vape-weight-semibold;
+            color: $vape-text-primary;
+        }
+
+        a {
+            color: $vape-brand;
+            text-decoration: underline;
+
+            &:hover,
+            &:focus {
+                color: $vape-brand-hover;
+            }
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: $vape-radius-md;
+        }
+
+        // Uzun tablolar dar ekranda taşmasın
+        table {
+            width: 100%;
+            max-width: 100%;
+            display: block;
+            overflow-x: auto;
+        }
+    }
+
+    // ---- Özellik tablosu: zebra yerine sakin "spec sheet" ----
+    .product-detail-properties {
+        margin-top: $vape-pdp-props-mt;
+    }
+
+    .product-detail-properties-table {
+        width: 100%;
+        margin-bottom: 0;
+        font-size: $vape-pdp-props-size;
+
+        // Bootstrap .table-striped zebra'sını iptal et — bu temada gürültülü.
+        > tbody > tr:nth-of-type(odd) > *,
+        > tbody > tr > * {
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        .properties-row {
+            border-bottom: 1px solid $vape-pdp-props-row-border;
+
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+
+        .properties-label,
+        .properties-value {
+            padding: $vape-pdp-props-cell-pad-y 0;
+            border: 0;
+            vertical-align: top;
+            line-height: $vape-leading-normal;
+        }
+
+        .properties-label {
+            width: $vape-pdp-props-label-width;
+            color: $vape-pdp-props-label-color;
+            font-weight: $vape-pdp-props-label-weight;
+            padding-right: $vape-space-4;
+        }
+
+        .properties-value {
+            color: $vape-pdp-props-value-color;
+            font-weight: $vape-pdp-props-value-weight;
+        }
+    }
+
+    // ==================================================
+    // DEĞERLENDİRME SEKMESİ — hafif hizalama
+    // ==================================================
+    // Tam bir yorum tasarımı ayrı bir iş; burada yalnız gövde nefesi ve
+    // sticky widget'ın sekme gövdesi padding'iyle çakışmaması.
+    .product-detail-review {
+        .product-detail-review-widget {
+            top: calc(#{$vape-header-sticky-height} + #{$vape-space-6});
+        }
+
+        .product-detail-review-title {
+            font-weight: $vape-weight-semibold;
+        }
     }
 }
 

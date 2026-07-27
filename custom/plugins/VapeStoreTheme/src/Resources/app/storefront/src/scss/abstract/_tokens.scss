@@ -1521,8 +1521,17 @@ $vape-pdp-gallery-border:       $vape-border-subtle;
 $vape-pdp-gallery-radius:       $vape-radius-lg;    // 12px — kart diliyle tutarlı
 $vape-pdp-gallery-shadow:       $vape-shadow-soft;  // yumuşak yüzer gölge
 $vape-pdp-gallery-pad:          $vape-space-5;      // ana görselin iç nefes payı
-$vape-pdp-gallery-ratio:        3 / 4;              // dikey ürün oranı (kart diliyle)
+// Oran: 3/4 dikey oran 520px genişlikte ~693px YÜKSEKLİK demekti — ekranın
+// tamamını kaplıyordu. 1/1 kare hem vape ürün fotoğraflarına (dikey cihaz ama
+// kare çerçevede rahat oturur) hem de ekran ekonomisine uygun.
+$vape-pdp-gallery-ratio:        1 / 1;              // kare çerçeve
 $vape-pdp-gallery-zoom:         1.05;               // masaüstü hover hafif yakınlaştırma
+// Ana görsel üst sınırı — container 1600px'te col-lg-7 ~840px'e çıkıyor ve tek
+// ürün fotoğrafı için fazla baskın duruyor. Galeri sütunu genişliğini korur
+// (layout kaymaz), yalnız GÖRSEL YÜZEYİ bu genişlikte durur ve sola hizalanır.
+// Kare oran nedeniyle bu değer aynı zamanda YÜKSEKLİK tavanıdır.
+$vape-pdp-gallery-max:          420px;              // ≥lg ana görsel yüzeyi maks.
+$vape-pdp-gallery-max-xxl:      460px;              // ≥1600px hafif nefes
 // Görselsiz durum — PLP placeholder dili: sakin nötr
 $vape-pdp-gallery-placeholder-color: $vape-neutral-300;
 
@@ -1621,3 +1630,97 @@ $vape-pdp-reviews-gap:          $vape-space-2;
 $vape-pdp-reviews-mb:           $vape-space-3;
 $vape-pdp-reviews-link-color:   $vape-text-muted;
 $vape-pdp-reviews-link-size:    $vape-text-sm;
+
+// ==================================================
+// PDP — AÇIKLAMA / DEĞERLENDİRME SEKMELERİ
+// ==================================================
+// Core `cms-element-product-description-reviews` bir Bootstrap `.card.card-tabs`
+// basar; hiç tema stili yoktu → buy-box'ın hemen dibine yapışık, çerçevesiz,
+// dar iç boşluklu duruyordu. Burada: sekme bloğunu üstten AYIR (section ritmi),
+// sekme çubuğunu alt-çizgili modern navigasyona çevir, gövdeye gerçek nefes ver,
+// açıklama tipografisini okunur ölçeğe oturt, özellik tablosunu zebra yerine
+// sakin satır ayırıcılı "spec" tablosuna çevir.
+//
+// Kırmızı SADECE aktif sekme alt çizgisi + aktif sekme metni. Gövde tamamen nötr.
+
+// ---------- sekme bloğu kabuğu ----------
+$vape-pdp-tabs-mt:              $vape-space-16;      // buy-box ↔ sekme bloğu ayrımı (64px)
+$vape-pdp-tabs-bg:              $vape-neutral-white;
+$vape-pdp-tabs-border:          $vape-border-subtle;
+$vape-pdp-tabs-radius:          $vape-radius-lg;     // galeri/kart diliyle tutarlı
+$vape-pdp-tabs-shadow:          $vape-shadow-soft;
+
+// ---------- sekme navigasyonu ----------
+$vape-pdp-tabnav-bg:            $vape-neutral-white;
+$vape-pdp-tabnav-border:        $vape-border-subtle; // çubuğun altındaki ince hat
+// Çubuğun kenar boşluğu = gövde padding'i EKSİ sekmenin kendi yatay pad'i.
+// Böylece ilk sekmenin METNİ, altındaki gövde metniyle aynı dikey hatta oturur
+// (optik hizalama) — sekme yine de tam yükseklikte tıklanabilir kalır.
+$vape-pdp-tabnav-pad-x:         $vape-space-1;       // <lg  (24px gövde − 20px sekme)
+$vape-pdp-tabnav-pad-x-lg:      $vape-space-5;       // ≥lg  (40px gövde − 20px sekme)
+$vape-pdp-tabnav-gap:           $vape-space-2;       // sekmeler arası (8px) — asıl
+                                                     // ayrım sekmenin kendi yatay
+                                                     // padding'inden gelir
+
+// Sekme linkinin KENDİ iç boşluğu. Yalnız dikey pad varken sekmeler sıkışık
+// duruyordu; yatay pad hem tıklama/dokunma alanını büyütür (a11y) hem de aktif
+// alt çizgiye metinden geniş, dengeli bir taban verir.
+$vape-pdp-tab-pad-y:            $vape-space-5;       // 20px dikey
+$vape-pdp-tab-pad-x:            $vape-space-5;       // 20px yatay
+$vape-pdp-tab-size:             $vape-text-md;       // 16px
+$vape-pdp-tab-weight:           $vape-weight-semibold;
+$vape-pdp-tab-color:            $vape-text-muted;    // pasif sekme
+$vape-pdp-tab-color-hover:      $vape-text-primary;
+$vape-pdp-tab-color-active:     $vape-text-primary;  // aktif sekme metni koyu
+$vape-pdp-tab-underline:        $vape-brand;         // aktif alt çizgi — kırmızı
+$vape-pdp-tab-underline-h:      3px;
+
+// ---------- sekme gövdesi ----------
+// "Dibe yapışmış" hissin asıl kaynağı buydu: core .card-body varsayılan Bootstrap
+// padding'i taşıyordu. Cömert ve breakpoint'e duyarlı iç boşluk.
+$vape-pdp-tabbody-pad-x:        $vape-space-6;       // <lg (24px)
+$vape-pdp-tabbody-pad-x-lg:     $vape-space-10;      // ≥lg (40px)
+$vape-pdp-tabbody-pad-y:        $vape-space-8;       // <lg (32px)
+$vape-pdp-tabbody-pad-y-lg:     $vape-space-10;      // ≥lg (40px)
+
+// ---------- açıklama tipografisi ----------
+// Uzun metin satır uzunluğu 1600px container'da 70-75ch'i geçmemeli (okunabilirlik).
+$vape-pdp-desc-measure:         72ch;
+$vape-pdp-desc-size:            $vape-text-md;       // 16px gövde
+$vape-pdp-desc-leading:         $vape-leading-loose;  // 1.7 — uzun metin rahat okunsun
+$vape-pdp-desc-color:           $vape-text-primary;
+$vape-pdp-desc-para-gap:        $vape-space-4;       // paragraflar arası
+
+$vape-pdp-desc-title-size:      $vape-text-xl;       // "Product information ..." başlığı
+$vape-pdp-desc-title-weight:    $vape-weight-bold;
+$vape-pdp-desc-title-mb:        $vape-space-5;
+
+$vape-pdp-desc-h-size:          $vape-text-lg;       // açıklama içi h2/h3 (Lieferumfang vb.)
+$vape-pdp-desc-h-weight:        $vape-weight-semibold;
+$vape-pdp-desc-h-mt:            $vape-space-8;
+$vape-pdp-desc-h-mb:            $vape-space-3;
+
+$vape-pdp-desc-li-gap:          $vape-space-2;       // liste maddeleri arası
+$vape-pdp-desc-marker-color:    $vape-brand;         // liste işareti — ince kırmızı vurgu
+
+// ---------- özellik (property) tablosu ----------
+// Core `.table-striped` zebra deseni bu temada gürültülü duruyor; onun yerine
+// sakin satır ayırıcı + gri etiket sütunu ("spec sheet" dili).
+$vape-pdp-props-mt:             $vape-space-10;      // açıklama ↔ tablo arası
+$vape-pdp-props-title-size:     $vape-text-lg;
+$vape-pdp-props-title-weight:   $vape-weight-semibold;
+$vape-pdp-props-title-mb:       $vape-space-4;
+$vape-pdp-props-row-border:     $vape-border-subtle;
+$vape-pdp-props-cell-pad-y:     $vape-space-3;
+$vape-pdp-props-label-color:    $vape-text-muted;
+$vape-pdp-props-label-weight:   $vape-weight-medium;
+$vape-pdp-props-label-width:    38%;                 // etiket sütunu oranı
+$vape-pdp-props-value-color:    $vape-text-primary;
+$vape-pdp-props-value-weight:   $vape-weight-medium;
+$vape-pdp-props-size:           $vape-text-sm;       // 14px
+
+// ---------- boş durum ----------
+// Demo/eksik veri: açıklaması olmayan üründe sekme gövdesi bomboş kalmasın.
+$vape-pdp-empty-color:          $vape-text-muted;
+$vape-pdp-empty-size:           $vape-text-sm;
+$vape-pdp-empty-pad-y:          $vape-space-6;
