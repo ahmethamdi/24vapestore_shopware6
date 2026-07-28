@@ -1192,6 +1192,9 @@ $vape-showcase-products-col:    1fr;                 // sağ ızgara kolonu (~60
 // ---------- sol banner ----------
 $vape-showcase-banner-min-height:     280px;         // <992px banner taban yüksekliği
 $vape-showcase-banner-min-height-lg:  440px;         // ≥992px — ızgara ile aynı optik ağırlık
+// Banner sticky konumu: sticky header yüksekliği + nefes payı.
+// Ürün sütunu bannerdan uzun olduğunda banner kaydırma boyunca görünür kalır.
+$vape-showcase-banner-sticky-top:     $vape-header-sticky-height + $vape-space-4;
 $vape-showcase-banner-radius:         $vape-radius-lg;   // 12px, kartlarla tutarlı
 $vape-showcase-banner-pad:            $vape-space-6;     // <992px iç boşluk
 $vape-showcase-banner-pad-lg:         $vape-space-8;     // ≥992px iç boşluk

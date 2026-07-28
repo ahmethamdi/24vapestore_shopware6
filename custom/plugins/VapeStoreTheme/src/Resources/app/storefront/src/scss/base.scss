@@ -64,7 +64,7 @@ body {
 //   2. Beyaz ↔ hafif gri zemin alternasyonu → bölümler birbirinden ayrışsın
 //
 // Zemin alternasyonu pos-N ile hedeflenir (anasayfa layout sırası sabit).
-// Not: hero (pos-1) ve promo banner kendi tam-genişlik/koyu zeminini taşır,
+// Not: hero ve promo banner kendi tam-genişlik/koyu zeminini taşır,
 // onlara dokunulmaz. Yönetici section'ı taşırsa native "Hintergrund" ayarı
 // yine öncelikli — bu yalnızca varsayılan ritim.
 // ==================================================
@@ -83,10 +83,10 @@ body {
         padding-bottom: $vape-section-gap-xl;
     }
 
-    // Hero: kendi ritmini taşır, hiç dikey boşluk istemez (fantom pos-1
-    // 112px boşluk ekliyordu → kaldırıldı).
-    &.pos-0,
-    &.pos-1 {
+    // Hero kendi ritmini taşır, dikey boşluk istemez.
+    // ⚠️ Pozisyona göre DEĞİL elemente göre: section sırası değişince
+    // (16→9 indirilirken oldu) pos-N hedefleri kayıyor.
+    &:has(.cms-element-vape-hero) {
         padding-top: 0;
         padding-bottom: 0;
     }
@@ -106,14 +106,14 @@ body {
 // Section ZEMİNİ (gri şerit) kenardan kenara kalır; sadece İÇERİK sınırlanır.
 // Böylece hem tutarlı hizalama hem düzgün kenar payı olur.
 //
-// Hero (pos-0/1): kendi tam-genişlik mekanizmasını korur, İSTİSNA.
+// Hero: kendi tam-genişlik mekanizmasını korur, İSTİSNA (elemente göre hedeflenir).
 // ==================================================
 
 // Shopware'in section'a koyduğu değişken davranışı (boxed → max-width 1400px +
 // sabit 100px margin; full-width → sınırsız) tek tutarlı kurala indiriyoruz:
 // section İÇERİĞİ her zaman ortalı, aynı max genişlikte, responsive padding'li.
 // Sabit 100px margin yerine auto margin → her ekranda düzgün ortalanır.
-.cms-page .cms-section:not(.pos-0):not(.pos-1) {
+.cms-page .cms-section:not(:has(.cms-element-vape-hero)) {
     // Shopware'in boxed sabit margin/max-width'ini sıfırla, biz yönetelim
     padding-left: 0;
     padding-right: 0;
@@ -135,14 +135,35 @@ body {
     }
 }
 
-// Zemin alternasyonu — keşif/marka blokları hafif gri şeride geçer,
-// ürün rayları beyazda kalır. Bölüm sınırını gözle ayırır.
+// ==================================================
+// Zemin ritmi — ELEMENT TİPİNE göre, pozisyona göre DEĞİL
+//
+// Önceden `pos-5, pos-9, pos-13, pos-17` ile hedefleniyordu. Kırılgandı:
+// 2026-07-28'de anasayfa 16→9 section'a indirilince bu numaralar kaydı ve
+// ritim tamamen bozuldu (4 beyaz section üst üste geldi). Yönetici bir
+// section'ı sürükleyip taşıdığında da aynı şey oluyordu — oysa taşıyabilmesi
+// altın kuralın ta kendisi.
+//
+// Artık İÇERİĞE bağlı: "keşif/marka" nitelikli bölümler gri şeride geçer,
+// ürün ızgaraları beyazda kalır. Section nereye taşınırsa taşınsın ritim korunur.
+//
+// Kendi tam-genişlik/koyu zeminini taşıyan elementlere (hero, promo banner,
+// showcase) DOKUNULMAZ — onlar zaten kendi kontrastını üretiyor.
+// ==================================================
 .cms-page .cms-section {
-    &.pos-5,    // kategori carousel
-    &.pos-9,    // kategori grid
-    &.pos-13,   // usp güven şeridi
-    &.pos-17 {  // marka slider
+    &:has(.cms-element-vape-category-carousel),
+    &:has(.cms-element-vape-category-grid),
+    &:has(.cms-element-vape-usp-strip),
+    &:has(.cms-element-vape-trust-bar),
+    &:has(.cms-element-vape-brand-slider) {
         background-color: $vape-section-tone-subtle;
+    }
+
+    // İki gri section yan yana gelirse ikincisi beyaza döner — şerit
+    // birleşip "tek dev gri blok" olmasın, sınır algısı korunsun.
+    &:has(.cms-element-vape-category-carousel) + &:has(.cms-element-vape-category-grid),
+    &:has(.cms-element-vape-usp-strip) + &:has(.cms-element-vape-trust-bar) {
+        background-color: transparent;
     }
 }
 

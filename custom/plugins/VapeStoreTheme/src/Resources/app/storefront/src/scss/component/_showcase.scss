@@ -30,7 +30,11 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
     @media (min-width: 992px) {
         grid-template-columns: $vape-showcase-banner-col $vape-showcase-products-col;
         gap: $vape-showcase-gap-lg;
-        align-items: stretch;
+        // ⚠️ `stretch` DEĞİL: banner içeriği (başlık + 2 satır + buton ≈ 300px)
+        // ürün sütununun boyuna zorlanıyordu → 1453px kutuda ~1150px ölü siyah
+        // alan oluşuyordu (ölçüldü 2026-07-28). `start` + sticky ile banner
+        // kendi boyunda kalır, kaydırırken de görünürlüğünü korur.
+        align-items: start;
     }
 
     // ==================================================
@@ -50,6 +54,10 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
         @media (min-width: 992px) {
             min-height: $vape-showcase-banner-min-height-lg;
             padding: $vape-showcase-banner-pad-lg;
+            // Ürün sütunu bannerdan uzun olduğunda banner kaydırma boyunca
+            // görünür kalsın — "hangi markanın vitrinindeyim" bağlamı kaybolmasın.
+            position: sticky;
+            top: $vape-showcase-banner-sticky-top;
         }
     }
 
@@ -149,6 +157,13 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
 
         @media (min-width: 992px) {
             gap: $vape-showcase-grid-gap-lg;
+        }
+
+        // ≥1200px: 2×2 yerine TEK SIRA 4 kart. 2×2 düzeninde bölüm 1533px'e
+        // çıkıyor ve sayfanın en uzun parçası oluyordu; tek sıra bunu yarıya
+        // indirir ve vitrin "şerit" karakterine kavuşur.
+        @media (min-width: 1200px) {
+            grid-template-columns: repeat(4, 1fr);
         }
     }
 
