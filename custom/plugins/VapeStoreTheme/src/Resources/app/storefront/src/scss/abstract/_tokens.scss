@@ -1473,6 +1473,28 @@ $vape-plp-range-input-h:        40px;
 $vape-plp-range-divider-color:  $vape-text-muted;
 $vape-plp-range-unit-color:     $vape-text-muted;
 
+// Birim etiketi (€) — input'un İÇİNDE, sağda yüzen `position:absolute` rozet.
+// ⚠️ Core bunu `bottom:1px; height:26px` ile KENDİ 28px'lik input'una göre
+// sabitlemiş. Bizim input 40px olduğu için etiket 6px aşağı kayıyordu (ölçüldü:
+// input ortası y=1007, etiket ortası y=1013). Sabit px ile telafi etmek yerine
+// ölçüler input yüksekliğinden TÜRETİLİYOR → input boyu değişirse etiket
+// kendiliğinden ortalı kalır.
+$vape-plp-range-unit-h:         26px;
+// Dikey ortalama: (input − etiket) / 2. 40px input'ta 7px.
+$vape-plp-range-unit-inset-y:   calc((#{$vape-plp-range-input-h} - #{$vape-plp-range-unit-h}) / 2);
+// Yatay: kenarlığı örtmesin diye 1px değil, nefes payı bırak.
+$vape-plp-range-unit-inset-x:   $vape-space-1;                // 4px
+$vape-plp-range-unit-size:      $vape-text-xs;                // 12px — € tek glif, küçük yeter
+// Etiket şeffaf zeminli ve tıklanamaz; yatay dolgusu yalnızca rakamla
+// arasına nefes koyuyor, kutu çizmiyor → 8px gereksizdi.
+$vape-plp-range-unit-pad-x:     $vape-space-1;                // 4px
+// Sayı input'unun sağ iç boşluğu: rakam birimin ALTINA girmesin.
+// ⚠️ DENGE: bu değer büyüdükçe yazılabilir alan daralır. 36px'te içerik
+// alanı 33px'e düşüyordu ve "999999" ekranda "9999" olarak kırpılıyordu
+// (screenshot'ta görüldü). Etiket 4px dolgu + 12px glif ≈ 20px; +4px inset
+// ve 2px nefes ile 26px yeterli → yazılabilir alan 33→43px'e çıkar.
+$vape-plp-range-input-pad-right: 26px;
+
 // ---------- sağ sütun: sıralama / sonuç barı (STICKY, madde 4) ----------
 $vape-plp-actions-mb:           $vape-space-5;               // bar ↔ grid arası
 $vape-plp-actions-pad-y:        $vape-space-3;

@@ -298,42 +298,10 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
         }
     }
 
-    // ---- fiyat aralığı (min/max sayı input'ları — core slider değil) ----
-    .filter-range-container {
-        display: flex;
-        align-items: center;
-        gap: $vape-space-2;
-    }
-
-    .filter-range-min,
-    .filter-range-max {
-        position: relative;
-        flex: 1 1 0;
-        min-width: 0;
-        margin: 0;
-    }
-
-    .filter-range-min .form-control,
-    .filter-range-max .form-control {
-        height: $vape-plp-range-input-h;
-        background-color: $vape-plp-range-input-bg;
-        border: 1px solid $vape-plp-range-input-border;
-        border-radius: $vape-plp-range-input-radius;
-        color: $vape-text-primary;
-        transition:
-            border-color $vape-duration-fast $vape-ease-out,
-            background-color $vape-duration-fast $vape-ease-out;
-
-        &:focus {
-            background-color: $vape-plp-range-input-bg-focus;
-            border-color: $vape-plp-range-input-border-focus;
-            box-shadow: $vape-focus-ring;
-        }
-    }
-
-    .filter-range-unit {
-        color: $vape-plp-range-unit-color;
-    }
+    // NOT: fiyat aralığı (min/max input + € birim etiketi) stilleri BİLEREK
+    // bu sarmalayıcının DIŞINA, dosya sonuna alındı — mobilde filtreler
+    // offcanvas'a taşınıyor ve `.is--vape-plp-filter` orada YOK.
+    // Bkz dosya sonundaki "FİYAT ARALIĞI" bloğu.
 
     .filter-range-divider {
         color: $vape-plp-range-divider-color;
@@ -513,4 +481,74 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
             width: 25%;
         }
     }
+}
+
+// ==================================================
+// FİYAT ARALIĞI — min/max sayı input'ları + € birim etiketi
+//
+// ⚠️ Kapsayıcıdan BAĞIMSIZ yazılmıştır (`.is--vape-plp-filter` altında DEĞİL).
+// Sebep ölçümle bulundu (2026-07-28): masaüstünde filtreler sol sidebar'da
+// (`.is--vape-plp-filter`), MOBİLDE offcanvas'a taşınıyor ve o kapsayıcı
+// orada yok. Sarmalayıcı altında yazıldığında mobilde stiller sessizce
+// uygulanmıyor, core değerleri kalıyordu (input 28px, etiket beyaz yama,
+// tıklama input'a geçmiyor). Bkz mobile-layout-lessons: "core'un mobil
+// deseni masaüstünden farklı olabilir".
+//
+// Core'un kendi konumlandırması KENDİ 28px'lik input'una göre sabitlenmiş
+// (`bottom:1px; height:26px`); bizim input 40px olduğu için etiket 6px aşağı
+// kayıyordu (ölçüldü: input ortası y=1007, etiket ortası y=1013). Ölçüler
+// token'da input yüksekliğinden TÜRETİLİYOR → boy değişirse ortalı kalır.
+// ==================================================
+
+.filter-range-container {
+    display: flex;
+    align-items: center;
+    gap: $vape-space-2;
+}
+
+.filter-range-min,
+.filter-range-max {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+}
+
+.filter-range-min .form-control,
+.filter-range-max .form-control {
+    height: $vape-plp-range-input-h;
+    // Rakam sağda yüzen € etiketinin altına girmesin. `type="number"`
+    // input'ta metin soldan akar; taşarsa etiketin altından geçer.
+    padding-right: $vape-plp-range-input-pad-right;
+    background-color: $vape-plp-range-input-bg;
+    border: 1px solid $vape-plp-range-input-border;
+    border-radius: $vape-plp-range-input-radius;
+    color: $vape-text-primary;
+    transition:
+        border-color $vape-duration-fast $vape-ease-out,
+        background-color $vape-duration-fast $vape-ease-out;
+
+    &:focus {
+        background-color: $vape-plp-range-input-bg-focus;
+        border-color: $vape-plp-range-input-border-focus;
+        box-shadow: $vape-focus-ring;
+    }
+}
+
+.filter-range-unit {
+    bottom: $vape-plp-range-unit-inset-y;
+    right: $vape-plp-range-unit-inset-x;
+    height: $vape-plp-range-unit-h;
+    line-height: $vape-plp-range-unit-h;
+    padding: 0 $vape-plp-range-unit-pad-x;
+    font-size: $vape-plp-range-unit-size;
+    color: $vape-plp-range-unit-color;
+    border-radius: $vape-plp-range-input-radius;
+    // Core beyaz zemin basıyor; gri input üzerinde etiket "yama" gibi
+    // duruyordu. Şeffaf → input yüzeyiyle bütünleşir.
+    // Not: uzun sayı yazıldığında rakam etiketin ARKASINDAN geçmesin diye
+    // padding-right yeterli; şeffaflık bu yüzden güvenli.
+    background-color: transparent;
+    // Dekoratif yüzey — tıklama input'a geçsin.
+    pointer-events: none;
 }
