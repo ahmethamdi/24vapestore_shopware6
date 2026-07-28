@@ -262,6 +262,87 @@ prefers-reduced-motion altında zoom/lift kapanır (erişilebilirlik).
         display: none;
     }
 
+    // ---- Yıldız derecelendirmesi ----
+    // Karar: yorumu OLMAYAN kartta satır hiç render edilmez (twig'de
+    // `if product.ratingAverage`), yer de rezerve EDİLMEZ. 4000 SKU'nun
+    // çoğunda başlangıçta yorum olmayacak; boş yıldız sırası "kötü ürün"
+    // izlenimi verirdi. Kart yüksekliği değişkenliği kabul edildi —
+    // grid zaten esnek, kartlar kendi içinde flex ile hizalanıyor.
+    .product-rating--vape {
+        display: flex;
+        align-items: center;
+        gap: $vape-pcard-rating-gap;
+        // margin-bottom YOK: `.product-info` zaten kardeşler arasında
+        // 8px ritim veriyor. Ek margin eklemek rating→isim aralığını
+        // 12px'e çıkarıp marka→rating (8px) ile tutarsız yapıyordu (ölçüldü).
+        line-height: 1;
+    }
+
+    // Core'un yıldız sarmalayıcısı
+    .product-review-rating {
+        display: inline-flex;
+        align-items: center;
+        gap: $vape-pcard-star-gap;
+    }
+
+    // Yıldız ikonları. Core `sw_icon` ile inline SVG basıyor ve renk
+    // sınıflarını (`text-review`, `text-light`) kendisi koyuyor; burada
+    // ikonun kendisini hedefleyip tema rengine çekiyoruz.
+    .product-review-point {
+        display: inline-flex;
+        width: $vape-pcard-star-size;
+        height: $vape-pcard-star-size;
+
+        .icon {
+            width: 100%;
+            height: 100%;
+
+            svg {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        // Dolu ve yarım yıldızın dolu kısmı → amber
+        .point-full .icon,
+        .point-partial .icon {
+            color: $vape-pcard-star-color;
+        }
+
+        // Boş yıldız ve yarım yıldızın arka planı → nötr gri
+        .point-blank .icon,
+        .point-partial-placeholder .icon {
+            color: $vape-pcard-star-empty-color;
+        }
+    }
+
+    // Yarım yıldız: core iki katmanı üst üste bindirip clip-path uyguluyor.
+    // Katmanların üst üste gelmesi için konumlandırma şart.
+    .product-review-point .point-container {
+        position: relative;
+        width: $vape-pcard-star-size;
+        height: $vape-pcard-star-size;
+
+        .point-partial {
+            position: absolute;
+            inset: 0;
+        }
+    }
+
+    // Sayısal ortalama — yıldızların kontrast açığını kapatan ASIL bilgi.
+    .product-rating-value {
+        font-size: $vape-pcard-rating-text-size;
+        font-weight: $vape-weight-semibold;
+        color: $vape-text-primary;
+    }
+
+    // Yorum sayısı — ikincil
+    .product-rating-count {
+        font-size: $vape-pcard-rating-text-size;
+        color: $vape-pcard-rating-text-color;
+        margin-left: -#{$vape-space-1};   // "4,5 (12)" sıkı dursun
+    }
+
     // İsim — 2 satır kırpma, sabit yükseklik yerine min
     .product-name {
         display: -webkit-box;
@@ -483,6 +564,21 @@ prefers-reduced-motion altında zoom/lift kapanır (erişilebilirlik).
                 #{$vape-pcard-name-size-mobile} * #{$vape-pcard-name-leading} *
                 #{$vape-pcard-name-lines}
             );
+        }
+
+        // Yıldızlar da ölçekle küçülmeli — 180px kartta 14px yıldız + metin
+        // satırı taşırıyordu. Kutu ölçüsü ve clip-path katmanı yıldız
+        // boyutuna BAĞLI olduğu için üçü birlikte güncelleniyor
+        // (yalnızca font-size küçültmek yarım yıldızı bozar).
+        .product-review-point,
+        .product-review-point .point-container {
+            width: $vape-pcard-star-size-mobile;
+            height: $vape-pcard-star-size-mobile;
+        }
+
+        .product-rating-value,
+        .product-rating-count {
+            font-size: $vape-pcard-rating-text-size-mobile;
         }
 
         .product-price-info {

@@ -1847,3 +1847,38 @@ $vape-agegate-deny-fg:           $vape-text-primary;
 // prefers-reduced-motion base.scss'te global olarak zaten kapatıyor.
 $vape-agegate-enter-duration: $vape-duration-base;
 $vape-agegate-enter-offset:   $vape-space-3;        // kartın yukarı süzülme mesafesi
+
+// ==================================================
+// 29. ÜRÜN KARTI — YILDIZ DERECELENDİRMESİ
+//
+// Sosyal kanıt: üç uzman raporu da kartta rating eksikliğini işaret etti.
+// Core markup'ı (component/review/rating.html.twig + point.html.twig) ZATEN
+// karta basılıyor ve `core.listing.showReview` açık — görünmemesinin sebebi
+// tasarım değil VERİYDİ (0 yorum). Burada yalnızca görsel dil veriliyor.
+//
+// Renk kararı: yıldız KEHRİBAR/amber, marka kırmızısı DEĞİL. Kırmızı bu
+// temada "indirim / aktif durum" anlamı taşıyor; rating'e de kırmızı
+// verilirse kartta üç ayrı kırmızı yarışır ve indirim vurgusu değersizleşir.
+// Amber ayrıca yıldız için evrensel konvansiyon (aboutyou, Amazon, Trustpilot).
+// ==================================================
+
+// Yıldız rengi — dolu yıldız. #f59e0b amber-500.
+// Metin DEĞİL, metin-dışı görsel öğe → WCAG 1.4.11 eşiği 3:1.
+// Beyaz zeminde 2.15:1 ile bu eşiğin ALTINDA kalıyor; bu yüzden yıldızlar
+// TEK BAŞINA bilgi taşımıyor: yanlarında sayısal ortalama + görsel-gizli
+// alt metin var (core `product-review-rating-alt-text`). Bkz twig.
+$vape-pcard-star-color:        #f59e0b;
+// Boş yıldız — nötr açık gri, "eksik" olduğu anlaşılsın ama gürültü yapmasın.
+$vape-pcard-star-empty-color:  $vape-neutral-300;
+$vape-pcard-star-size:         14px;    // ≥576px
+$vape-pcard-star-size-mobile:  12px;    // <576px (2 sütun, kart ~180px)
+$vape-pcard-star-gap:          2px;     // yıldızlar arası
+
+// Sayısal ortalama + yorum sayısı — yıldızın sağında.
+// Yıldızlar kontrast eşiğini geçmediği için ASIL bilgi taşıyıcısı bu metin.
+$vape-pcard-rating-text-size:        $vape-text-xs;    // 12px
+$vape-pcard-rating-text-size-mobile: $vape-text-2xs;   // 10px
+$vape-pcard-rating-text-color:       $vape-text-muted; // 4.80:1 — AA geçer
+$vape-pcard-rating-gap:              $vape-space-2;    // yıldız ↔ metin
+// rating ↔ isim arası için AYRI token yok: `.product-info` kardeşler
+// arasında zaten 8px ritim veriyor, ek margin tutarsızlık yaratıyordu.

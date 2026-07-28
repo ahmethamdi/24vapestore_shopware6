@@ -14,8 +14,17 @@
     ölü alanlar temizlenir. Golden rule etkilenmez: kart hâlâ CMS listelemeden gelir.
 #}
 
-{# Marka eyebrow — ismin hemen üstünde. Core'da name bloğunun içine giremeyiz
-   temiz şekilde, o yüzden rating bloğunu markayla birleştiriyoruz. #}
+{# Marka eyebrow + yıldız derecelendirmesi. Core'da name bloğunun içine
+   temiz şekilde giremeyiz, o yüzden ikisi de rating bloğuna yerleşiyor.
+
+   Yıldızlar için core'un kendi `component/review/rating.html.twig`'i
+   kullanılıyor ({{ parent() }} ile) — kendi yıldızımızı çizmiyoruz.
+   Core zaten yarım yıldızı (clip-path) ve görsel-gizli alt metni
+   ("4.5 / 5 yıldız") doğru üretiyor.
+
+   ⚠️ Yıldız rengi (amber) beyaz zeminde 1.4.11'in 3:1 eşiğini GEÇMEZ.
+   Bu yüzden yıldızlar tek başına bilgi taşımıyor: yanlarına sayısal
+   ortalama + yorum sayısı basılıyor ve core'un alt metni korunuyor. #}
 {% block component_product_box_rating %}
     {# `brand` core'da üst blokta {% set %} ile tanımlı; sw_extends alt bloğuna
        taşınmaz (twig scope). Entity'den doğrudan oku — manufacturer objesi
@@ -24,7 +33,29 @@
     {% if brandName %}
         <div class="product-brand-eyebrow">{{ brandName }}</div>
     {% endif %}
-    {{ parent() }}
+
+    {% if config('core.listing.showReview') and product.ratingAverage %}
+        <div class="product-rating product-rating--vape">
+            {% sw_include '@Storefront/storefront/component/review/rating.html.twig' with {
+                points: product.ratingAverage
+            } %}
+
+            {# Sayısal değer — yıldızların kontrast açığını kapatan asıl
+               bilgi. `|number_format` yerel ayrımı (4,5 vs 4.5) uygular. #}
+            <span class="product-rating-value">
+                {{ product.ratingAverage|number_format(1) }}
+            </span>
+
+            {# Yorum sayısı yalnızca yüklenmişse. Listelemede `productReviews`
+               association'ı gelmeyebilir; gelmiyorsa satırı hiç basma
+               (0 yazmak "hiç yorum yok" gibi okunur, oysa veri eksik). #}
+            {% if product.productReviews is defined and product.productReviews is not null %}
+                <span class="product-rating-count">
+                    ({{ product.productReviews.count }})
+                </span>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}
 
 {# Varyant satırı: boşsa hiç render etme (ölü yükseklik bırakma). #}
