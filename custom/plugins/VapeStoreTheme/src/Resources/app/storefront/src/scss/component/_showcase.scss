@@ -30,11 +30,16 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
     @media (min-width: 992px) {
         grid-template-columns: $vape-showcase-banner-col $vape-showcase-products-col;
         gap: $vape-showcase-gap-lg;
-        // ⚠️ `stretch` DEĞİL: banner içeriği (başlık + 2 satır + buton ≈ 300px)
-        // ürün sütununun boyuna zorlanıyordu → 1453px kutuda ~1150px ölü siyah
-        // alan oluşuyordu (ölçüldü 2026-07-28). `start` + sticky ile banner
-        // kendi boyunda kalır, kaydırırken de görünürlüğünü korur.
-        align-items: start;
+        // `stretch`: banner ile kart sırası AYNI yüksekliği paylaşır, iki
+        // sütunun hem üst hem alt kenarı hizalanır (ölçüldü: start ile alt
+        // kenarlar 155px kayıyordu).
+        //
+        // ⚠️ Eskiden bu düzen ~1150px ölü siyah alan üretiyordu — ama sebebi
+        // stretch DEĞİL, ürünlerin 2×2 dizilip sütunu 1453px'e uzatmasıydı.
+        // Tek sıra 3 karta geçince sütun 595px'e indi; stretch artık güvenli.
+        // Banner içeriği ayrıca `flex-start` ile üste yaslanıyor (aşağıda),
+        // böylece kutu uzasa bile metin ortada yüzüp dağılmaz.
+        align-items: stretch;
     }
 
     // ==================================================
@@ -43,6 +48,10 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
     &__banner {
         position: relative;
         display: flex;
+        // İçerik dikeyde ORTALI. `flex-start` denendi (kutu uzarsa metin
+        // yukarıda dursun diye) ama tersine döndü: başlık tepeye yapışıp
+        // altında büyük boş alan bıraktı. Kutu artık 595px — kart sırasıyla
+        // aynı, makul bir yükseklik — ortalama doğru duruyor.
         align-items: center;
         min-height: $vape-showcase-banner-min-height;
         padding: $vape-showcase-banner-pad;
@@ -54,10 +63,6 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
         @media (min-width: 992px) {
             min-height: $vape-showcase-banner-min-height-lg;
             padding: $vape-showcase-banner-pad-lg;
-            // Ürün sütunu bannerdan uzun olduğunda banner kaydırma boyunca
-            // görünür kalsın — "hangi markanın vitrinindeyim" bağlamı kaybolmasın.
-            position: sticky;
-            top: $vape-showcase-banner-sticky-top;
         }
     }
 
@@ -159,11 +164,12 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
             gap: $vape-showcase-grid-gap-lg;
         }
 
-        // ≥1200px: 2×2 yerine TEK SIRA 4 kart. 2×2 düzeninde bölüm 1533px'e
-        // çıkıyor ve sayfanın en uzun parçası oluyordu; tek sıra bunu yarıya
-        // indirir ve vitrin "şerit" karakterine kavuşur.
+        // ≥1200px: 2×2 yerine TEK SIRA 3 kart. 2×2 düzeninde bölüm 1533px'e
+        // çıkıyor ve sayfanın en uzun parçası oluyordu.
+        // 4 kart denendi ama kart 200px'e düşüyordu (PLP'de ~264px) — isim
+        // iki satıra kırılıyor, fiyat/CTA sıkışıyordu. 3 kart ≈ 283px verir.
         @media (min-width: 1200px) {
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
