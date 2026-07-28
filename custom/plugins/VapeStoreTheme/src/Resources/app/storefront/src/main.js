@@ -16,6 +16,7 @@ import VapeFeaturedSplitPlugin from './plugin/vape-featured-split/vape-featured-
 import VapeProductTabsPlugin from './plugin/vape-product-tabs/vape-product-tabs.plugin';
 import VapeBrandSliderPlugin from './plugin/vape-brand-slider/vape-brand-slider.plugin';
 import VapeDealsCountdownPlugin from './plugin/vape-deals-countdown/vape-deals-countdown.plugin';
+import VapeAgeGatePlugin from './plugin/vape-age-gate/vape-age-gate.plugin';
 
 const registry = window.PluginManager;
 
@@ -27,3 +28,6 @@ registry.register('VapeFeaturedSplit', VapeFeaturedSplitPlugin, '[data-vape-feat
 registry.register('VapeProductTabs', VapeProductTabsPlugin, '[data-vape-product-tabs]');
 registry.register('VapeBrandSlider', VapeBrandSliderPlugin, '[data-vape-brand-slider]');
 registry.register('VapeDealsCountdown', VapeDealsCountdownPlugin, '.vape-deals');
+// Age-gate: yasal kapı, her sayfada. CMS element DEĞİL — gerekçe
+// component/age-gate.html.twig başındaki nota bakınız.
+registry.register('VapeAgeGate', VapeAgeGatePlugin, '[data-vape-age-gate]');

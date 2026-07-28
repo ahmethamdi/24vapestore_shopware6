@@ -1766,3 +1766,84 @@ $vape-breadcrumb-divider-color: $vape-neutral-500;
 
 // Mobilde uzun yol satırı taşırmasın: yatay kaydırma + kenar solma
 $vape-breadcrumb-fade-width:    $vape-space-6;
+
+// ==================================================
+// 28. AGE-GATE (18+ yaş kapısı)
+//
+// Almanya'da nikotin ürünleri için yasal zorunluluk (JuSchG §10,
+// TabakerzG). Beyan tabanlı kapı: doğum tarihi SORULMAZ — WCAG 3.3.8
+// (Accessible Authentication) bilişsel fonksiyon testini yasaklar ve
+// beyan kapısında tarih sormanın güvenlik kazanımı zaten sıfırdır.
+//
+// Görsel dil: koyu opak overlay (arkadaki içerik OKUNMAMALI — yasal kapı,
+// dekoratif modal değil) + beyaz kart. Onay butonu kırmızı dolgu — sitede
+// nadiren kullanılan güçlü vurgu, burada birincil ve tek eylem olduğu için
+// yerinde. Ret butonu nötr çerçeveli.
+// ==================================================
+
+// ---------- overlay ----------
+// z-index her şeyin ÜSTÜNDE olmalı.
+// ⚠️ ÖLÇÜLDÜ (2026-07-28): core'un `.cookie-permission-container` değeri
+// TAM 1100. `$vape-z-toast + 10` da 1100 veriyordu → eşit z-index'te sonra
+// gelen kardeş kazanır, cookie bar kapının ÜSTÜNE boyanıyordu: inert
+// olduğu için tıklanmıyor ama görünüyordu — "tıklanabilir görünen ama
+// çalışmayan" en kötü durum. 1200'e çıkarıldı.
+$vape-agegate-z:              1200;
+// Opaklık 0.88 → arkadaki ürünler seçilemez. Yasal kapıda "içeriği göster
+// ama tıklatma" yeterli değil; nikotin görselleri de kapının arkasında kalmalı.
+$vape-agegate-overlay-bg:     rgba(11, 11, 15, 0.88);
+$vape-agegate-overlay-blur:   4px;
+$vape-agegate-overlay-pad:    $vape-space-4;        // dar ekranda kart kenara yapışmasın
+
+// ---------- kart ----------
+$vape-agegate-card-max:       440px;
+$vape-agegate-card-bg:        $vape-bg-surface;
+$vape-agegate-card-radius:    $vape-radius-lg;
+$vape-agegate-card-shadow:    $vape-shadow-lg;
+$vape-agegate-card-pad:       $vape-space-6;        // <768px
+$vape-agegate-card-pad-md:    $vape-space-10;       // ≥768px
+$vape-agegate-card-gap:       $vape-space-4;        // kart içi dikey ritim
+
+// ---------- logo / amblem ----------
+$vape-agegate-badge-size:     72px;
+$vape-agegate-badge-bg:       $vape-brand-subtle;
+$vape-agegate-badge-fg:       $vape-brand-active;   // koyu kırmızı — AA kontrast
+$vape-agegate-badge-size-txt:  $vape-text-2xl;
+$vape-agegate-logo-max-h:     48px;                 // config'ten logo geldiyse
+
+// ---------- tipografi ----------
+$vape-agegate-title-size:     $vape-text-2xl;       // <768px
+$vape-agegate-title-size-md:  $vape-text-3xl;       // ≥768px
+$vape-agegate-title-color:    $vape-text-heading;
+$vape-agegate-text-size:      $vape-text-md;
+$vape-agegate-text-color:     $vape-text-primary;
+$vape-agegate-text-leading:   $vape-leading-normal;
+// Yasal dipnot (nikotin uyarısı) — sakin ama OKUNUR kalmalı.
+// neutral-500 beyazda 4.80:1 → AA (≥4.5:1) geçer. Daha açık tona İNME.
+$vape-agegate-note-size:      $vape-text-xs;
+$vape-agegate-note-color:     $vape-text-muted;
+
+// ---------- butonlar ----------
+// 48px: WCAG 2.5.8 (Target Size Minimum, 24px) fazlasıyla aşılır; birincil
+// yasal eylem olduğu için mobil kart CTA'sının (36px) üstünde tutuluyor.
+$vape-agegate-btn-height:     48px;
+$vape-agegate-btn-radius:     $vape-radius-md;
+$vape-agegate-btn-gap:        $vape-space-3;
+$vape-agegate-btn-size:       $vape-text-md;
+$vape-agegate-btn-weight:     $vape-weight-semibold;
+
+// Onay (birincil) — kırmızı dolgu, beyaz metin
+$vape-agegate-confirm-bg:        $vape-brand;
+$vape-agegate-confirm-bg-hover:  $vape-brand-hover;
+$vape-agegate-confirm-fg:        $vape-text-inverse;
+
+// Ret (ikincil) — nötr çerçeveli
+$vape-agegate-deny-bg:           transparent;
+$vape-agegate-deny-bg-hover:     $vape-bg-raised;
+$vape-agegate-deny-border:       $vape-border-strong;
+$vape-agegate-deny-fg:           $vape-text-primary;
+
+// ---------- animasyon ----------
+// prefers-reduced-motion base.scss'te global olarak zaten kapatıyor.
+$vape-agegate-enter-duration: $vape-duration-base;
+$vape-agegate-enter-offset:   $vape-space-3;        // kartın yukarı süzülme mesafesi

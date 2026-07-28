@@ -1,0 +1,22 @@
+{#
+24VapeStore — base layout override
+==================================================
+TEK amaç: age-gate (18+ yaş kapısı) markup'ını her sayfaya basmak.
+
+Neden `base_body_inner` başına (append değil prepend):
+  Kapı sayfadaki İLK öğe olmalı ki JS yüklenmeden önce paint edilsin ve
+  DOM sırasında header/içerikten önce gelsin — böylece ekran okuyucu
+  sırasında da ilk sırada. `parent()` sonda çağrılıyor.
+
+⚠️ Bu dosya YENİ bir core template override'ı. İlk eklendiğinde
+   `cache:clear` YETMEZ — PHP opcache eski dosya listesini tutar ve
+   override sessizce uygulanmaz. `brew services restart php` şart.
+   Bkz CLAUDE.md → Shopware 6.7 Tuzakları.
+#}
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{% block base_body_inner %}
+    {% sw_include '@Storefront/storefront/component/age-gate.html.twig' %}
+
+    {{ parent() }}
+{% endblock %}

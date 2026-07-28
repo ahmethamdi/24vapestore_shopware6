@@ -81,5 +81,16 @@
     "vapeTrustShipping": "Free shipping from €50",
     "vapeTrustPayment": "Secure payment",
     "vapeTrustReturn": "14-day return policy"
+  },
+  "ageGate": {
+    "badge": "18+",
+    "title": "Are you 18 years or older?",
+    "text": "Our range contains products with nicotine. Sales are permitted to adults only. Please confirm your age to continue.",
+    "note": "Nicotine is highly addictive. Not suitable for non-smokers, pregnant or breastfeeding people. Your confirmation is stored locally in your browser.",
+    "confirm": "Yes, I am 18 or older",
+    "deny": "No, I am younger",
+    "deniedTitle": "Access not possible",
+    "deniedText": "This website is intended for people aged 18 and over only. Thank you for your understanding.",
+    "deniedBack": "Back"
   }
 }

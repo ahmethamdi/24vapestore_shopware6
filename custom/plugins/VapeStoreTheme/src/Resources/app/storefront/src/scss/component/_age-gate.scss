@@ -1,0 +1,273 @@
+/*
+Age-Gate (18+ yaş kapısı)
+==================================================
+Almanya'da nikotin satışı için yasal zorunluluk. CMS element DEĞİL —
+gerekçe: her sayfada (PDP, PLP, checkout, hesap, 404) CMS'ten bağımsız
+çıkmalı ve yönetici tarafından KALDIRILAMAMALI. Core'un cookie bar'ı da
+aynı sebeple CMS dışıdır. İçerik yine de düzenlenebilir: bütün metinler
+theme.json config alanlarından okunur.
+
+Görünürlük mantığı:
+  - Sunucu her zaman markup'ı basar (HTTP cache güvenli — kapı state'i
+    cache key'e girmez).
+  - Varsayılan DURUM: gizli. JS çerezi kontrol eder, gerekiyorsa
+    `is-open` ekler. Böylece onay vermiş kullanıcıda kapı hiç flash etmez.
+  - JS yoksa `<noscript>` kuralı devreye girer (aşağıda) → kapı yine görünür.
+*/
+
+// ==================================================
+// Kapsayıcı / overlay
+// ==================================================
+
+.vape-age-gate {
+    // Varsayılan gizli. `hidden` attribute'u twig'de de var (JS'siz/erken
+    // paint), burada CSS ile de kapatıyoruz ki `hidden`'ı ezen bir
+    // display kuralı kazara kapıyı açmasın.
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: $vape-agegate-z;
+    padding: $vape-agegate-overlay-pad;
+    background-color: $vape-agegate-overlay-bg;
+    backdrop-filter: blur($vape-agegate-overlay-blur);
+    -webkit-backdrop-filter: blur($vape-agegate-overlay-blur);
+
+    // Dikey ortalama + taşma güvenliği: kart uzun metinle ekrandan
+    // yüksek olursa overlay'in KENDİSİ kaysın (kart değil), yoksa
+    // küçük ekranda butonlar erişilemez kalır.
+    overflow-y: auto;
+
+    &.is-open {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+// JS devre dışıysa kapı her koşulda görünür olmalı — yasal gereklilik.
+// `<noscript>` içindeki <style> bu sınıfı body'ye eklemez; onun yerine
+// twig'de noscript bloğu doğrudan bu kuralı basar. Burada yalnızca
+// yardımcı sınıf tanımlanıyor.
+.vape-age-gate.is-forced {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// Kapı açıkken arka plan kaymasın. JS `body`'ye ekler; JS yoksa
+// noscript style'ı aynı işi yapar.
+body.vape-age-gate-open {
+    overflow: hidden;
+}
+
+// ==================================================
+// Kart
+// ==================================================
+
+.vape-age-gate__dialog {
+    width: 100%;
+    max-width: $vape-agegate-card-max;
+    // `margin: auto` + overlay flex → kart uzunsa üstten kırpılmaz,
+    // kısaysa dikey ortalanır.
+    margin: auto;
+    padding: $vape-agegate-card-pad;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $vape-agegate-card-gap;
+    text-align: center;
+
+    background-color: $vape-agegate-card-bg;
+    border-radius: $vape-agegate-card-radius;
+    box-shadow: $vape-agegate-card-shadow;
+
+    animation: vape-age-gate-in $vape-agegate-enter-duration $vape-ease-out both;
+
+    @media (min-width: 768px) {
+        padding: $vape-agegate-card-pad-md;
+    }
+}
+
+// Soru bloğu — kartın `align-items`/`gap`'i buraya UZANMAZ (blok çocuk,
+// flex item değil). Ölçümle yakalandı: amblem sola yapışıyordu ve yasal
+// dipnot butona sıfır boşlukla bitişikti. Blok kendi flex bağlamını kurar.
+.vape-age-gate__prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $vape-agegate-card-gap;
+    width: 100%;
+}
+
+@keyframes vape-age-gate-in {
+    from {
+        opacity: 0;
+        transform: translateY($vape-agegate-enter-offset);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// ==================================================
+// Amblem — yönetici logo yüklediyse logo, yoksa "18+" rozeti
+// ==================================================
+
+.vape-age-gate__logo {
+    max-height: $vape-agegate-logo-max-h;
+    max-width: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.vape-age-gate__badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: $vape-agegate-badge-size;
+    height: $vape-agegate-badge-size;
+    border-radius: $vape-radius-pill;
+
+    background-color: $vape-agegate-badge-bg;
+    color: $vape-agegate-badge-fg;
+    font-size: $vape-agegate-badge-size-txt;
+    font-weight: $vape-weight-black;
+    letter-spacing: $vape-tracking-tight;
+    // Dekoratif tekrar — başlık ve metin aynı bilgiyi zaten taşıyor,
+    // ekran okuyucuya "18+" iki kez okutulmasın (twig'de aria-hidden).
+    line-height: 1;
+}
+
+// ==================================================
+// Metin
+// ==================================================
+
+.vape-age-gate__title {
+    margin: 0;
+    font-size: $vape-agegate-title-size;
+    font-weight: $vape-weight-bold;
+    line-height: $vape-leading-snug;
+    color: $vape-agegate-title-color;
+
+    @media (min-width: 768px) {
+        font-size: $vape-agegate-title-size-md;
+    }
+}
+
+.vape-age-gate__text {
+    margin: 0;
+    font-size: $vape-agegate-text-size;
+    line-height: $vape-agegate-text-leading;
+    color: $vape-agegate-text-color;
+}
+
+.vape-age-gate__note {
+    // Yasal dipnot butonlardan ayrı bir kayıt — flex gap'in üstüne ek
+    // ayrım + ince çizgi, "buton etiketi" gibi okunmasın.
+    margin: 0;
+    padding-top: $vape-space-4;
+    border-top: 1px solid $vape-border-subtle;
+    width: 100%;
+    font-size: $vape-agegate-note-size;
+    line-height: $vape-leading-normal;
+    color: $vape-agegate-note-color;
+}
+
+// ==================================================
+// Butonlar
+// ==================================================
+
+.vape-age-gate__actions {
+    display: flex;
+    flex-direction: column;
+    gap: $vape-agegate-btn-gap;
+    width: 100%;
+    margin-top: $vape-space-2;
+}
+
+.vape-age-gate__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    // min-height (height değil): metin sarınca buton büyüsün, kırpmasın.
+    min-height: $vape-agegate-btn-height;
+    padding: $vape-space-2 $vape-space-5;
+    width: 100%;
+
+    border: 1px solid transparent;
+    border-radius: $vape-agegate-btn-radius;
+    font-size: $vape-agegate-btn-size;
+    font-weight: $vape-agegate-btn-weight;
+    line-height: $vape-leading-snug;
+    cursor: pointer;
+    text-decoration: none;
+
+    transition:
+        background-color $vape-duration-fast $vape-ease-out,
+        border-color $vape-duration-fast $vape-ease-out,
+        color $vape-duration-fast $vape-ease-out;
+
+    &:focus-visible {
+        outline: 2px solid $vape-agegate-confirm-bg;
+        outline-offset: 2px;
+    }
+}
+
+// Onay — birincil, kırmızı dolgu
+.vape-age-gate__btn--confirm {
+    background-color: $vape-agegate-confirm-bg;
+    border-color: $vape-agegate-confirm-bg;
+    color: $vape-agegate-confirm-fg;
+
+    &:hover,
+    &:focus {
+        background-color: $vape-agegate-confirm-bg-hover;
+        border-color: $vape-agegate-confirm-bg-hover;
+        color: $vape-agegate-confirm-fg;
+    }
+
+    // Kırmızı zeminde kırmızı odak halkası görünmez → koyu halka.
+    &:focus-visible {
+        outline-color: $vape-text-heading;
+    }
+}
+
+// Ret — ikincil, nötr çerçeveli
+.vape-age-gate__btn--deny {
+    background-color: $vape-agegate-deny-bg;
+    border-color: $vape-agegate-deny-border;
+    color: $vape-agegate-deny-fg;
+
+    &:hover,
+    &:focus {
+        background-color: $vape-agegate-deny-bg-hover;
+        border-color: $vape-text-primary;
+        color: $vape-agegate-deny-fg;
+    }
+}
+
+// ==================================================
+// Ret ekranı — "Nein" sonrası yönlendirme yapılamıyorsa
+// (config'te URL yoksa) kart bu duruma döner.
+// ==================================================
+
+.vape-age-gate__denied {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: $vape-agegate-card-gap;
+    text-align: center;
+}
+
+// Durum sınıfı kartın kendisinde: soru bloğu gizlenir, ret bloğu açılır.
+.vape-age-gate__dialog.is-denied {
+    .vape-age-gate__prompt {
+        display: none;
+    }
+
+    .vape-age-gate__denied {
+        display: flex;
+    }
+}

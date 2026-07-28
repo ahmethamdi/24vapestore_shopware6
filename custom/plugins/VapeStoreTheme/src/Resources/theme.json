@@ -66,6 +66,12 @@
           "de-DE": "Footer",
           "en-GB": "Footer"
         }
+      },
+      "ageGate": {
+        "label": {
+          "de-DE": "Altersprüfung (18+)",
+          "en-GB": "Age verification (18+)"
+        }
       }
     },
     "fields": {
@@ -567,6 +573,151 @@
           "de-DE": "DHL-Logo anzeigen",
           "en-GB": "Show DHL logo"
         },
+        "scss": false
+      },
+      "ageGateEnabled": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "ageGate",
+        "order": 100,
+        "label": {
+          "de-DE": "Altersprüfung aktivieren",
+          "en-GB": "Enable age verification"
+        },
+        "helpText": {
+          "de-DE": "Gesetzlich vorgeschrieben für den Verkauf nikotinhaltiger Produkte in Deutschland. Nur deaktivieren, wenn rechtlich abgeklärt.",
+          "en-GB": "Legally required for selling nicotine products in Germany. Only disable if legally cleared."
+        },
+        "scss": false
+      },
+      "ageGateTitle": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "ageGate",
+        "order": 110,
+        "label": {
+          "de-DE": "Überschrift",
+          "en-GB": "Headline"
+        },
+        "helpText": {
+          "de-DE": "Leer lassen, um den Standardtext aus den Snippets zu verwenden.",
+          "en-GB": "Leave empty to use the default text from the snippets."
+        },
+        "scss": false
+      },
+      "ageGateText": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "ageGate",
+        "order": 120,
+        "label": {
+          "de-DE": "Fließtext",
+          "en-GB": "Body text"
+        },
+        "helpText": {
+          "de-DE": "Leer lassen für den Standardtext.",
+          "en-GB": "Leave empty for the default text."
+        },
+        "scss": false
+      },
+      "ageGateNote": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "ageGate",
+        "order": 130,
+        "label": {
+          "de-DE": "Rechtlicher Hinweis (klein)",
+          "en-GB": "Legal note (small)"
+        },
+        "helpText": {
+          "de-DE": "Nikotinwarnung unter den Buttons. Leer lassen für den Standardtext.",
+          "en-GB": "Nicotine warning below the buttons. Leave empty for the default text."
+        },
+        "scss": false
+      },
+      "ageGateConfirmLabel": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "ageGate",
+        "order": 140,
+        "label": {
+          "de-DE": "Button „Ja\" — Beschriftung",
+          "en-GB": "Button \"Yes\" — label"
+        },
+        "helpText": {
+          "de-DE": "Leer lassen für den Standardtext.",
+          "en-GB": "Leave empty for the default text."
+        },
+        "scss": false
+      },
+      "ageGateDenyLabel": {
+        "type": "text",
+        "value": "",
+        "editable": true,
+        "block": "ageGate",
+        "order": 150,
+        "label": {
+          "de-DE": "Button „Nein\" — Beschriftung",
+          "en-GB": "Button \"No\" — label"
+        },
+        "helpText": {
+          "de-DE": "Leer lassen für den Standardtext.",
+          "en-GB": "Leave empty for the default text."
+        },
+        "scss": false
+      },
+      "ageGateDenyUrl": {
+        "type": "text",
+        "value": "https://www.rauchfrei-info.de/",
+        "editable": true,
+        "block": "ageGate",
+        "order": 160,
+        "label": {
+          "de-DE": "Weiterleitung bei „Nein\"",
+          "en-GB": "Redirect on \"No\""
+        },
+        "helpText": {
+          "de-DE": "Vollständige URL. Leer lassen, um stattdessen eine Hinweisseite im Dialog anzuzeigen.",
+          "en-GB": "Full URL. Leave empty to show an in-dialog notice instead."
+        },
+        "scss": false
+      },
+      "ageGateCookieDays": {
+        "type": "text",
+        "value": "30",
+        "editable": true,
+        "block": "ageGate",
+        "order": 170,
+        "label": {
+          "de-DE": "Gültigkeit der Bestätigung (Tage)",
+          "en-GB": "Confirmation validity (days)"
+        },
+        "helpText": {
+          "de-DE": "Wie lange die Bestätigung gespeichert bleibt, bevor erneut gefragt wird.",
+          "en-GB": "How long the confirmation is stored before asking again."
+        },
+        "scss": false
+      },
+      "ageGateLogo": {
+        "type": "media",
+        "value": "",
+        "editable": true,
+        "block": "ageGate",
+        "order": 180,
+        "label": {
+          "de-DE": "Logo im Dialog",
+          "en-GB": "Logo in dialog"
+        },
+        "helpText": {
+          "de-DE": "Optional. Ohne Logo wird ein „18+\"-Emblem angezeigt.",
+          "en-GB": "Optional. Without a logo an \"18+\" emblem is shown."
+        },
+        "fullWidth": true,
         "scss": false
       }
     }

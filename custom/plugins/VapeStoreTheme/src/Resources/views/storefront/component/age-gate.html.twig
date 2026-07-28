@@ -1,0 +1,155 @@
+{#
+Age-Gate (18+ yaş kapısı) — 24VapeStore
+==================================================
+Almanya'da nikotin ürünleri için yasal zorunluluk (JuSchG §10 / TabakerzG).
+
+NEDEN CMS ELEMENT DEĞİL (altın kural istisnası):
+  Kapının her sayfada — PDP, PLP, checkout, hesap, 404 — CMS'ten bağımsız
+  çıkması gerekiyor. CMS element yalnızca Shopping Experiences sayfasına
+  konabilir; anasayfada çıkar, ürün sayfasında çıkmazdı. Ayrıca yöneticinin
+  onu sürükleyip KALDIRABİLMESİ bir özellik değil, hukuki risk. Core'un
+  cookie bar'ı da tam bu sebeple CMS dışıdır.
+  Düzenlenebilirlik korunuyor: bütün metinler + logo + ret hedefi + çerez
+  ömrü theme.json'dan (Admin → Temalar → VapeStoreTheme) düzenlenir.
+
+WCAG 3.3.8 (Accessible Authentication):
+  Doğum tarihi SORULMAZ. Tarih hatırlatmak bilişsel fonksiyon testidir ve
+  beyan tabanlı kapıda güvenlik kazanımı sıfırdır (kullanıcı istediğini
+  yazabilir). İki buton, tek tık.
+
+Görünürlük: sunucu markup'ı HER ZAMAN basar (HTTP full-page cache güvenli —
+kapı durumu çerezde, cache key'de değil). Varsayılan gizli; JS çerezi
+kontrol edip gerekiyorsa açar. JS yoksa alttaki <noscript> devreye girer.
+#}
+
+{% set ageGateEnabled = theme_config('ageGateEnabled') %}
+
+{% if ageGateEnabled %}
+    {% set ageGateTitle    = theme_config('ageGateTitle')    ?: 'ageGate.title'|trans %}
+    {% set ageGateText     = theme_config('ageGateText')     ?: 'ageGate.text'|trans %}
+    {% set ageGateNote     = theme_config('ageGateNote')     ?: 'ageGate.note'|trans %}
+    {% set ageGateConfirm  = theme_config('ageGateConfirmLabel') ?: 'ageGate.confirm'|trans %}
+    {% set ageGateDeny     = theme_config('ageGateDenyLabel')    ?: 'ageGate.deny'|trans %}
+    {% set ageGateDenyUrl  = theme_config('ageGateDenyUrl') %}
+    {% set ageGateLogo     = theme_config('ageGateLogo') %}
+    {% set ageGateDays     = theme_config('ageGateCookieDays') ?: 30 %}
+
+    {# Plugin seçenekleri — JS tarafında sabit yok, hepsi buradan okunuyor. #}
+    {% set ageGateOptions = {
+        cookieDays: ageGateDays,
+        denyUrl: ageGateDenyUrl
+    } %}
+
+    <div class="vape-age-gate"
+         id="vape-age-gate"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="vape-age-gate-title"
+         aria-describedby="vape-age-gate-text"
+         hidden
+         data-vape-age-gate
+         data-vape-age-gate-options="{{ ageGateOptions|json_encode }}">
+
+        <div class="vape-age-gate__dialog" data-vape-age-gate-card>
+
+            {# ---------- Soru durumu ---------- #}
+            <div class="vape-age-gate__prompt" data-vape-age-gate-prompt>
+
+                {% block component_age_gate_emblem %}
+                    {% if ageGateLogo %}
+                        <img src="{{ ageGateLogo }}"
+                             alt=""
+                             class="vape-age-gate__logo"
+                             loading="eager">
+                    {% else %}
+                        {# Dekoratif: "18+" bilgisi başlık ve metinde zaten var,
+                           ekran okuyucuya iki kez okutulmasın. #}
+                        <div class="vape-age-gate__badge" aria-hidden="true">
+                            {{ 'ageGate.badge'|trans }}
+                        </div>
+                    {% endif %}
+                {% endblock %}
+
+                {% block component_age_gate_title %}
+                    <h2 class="vape-age-gate__title" id="vape-age-gate-title">
+                        {{ ageGateTitle }}
+                    </h2>
+                {% endblock %}
+
+                {% block component_age_gate_text %}
+                    <p class="vape-age-gate__text" id="vape-age-gate-text">
+                        {{ ageGateText }}
+                    </p>
+                {% endblock %}
+
+                {% block component_age_gate_actions %}
+                    <div class="vape-age-gate__actions">
+                        <button type="button"
+                                class="vape-age-gate__btn vape-age-gate__btn--confirm"
+                                data-vape-age-gate-confirm>
+                            {{ ageGateConfirm }}
+                        </button>
+
+                        <button type="button"
+                                class="vape-age-gate__btn vape-age-gate__btn--deny"
+                                data-vape-age-gate-deny>
+                            {{ ageGateDeny }}
+                        </button>
+                    </div>
+                {% endblock %}
+
+                {% block component_age_gate_note %}
+                    {% if ageGateNote %}
+                        <p class="vape-age-gate__note">{{ ageGateNote }}</p>
+                    {% endif %}
+                {% endblock %}
+            </div>
+
+            {# ---------- Ret durumu ----------
+               Yalnızca ageGateDenyUrl BOŞ ise gösterilir; doluysa JS
+               yönlendirir ve bu blok hiç görünmez. Yönlendirme hedefi
+               yoksa kullanıcı boş kapıda kalmasın diye burada duruyor.
+               role="alert" DEĞİL: içerik gösterildiğinde odak zaten buraya
+               taşınıyor, alert ile birlikte çift duyuru olurdu. #}
+            <div class="vape-age-gate__denied"
+                 data-vape-age-gate-denied
+                 tabindex="-1">
+
+                {% block component_age_gate_denied %}
+                    <h2 class="vape-age-gate__title">{{ 'ageGate.deniedTitle'|trans }}</h2>
+                    <p class="vape-age-gate__text">{{ 'ageGate.deniedText'|trans }}</p>
+
+                    <div class="vape-age-gate__actions">
+                        <button type="button"
+                                class="vape-age-gate__btn vape-age-gate__btn--deny"
+                                data-vape-age-gate-back>
+                            {{ 'ageGate.deniedBack'|trans }}
+                        </button>
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    {# JS kapalıyken kapı yine görünmeli — yasal gereklilik. JS varsa
+       plugin çerezi okuyup kapıyı gerektiğinde açar; JS yoksa aşağıdaki
+       stil kapıyı koşulsuz açar ve sayfayı kilitler.
+       (JS'li tarayıcıda <noscript> hiç uygulanmaz, çakışma olmaz.) #}
+    <noscript>
+        <style>
+            #vape-age-gate {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+            }
+            body {
+                overflow: hidden !important;
+            }
+            /* JS yokken buton hiçbir şey yapamaz — kullanıcıyı boşa
+               tıklatmak yerine gizle, yalnızca uyarı metni kalsın. */
+            #vape-age-gate .vape-age-gate__actions {
+                display: none !important;
+            }
+        </style>
+    </noscript>
+{% endif %}

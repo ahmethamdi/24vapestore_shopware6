@@ -81,5 +81,16 @@
     "vapeTrustShipping": "Kostenloser Versand ab 50 €",
     "vapeTrustPayment": "Sichere Zahlung",
     "vapeTrustReturn": "14 Tage Rückgaberecht"
+  },
+  "ageGate": {
+    "badge": "18+",
+    "title": "Sind Sie 18 Jahre oder älter?",
+    "text": "Unser Sortiment enthält nikotinhaltige Produkte. Der Verkauf ist ausschließlich an volljährige Personen gestattet. Bitte bestätigen Sie Ihr Alter, um fortzufahren.",
+    "note": "Nikotin ist stark abhängig machend. Nicht geeignet für Nichtraucher, Schwangere und Stillende. Ihre Bestätigung wird lokal in Ihrem Browser gespeichert.",
+    "confirm": "Ja, ich bin 18 Jahre oder älter",
+    "deny": "Nein, ich bin jünger",
+    "deniedTitle": "Zugang nicht möglich",
+    "deniedText": "Diese Website richtet sich ausschließlich an Personen ab 18 Jahren. Wir bitten um Ihr Verständnis.",
+    "deniedBack": "Zurück"
   }
 }
