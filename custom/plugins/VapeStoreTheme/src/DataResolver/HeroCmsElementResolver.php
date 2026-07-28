@@ -147,6 +147,10 @@ class HeroCmsElementResolver extends AbstractCmsElementResolver
                 'newTab' => (bool) ($slide['newTab'] ?? false),
                 'bgColor' => (string) ($slide['bgColor'] ?? '#3f3f4a'),
                 'textColor' => (string) ($slide['textColor'] ?? 'light'),
+                // Görselin kadraj odağı — `object-position` olarak basılır.
+                // Beyaz listeyle sınırlandırılıyor: değer doğrudan inline
+                // style'a giriyor, serbest metin CSS enjeksiyonu olurdu.
+                'focalPoint' => $this->normaliseFocalPoint($slide['focalPoint'] ?? null),
             ];
         }
 
@@ -181,5 +185,30 @@ class HeroCmsElementResolver extends AbstractCmsElementResolver
         }
 
         return \strtolower($id);
+    }
+
+    /**
+     * Odak noktasını CSS `object-position` değerine çevirir.
+     *
+     * ⚠️ BEYAZ LİSTE ŞART: dönen değer twig'de inline `style` içine giriyor.
+     * Config'ten gelen ham metni doğrudan basmak CSS enjeksiyonu olurdu
+     * (yönetici yetkisi gerekse de savunma katmanı ucuz).
+     * Bilinmeyen/boş değer güvenli varsayılana düşer.
+     */
+    private function normaliseFocalPoint(mixed $value): string
+    {
+        $map = [
+            'left' => 'left center',
+            'center' => 'center center',
+            'right' => 'right center',
+            'top' => 'center top',
+            'bottom' => 'center bottom',
+        ];
+
+        if (!\is_string($value)) {
+            return $map['center'];
+        }
+
+        return $map[\strtolower(\trim($value))] ?? $map['center'];
     }
 }

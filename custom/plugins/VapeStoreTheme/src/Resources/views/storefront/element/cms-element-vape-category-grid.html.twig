@@ -46,13 +46,13 @@
                                     class="vape-category-grid__arrow vape-category-grid__arrow--prev"
                                     data-vape-category-carousel-prev
                                     aria-label="{{ 'vapeCategoryGrid.previous'|trans|sw_sanitize }}">
-                                {% sw_icon 'arrow-medium-left' %}
+                                {% sw_icon 'arrow-medium-left' style { pack: 'solid' } %}
                             </button>
                             <button type="button"
                                     class="vape-category-grid__arrow vape-category-grid__arrow--next"
                                     data-vape-category-carousel-next
                                     aria-label="{{ 'vapeCategoryGrid.next'|trans|sw_sanitize }}">
-                                {% sw_icon 'arrow-medium-right' %}
+                                {% sw_icon 'arrow-medium-right' style { pack: 'solid' } %}
                             </button>
                         </div>
                     {% endif %}
@@ -141,7 +141,7 @@
 
                                         <span class="vape-category-grid__cta">
                                             {{ ctaText }}
-                                            {% sw_icon 'arrow-medium-right' style { size: 'xs' } %}
+                                            {% sw_icon 'arrow-medium-right' style { size: 'xs', pack: 'solid' } %}
                                         </span>
                                     </span>
                                 {% endblock %}

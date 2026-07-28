@@ -72,6 +72,21 @@ export default {
                 { value: 'dark',  label: this.$t('vape-cms.elements.hero.config.tone.dark') },
             ];
         },
+
+        // Görselin kadrajlanacağı odak noktası (`object-position`).
+        // Geniş kampanya banner'ları hero kutusuna sığmaz ve kırpılır;
+        // yönetici burada görselin hangi kısmının görüneceğini seçer.
+        focalPointOptions() {
+            const t = (k) => this.$t(`vape-cms.elements.hero.config.focal.${k}`);
+
+            return [
+                { value: 'left',        label: t('left') },
+                { value: 'center',      label: t('center') },
+                { value: 'right',       label: t('right') },
+                { value: 'top',         label: t('top') },
+                { value: 'bottom',      label: t('bottom') },
+            ];
+        },
     },
 
     created() {

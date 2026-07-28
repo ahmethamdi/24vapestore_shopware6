@@ -40,6 +40,15 @@
           "tone": {
             "light": "Light (for dark panels)",
             "dark": "Dark (for light panels)"
+          },
+          "focalPoint": "Image focus",
+          "focalPointHelp": "Wide campaign images get cropped in the hero. Choose which part stays visible.",
+          "focal": {
+            "left": "Left",
+            "center": "Centre",
+            "right": "Right",
+            "top": "Top",
+            "bottom": "Bottom"
           }
         }
       },

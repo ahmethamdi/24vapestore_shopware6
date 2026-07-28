@@ -1904,3 +1904,20 @@ $vape-pcard-rating-text-color:       $vape-text-muted; // 4.80:1 — AA geçer
 $vape-pcard-rating-gap:              $vape-space-2;    // yıldız ↔ metin
 // rating ↔ isim arası için AYRI token yok: `.product-info` kardeşler
 // arasında zaten 8px ritim veriyor, ek margin tutarsızlık yaratıyordu.
+
+// ==================================================
+// 30. İKON VARSAYILAN RENGİ
+//
+// Core `.icon` sınıfına `color: #4a545b` veriyor (`$icon-base-color`).
+// Bu MAVİMSİ-gri Shopware'in kendi paletinden; bizim soğuk-nötr rampamızda
+// karşılığı yok. Ölçüldü (2026-07-28): anasayfada 50, PLP/PDP'de 22'şer ikon
+// bu renkte kalıyordu — üstelik header'daki arama/hesap/sepet gibi EN görünür
+// ikonlar. Kontrast sorunu DEĞİL (#4a545b beyazda 7.75:1), tutarlılık sorunu.
+//
+// neutral-600 seçildi: 7.70:1 ile pratikte aynı kontrast, ama paletten.
+// (neutral-700 daha koyu/ağır, ikincil ikonlar için gereksiz vurgu olurdu.)
+//
+// ⚠️ Bu YALNIZCA varsayılan. Kendi rengini belirleyen ikonlar
+// (`.icon-primary`, ürün kartı wishlist kalbi, USP şeridi vb.) etkilenmez —
+// onlar kendi kurallarıyla bunu zaten eziyor.
+$vape-icon-default-color: $vape-neutral-600;

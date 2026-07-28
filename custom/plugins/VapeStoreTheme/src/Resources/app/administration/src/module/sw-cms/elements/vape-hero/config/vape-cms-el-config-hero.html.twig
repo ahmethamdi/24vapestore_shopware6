@@ -192,6 +192,20 @@
                             </div>
                         </sw-container>
 
+                        {# --- görsel odak noktası ---
+                           Geniş kampanya banner'ları hero kutusuna sığmaz ve
+                           `cover` ile kırpılır. Yönetici burada görselin hangi
+                           kısmının kadrajda kalacağını seçer. #}
+                        <div class="vape-cms-el-config-hero__field">
+                            <mt-select
+                                :model-value="activeSlide.focalPoint || 'center'"
+                                :options="focalPointOptions"
+                                :label="$t('vape-cms.elements.hero.config.focalPoint')"
+                                :help-text="$t('vape-cms.elements.hero.config.focalPointHelp')"
+                                @update:model-value="updateSlide(activeSlideIndex, { focalPoint: $event })"
+                            />
+                        </div>
+
                         {# --- ürünler --- #}
                         <div class="vape-cms-el-config-hero__field">
                             <sw-entity-multi-select

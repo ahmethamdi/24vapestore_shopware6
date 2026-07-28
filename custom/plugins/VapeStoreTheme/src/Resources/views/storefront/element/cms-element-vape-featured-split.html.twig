@@ -82,7 +82,7 @@
                 {% if ctaText %}
                     <a href="{{ ctaUrl ?: '#' }}" class="vape-featured-split__cta btn">
                         {{ ctaText }}
-                        {% sw_icon 'arrow-medium-right' style { size: 'xs' } %}
+                        {% sw_icon 'arrow-medium-right' style { size: 'xs', pack: 'solid' } %}
                     </a>
                 {% endif %}
 
@@ -118,13 +118,13 @@
                                                             class="vape-featured-split__arrow vape-featured-split__arrow--prev"
                                                             data-vape-featured-split-prev
                                                             aria-label="{{ 'vapeFeaturedSplit.previous'|trans|sw_sanitize }}">
-                                                        {% sw_icon 'arrow-medium-left' %}
+                                                        {% sw_icon 'arrow-medium-left' style { pack: 'solid' } %}
                                                     </button>
                                                     <button type="button"
                                                             class="vape-featured-split__arrow vape-featured-split__arrow--next"
                                                             data-vape-featured-split-next
                                                             aria-label="{{ 'vapeFeaturedSplit.next'|trans|sw_sanitize }}">
-                                                        {% sw_icon 'arrow-medium-right' %}
+                                                        {% sw_icon 'arrow-medium-right' style { pack: 'solid' } %}
                                                     </button>
                                                 </div>
                                             {% endif %}

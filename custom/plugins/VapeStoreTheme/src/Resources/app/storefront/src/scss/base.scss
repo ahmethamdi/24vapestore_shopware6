@@ -175,6 +175,31 @@ a {
     transition: color $vape-duration-fast $vape-ease-out;
 }
 
+// ==================================================
+// İkon varsayılan rengi
+//
+// Core `.icon` sınıfına `color: #4a545b` veriyor — Shopware'in kendi
+// mavimsi grisi, bizim nötr rampamızda yok. Ölçüldü: anasayfada 50 ikon
+// (header arama/hesap/sepet dahil) bu renkte kalıyordu.
+//
+// ⚠️ `color` DEĞİL `--icon-color` gibi davranan bir taban veriyoruz:
+// core'un sabit rengini yalnızca, ATASI renk belirtmemişse kullan.
+// Doğrudan `color:` yazmak gerileme yarattı (ölçüldü): hero ok butonu
+// `color: neutral-900` verirken içindeki `.icon` bu kuralla 600'e
+// düşüyordu — buton rengini devralması gerekirken ezildi.
+// `:where()` özgüllüğü 0'a indirir → bileşen kuralları ve renk
+// sınıfları (.icon-primary, .icon-review …) hep kazanır.
+// ==================================================
+:where(.icon) {
+    color: $vape-icon-default-color;
+}
+
+// Bir ata renk belirlediyse ikon onu devralsın (buton, link, kart).
+// Core'un `> svg { fill: currentColor }` zinciri sayesinde bu yeterli.
+:where(.btn, a, button) .icon {
+    color: inherit;
+}
+
 // Odak görünürlüğü — erişilebilirlik için zorunlu (klavye navigasyonu).
 :focus-visible {
     outline: 2px solid $vape-brand;

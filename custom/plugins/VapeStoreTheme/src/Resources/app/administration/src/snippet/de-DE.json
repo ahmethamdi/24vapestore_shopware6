@@ -40,6 +40,15 @@
           "tone": {
             "light": "Hell (für dunkle Panels)",
             "dark": "Dunkel (für helle Panels)"
+          },
+          "focalPoint": "Bildausschnitt (Fokus)",
+          "focalPointHelp": "Breite Kampagnenbilder werden im Hero beschnitten. Wählen Sie, welcher Bildbereich sichtbar bleibt.",
+          "focal": {
+            "left": "Links",
+            "center": "Mitte",
+            "right": "Rechts",
+            "top": "Oben",
+            "bottom": "Unten"
           }
         }
       },

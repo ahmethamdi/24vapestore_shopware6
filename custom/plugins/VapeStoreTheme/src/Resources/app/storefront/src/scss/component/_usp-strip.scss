@@ -82,6 +82,13 @@
             width: $vape-usp-icon-size;
             height: $vape-usp-icon-size;
         }
+
+        // Renk de ikonun KENDİSİNE verilmeli: sarmalayıcıya `color` yazmak
+        // yetmiyordu, core `.icon`'a sabit renk atıyor. Ölçüldü (2026-07-28):
+        // bu ikonlar Shopware'in #4a545b grisinde kalıyordu.
+        .icon {
+            color: $vape-usp-icon-color;
+        }
     }
 
     &__text {

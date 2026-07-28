@@ -437,6 +437,11 @@ dönüşüm — ölçülü istisna). Diğer her şey nötr. Token-only.
             width: $vape-pdp-trust-icon-size;
             height: $vape-pdp-trust-icon-size;
         }
+
+        // Renk ikonun KENDİSİNE — sarmalayıcıdaki `color` yetmiyor.
+        .icon {
+            color: $vape-pdp-trust-icon-color;
+        }
     }
 
     .vape-pdp-trust-text {

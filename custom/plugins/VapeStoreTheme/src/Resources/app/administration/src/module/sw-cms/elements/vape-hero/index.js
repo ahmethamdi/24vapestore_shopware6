@@ -33,8 +33,13 @@ Shopware.Service('cmsService').registerCmsElement({
         // --- slide'lar ---
         // Her eleman: {
         //   mediaId, eyebrow, kicker, headline, ctaText, ctaUrl, newTab,
-        //   bgColor, textColor, productIds[]
+        //   bgColor, textColor, productIds[], focalPoint
         // }
+        // `focalPoint`: görsel `object-fit: cover` ile kutuya sığdırılırken
+        // HANGİ kısmının kadrajda kalacağı. Kampanya banner'ları genelde çok
+        // geniş (ölçüldü: 4.0–4.3:1) ama hero kutusu 1.8:1 → görselin ~%58'i
+        // kırpılıyor. Odak noktası olmadan önemli kısım (ürün/logo) kadraj
+        // dışında kalabiliyor.
         // Element sürüklendiğinde boş kutu yerine hazır bir slide gelsin —
         // yönetici ne düzenleyeceğini görsün. Görsel seçilmezse storefront
         // Shopware'in varsayılan CMS görselini gösterir.
@@ -52,6 +57,7 @@ Shopware.Service('cmsService').registerCmsElement({
                     bgColor: '#18181d',
                     textColor: 'light',
                     productIds: [],
+                    focalPoint: 'center',
                 },
             ],
         },

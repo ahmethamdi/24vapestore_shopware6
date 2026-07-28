@@ -69,6 +69,12 @@
             width: $vape-trust-icon-size;
             height: $vape-trust-icon-size;
         }
+
+        // Renk ikonun KENDİSİNE — sarmalayıcıdaki `color` core'un
+        // `.icon { color: #4a545b }` kuralını ezmiyor (ölçüldü).
+        .icon {
+            color: $vape-trust-icon-color;
+        }
     }
 
     &__title {

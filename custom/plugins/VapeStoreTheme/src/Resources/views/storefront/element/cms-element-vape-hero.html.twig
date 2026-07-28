@@ -108,6 +108,20 @@
                                    gösterilir — böylece slide asla boş gri kutu olmaz
                                    ve yönetici düzeni gerçekçi görür. #}
                                 <div class="vape-hero__media">
+                                    {#
+                                       Görsel odak noktası (object-position):
+                                       Kampanya banner'ları hero kutusundan çok daha geniş
+                                       (ölçüldü: 4.0–4.3:1 vs 1.8:1) → object-fit cover ile
+                                       kırpılıyor ve önemli kısım kadraj dışında kalabiliyor.
+                                       Yönetici hangi bölgenin görüneceğini config'ten seçer;
+                                       değer resolver'da beyaz listeden geçirilir (CSS enjeksiyonu).
+
+                                       ⚠️ Açıklama sw_thumbnails hash'inin DIŞINDA durmalı:
+                                       hash literal'i içine yorum veya backtick koymak
+                                       sözdizimi hatası verir (500). Ayrıca twig yorumları
+                                       İÇ İÇE YAZILAMAZ — içeride bir kapanış dizisi geçerse
+                                       yorum orada biter, kalanı sayfaya METİN olarak basılır.
+                                    #}
                                     {% if slide.media %}
                                         {% sw_thumbnails 'vape-hero-image-thumbnails' with {
                                             media: slide.media,
@@ -121,7 +135,8 @@
                                             attributes: {
                                                 class: 'vape-hero__image',
                                                 alt: (slide.media.translated.alt ?: slide.headline),
-                                                loading: (loop.first ? 'eager' : 'lazy')
+                                                loading: (loop.first ? 'eager' : 'lazy'),
+                                                style: 'object-position: ' ~ slide.focalPoint
                                             }
                                         } %}
                                     {% else %}
@@ -147,13 +162,13 @@
                                 class="vape-hero__arrow vape-hero__arrow--prev"
                                 data-vape-hero-prev
                                 aria-label="{{ 'vapeHero.previousSlide'|trans|sw_sanitize }}">
-                            {% sw_icon 'arrow-medium-left' %}
+                            {% sw_icon 'arrow-medium-left' style { pack: 'solid' } %}
                         </button>
                         <button type="button"
                                 class="vape-hero__arrow vape-hero__arrow--next"
                                 data-vape-hero-next
                                 aria-label="{{ 'vapeHero.nextSlide'|trans|sw_sanitize }}">
-                            {% sw_icon 'arrow-medium-right' %}
+                            {% sw_icon 'arrow-medium-right' style { pack: 'solid' } %}
                         </button>
                     </div>
                 {% endif %}
