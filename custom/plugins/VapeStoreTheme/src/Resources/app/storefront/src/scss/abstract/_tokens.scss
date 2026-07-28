@@ -278,7 +278,12 @@ $vape-pcard-shadow:           $vape-shadow-sm;                   // düz "gri ku
 $vape-pcard-shadow-hover:     $vape-shadow-lg;                   // md → lg: hover net hissedilsin
 $vape-pcard-bg:               $vape-neutral-white;
 $vape-pcard-image-bg:         $vape-neutral-white;               // zemin beyaz (SVG marka temizlendi)
-$vape-pcard-image-ratio:      1 / 1;   // kare — geniş 4'lü kartta dengeli, kart kısalır
+// Görsel oranı — kartın TEK en büyük maliyeti. 1:1'de görsel 341px'ti ve 645px
+// kartın %53'ünü yiyordu (ölçüldü); metin gövdesi zaten sıkı paketli, orada
+// kısılacak yer yok. 5:4 → görsel 273px, kart 577px. Ürün hâlâ tam okunur
+// (placeholder/foto `object-fit: contain`, kırpılmıyor), ızgara ritmi korunur.
+// 4:3 ve 3:2 de denendi: daha kısa ama vape kutusu yatay alanda küçük kalıyor.
+$vape-pcard-image-ratio:      5 / 4;   // dikeyde ölçülü — kart 645→577px
 $vape-pcard-body-pad:         $vape-space-4;                     // 16px iç boşluk
 $vape-pcard-body-gap:         $vape-space-1;                     // satırlar arası ritim
 
