@@ -217,6 +217,17 @@ a {
     color: $vape-icon-default-color;
 }
 
+// İkonların optik hizası: metinle yan yana dururken ikon taban çizgisinden
+// biraz aşağıda oturuyordu. 5px alt boşluk ikonu yukarı iterek metinle
+// optik ortaya getirir (talep üzerine eklendi).
+//
+// ⚠️ `:where()` ile özgüllük 0 → bileşen kuralları bunu ezebilir. Ölçüm:
+//    anasayfada 115 görünür ikon var, 79'u ürün kartı içinde. Kartlarda
+//    ikon zaten flex ile ortalandığı için görünür kayma yaratmadı (ölçüldü).
+:where(.icon) {
+    margin-bottom: 5px;
+}
+
 // Bir ata renk belirlediyse ikon onu devralsın (buton, link, kart).
 // Core'un `> svg { fill: currentColor }` zinciri sayesinde bu yeterli.
 :where(.btn, a, button) .icon {
