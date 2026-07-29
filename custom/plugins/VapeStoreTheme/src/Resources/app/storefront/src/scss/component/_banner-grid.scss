@@ -82,6 +82,30 @@ Magic hex/px YOK — hepsi token.
         object-fit: cover;
     }
 
+    // ⚠️ Görselsiz kart: mevcut diyagonal gradient KORUNUYOR, üstüne
+    //    promo-banner/showcase ile AYNI doku katmanı ekleniyor (sağda marka
+    //    ışıması + ince çizgi). Üç banner element'i böylece tek bir görsel
+    //    dil konuşuyor. `::after` dekoratif; metin `__inner` z-index'iyle üstte.
+    &__card:not(.has--media) &__placeholder::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+            radial-gradient(
+                circle at 100% 50%,
+                $vape-promo-deco-glow-color 0%,
+                transparent $vape-promo-deco-glow-size
+            ),
+            repeating-linear-gradient(
+                135deg,
+                $vape-promo-deco-line-color 0,
+                $vape-promo-deco-line-color $vape-promo-deco-line-w,
+                transparent $vape-promo-deco-line-w,
+                transparent $vape-promo-deco-line-gap
+            );
+    }
+
     &__placeholder {
         position: relative;
         display: block;
