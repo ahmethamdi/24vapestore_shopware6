@@ -92,5 +92,8 @@
     "deniedTitle": "Access not possible",
     "deniedText": "This website is intended for people aged 18 and over only. Thank you for your understanding.",
     "deniedBack": "Back"
+  },
+  "vapeProductSpotlight": {
+    "cta": "Discover now"
   }
 }

@@ -23,7 +23,13 @@
 
     {% set eyebrow = cfg.eyebrow.value|default('') %}
     {% set description = cfg.description.value|default('') %}
-    {% set ctaText = cfg.ctaText.value|default('Jetzt entdecken') %}
+    {# ⚠️ Ham string GÖMME. Yönetici config'ten metni tamamen silerse twig
+       hardcode Almanca metni geri getiriyordu ("sildim ama gitmiyor").
+       Fallback snippet'ten gelir — brand-slider/deals ile aynı desen. #}
+    {% set ctaText = cfg.ctaText.value|default('') %}
+    {% if ctaText is empty %}
+        {% set ctaText = 'vapeProductSpotlight.cta'|trans|sw_sanitize %}
+    {% endif %}
     {% set ctaUrl = cfg.ctaUrl.value|default('') %}
 
     {% if product %}

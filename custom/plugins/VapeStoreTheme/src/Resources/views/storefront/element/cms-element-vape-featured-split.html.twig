@@ -79,8 +79,11 @@
                     {% endblock %}
                 {% endif %}
 
-                {% if ctaText %}
-                    <a href="{{ ctaUrl ?: '#' }}" class="vape-featured-split__cta btn">
+                {# ⚠️ URL şart. Önce `ctaUrl ?: '#'` vardı: yönetici metin girip
+                   link girmeyince hiçbir yere gitmeyen buton çıkıyordu.
+                   promo-banner ve showcase bu koşulu zaten böyle kuruyor. #}
+                {% if ctaText and ctaUrl %}
+                    <a href="{{ ctaUrl }}" class="vape-featured-split__cta btn">
                         {{ ctaText }}
                         {% sw_icon 'arrow-medium-right' style { size: 'xs', pack: 'solid' } %}
                     </a>

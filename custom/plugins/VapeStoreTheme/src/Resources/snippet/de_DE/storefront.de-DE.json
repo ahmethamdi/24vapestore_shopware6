@@ -92,5 +92,8 @@
     "deniedTitle": "Zugang nicht möglich",
     "deniedText": "Diese Website richtet sich ausschließlich an Personen ab 18 Jahren. Wir bitten um Ihr Verständnis.",
     "deniedBack": "Zurück"
+  },
+  "vapeProductSpotlight": {
+    "cta": "Jetzt entdecken"
   }
 }

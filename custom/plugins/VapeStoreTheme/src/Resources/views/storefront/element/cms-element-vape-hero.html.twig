@@ -12,14 +12,19 @@
     ayrı bir çeviri stratejisi gerekir (şimdilik tek dil).
 #}
 {% block element_vape_hero %}
-    {% set layout = element.config %}
+    {# ⚠️ `element.translated.config` — düz `element.config` DEĞİL. Buradaki
+       alanlar davranışsal (çevrilecek metin değil) ama hero projenin REFERANS
+       deseni; yanlış kalıp buradan kopyalanıyor. Kalıp doğru olmalı. #}
+    {% set layout = element.translated.config %}
     {% set slides = element.data.slides|default([]) %}
 
     {% set minHeight = layout.minHeight.value|default(520) %}
     {% set showArrows = layout.showArrows.value|default(true) and slides|length > 1 %}
     {% set showDots = layout.showDots.value|default(true) and slides|length > 1 %}
     {% set showProducts = layout.showProducts.value|default(true) %}
-    {% set autoplay = layout.autoplay.value|default(false) and slides|length > 1 %}
+    {# defaultConfig'te autoplay: true → fallback de true olmalı (iki kaynak
+       çelişmesin). Diğer 5 alanın fallback'i zaten config ile uyumlu. #}
+    {% set autoplay = layout.autoplay.value|default(true) and slides|length > 1 %}
     {% set autoplaySpeed = layout.autoplaySpeed.value|default(6000) %}
 
     {% if slides|length > 0 %}
