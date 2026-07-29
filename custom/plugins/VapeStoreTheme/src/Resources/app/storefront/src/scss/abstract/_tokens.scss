@@ -1926,3 +1926,59 @@ $vape-pcard-rating-gap:              $vape-space-2;    // yıldız ↔ metin
 // (`.icon-primary`, ürün kartı wishlist kalbi, USP şeridi vb.) etkilenmez —
 // onlar kendi kurallarıyla bunu zaten eziyor.
 $vape-icon-default-color: $vape-neutral-600;
+
+
+// ==================================================
+// MOBİL OFFCANVAS MENÜ
+// ==================================================
+// Mobil menü 2026-07-28'e kadar ham Shopware varsayılanıydı: marka rengi yok,
+// kapat butonu `.btn-secondary` olduğu için TAM GENİŞLİK (370px) bir gri
+// bloktu, tipografi token'lardan gelmiyordu. Aşağıdakiler menüyü temaya bağlar.
+//
+// Dokunma hedefleri: link yüksekliği ≥48px KORUNMALI (WCAG 2.5.8 / 2.5.5).
+// Ölçüldü: core zaten 48px veriyor, burada küçültme yapılmıyor.
+
+$vape-ocnav-pad-x:            $vape-space-4;    // yatay iç boşluk
+$vape-ocnav-headline-size:    $vape-text-sm;    // "Kategorien" başlığı
+$vape-ocnav-headline-color:   $vape-neutral-600;
+$vape-ocnav-headline-track:   $vape-tracking-wide;
+$vape-ocnav-headline-pad-y:   $vape-space-4;
+
+$vape-ocnav-link-size:        $vape-text-md;
+$vape-ocnav-link-color:       $vape-text-heading;
+$vape-ocnav-link-weight:      $vape-weight-medium;
+$vape-ocnav-link-min-h:       48px;             // ⚠️ dokunma hedefi — küçültme
+$vape-ocnav-link-pad-y:       $vape-space-3;
+$vape-ocnav-link-hover-bg:    $vape-neutral-50;
+$vape-ocnav-border:           $vape-border-subtle;
+
+// NOT: "aktif kategori" token'ı YOK — core offcanvas'ta `.active` sınıfı
+// pratikte basılmıyor (listelenen linkler activeId'nin çocukları). Ayrıntı
+// için `layout/_offcanvas-nav.scss` içindeki açıklamaya bak.
+
+// Ok ikonu — core SVG'ye fill="#758CA3" gömüyor, currentColor'a çekilir
+$vape-ocnav-icon-color:       $vape-neutral-600;
+
+// Kapat butonu — core `.btn-secondary` ile tam genişlik gri blok veriyor
+$vape-ocnav-close-size:       44px;             // ⚠️ dokunma hedefi ≥44px
+$vape-ocnav-close-fg:         $vape-neutral-600;
+$vape-ocnav-close-fg-hover:   $vape-text-heading;
+$vape-ocnav-close-bg-hover:   $vape-neutral-100;
+
+
+// ==================================================
+// CORE SAYFA BAŞLIKLARI — MOBİL ÖLÇEK
+// ==================================================
+// CMS element'lerinin kendi mobil ölçeği var (örn. product-rail 24px→36px),
+// ama CORE sayfalar (sepet, checkout, hesap, arama) hiç ölçeklenmemişti:
+// 390px ekranda h1 44px, h2 36px basıyordu — Bootstrap'ın masaüstü değeri.
+// Ölçüldü 2026-07-28: /checkout/cart, /checkout/register, /account/login,
+// /search hepsinde aynı.
+//
+// Masaüstünde dokunulmuyor (h1 56px kalır); yalnızca <768px'te tema
+// ölçeğine çekilir. CMS element'leriyle aynı kademe kullanılır.
+
+$vape-page-h1-size-mobile:   $vape-text-2xl;   // 24px (öncesi 44px)
+$vape-page-h2-size-mobile:   $vape-text-xl;    // 20px (öncesi 36px)
+// h3 token'ı YOK: core sayfalarda mobilde taşan bir h3 ölçülmedi.
+// `.card-title` zaten 18px — ona dokunulmuyor.

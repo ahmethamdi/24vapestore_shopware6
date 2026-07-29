@@ -1,0 +1,163 @@
+/*
+Mobil offcanvas menü — tema uyumu.
+
+2026-07-28'e kadar bu menü ham Shopware varsayılanıydı: marka rengi yok,
+kapat butonu `.btn-secondary` olduğu için TAM GENİŞLİK (370px) gri bir bloktu,
+tipografi/renk token'lardan gelmiyordu. Menü çalışıyordu ama siteye ait
+görünmüyordu.
+
+⚠️ DOKUNMA HEDEFLERİ: link yüksekliği ≥48px, kapat butonu ≥44px. Core zaten
+   48px veriyor (ölçüldü); buradaki kurallar bunu KÜÇÜLTMEZ, yalnız hizalar.
+   WCAG 2.5.8 (Target Size Minimum, AA) gereği.
+
+⚠️ Menü içeriği AJAX ile gelir (`/widgets/menu/offcanvas`, OffcanvasMenuPlugin).
+   Yani bu stiller sonradan DOM'a giren markup'a uygulanır — seçiciler
+   `.js-navigation-offcanvas-link` gibi JS sınıflarına DEĞİL, yapısal
+   sınıflara bağlı ki alt kategoriye inildiğinde de geçerli kalsın.
+
+⚠️ Core ok ikonunu inline SVG olarak basıyor ve içine `fill="#758CA3"`
+   GÖMÜYOR. Sınıfla renk veremezsin; `fill` doğrudan ezilmeli.
+   (Aynı tuzağa hero ok ikonlarında da düşülmüştü.)
+*/
+
+.navigation-offcanvas {
+    // ---------- "Kategorien" başlığı ----------
+
+    .navigation-offcanvas-headline {
+        padding: $vape-ocnav-headline-pad-y $vape-ocnav-pad-x $vape-space-2;
+        font-size: $vape-ocnav-headline-size;
+        font-weight: $vape-weight-semibold;
+        letter-spacing: $vape-ocnav-headline-track;
+        text-transform: uppercase;
+        color: $vape-ocnav-headline-color;
+    }
+
+    // ---------- kategori listesi ----------
+
+    .navigation-offcanvas-list {
+        margin: 0;
+        padding: 0;
+    }
+
+    .navigation-offcanvas-list-item {
+        border-bottom: 1px solid $vape-ocnav-border;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    .navigation-offcanvas-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $vape-space-2;
+        // min-height: dokunma hedefi. padding ile birlikte 48px'i garantiler.
+        min-height: $vape-ocnav-link-min-h;
+        padding: $vape-ocnav-link-pad-y $vape-ocnav-pad-x;
+        font-size: $vape-ocnav-link-size;
+        font-weight: $vape-ocnav-link-weight;
+        line-height: $vape-leading-snug;
+        color: $vape-ocnav-link-color;
+        text-decoration: none;
+        transition:
+            background-color $vape-duration-fast $vape-ease-out,
+            color $vape-duration-fast $vape-ease-out;
+
+        &:hover,
+        &:focus-visible {
+            background-color: $vape-ocnav-link-hover-bg;
+            color: $vape-ocnav-link-color;
+        }
+
+        &:focus-visible {
+            outline: 2px solid $vape-brand;
+            outline-offset: -2px;   // içeri al, kenarlıkla çakışmasın
+        }
+    }
+
+    // ---------- ok ikonu ----------
+    // Core SVG'ye fill="#758CA3" gömüyor → sınıfla değil, fill ile ezilir.
+
+    .navigation-offcanvas-link-icon {
+        display: inline-flex;
+        flex: 0 0 auto;
+        color: $vape-ocnav-icon-color;
+
+        svg use,
+        svg path {
+            fill: currentColor;
+        }
+    }
+
+    // ---------- aktif kategori vurgusu: KASITLI OLARAK YOK ----------
+    // Denendi ve KALDIRILDI (2026-07-28). Core `categories.html.twig`:
+    //     {% set activeId = shopware.navigation.id ?? ... %}
+    //     {% set children = navigation.getChildren(activeId) %}
+    // Yani listelenen linkler activeId'nin ÇOCUKLARI; `item-link.html.twig`
+    // içindeki `item.category.id == activeId` karşılaştırması bu listede
+    // hiçbir zaman true olmaz. `.active` sınıfı offcanvas'ta pratikte
+    // basılmıyor (kategori sayfasında da doğrulandı: 0 eşleşme).
+    //
+    // Buraya kırmızı vurgu kuralı yazmak SESSİZ ölü kod olur. Aktif kategori
+    // göstergesi gerekirse önce twig override ile sınıfın basılması lazım.
+
+    // ---------- geri linki (alt kategoriye inince) ----------
+    // ⚠️ Ayrı bir eleman DEĞİL: core aynı `.navigation-offcanvas-link`'e
+    //    `.is-back-link` ekliyor (doğrulandı: /widgets/menu/offcanvas?navigationId=…).
+    //    Yani boyut/dokunma hedefi yukarıdaki kuraldan zaten geliyor; burada
+    //    yalnızca "bu bir gezinme değil, geri adım" ayrımı yapılır.
+
+    .navigation-offcanvas-link.is-back-link {
+        font-size: $vape-text-sm;
+        font-weight: $vape-weight-semibold;
+        color: $vape-ocnav-headline-color;
+
+        &:hover,
+        &:focus-visible {
+            color: $vape-ocnav-link-color;
+        }
+    }
+}
+
+// ==================================================
+// KAPAT BUTONU
+// ==================================================
+// Core `.btn.btn-secondary.offcanvas-close` veriyor → Bootstrap'ın blok
+// butonu TAM GENİŞLİK (370px) gri bir çubuk oluyordu. Sağ üstte ölçülü,
+// ikon boyutunda bir butona indirilir. Dokunma hedefi ≥44px korunur.
+
+.offcanvas .offcanvas-close.btn,
+.offcanvas .js-offcanvas-close.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: $vape-space-2;
+    width: auto;
+    min-height: $vape-ocnav-close-size;
+    padding: $vape-space-2 $vape-ocnav-pad-x;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    font-size: $vape-text-sm;
+    font-weight: $vape-weight-medium;
+    color: $vape-ocnav-close-fg;
+    box-shadow: none;
+
+    &:hover,
+    &:focus-visible {
+        background-color: $vape-ocnav-close-bg-hover;
+        color: $vape-ocnav-close-fg-hover;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $vape-brand;
+        outline-offset: -2px;
+    }
+
+    .icon svg use,
+    .icon svg path {
+        fill: currentColor;
+    }
+}

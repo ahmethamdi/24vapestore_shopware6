@@ -1,0 +1,42 @@
+/*
+Core sayfa başlıkları — mobil ölçek.
+
+SORUN (ölçüldü 2026-07-28, 390×844) — hepsi Bootstrap'ın MASAÜSTÜ değeri:
+  /checkout/cart      h1 44px  .cart-main-header
+  /checkout/register  h1 44px  .address-main-header      h2 36px (×2)
+  /account/login      h1 44px  (sınıfsız)
+  /search             h1 44px  .search-headline
+390px ekranda "Versandinformationen" neredeyse kenardan kenara uzuyordu.
+
+CMS element'lerinin zaten kendi mobil kademesi var (product-rail 24→36px,
+promo-banner 36→44px). Core sayfalara hiç kademe tanımlanmamıştı; bu dosya
+aynı ölçeği oraya getirir.
+
+⚠️ KAPSAM: yalnızca <768px. Masaüstü dokunulmaz (h1 56px kalır).
+⚠️ `.card-title` (18px) DIŞARIDA — zaten ölçekli, büyütmek/küçültmek yanlış
+   olurdu. Yalnızca 36-44px'lik gerçek taşkın başlıklar hedeflenir.
+⚠️ Ölçüldü: bu başlıkların hiçbiri `.cms-element-*` içinde DEĞİL, yani CMS
+   element ölçeğiyle çakışma yok. Yine de h1 kuralı `.cms-element-*` altını
+   dışarıda bırakır ki ileride bir element core sayfaya girerse bozulmasın.
+*/
+
+@media (max-width: 767.98px) {
+    // ---------- h1: sayfa başlığı ----------
+    // Sınıfsız h1'ler de var (/account/login) → eleman seçicisi şart.
+    .content-main h1:not([class*='cms-']) {
+        font-size: $vape-page-h1-size-mobile;
+        line-height: $vape-leading-tight;
+        letter-spacing: $vape-tracking-tight;
+    }
+
+    // ---------- h2: checkout yan sütun başlıkları ----------
+    // Yalnızca 36px basanlar. `.card-title` bilinçli olarak listede YOK.
+    .content-main {
+        .checkout-aside-summary-header,
+        .checkout-aside-product-header {
+            font-size: $vape-page-h2-size-mobile;
+            line-height: $vape-leading-snug;
+            letter-spacing: $vape-tracking-tight;
+        }
+    }
+}
