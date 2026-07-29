@@ -768,8 +768,12 @@ $vape-usp-sub-color:       $vape-text-muted;
 // ==================================================
 
 // ---------- kapsayıcı ----------
-$vape-promo-min-height:          260px;   // <768px
-$vape-promo-min-height-md:       420px;   // ≥768px — uzun beyaz akıştaki tek koyu
+$vape-promo-min-height:          220px;   // <768px  (260→220)
+// ≥768px: 420→320px. Gerekçe: içerik eyebrow+başlık+metin+CTA = ~200px;
+// 420px'te banner'ın ~%40'ı ölü boşluktu (ölçüldü 2026-07-29). Koyu şerit
+// "uzun beyaz akıştaki tek koyu nefes" olarak KORUNUYOR, yalnız orantısı
+// düzeltildi. 320px hâlâ belirgin bir vurgu bandı.
+$vape-promo-min-height-md:       320px;
                                           // "nefes"; iri olması ritmi güçlendirir (UX P2.3)
 $vape-promo-fallback-bg:         $vape-neutral-900;   // config'te renk yoksa
 
@@ -1982,3 +1986,29 @@ $vape-page-h1-size-mobile:   $vape-text-2xl;   // 24px (öncesi 44px)
 $vape-page-h2-size-mobile:   $vape-text-xl;    // 20px (öncesi 36px)
 // h3 token'ı YOK: core sayfalarda mobilde taşan bir h3 ölçülmedi.
 // `.card-title` zaten 18px — ona dokunulmuyor.
+
+
+// ==================================================
+// PROMO BANNER — GÖRSELSİZ DURUM (no-media)
+// ==================================================
+// Sorun (ölçüldü 2026-07-29, 1600px): promo-banner'da `mediaId` null olunca
+// 420px'lik DÜZ SİYAH blok kalıyordu; metin solda ~640px'te bitiyor, sağdaki
+// ~%60 tamamen boştu. Koyu şerit BİLİNÇLİ bir karar (uzun beyaz akışta tek
+// koyu nefes noktası) ama görselsiz hâli "eksik" duruyordu.
+//
+// Çözüm: koyu zemin KORUNUR, üstüne markaya ait ölçülü bir doku eklenir —
+// sağ tarafta yumuşak kırmızı ışıma + ince diyagonal çizgi dokusu. Böylece
+// boş alan "unutulmuş" değil "tasarlanmış" okunur. Görsel VARSA bu katman
+// render edilmez (`has--media` durumunda kapatılır).
+//
+// ⚠️ Tamamen dekoratif → `aria-hidden`, kontrast hesabına girmez. Metin
+//    kontrastı hâlâ düz zemin rengine karşı ölçülür (AA korunur).
+
+$vape-promo-deco-glow-color:   rgba(225, 17, 34, 0.28);  // $vape-brand ışıma
+$vape-promo-deco-glow-size:    58%;    // ışımanın yarıçapı (sağ kenardan)
+$vape-promo-deco-line-color:   rgba(255, 255, 255, 0.04);
+$vape-promo-deco-line-gap:     14px;   // diyagonal çizgi aralığı
+$vape-promo-deco-line-w:       1px;
+
+// Açık tonlu (textColor: dark) banner'da beyaz çizgi görünmez → koyu çizgi
+$vape-promo-deco-line-dark:    rgba(0, 0, 0, 0.05);

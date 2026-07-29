@@ -28,6 +28,56 @@ AA'yı geçen nötrlerden seçildi. CTA gerçek <a>, focus göstergesi global
         padding: $vape-promo-pad-y-md $vape-promo-pad-x-md;
     }
 
+    // ---------- GÖRSELSİZ DURUM: markalı doku ----------
+    // `mediaId` boşken banner düz siyah bir bloktu ve sağdaki ~%60 alan boş
+    // duruyordu (ölçüldü). Koyu zemin bilinçli bir karar olduğu için
+    // KALDIRILMADI; yerine sağa yumuşak kırmızı ışıma + ince diyagonal
+    // çizgi dokusu eklendi. Boş alan artık "tasarlanmış" okunuyor.
+    //
+    // ⚠️ Yalnızca `.has--media` YOKKEN çalışır — görsel varsa doku, fotoğrafla
+    //    yarışmasın diye hiç basılmaz.
+    // ⚠️ Tamamen dekoratif; metnin arkasında kalır (z-index) ve kontrast
+    //    hesabına girmez.
+    &:not(.has--media)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: $vape-z-base;
+        pointer-events: none;
+        background-image:
+            // 1) sağ tarafta yumuşak marka ışıması
+            radial-gradient(
+                circle at 100% 50%,
+                $vape-promo-deco-glow-color 0%,
+                transparent $vape-promo-deco-glow-size
+            ),
+            // 2) ince diyagonal çizgi dokusu (yüzeye derinlik verir)
+            repeating-linear-gradient(
+                135deg,
+                $vape-promo-deco-line-color 0,
+                $vape-promo-deco-line-color $vape-promo-deco-line-w,
+                transparent $vape-promo-deco-line-w,
+                transparent $vape-promo-deco-line-gap
+            );
+    }
+
+    // Açık tonlu banner'da beyaz çizgi kaybolur → koyu çizgiye çevir.
+    &.is--tone-dark:not(.has--media)::after {
+        background-image:
+            radial-gradient(
+                circle at 100% 50%,
+                $vape-promo-deco-glow-color 0%,
+                transparent $vape-promo-deco-glow-size
+            ),
+            repeating-linear-gradient(
+                135deg,
+                $vape-promo-deco-line-dark 0,
+                $vape-promo-deco-line-dark $vape-promo-deco-line-w,
+                transparent $vape-promo-deco-line-w,
+                transparent $vape-promo-deco-line-gap
+            );
+    }
+
     // ---------- arka plan görseli ----------
     &__media {
         position: absolute;

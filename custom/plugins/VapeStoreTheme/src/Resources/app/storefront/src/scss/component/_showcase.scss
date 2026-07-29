@@ -64,6 +64,32 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
             min-height: $vape-showcase-banner-min-height-lg;
             padding: $vape-showcase-banner-pad-lg;
         }
+
+        // GÖRSELSİZ DURUM: markalı doku.
+        // promo-banner ile AYNI desen — görsel yokken düz koyu blok yerine
+        // sağa yumuşak marka ışıması + ince diyagonal çizgi dokusu.
+        // Aynı token'ları kullanır ki iki banner tutarlı görünsün.
+        // ⚠️ Dekoratif; metnin arkasında (z-index) ve kontrast hesabına girmez.
+        &:not(.has--media)::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: $vape-z-base;
+            pointer-events: none;
+            background-image:
+                radial-gradient(
+                    circle at 100% 50%,
+                    $vape-promo-deco-glow-color 0%,
+                    transparent $vape-promo-deco-glow-size
+                ),
+                repeating-linear-gradient(
+                    135deg,
+                    $vape-promo-deco-line-color 0,
+                    $vape-promo-deco-line-color $vape-promo-deco-line-w,
+                    transparent $vape-promo-deco-line-w,
+                    transparent $vape-promo-deco-line-gap
+                );
+        }
     }
 
     // ---------- banner arka plan görseli ----------
