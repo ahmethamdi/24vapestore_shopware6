@@ -20,6 +20,9 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 @import 'layout/offcanvas-nav';
 @import 'layout/page-headings';
 @import 'layout/footer';
+// Mobil app hissi (alt gezinme, dokunma) — EN SONDA: mobil düzeltmeleri
+// diğer layout kurallarını ezebilmeli.
+@import 'layout/mobile-app';
 
 // 3. Component'ler (CMS element'leri dahil)
 @import 'component/hero';

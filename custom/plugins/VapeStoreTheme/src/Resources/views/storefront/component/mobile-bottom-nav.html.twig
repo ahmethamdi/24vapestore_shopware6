@@ -1,0 +1,126 @@
+{#
+    Mobil alt gezinme barı — "app hissi"nin en belirgin işareti.
+
+    NEDEN CMS ELEMENT DEĞİL (altın kuralın meşru istisnası):
+      Bu bir SAYFA İÇERİĞİ değil, SİTE KABUĞU (chrome). Header ve USP şeridiyle
+      aynı kategoride: her sayfada görünmeli, yalnızca Shopping Experiences
+      sayfalarında değil. CMS element olsaydı yönetici onu PLP/PDP/checkout'a
+      koyamaz, anasayfadan silince tüm sitede kaybolurdu.
+      Düzenlenebilirlik theme.json ile korunuyor: açma/kapama + 5 etiket
+      admin'den değiştirilebilir (bkz. `mobileNav*` alanları).
+      Aynı gerekçe: [[legal-gate-not-cms-element]] deseni.
+
+    ⚠️ YALNIZCA MOBİLDE (<768px) görünür — SCSS'te media query ile.
+       Masaüstünde `display: none`, DOM'da kalır ama erişilebilirlik
+       ağacından da çıkar (visibility değil display kullanıldı).
+
+    ⚠️ Sepet adedi core'un `page.cart.lineItems` verisinden gelir; header
+       cart-widget ile AYNI kaynak, böylece iki yerde farklı sayı görünmez.
+       Sayfa cache'li olsa da bu bölge ESI/AJAX ile tazelenir (core davranışı).
+
+    Aktif durum: `activeRoute` ile mevcut rota karşılaştırılır. Renk TEK
+    ayırt edici işaret olmasın diye aktif öğede üstte ince kırmızı şerit de
+    var (WCAG 1.4.1).
+#}
+{% if theme_config('mobileNavEnabled') %}
+
+    {% set currentRoute = app.request.attributes.get('_route') %}
+
+    {# Aktif sekme tespiti — rota adına göre. Kategori sayfaları da
+       "Kategorien" sekmesini aktif gösterir. #}
+    {% set isHome = currentRoute == 'frontend.home.page' %}
+    {% set isNav = currentRoute starts with 'frontend.navigation' %}
+    {% set isSearch = currentRoute starts with 'frontend.search' %}
+    {% set isCart = currentRoute starts with 'frontend.checkout.cart' %}
+    {% set isAccount = currentRoute starts with 'frontend.account' %}
+
+    {% set cartCount = page.cart.lineItems|default([])|length %}
+
+    <nav class="vape-mobile-nav"
+         data-vape-mobile-nav="true"
+         aria-label="{{ 'vapeMobileNav.ariaLabel'|trans|sw_sanitize }}">
+        <ul class="vape-mobile-nav__list">
+
+            {% block component_vape_mobile_nav_home %}
+                <li class="vape-mobile-nav__item">
+                    <a href="{{ path('frontend.home.page') }}"
+                       class="vape-mobile-nav__link{{ isHome ? ' is--active' : '' }}"
+                       {% if isHome %}aria-current="page"{% endif %}>
+                        <span class="vape-mobile-nav__icon">
+                            {% sw_icon 'home' style { size: 'sm' } %}
+                        </span>
+                        <span class="vape-mobile-nav__label">{{ theme_config('mobileNavHomeLabel') }}</span>
+                    </a>
+                </li>
+            {% endblock %}
+
+            {% block component_vape_mobile_nav_categories %}
+                <li class="vape-mobile-nav__item">
+                    {# Offcanvas menüyü açar. ⚠️ Öznitelik `data-off-canvas-menu`
+                       — TİRELİ. `data-offcanvas-menu` yazılırsa core'un
+                       OffcanvasMenuPlugin'i bağlanmaz ve buton SESSİZCE
+                       hiçbir şey yapmaz. Header'daki burger butonundan
+                       birebir doğrulandı. #}
+                    <button type="button"
+                            class="vape-mobile-nav__link{{ isNav ? ' is--active' : '' }}"
+                            data-off-canvas-menu="true"
+                            aria-haspopup="dialog">
+                        <span class="vape-mobile-nav__icon">
+                            {% sw_icon 'stack' style { size: 'sm' } %}
+                        </span>
+                        <span class="vape-mobile-nav__label">{{ theme_config('mobileNavCategoriesLabel') }}</span>
+                    </button>
+                </li>
+            {% endblock %}
+
+            {% block component_vape_mobile_nav_search %}
+                <li class="vape-mobile-nav__item">
+                    <a href="{{ path('frontend.search.page') }}"
+                       class="vape-mobile-nav__link{{ isSearch ? ' is--active' : '' }}"
+                       {% if isSearch %}aria-current="page"{% endif %}>
+                        <span class="vape-mobile-nav__icon">
+                            {% sw_icon 'search' style { size: 'sm' } %}
+                        </span>
+                        <span class="vape-mobile-nav__label">{{ theme_config('mobileNavSearchLabel') }}</span>
+                    </a>
+                </li>
+            {% endblock %}
+
+            {% block component_vape_mobile_nav_cart %}
+                <li class="vape-mobile-nav__item">
+                    <a href="{{ path('frontend.checkout.cart.page') }}"
+                       class="vape-mobile-nav__link{{ isCart ? ' is--active' : '' }}"
+                       {% if isCart %}aria-current="page"{% endif %}>
+                        {# ⚠️ `page.cart` YALNIZCA sepet/checkout sayfalarında dolu.
+                           Diğer sayfalarda adet twig'de bilinmiyor → rozeti
+                           `vape-mobile-nav` JS eklentisi header'ın sepet
+                           rozetinden senkronlar. Aşağıdaki twig çıktısı
+                           JS'siz durumda (sepet sayfası) çalışan fallback. #}
+                        <span class="vape-mobile-nav__icon"
+                              data-vape-mobile-nav-cart-icon="true">
+                            {% sw_icon 'bag' style { size: 'sm' } %}
+                            {% if cartCount > 0 %}
+                                <span class="vape-mobile-nav__badge">{{ cartCount }}</span>
+                            {% endif %}
+                        </span>
+                        <span class="vape-mobile-nav__label">{{ theme_config('mobileNavCartLabel') }}</span>
+                    </a>
+                </li>
+            {% endblock %}
+
+            {% block component_vape_mobile_nav_account %}
+                <li class="vape-mobile-nav__item">
+                    <a href="{{ path('frontend.account.home.page') }}"
+                       class="vape-mobile-nav__link{{ isAccount ? ' is--active' : '' }}"
+                       {% if isAccount %}aria-current="page"{% endif %}>
+                        <span class="vape-mobile-nav__icon">
+                            {% sw_icon 'avatar' style { size: 'sm' } %}
+                        </span>
+                        <span class="vape-mobile-nav__label">{{ theme_config('mobileNavAccountLabel') }}</span>
+                    </a>
+                </li>
+            {% endblock %}
+
+        </ul>
+    </nav>
+{% endif %}

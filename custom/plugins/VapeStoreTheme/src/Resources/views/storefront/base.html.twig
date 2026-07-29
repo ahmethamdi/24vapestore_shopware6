@@ -19,4 +19,9 @@ Neden `base_body_inner` başına (append değil prepend):
     {% sw_include '@Storefront/storefront/component/age-gate.html.twig' %}
 
     {{ parent() }}
+
+    {# Mobil alt gezinme barı — SONDA: sabit konumlu, DOM sırasında en sonda
+       olması ekran okuyucuda içerikten sonra gelmesini sağlar (doğru sıra).
+       Yalnızca <768px'te görünür; masaüstünde SCSS `display:none` yapar. #}
+    {% sw_include '@Storefront/storefront/component/mobile-bottom-nav.html.twig' %}
 {% endblock %}

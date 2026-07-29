@@ -1,0 +1,239 @@
+/*
+Mobil "app hissi" katmanı.
+
+Ölçüm (2026-07-29, 390×844): sayfada HİÇ sabit/yapışkan eleman yoktu.
+Header yukarı kaydırınca kayboluyordu, alt gezinme yoktu, 22 adet CTA
+36px'ti (WCAG 2.5.8 asgarisi 44px). Bunlar "web sayfası" hissinin
+başlıca sebepleriydi.
+
+Bu dosya 4 şey yapar — HEPSİ yalnızca <768px:
+  1. Alt gezinme barı (sabit, 5 sekme, sepet rozetli)
+  2. Yapışkan header (yukarı kaydırınca gizlen, aşağıda geri gel)
+  3. Dokunma geri bildirimi (:active ölçekleme) + tap-highlight temizliği
+  4. Dokunma hedefi düzeltmeleri
+
+⚠️ MASAÜSTÜ DOKUNULMAZ. Tüm kurallar `@media (max-width: 767.98px)` içinde.
+⚠️ Alt bar z-index'i offcanvas'ın (1045) ALTINDA — menü açılınca bar üstte
+   kalmamalı, aksi halde menünün üstüne biner.
+*/
+
+// ⚠️ MASAÜSTÜNDE TAMAMEN GİZLE.
+// Bu kural mobil media query'sinin DIŞINDA olmalı. İlk yazımda tüm dosya
+// `max-width: 767.98px` içindeydi → masaüstünde alt bara HİÇ kural
+// uygulanmıyordu ve bar sayfanın en altında 1600×164px düz bir blok olarak
+// görünüyordu (ölçüldü: top 9030, display block). Sessiz bir sızıntıydı.
+//
+// `display: none` seçildi (visibility/opacity değil) ki eleman erişilebilirlik
+// ağacından da çıksın — masaüstü klavye kullanıcısı boş sekmelere tab'lamasın.
+@media (min-width: 768px) {
+    .vape-mobile-nav {
+        display: none;
+    }
+}
+
+@media (max-width: 767.98px) {
+
+    // ==================================================
+    // 1) ALT GEZİNME BARI
+    // ==================================================
+
+    .vape-mobile-nav {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: $vape-mnav-z;
+        background-color: $vape-mnav-bg;
+        border-top: 1px solid $vape-mnav-border;
+        box-shadow: $vape-mnav-shadow;
+        // iPhone home indicator alanı — çentikli cihazlarda bar ekranın
+        // en altına yapışıp dokunulamaz hale gelmesin.
+        padding-bottom: env(safe-area-inset-bottom, 0);
+
+        &__list {
+            display: flex;
+            align-items: stretch;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        &__item {
+            flex: 1 1 0;
+            min-width: $vape-mnav-item-min-w;
+        }
+
+        // Hem <a> hem <button> — ikisi de aynı görünmeli.
+        &__link {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;   // 2px sıkışıktı — ikon glifi etikete değiyor gibi duruyordu
+            width: 100%;
+            height: $vape-mnav-height;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: $vape-mnav-fg;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: color $vape-duration-fast $vape-ease-out;
+
+            &:hover {
+                color: $vape-mnav-fg;
+            }
+
+            &:focus-visible {
+                outline: 2px solid $vape-brand;
+                outline-offset: -2px;
+            }
+
+            // Aktif sekme: kırmızı + üstte ince şerit.
+            // Renk TEK ayırt edici işaret olmasın diye şerit de var (WCAG 1.4.1).
+            &.is--active {
+                color: $vape-mnav-fg-active;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    width: 32px;
+                    height: $vape-mnav-active-bar-h;
+                    transform: translateX(-50%);
+                    border-radius: 0 0 $vape-radius-xs $vape-radius-xs;
+                    background-color: $vape-mnav-fg-active;
+                }
+            }
+        }
+
+        &__icon {
+            position: relative;
+            display: inline-flex;
+
+            .icon {
+                width: $vape-mnav-icon-size;
+                height: $vape-mnav-icon-size;
+                // ⚠️ base.scss'teki global `.icon { margin-bottom: 5px }`
+                //    burada dikey ortalamayı bozuyordu — sıfırla.
+                margin-bottom: 0;
+                color: currentColor;
+
+                svg use,
+                svg path {
+                    fill: currentColor;
+                }
+            }
+        }
+
+        // sepet adedi rozeti
+        &__badge {
+            position: absolute;
+            top: -4px;
+            right: -8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: $vape-mnav-badge-size;
+            height: $vape-mnav-badge-size;
+            padding: 0 4px;
+            border-radius: $vape-mnav-badge-size;
+            background-color: $vape-mnav-badge-bg;
+            color: $vape-mnav-badge-fg;
+            font-size: $vape-mnav-badge-font;
+            font-weight: $vape-weight-bold;
+            line-height: 1;
+        }
+
+        &__label {
+            font-size: $vape-mnav-label-size;
+            font-weight: $vape-weight-medium;
+            letter-spacing: $vape-mnav-label-tracking;
+            line-height: 1;
+        }
+    }
+
+    // Sabit bar içeriğin son satırını örtmesin.
+    // Footer'ın altına bar yüksekliği kadar boşluk eklenir.
+    .footer-main,
+    .is-ctl-checkout .footer-main {
+        padding-bottom: calc(#{$vape-mnav-height} + env(safe-area-inset-bottom, 0px));
+    }
+
+    // ==================================================
+    // 2) YAPIŞKAN HEADER — ZATEN VAR, DOKUNULMADI
+    // ==================================================
+    // İlk ölçümde "hiç sabit eleman yok" görünmüştü; YANLIŞTI — ölçüm scroll
+    // pozisyonu 0'dayken alınmıştı. `vape-sticky-header` plugin'i mevcut ve
+    // MOBİLDE DE ÇALIŞIYOR (doğrulandı: 600px kaydırınca body'de
+    // `is--header-sticky`, header `position: fixed`, top 0).
+    //
+    // Plugin IntersectionObserver + sentinel + spacer deseni kullanıyor.
+    // Buraya `position: sticky` yazmak o mekanizmayla ÇAKIŞIRDI (iki farklı
+    // konumlandırma stratejisi). Bu yüzden header'a hiç dokunulmuyor.
+    //
+    // Not: `$vape-sticky-header-*` token'ları bu yüzden KULLANILMIYOR;
+    // ileride header davranışı değişirse diye tokens.scss'te duruyor.
+
+    // ==================================================
+    // 3) DOKUNMA GERİ BİLDİRİMİ
+    // ==================================================
+    // Native app'lerde basılı tutunca öğe hafifçe küçülür. Mavi tap-highlight
+    // ise webe özgü bir iz — temizlenir.
+
+    a,
+    button,
+    .btn,
+    .product-box .card {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:active,
+    .btn-buy:active,
+    .vape-mobile-nav__link:active {
+        transform: scale($vape-tap-scale);
+        transition: transform $vape-tap-dur $vape-ease-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .btn:active,
+        .btn-buy:active,
+        .vape-mobile-nav__link:active {
+            transform: none;
+        }
+    }
+
+    // Momentum scroll — yatay kaydırılan şeritlerde (ray, marka slider'ı)
+    // parmağı bırakınca akıcı devam etsin.
+    .vape-product-rail__track,
+    .vape-brand-slider__track,
+    .vape-category-carousel__track,
+    .vape-product-tabs__tablist {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+    }
+
+    // ==================================================
+    // 4) DOKUNMA HEDEFLERİ
+    // ==================================================
+    // Ölçüldü: `.product-price-tax-link` 125×26px, WCAG 2.5.8'in çok altında.
+    // Bu bir bilgi linki (KDV/kargo) — asıl CTA değil, ama yine de
+    // parmakla ıskalanıyordu. Dokunma alanı görsel boyutu değiştirmeden
+    // ::after ile büyütülür (metin küçük kalır, hedef büyür).
+
+    .product-price-tax-link {
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            min-height: $vape-touch-min;
+            transform: translateY(-50%);
+        }
+    }
+}

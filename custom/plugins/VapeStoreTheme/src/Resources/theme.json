@@ -72,6 +72,12 @@
           "de-DE": "Altersprüfung (18+)",
           "en-GB": "Age verification (18+)"
         }
+      },
+      "mobileNav": {
+        "label": {
+          "de-DE": "Mobile Navigation",
+          "en-GB": "Mobile navigation"
+        }
       }
     },
     "fields": {
@@ -718,6 +724,82 @@
           "en-GB": "Optional. Without a logo an \"18+\" emblem is shown."
         },
         "fullWidth": true,
+        "scss": false
+      },
+      "mobileNavEnabled": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "mobileNav",
+        "order": 100,
+        "label": {
+          "de-DE": "Mobile Navigationsleiste aktivieren",
+          "en-GB": "Enable mobile bottom navigation"
+        },
+        "helpText": {
+          "de-DE": "Feste Navigationsleiste am unteren Bildschirmrand – nur auf Mobilgeräten (<768px).",
+          "en-GB": "Fixed bottom navigation bar – mobile only (<768px)."
+        },
+        "scss": false
+      },
+      "mobileNavHomeLabel": {
+        "type": "text",
+        "value": "Start",
+        "editable": true,
+        "block": "mobileNav",
+        "order": 110,
+        "label": {
+          "de-DE": "Label: Start",
+          "en-GB": "Label: Home"
+        },
+        "scss": false
+      },
+      "mobileNavCategoriesLabel": {
+        "type": "text",
+        "value": "Kategorien",
+        "editable": true,
+        "block": "mobileNav",
+        "order": 120,
+        "label": {
+          "de-DE": "Label: Kategorien",
+          "en-GB": "Label: Categories"
+        },
+        "scss": false
+      },
+      "mobileNavSearchLabel": {
+        "type": "text",
+        "value": "Suche",
+        "editable": true,
+        "block": "mobileNav",
+        "order": 130,
+        "label": {
+          "de-DE": "Label: Suche",
+          "en-GB": "Label: Search"
+        },
+        "scss": false
+      },
+      "mobileNavCartLabel": {
+        "type": "text",
+        "value": "Warenkorb",
+        "editable": true,
+        "block": "mobileNav",
+        "order": 140,
+        "label": {
+          "de-DE": "Label: Warenkorb",
+          "en-GB": "Label: Cart"
+        },
+        "scss": false
+      },
+      "mobileNavAccountLabel": {
+        "type": "text",
+        "value": "Konto",
+        "editable": true,
+        "block": "mobileNav",
+        "order": 150,
+        "label": {
+          "de-DE": "Label: Konto",
+          "en-GB": "Label: Account"
+        },
         "scss": false
       }
     }

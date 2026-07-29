@@ -341,7 +341,10 @@ $vape-pcard-saved-bg:         $vape-brand-subtle;                // "%X saved" h
 $vape-pcard-body-pad-mobile:  $vape-space-3;                     // 12px
 $vape-pcard-name-size-mobile: $vape-text-sm;                     // 14px
 $vape-pcard-price-size-mobile: $vape-text-md;                    // 16px
-$vape-pcard-cta-height-mobile: 36px;                             // dokunma hedefi ≥36px korunur
+// 36px → 44px (2026-07-29). Ölçüldü: mobilde 22 adet "In den Warenkorb"
+// butonu 36px yüksekliğindeydi — WCAG 2.5.8 (Target Size Minimum, AA)
+// asgari 44px ister. App hissi için de 36px parmakla ıskalanıyordu.
+$vape-pcard-cta-height-mobile: 44px;                             // ⚠️ WCAG 2.5.8 — altına inme
 $vape-pcard-image-inset-mobile: $vape-space-2;                   // 8px — dar kartta görsele yer aç
 $vape-pcard-price-min-h-mobile: 40px;                            // fiyat bloğu rezervi (küçük ölçek)
 $vape-pcard-saved-fg:         $vape-brand-active;                // koyu kırmızı — AA kontrast
@@ -2012,3 +2015,53 @@ $vape-promo-deco-line-w:       1px;
 
 // Açık tonlu (textColor: dark) banner'da beyaz çizgi görünmez → koyu çizgi
 $vape-promo-deco-line-dark:    rgba(0, 0, 0, 0.05);
+
+
+// ==================================================
+// MOBİL APP HİSSİ (alt gezinme + yapışkan header + dokunma)
+// ==================================================
+// Ölçüm (2026-07-29, 390×844): sayfada HİÇ sabit/yapışkan eleman yoktu —
+// header yukarı kaydırınca kayboluyor, alt gezinme yok. "App gibi"
+// hissettiren en temel iki şey buydu.
+// ⚠️ HEPSİ yalnızca <768px'te uygulanır; masaüstü DOKUNULMAZ.
+
+// ---- alt gezinme barı ----
+// 58 → 64px. 58'de ikon (22px) + etiket (10px) arasında yalnızca 2px
+// kalıyordu; ölçümde teknik çakışma YOKTU ama görsel olarak sıkışık
+// duruyordu (yakınlaştırılmış ekran görüntüsünde ikon glifi etikete
+// değiyor gibi). 64px ile aralık nefes alıyor, dokunma hedefi de büyüyor.
+$vape-mnav-height:           64px;   // + safe-area (iPhone home indicator)
+$vape-mnav-bg:               $vape-neutral-white;
+$vape-mnav-border:           $vape-border-subtle;
+$vape-mnav-shadow:           0 -2px 12px rgba(16, 16, 24, 0.08);
+$vape-mnav-z:                $vape-z-fixed;   // offcanvas(1045) ALTINDA kalmalı
+$vape-mnav-icon-size:        22px;
+$vape-mnav-label-size:       10px;
+$vape-mnav-label-tracking:   0.01em;
+$vape-mnav-fg:               $vape-neutral-600;
+$vape-mnav-fg-active:        $vape-brand;
+$vape-mnav-active-bar-h:     2px;    // aktifte üstte ince kırmızı şerit
+$vape-mnav-item-min-w:       44px;   // ⚠️ dokunma hedefi (WCAG 2.5.8)
+
+// sepet rozeti
+$vape-mnav-badge-bg:         $vape-brand;
+$vape-mnav-badge-fg:         $vape-neutral-white;
+$vape-mnav-badge-size:       16px;
+$vape-mnav-badge-font:       10px;
+
+// ---- yapışkan header: TOKEN YOK ----
+// `vape-sticky-header` plugin'i zaten var ve mobilde çalışıyor (doğrulandı).
+// IntersectionObserver + sentinel + spacer deseni kullanıyor; CSS'ten
+// `position: sticky` ile müdahale etmek onunla çakışır. Bkz.
+// `layout/_mobile-app.scss` bölüm 2.
+
+// ---- dokunma geri bildirimi ----
+// Native app'lerde basılı tutunca öğe hafifçe küçülür. 0.97 fark edilir
+// ama sarsıcı değil (0.9 denendi: fazla agresif).
+$vape-tap-scale:             0.97;
+$vape-tap-dur:               90ms;
+
+// CTA dokunma hedefi: ölçüldü, `.btn-buy` mobilde 36px'ti → 44px'in altında
+// (WCAG 2.5.8 AA). Ürün kartı CTA'sı için ayrı token zaten var
+// ($vape-pcard-cta-height-mobile) — o da 44'e çekiliyor.
+$vape-touch-min:             44px;

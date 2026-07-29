@@ -10,6 +10,7 @@ Inline <script> veya doğrudan DOM manipülasyonu KULLANILMAZ.
 
 import VapeHeroSliderPlugin from './plugin/vape-hero-slider/vape-hero-slider.plugin';
 import VapeStickyHeaderPlugin from './plugin/vape-sticky-header/vape-sticky-header.plugin';
+import VapeMobileNavPlugin from './plugin/vape-mobile-nav/vape-mobile-nav.plugin';
 import VapeCategoryCarouselPlugin from './plugin/vape-category-carousel/vape-category-carousel.plugin';
 import VapeProductRailPlugin from './plugin/vape-product-rail/vape-product-rail.plugin';
 import VapeFeaturedSplitPlugin from './plugin/vape-featured-split/vape-featured-split.plugin';
@@ -31,3 +32,5 @@ registry.register('VapeDealsCountdown', VapeDealsCountdownPlugin, '.vape-deals')
 // Age-gate: yasal kapı, her sayfada. CMS element DEĞİL — gerekçe
 // component/age-gate.html.twig başındaki nota bakınız.
 registry.register('VapeAgeGate', VapeAgeGatePlugin, '[data-vape-age-gate]');
+// Mobil alt gezinme — sepet rozetini header widget'ından senkronlar.
+registry.register('VapeMobileNav', VapeMobileNavPlugin, '[data-vape-mobile-nav]');

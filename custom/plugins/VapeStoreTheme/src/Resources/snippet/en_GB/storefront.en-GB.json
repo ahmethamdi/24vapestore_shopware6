@@ -95,5 +95,8 @@
   },
   "vapeProductSpotlight": {
     "cta": "Discover now"
+  },
+  "vapeMobileNav": {
+    "ariaLabel": "Main navigation (mobile)"
   }
 }

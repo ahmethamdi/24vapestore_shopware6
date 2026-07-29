@@ -1,0 +1,29 @@
+{#
+    PWA meta etiketleri — "ana ekrana ekle" desteği.
+
+    Telefonda siteyi ana ekrana ekleyince tarayıcı çubuğu olmadan, tam ekran
+    ve kendi ikonuyla açılır ("standalone"). Native app hissinin son parçası.
+
+    ⚠️ `apple-mobile-web-app-capable` iOS'a özgü; Android manifest'teki
+       `display: standalone` ile aynı işi yapar. İkisi de gerekli.
+
+    ⚠️ Varlıklar `Resources/public/` altında → storefront'ta
+       `/bundles/vapestoretheme/...` yolundan servis edilir. Yeni dosya
+       eklendiğinde `bin/console assets:install` ŞART, yoksa 404 döner.
+
+    Not: `theme-color` core zaten basıyor (#ffffff, ölçüldü) — burada
+    TEKRAR EDİLMİYOR ki iki farklı değer çakışmasın.
+#}
+{% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
+
+{% block layout_head_meta_tags %}
+    {{ parent() }}
+
+    {# --- PWA: ana ekrana ekle --- #}
+    <link rel="manifest" href="{{ asset('bundles/vapestoretheme/pwa/manifest.webmanifest') }}">
+    <link rel="apple-touch-icon" href="{{ asset('bundles/vapestoretheme/pwa/icon-192.png') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="24VapeStore">
+    <meta name="mobile-web-app-capable" content="yes">
+{% endblock %}
