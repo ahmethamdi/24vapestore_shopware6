@@ -21,11 +21,13 @@
         padding: 0;
 
         display: grid;
-        grid-template-columns: 1fr;              // mobil: alt alta
+        // Mobilde 2 sütun (talep). Önce 1 sütundu, 480px'te 2'ye geçiyordu;
+        // yaygın telefon 390px olduğu için pratikte HİÇ 2'li görünmüyordu —
+        // 4 kart alt alta uzuyordu. (usp-strip'te birebir aynı durum vardı.)
+        grid-template-columns: repeat(2, 1fr);
         gap: $vape-trust-grid-gap;
 
         @media (min-width: 480px) {
-            grid-template-columns: repeat(2, 1fr); // küçük ekran: 2'li
             gap: $vape-trust-grid-gap-md;
         }
 
@@ -82,11 +84,22 @@
         font-weight: $vape-trust-title-weight;
         color: $vape-trust-title-color;
         line-height: $vape-leading-snug;
+
+        // 2 sütuna geçince sütun ~170px'e düşüyor; 16px başlık
+        // ("18+ Altersverifikation", "Original & authentisch") sarıyordu.
+        // usp-strip ile aynı ölçek düzeltmesi.
+        @media (max-width: 767.98px) {
+            font-size: $vape-text-sm;
+        }
     }
 
     &__sub {
         font-size: $vape-trust-sub-size;
         color: $vape-trust-sub-color;
         line-height: $vape-leading-snug;
+
+        @media (max-width: 767.98px) {
+            font-size: $vape-text-xs;
+        }
     }
 }
