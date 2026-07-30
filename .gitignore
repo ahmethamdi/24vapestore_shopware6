@@ -16,7 +16,14 @@ npm-debug.log*
 
 # Build artefacts
 /custom/plugins/*/src/Resources/app/*/node_modules/
-/custom/plugins/*/src/Resources/public/
+# ⚠️ Dizinin KENDİSİ ignore edilirse içindeki dosyalar `!` ile geri
+#    alınamaz (git ignore edilen dizine hiç bakmaz). Bu yüzden dizin
+#    değil, İÇERİĞİ ignore edilir (`/*`) ve pwa/ istisna tutulur.
+/custom/plugins/*/src/Resources/public/*
+# İSTİSNA: PWA varlıkları derleme ürünü DEĞİL, elle yazılmış kaynak dosya
+# (manifest + ana ekran ikonları). Ignore'da kalırsa yeni kurulumda
+# `assets:install` kopyalayacak bir şey bulamaz ve manifest 404 döner.
+!/custom/plugins/*/src/Resources/public/pwa/
 /custom/apps/*/node_modules/
 # Not: theme.json dist/.../<tema>.js dosyasına referans verdiği için o stub
 # repoda kalır; sadece derleme ürünleri (sourcemap, vendor chunk) ignore edilir.
