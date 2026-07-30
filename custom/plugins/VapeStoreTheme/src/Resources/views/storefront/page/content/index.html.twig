@@ -1,0 +1,33 @@
+{#
+    CMS içerik sayfası (anasayfa + landing page) — breadcrumb düzeltmesi.
+
+    SORUN (ölçüldü 2026-07-29, 1600px): anasayfada nav (185px) ile hero
+    section'ı (237px) arasında 52px'lik açıklanamayan beyaz bant vardı.
+    Kaynak: `.cms-breadcrumb container` — içi TAMAMEN BOŞ (0 çocuk, 0 karakter)
+    ama 32px yükseklik + 16px üst/alt padding kaplıyordu.
+
+    Anasayfada breadcrumb'ın gösterecek bir şeyi yok (kök kategori), bu yüzden
+    core boş bir kapsayıcı basıyor.
+
+    ÇÖZÜM: kapsayıcıyı yalnızca breadcrumb GERÇEKTEN doluyken bas.
+    Kategori/landing sayfalarında breadcrumb dolu → değişiklik yok, orada
+    gezinme için gerekli. Yalnızca boş olduğu yerde (anasayfa) hiç basılmaz.
+
+    ⚠️ `page.breadcrumb` 6.8/BREADCRUMB_REWORK bayrağına göre farklı
+       dolduruluyor; ikisini de kapsayacak şekilde hem `page.breadcrumb`
+       hem `shopware.navigation.id` kök kontrolü yapılır.
+
+    ⚠️ Bu YENİ bir core template override'ı → ilk eklendiğinde
+       `cache:clear` YETMEZ, `brew services restart php` şart (opcache).
+#}
+{% sw_extends '@Storefront/storefront/page/content/index.html.twig' %}
+
+{% block cms_breadcrumb %}
+    {# Kök kategorideysek (anasayfa) breadcrumb boş gelir — hiç basma. #}
+    {% set crumbs = page.breadcrumb|default([]) %}
+    {% set isRoot = shopware.navigation.id == context.salesChannel.navigationCategoryId %}
+
+    {% if crumbs|length > 0 and not isRoot %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

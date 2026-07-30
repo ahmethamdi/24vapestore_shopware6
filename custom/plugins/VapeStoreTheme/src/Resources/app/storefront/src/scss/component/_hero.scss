@@ -34,6 +34,18 @@ Tüm değerler token'lardan gelir; magic hex/px yok.
             // Referans oranı: sol panel ~1/3, görsel ~2/3
             grid-template-columns: $vape-hero-panel-col $vape-hero-media-col;
             grid-template-rows: 1fr;
+
+            // ⚠️ `min-height` TEK BAŞINA yetmiyor: sağdaki görsel `object-fit:
+            //    cover` ile kendi doğal oranını dayatıyor. Ölçüldü (2026-07-29):
+            //    config 520→420 yapıldığında slide min-height 420'ye düştü ama
+            //    1118×629 görsel 939px genişlikte 528px yer kaplayıp yüksekliği
+            //    geri yukarı itti. Yani ayar sessizce etkisiz kalıyordu.
+            //
+            //    `max-height` ile tavan kapatılır; görsel artık kırpılarak
+            //    (cover) bu yüksekliğe uyar. Panel içeriği 473px (393 içerik +
+            //    80 padding) olduğu için 420px'in altına İNİLMEMELİ — metin
+            //    taşar. Bu yüzden tavan `min-height` ile aynı değere bağlandı.
+            max-height: var(--vape-hero-min-height, #{$vape-hero-min-height});
         }
 
         &.is--tone-light {
