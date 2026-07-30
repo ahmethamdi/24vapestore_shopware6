@@ -19,8 +19,12 @@ ama dikey alan israf edilmez.
 // !default ile buradaki değerler geçerli olur.
 // ==================================================
 
-$vape-usp-bar-bg: $vape-neutral-950 !default;
-$vape-usp-bar-color: $vape-neutral-white !default;
+// ⚠️ Bu !default'lar YALNIZCA theme.json değeri hiç enjekte edilmezse
+//    devreye girer. Gerçek varsayılan theme.json'da (açık gri #f0f0f3 /
+//    koyu metin #3f3f4a). Buradaki fallback de onunla AYNI yönde olmalı,
+//    yoksa enjeksiyon bir sebeple atlanırsa şerit siyaha döner.
+$vape-usp-bar-bg: $vape-nav-bg-topbar !default;
+$vape-usp-bar-color: $vape-nav-topbar-fg !default;
 
 // Zemin TAM GENİŞLİK, içerik container'da hizalı.
 // Önceden şeridin tamamı .container içindeydi: 1800px'te kesiliyor,
@@ -31,6 +35,9 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     width: 100%;
     background-color: $vape-usp-bar-bg;
     color: $vape-usp-bar-color;
+    // Şerit AÇIK GRİ olduğu için beyaz header ile arasında sınır kalmıyordu;
+    // ince ayraç iki katmanı ayırır (koyu şeritte gerekmiyordu).
+    border-bottom: 1px solid $vape-nav-topbar-border;
     font-size: $vape-text-xs;
     line-height: 1;
 
@@ -93,7 +100,7 @@ $vape-usp-bar-color: $vape-neutral-white !default;
             transform: translateY(-50%);
             width: 1px;
             height: $vape-space-3;
-            background-color: $vape-usp-divider;
+            background-color: $vape-usp-bar-divider;
 
             @media (max-width: 767px) {
                 right: calc(#{$vape-space-5} / -2);
@@ -104,11 +111,11 @@ $vape-usp-bar-color: $vape-neutral-white !default;
             flex: 0 0 auto;
             // İkon kırmızı vurgu: koyu zeminde metinden ayrışır ve
             // şeride marka rengi taşır. Metin beyaz kalır (kontrast).
-            color: $vape-usp-icon-color;
+            color: $vape-usp-bar-icon-color;
 
             svg {
-                width: $vape-usp-icon-size;
-                height: $vape-usp-icon-size;
+                width: $vape-usp-bar-icon-size;
+                height: $vape-usp-bar-icon-size;
             }
         }
     }
@@ -522,11 +529,44 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     min-width: 0;
     max-width: 100%;
 
+    // Kategoriler ORTADA (talep). Rozet grubu aşağıda `margin-left: auto`
+    // ile sağa itilir; ortalama ondan ARTA KALAN alana göre yapılır.
+    //
+    // ⚠️ `justify-content: center` TAŞMA DURUMUNDA İLK ÖĞEYİ KIRPAR — flex'in
+    //    bilinen tuzağı: içerik kutudan genişse ortalama taşmayı İKİ YANA
+    //    dağıtır ve baştaki kısım `scrollLeft: 0`da bile erişilemez olur
+    //    (ölçüldü: "Home" solda kesiliyordu, sadece "e" görünüyordu).
+    //    `safe` anahtar kelimesi bunu çözer: sığmıyorsa ortalamayı bırakıp
+    //    başa hizalar, sığıyorsa ortalar.
+    justify-content: safe center;
+
     // Son öğe kenara yapışmasın; kaydırma varsa da nefes alanı kalsın
     padding-right: $vape-space-4;
 
     &::-webkit-scrollbar {
         display: none;
+    }
+
+    // ---- promosyon rozetleri sağa gruplanır ----
+    // ⚠️ DOM sırası uygun DEĞİL: "Salt Produkte" tam olarak Aktionen ile
+    //    SALE arasında duruyor (ölçüldü). Flex `order` ile üçü DOM'a
+    //    dokunmadan yan yana getirilir — twig override gerekmez.
+    //    order varsayılanı 0; rozetlere 1,2,3 verilir → hepsi sona gider.
+    > li:has(> [title="Aktionen" i]) { order: 1; }
+    > li:has(> [title="SALE" i])     { order: 2; }
+    > li:has(> [title="Outlet" i])   { order: 3; }
+
+    // Grubun ilki sola boşluk bırakır → kategorilerden ayrışır ve
+    // `auto` margin sayesinde grup sağ kenara yaslanır.
+    > li:has(> [title="Aktionen" i]) {
+        margin-left: auto;
+        padding-left: $vape-space-4;
+    }
+
+    // Rozetler arası nefes payı
+    > li:has(> [title="SALE" i]),
+    > li:has(> [title="Outlet" i]) {
+        margin-left: $vape-nav-badge-group-gap;
     }
 }
 
@@ -572,27 +612,25 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     //    Eşik 1500px'e çekildi: bu genişliğin ALTINDA daha dar padding
     //    (8px) kullanılır, 13 öğe 1440px'te de tek satıra sığar.
     //    Kaydırma yine yedek olarak duruyor (yukarıdaki min-width düzeltmesi).
+    // Talep: "biraz küçült". 14px → 13px, dikey padding 16→12px.
+    // 13 öğe artık 1200px'te bile rahat sığıyor, şerit daha kompakt.
     @media (min-width: 1200px) {
-        padding: $vape-space-4 $vape-space-2 !important;
-        font-size: $vape-text-sm;
+        padding: $vape-space-3 $vape-nav-link-pad-x !important;
+        font-size: $vape-nav-link-size;
     }
 
     @media (min-width: 1500px) {
-        padding: $vape-space-4 $vape-space-3 !important;
+        padding: $vape-space-3 $vape-nav-link-pad-x-lg !important;
     }
 
-    // Aktif/hover durumunda altta kırmızı çizgi
-    &::after {
-        content: '';
-        position: absolute;
-        left: $vape-space-2;
-        right: $vape-space-2;
-        bottom: 0;
-        height: 2px;
-        background-color: $vape-brand;
-        transform: scaleX(0);
-        transition: transform $vape-duration-base $vape-ease-out;
-    }
+    // ⚠️ AKTİF/HOVER ALT ÇİZGİSİ KALDIRILDI (talep: "aktifse altında çizgi
+    //    çıkmasın"). Vurgu artık yalnızca RENK ile: aktif/hover linki beyaz,
+    //    diğerleri %85 opak beyaz.
+    //
+    //    Erişilebilirlik notu: aktif sayfa göstergesi için renk tek başına
+    //    zayıf bir işaret (WCAG 1.4.1). Ancak burada gerçek gösterge
+    //    `aria-current="page"` ile SEMANTİK olarak veriliyor — ekran
+    //    okuyucu aktif sayfayı bildirir, görsel işaret ikincildir.
 
     &:hover,
     &:focus,
@@ -616,13 +654,34 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         color: $vape-neutral-white;
     }
 
-    // Core dropdown okunu gizle — mega menü hover ile açılıyor
-    &.dropdown-toggle::before {
+    // Core dropdown okunu gizle — mega menü hover ile açılıyor.
+    // ⚠️ Bootstrap oku `::after` ile basıyor (`::before` DEĞİL). Önceden
+    //    alt çizgi kuralımız `::after`ı zaten ezdiği için ok görünmüyordu;
+    //    çizgi kaldırılınca ok ORTAYA ÇIKTI (her kategoride ▾ belirdi).
+    //    Artık ikisi de açıkça gizleniyor.
+    &.dropdown-toggle::before,
+    &.dropdown-toggle::after {
         display: none;
     }
 
     .main-navigation-link-text {
         display: inline-block;
+
+        // ⚠️ ALT ÇİZGİNİN ASIL KAYNAĞI BURASI — bizim `::after` kuralımız
+        //    değil. Core `skin/shopware/layout/_main-navigation.scss`:
+        //        .main-navigation-link-text { border-bottom: 2px solid transparent }
+        //        .main-navigation-link.active .main-navigation-link-text { border-color: $primary }
+        //    Yani çizgi bir BORDER, pseudo-element değil. `::after`ı
+        //    kaldırdıktan sonra da "Home" altında kırmızı çizgi kalmıştı
+        //    (ekran görüntüsünde görüldü, CDP ile kaynağı doğrulandı).
+        //    Talep gereği tamamen kapatılıyor.
+        border-bottom: 0;
+    }
+
+    &.active .main-navigation-link-text,
+    &.root.active .main-navigation-link-text {
+        border-bottom: 0;
+        border-color: transparent;
     }
 }
 
@@ -635,17 +694,17 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     &[title="SALE" i],
     &[title="Outlet" i],
     &[title="Aktionen" i] {
-        // ⚠️ Şerit koyu BORDO olduğu için rozet dolgusu KIRMIZI OLAMAZ —
-        //    kırmızı üstüne kırmızı, rozet kayboluyordu (siyah şeritte
-        //    sorun değildi). Beyaz dolgu + bordo metin: vurgu korunur,
-        //    kontrast artar (beyaz/#6b0710 ≈ 10:1, AA fazlasıyla geçer).
+        // Şerit GRİ olduğu için rozet dolgusu yeniden KIRMIZI olabiliyor
+        // (bordo şeritte kırmızı-üstüne-kırmızı olduğu için beyaza
+        // çevrilmişti). Gri zeminde kırmızı en güçlü vurgu.
+        // Talep: "daha göze batmalı" → dolgu büyütüldü, harf aralığı açıldı.
         .main-navigation-link-text {
-            padding: 3px $vape-space-2;
+            padding: 5px $vape-space-3;
             border-radius: $vape-radius-sm;
             background-color: $vape-nav-badge-bg;
             color: $vape-nav-badge-fg;
             font-weight: $vape-weight-bold;
-            letter-spacing: $vape-tracking-wide;
+            letter-spacing: $vape-tracking-wider;
             text-transform: uppercase;
             font-size: $vape-text-2xs;
         }
@@ -661,19 +720,22 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         }
     }
 
-    // Outlet ikinci vurgu seviyesi — koyu şeritte dolgu yerine çerçeve,
-    // yoksa siyah üstünde siyah kutu görünmez olur.
+    // Outlet ikinci vurgu seviyesi — dolgu yerine KIRMIZI ÇERÇEVE.
+    // Üç rozet de dolu kırmızı olsaydı hiçbiri öne çıkmazdı; SALE ve
+    // AKTIONEN dolu (birincil), OUTLET çerçeveli (ikincil) → hiyerarşi.
+    // Çerçeve rengi beyaz-alfa değil MARKA KIRMIZISI: gri şeritte beyaz
+    // çerçeve soluk kalıyordu, kırmızı hem görünür hem grupla tutarlı.
     &[title="Outlet" i] .main-navigation-link-text {
         background-color: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        color: $vape-neutral-white;
+        border: 1px solid $vape-nav-badge-outline-border;
+        // Metin beyaz kalır: gri zeminde kırmızı metin (5.2:1) beyazdan
+        // (7.4:1) daha düşük kontrastlı — okunabilirlik önce gelir.
+        color: $vape-nav-badge-outline-fg;
     }
 
     &[title="Outlet" i]:hover .main-navigation-link-text {
-        background-color: $vape-neutral-white;
-        border-color: $vape-neutral-white;
-        // Şerit bordo olduğu için hover metni de bordo — siyah kalırsa
-        // diğer rozetlerle (bordo metin) tutarsız görünüyordu.
+        background-color: $vape-nav-badge-bg;
+        border-color: $vape-nav-badge-bg;
         color: $vape-nav-badge-fg;
     }
 }

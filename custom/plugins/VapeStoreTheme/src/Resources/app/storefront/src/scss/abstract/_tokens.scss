@@ -420,12 +420,18 @@ $vape-search-icon-color:    $vape-neutral-500;
 $vape-search-max-width:     640px;
 $vape-search-placeholder:   $vape-neutral-500;
 
-// ---------- USP şeridi ----------
-// Koyu zemin üzerinde ayırıcı; nötr token'lar açık zemin için
-// tasarlandığından burada beyaz-alfa kullanılıyor.
-$vape-usp-divider:    rgba(255, 255, 255, 0.16);
-$vape-usp-icon-size:  14px;
-$vape-usp-icon-color: $vape-red-400;   // koyu zeminde 500 yerine 400 — kontrast
+// ---------- USP ŞERİDİ (header üst bar) ----------
+// ⚠️ İSİM ÇAKIŞMASI DÜZELTİLDİ (2026-07-30): bu üç token daha önce
+//    `$vape-usp-divider` / `$vape-usp-icon-*` adlarını kullanıyordu ve
+//    AŞAĞIDAKİ `vape-usp-strip` CMS ELEMENTİ aynı adları yeniden
+//    tanımlıyordu. SCSS'te son tanım kazandığı için header barının
+//    değerleri SESSİZCE eziliyordu (ölçüldü: ikon #2a2a33 çıkıyordu,
+//    yani koyu şeritte görünmez haldeydi). Artık `-bar-` ekiyle ayrı.
+//
+// Şerit AÇIK GRİ (2026-07-30) → ayırıcı ve ikon koyu nötr.
+$vape-usp-bar-divider:    $vape-neutral-300;
+$vape-usp-bar-icon-size:  14px;
+$vape-usp-bar-icon-color: $vape-brand;   // açık zeminde marka kırmızısı okunur
 
 // ---------- Ana satır ----------
 $vape-header-row-pad-y:         $vape-space-4;
@@ -2091,22 +2097,39 @@ $vape-hscroll-product-max: 190px;
 
 
 // ==================================================
-// KATEGORİ MENÜ ŞERİDİ — koyu bordo (2026-07-30)
+// HEADER ŞERİTLERİ — gri (2026-07-30, revize)
 // ==================================================
-// Önce düz siyah (#0b0b0f) idi ve üstündeki USP şeridiyle birlikte iki koyu
-// bant üst üste biniyordu; sayfa girişi ağır duruyordu.
-// Koyu bordo marka rengini taşır ama hâlâ "koyu şerit" işlevini görür.
+// Sırasıyla denendi: siyah → koyu bordo → GRİ.
+// Siyah "içi karartıyordu", bordo da tutmadı (fazla baskın). Nötr gri
+// hem beyaz gövdeyle uyumlu hem de kırmızıyı TEK vurgu olarak serbest
+// bırakıyor — projenin "beyaz zemin + kırmızı vurgu" kuralına en yakını.
 //
-// ⚠️ KRİTİK YAN ETKİ: AKTIONEN/SALE rozetleri KIRMIZI dolguluydu. Bordo
-//    zemin üzerinde kırmızı rozet kontrastını kaybediyor (kırmızı üstüne
-//    kırmızı). Bu yüzden rozetler bordo şeritte BEYAZ dolgu + bordo metne
-//    çevrildi — vurgu korunur, okunabilirlik artar.
+// İki kademe: üst yardımcı bar AÇIK gri (ikincil bilgi), kategori menüsü
+// KOYU antrasit (ana gezinme, belirgin şerit olarak kalmalı).
 
-$vape-nav-bg:            $vape-red-800;   // #6b0710 — menü şeridi
-$vape-nav-bg-topbar:     $vape-red-900;   // #40040a — üstteki USP şeridi
-$vape-nav-hairline:      rgba(255, 255, 255, 0.10);  // üst ince ayraç
+$vape-nav-bg:            $vape-neutral-700;   // #3f3f4a — menü şeridi (koyu gri)
+$vape-nav-bg-topbar:     $vape-neutral-100;   // #f0f0f3 — üst bar (açık gri)
+$vape-nav-topbar-fg:     $vape-neutral-700;   // açık gri üstünde koyu metin
+$vape-nav-hairline:      rgba(255, 255, 255, 0.10);  // menüde üst ince ayraç
+$vape-nav-topbar-border: $vape-neutral-200;   // açık bar altında ince ayraç
 
-// Rozetler: bordo üstünde beyaz dolgu (kırmızı dolgu görünmüyordu)
-$vape-nav-badge-bg:      $vape-neutral-white;
-$vape-nav-badge-fg:      $vape-red-800;
-$vape-nav-badge-bg-hover: $vape-neutral-100;
+// ---- promosyon rozetleri (AKTIONEN / SALE / OUTLET) ----
+// Talep: "daha göze batmalı". Koyu gri şerit üzerinde KIRMIZI dolgu artık
+// çalışıyor (bordo şeritte kırmızı-üstüne-kırmızı olduğu için beyaza
+// çevrilmişti; gri zeminde kırmızı yeniden en güçlü vurgu).
+$vape-nav-badge-bg:       $vape-brand;
+$vape-nav-badge-fg:       $vape-neutral-white;
+$vape-nav-badge-bg-hover: $vape-brand-hover;
+
+// Outlet ikinci kademe: dolgu yerine kırmızı çerçeve (üç rozet aynı
+// ağırlıkta olursa hiçbiri öne çıkmaz; SALE/AKTIONEN dolu, OUTLET çerçeveli).
+$vape-nav-badge-outline-fg:     $vape-neutral-white;
+$vape-nav-badge-outline-border: $vape-brand;
+
+// Rozet grubu sağa yaslanır; kategori linkleri ortada kalır.
+$vape-nav-badge-group-gap: $vape-space-2;
+
+// ---- kompakt ölçek (talep: "biraz küçült") ----
+$vape-nav-link-size:     $vape-text-xs;   // 13px değil 12px — 13 öğe ferah sığsın
+$vape-nav-link-pad-x:    $vape-space-2;
+$vape-nav-link-pad-x-lg: $vape-space-3;
