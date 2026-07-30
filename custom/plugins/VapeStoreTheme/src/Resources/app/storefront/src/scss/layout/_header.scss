@@ -768,9 +768,17 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
     // menünün önüne geçiyordu. z-fixed ile menü her sticky içeriğin üstünde.
     z-index: $vape-z-fixed;
 
-    // Pratikte tüm kategoriler scroll'suz sığsın: sütunlar 6'lı yapıldı
-    // (aşağıda) + sınır 85vh. Scroll yalnızca aşırı uç dalda güvenlik ağı.
-    max-height: 85vh;
+    // ⚠️ Sınır `vh` DEĞİL, panelin BAŞLADIĞI yere göre hesaplanır.
+    //
+    // Eskiden `max-height: 85vh` idi ve taşmayı çözmüyordu: panel header'ın
+    // altında, y≈181px'te başlıyor. 1000px'lik ekranda 85vh = 850px, yani
+    // panelin alt kenarı 181+850 = 1031px — ekranın 31px altında. Panel kendi
+    // içinde kayıyordu ama kaydırma çubuğunun sonuna ULAŞILAMIYORDU.
+    //
+    // `100dvh - top` doğru büyüklük: panel nerede başlıyorsa oradan ekranın
+    // altına kadar. 24px pay altta nefes bırakıyor (ve alt kenarlığı gösteriyor).
+    // dvh: mobil tarayıcılarda adres çubuğu daralınca da doğru kalır.
+    max-height: calc(100dvh - #{$vape-flyout-top-offset} - #{$vape-space-5});
     overflow-y: auto;
     overscroll-behavior: contain;
 

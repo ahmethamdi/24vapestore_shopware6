@@ -22,8 +22,64 @@
     NOT: core'un `columnCount` mantığına (navigationMedia ? 3 : 4) dokunulmadı.
     Değişkeni burada set etmek işe yaramazdı: core özyinelemeli include'u
     `only` ile çağırıyor, dış kapsamdaki değişkenler içeri geçmiyor.
+
+    ---
+    2. EKLENTİ: 1. seviye sütunları alfabetik sırala.
+
+    Neden: kategori ağacı içe aktarım sırasında duruyor, alfabetik değil.
+    "Prefilled Pod Kits" altında 32 marka sırasız listeleniyordu (Elf Bar ELFA,
+    Gzuz, Haftbar, Cubar, ... sonra tekrar Elfbar Elfa Turbo Pro) — kullanıcı
+    aradığı markayı bulmak için 32 öğenin tamamını okumak zorundaydı.
+
+    Yalnızca level == 0 sıralanıyor. Alt seviyeler (Pods / Akkuträger / Set gibi)
+    kasıtlı bir sırada — orada alfabetik sıralama anlamı bozar, o yüzden
+    core sırası korunuyor.
+
+    ⚠️ Sıralama TWIG'de yapılıyor, veride değil: katalog verisine dokunulmuyor,
+    yeni kurulumda tekrar uygulanması gerekmiyor. Yönetici bir kategoriye
+    manuel sıra vermek isterse bu kural onu ezer — o gün burayı gözden geçir.
 #}
 {% sw_extends '@Storefront/storefront/layout/navbar/categories.html.twig' %}
+
+{#
+    Core'un tüm döngüsü tek bir blokta (`layout_navbar_categories`) yaşıyor,
+    bu yüzden sıralama için dış blok eziliyor. Döngü gövdesi core'un yaptığı
+    işi birebir tekrarlıyor — AMA öğe içeriği `layout_navbar_categories_item_link`
+    ve `layout_navbar_categories_recoursion` bloklarına devrediliyor, yani
+    yukarıdaki görsel/thumbnail mantığı ve özyineleme aynen korunuyor.
+#}
+{% block layout_navbar_categories %}
+    {% set navigationMaxDepth = 3 %}
+
+    {% if not level %}
+        {% set level = 0 %}
+    {% endif %}
+
+    {# Yalnızca sütun başlıkları (level 0) sıralanır; alt listeler core sırasında kalır #}
+    {% set items = navigationTree %}
+    {% if level == 0 %}
+        {% set items = navigationTree|sort((a, b) =>
+            (a.category.translated.name|lower) <=> (b.category.translated.name|lower)
+        ) %}
+    {% endif %}
+
+    <div class="{% if level == 0 %}row {% endif %}navigation-flyout-categories is-level-{{ level|raw }}">
+        {% for treeItem in items %}
+            {% set category = treeItem.category %}
+            {% set id = category.id %}
+            {% set name = category.translated.name %}
+            {% set link = category.seoUrl %}
+
+            {% block layout_navbar_categories_item %}
+                {% set columnCount = navigationMedia ? 3 : 4 %}
+                <div class="{% if level == 0 %}col-{{ (12 / columnCount)|raw }} {% endif %}{% if loop.index0 % columnCount != 0 %}navigation-flyout-col{% endif %}">
+                    {{ block('layout_navbar_categories_item_link') }}
+                    {{ block('layout_navbar_categories_recoursion') }}
+                </div>
+            {% endblock %}
+        {% endfor %}
+    </div>
+{% endblock %}
 
 {% block layout_navbar_categories_item_link %}
     {% if level == 0 %}

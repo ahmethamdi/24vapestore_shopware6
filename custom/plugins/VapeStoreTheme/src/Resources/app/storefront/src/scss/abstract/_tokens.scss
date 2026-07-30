@@ -470,6 +470,14 @@ $vape-flyout-fallback-bg:     $vape-neutral-100;
 $vape-flyout-fallback-fg:     $vape-neutral-500;
 $vape-flyout-head-gap:        $vape-space-2;
 
+// Mega menü panelinin ekranın üstünden başladığı yer = header'ın alt kenarı.
+// Panelin max-height'ı bundan hesaplanır (`100dvh - offset`), aksi halde
+// panel ekranın altından taşar ve kaydırma sonuna ulaşılamaz.
+// ⚠️ ÖLÇÜLEN değer: 1600px ve 1280px'te header alt kenarı = 179px (üst şerit
+// + logo satırı + kategori şeridi). Header yüksekliği değişirse burayı da
+// güncelle — yoksa panel ya taşar ya da gereksiz kısa kalır.
+$vape-flyout-top-offset:      179px;
+
 // ==================================================
 // 12b. HERO SLIDER (vape-hero CMS element)
 //
