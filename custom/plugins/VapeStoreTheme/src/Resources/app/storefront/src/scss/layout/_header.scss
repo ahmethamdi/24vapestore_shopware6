@@ -483,12 +483,15 @@ $vape-usp-bar-color: $vape-neutral-white !default;
 // ==================================================
 
 .nav-main {
-    background-color: $vape-neutral-950;
+    // Düz siyahtan koyu bordoya (2026-07-30). Siyah şerit + üstündeki koyu
+    // USP şeridi birlikte sayfa girişini ağırlaştırıyordu; bordo marka
+    // rengini taşır, "koyu şerit" işlevi korunur.
+    background-color: $vape-nav-bg;
     border-bottom: 0;
-    // Üstte çok ince açık çizgi: beyaz header ile siyah menü arasındaki
+    // Üstte çok ince açık çizgi: beyaz header ile koyu menü arasındaki
     // geçişi keskin bir kesme yerine kenarlı bir katman gibi gösterir.
-    // Siyah üstünde nötr token işe yaramaz, beyaz-alfa gerekiyor.
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    // Koyu zeminde nötr token işe yaramaz, beyaz-alfa gerekiyor.
+    box-shadow: inset 0 1px 0 $vape-nav-hairline;
 }
 
 .main-navigation-menu {
@@ -601,6 +604,18 @@ $vape-usp-bar-color: $vape-neutral-white !default;
         }
     }
 
+    // ⚠️ Bootstrap `.navbar-nav .nav-link.active { color: var(--bs-navbar-
+    //    active-color) }` bizim `.main-navigation-link.active` kuralımızdan
+    //    DAHA ÖZGÜL — aktif link (Home) marka kırmızısında kalıyordu.
+    //    Siyah şeritte fark edilmiyordu; BORDO şeritte kırmızı-üstüne-kırmızı
+    //    oldu ve kontrast 2.59:1'e düştü (AA eşiği 4.5, ölçüldü).
+    //    Aynı özgüllükle geri alınır: aktif link beyaz + altında kırmızı çizgi
+    //    (çizgi zaten `::after`ta, yani vurgu rengi kaybolmuyor).
+    .navbar-nav &.active,
+    &.navbar-nav .nav-link.active {
+        color: $vape-neutral-white;
+    }
+
     // Core dropdown okunu gizle — mega menü hover ile açılıyor
     &.dropdown-toggle::before {
         display: none;
@@ -620,11 +635,15 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     &[title="SALE" i],
     &[title="Outlet" i],
     &[title="Aktionen" i] {
+        // ⚠️ Şerit koyu BORDO olduğu için rozet dolgusu KIRMIZI OLAMAZ —
+        //    kırmızı üstüne kırmızı, rozet kayboluyordu (siyah şeritte
+        //    sorun değildi). Beyaz dolgu + bordo metin: vurgu korunur,
+        //    kontrast artar (beyaz/#6b0710 ≈ 10:1, AA fazlasıyla geçer).
         .main-navigation-link-text {
             padding: 3px $vape-space-2;
             border-radius: $vape-radius-sm;
-            background-color: $vape-brand;
-            color: $vape-text-inverse;
+            background-color: $vape-nav-badge-bg;
+            color: $vape-nav-badge-fg;
             font-weight: $vape-weight-bold;
             letter-spacing: $vape-tracking-wide;
             text-transform: uppercase;
@@ -637,8 +656,8 @@ $vape-usp-bar-color: $vape-neutral-white !default;
 
         &:hover .main-navigation-link-text,
         &:focus .main-navigation-link-text {
-            background-color: $vape-brand-hover;
-            color: $vape-text-inverse;
+            background-color: $vape-nav-badge-bg-hover;
+            color: $vape-nav-badge-fg;
         }
     }
 
@@ -653,7 +672,9 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     &[title="Outlet" i]:hover .main-navigation-link-text {
         background-color: $vape-neutral-white;
         border-color: $vape-neutral-white;
-        color: $vape-neutral-950;
+        // Şerit bordo olduğu için hover metni de bordo — siyah kalırsa
+        // diğer rozetlerle (bordo metin) tutarsız görünüyordu.
+        color: $vape-nav-badge-fg;
     }
 }
 

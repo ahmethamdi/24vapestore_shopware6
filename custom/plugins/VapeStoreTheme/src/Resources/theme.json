@@ -401,7 +401,7 @@
       },
       "vape-usp-bar-bg": {
         "type": "color",
-        "value": "#18181d",
+        "value": "#40040a",
         "editable": true,
         "block": "header",
         "order": 200,

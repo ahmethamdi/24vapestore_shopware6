@@ -2088,3 +2088,25 @@ $vape-hscroll-card-w:      78vw;            // banner/deals — geniş görsel k
 $vape-hscroll-card-max:    300px;           // çok geniş telefonlarda sınır
 $vape-hscroll-product-w:   46vw;            // ürün kartı — 2'si sığar + kenar
 $vape-hscroll-product-max: 190px;
+
+
+// ==================================================
+// KATEGORİ MENÜ ŞERİDİ — koyu bordo (2026-07-30)
+// ==================================================
+// Önce düz siyah (#0b0b0f) idi ve üstündeki USP şeridiyle birlikte iki koyu
+// bant üst üste biniyordu; sayfa girişi ağır duruyordu.
+// Koyu bordo marka rengini taşır ama hâlâ "koyu şerit" işlevini görür.
+//
+// ⚠️ KRİTİK YAN ETKİ: AKTIONEN/SALE rozetleri KIRMIZI dolguluydu. Bordo
+//    zemin üzerinde kırmızı rozet kontrastını kaybediyor (kırmızı üstüne
+//    kırmızı). Bu yüzden rozetler bordo şeritte BEYAZ dolgu + bordo metne
+//    çevrildi — vurgu korunur, okunabilirlik artar.
+
+$vape-nav-bg:            $vape-red-800;   // #6b0710 — menü şeridi
+$vape-nav-bg-topbar:     $vape-red-900;   // #40040a — üstteki USP şeridi
+$vape-nav-hairline:      rgba(255, 255, 255, 0.10);  // üst ince ayraç
+
+// Rozetler: bordo üstünde beyaz dolgu (kırmızı dolgu görünmüyordu)
+$vape-nav-badge-bg:      $vape-neutral-white;
+$vape-nav-badge-fg:      $vape-red-800;
+$vape-nav-badge-bg-hover: $vape-neutral-100;
