@@ -44,6 +44,36 @@ Magic hex/px YOK — hepsi token.
         grid-template-columns: 1fr;
         gap: $vape-deals-grid-gap;
 
+        // MOBİL: alt alta 1213px yer kaplıyordu (ölçüldü) → yatay kaydırma.
+        // ⚠️ Kart yüksekliği EŞİTLENMELİ: flex satırında `align-items` varsayılanı
+        //    stretch, yani geri sayım sayaçları farklı satır sayısında olsa bile
+        //    kartlar aynı boyda kalır. Grid'de bu otomatikti, flex'te de korunur.
+        // ⚠️ Sınır 639.98px — aşağıdaki `min-width: 640px` (2 sütun) ile
+        //    ÇAKIŞMASIN. 767.98 yazılsaydı 640–768px arasında `display: flex`
+        //    kazanır, `grid-template-columns` sessizce etkisiz kalırdı.
+        @media (max-width: 639.98px) {
+            display: flex;
+            align-items: stretch;
+            gap: $vape-hscroll-gap;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: $vape-hscroll-pad-y 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            > * {
+                flex: 0 0 $vape-hscroll-card-w;
+                max-width: $vape-hscroll-card-max;
+                scroll-snap-align: start;
+            }
+        }
+
         @media (min-width: 640px) {
             grid-template-columns: repeat(2, 1fr);
         }

@@ -15,6 +15,31 @@ Magic hex/px YOK — hepsi token.
         grid-template-columns: 1fr;
         gap: $vape-bgrid-gap;
 
+        // MOBİL: alt alta 812px yer kaplıyordu (ölçüldü) → yatay kaydırma.
+        // `vape-product-rail`'deki kanıtlanmış scroll-snap deseni.
+        @media (max-width: 767.98px) {
+            display: flex;
+            gap: $vape-hscroll-gap;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: $vape-hscroll-pad-y 0;
+            // Scrollbar gizli ama kaydırma çalışır (dokunma + klavye).
+            scrollbar-width: none;              // Firefox
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;     // sayfa yatay zıplamasın
+
+            &::-webkit-scrollbar {
+                display: none;                  // WebKit
+            }
+
+            > * {
+                flex: 0 0 $vape-hscroll-card-w;
+                max-width: $vape-hscroll-card-max;
+                scroll-snap-align: start;
+            }
+        }
+
         @media (min-width: 768px) {
             grid-template-columns: repeat(2, 1fr);
             gap: $vape-bgrid-gap-md;

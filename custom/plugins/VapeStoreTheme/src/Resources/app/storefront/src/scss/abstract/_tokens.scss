@@ -2065,3 +2065,26 @@ $vape-tap-dur:               90ms;
 // (WCAG 2.5.8 AA). Ürün kartı CTA'sı için ayrı token zaten var
 // ($vape-pcard-cta-height-mobile) — o da 44'e çekiliyor.
 $vape-touch-min:             44px;
+
+
+// ==================================================
+// MOBİLDE YATAY KAYDIRMA (banner-grid, deals, product-tabs)
+// ==================================================
+// Talep (2026-07-30): mobilde bu üç bölüm alt alta uzayıp sayfayı şişiriyordu.
+// Ölçüldü (390px): banner-grid 812px, deals 1213px, product-tabs 1765px —
+// toplam 3790px, tek başına mobil sayfanın ~%32'si.
+// Çözüm: `vape-product-rail`'deki KANITLANMIŞ scroll-snap deseni.
+//
+// ⚠️ Kaydırma kutusu container padding'i (16px) İÇİNDE kalır; kart genişliği
+//    yüzde ile değil sabit px ile verilir ki bir sonraki kartın kenarı
+//    görünsün ("daha var" ipucu) — yoksa kullanıcı kaydırılabildiğini anlamaz.
+// ⚠️ Scrollbar gizlenir ama kaydırma ÇALIŞIR (klavye + dokunma).
+
+$vape-hscroll-gap:         $vape-space-3;   // 12px — kartlar arası
+$vape-hscroll-pad-y:       $vape-space-1;   // gölge kırpılmasın diye dikey pay
+
+// Kart genişlikleri: bir sonraki kartın ~%15'i görünsün diye viewport'tan küçük
+$vape-hscroll-card-w:      78vw;            // banner/deals — geniş görsel kart
+$vape-hscroll-card-max:    300px;           // çok geniş telefonlarda sınır
+$vape-hscroll-product-w:   46vw;            // ürün kartı — 2'si sığar + kenar
+$vape-hscroll-product-max: 190px;

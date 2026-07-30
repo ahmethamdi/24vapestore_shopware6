@@ -23,12 +23,12 @@
         padding: 0;
 
         display: grid;
-        grid-template-columns: 1fr;              // mobil: alt alta
-        gap: $vape-usp-row-gap;
-
-        @media (min-width: 480px) {
-            grid-template-columns: repeat(2, 1fr); // küçük ekran: 2'li
-        }
+        // Mobilde 2 sütun (talep). Önce 1 sütundu ve 480px'te 2'ye geçiyordu;
+        // yaygın telefon genişliği 390px olduğu için pratikte HİÇ 2'li
+        // görünmüyordu — 4 USP alt alta 228px yer kaplıyordu.
+        // 2×2 ızgara hem yarı yüksekliğe iniyor hem "app" hissine yakışıyor.
+        grid-template-columns: repeat(2, 1fr);
+        gap: $vape-usp-row-gap $vape-space-3;   // satır arası geniş, sütun arası dar
 
         // Masaüstü: item sayısı kadar eşit sütun (auto-fit min genişlik),
         // 3 veya 4 sütun doğal olarak tek satıra sığar.
@@ -43,6 +43,16 @@
         align-items: center;
         gap: $vape-usp-item-gap;
         min-width: 0;
+
+        // 2 sütuna geçince (mobil) sütun ~173px'e düşüyor ve başlıklar
+        // ("Einfache Rückgabe", "Top Bewertung") iki satıra sarıyordu →
+        // satırlar farklı yükseklikte, ızgara dengesiz görünüyordu.
+        // İkon ↔ metin arası daraltılır, tipografi bir tık küçülür.
+        // ⚠️ Dokunma hedefi etkilenmez: bunlar link değil, bilgi öğesi.
+        @media (max-width: 767.98px) {
+            gap: $vape-space-2;
+            align-items: flex-start;   // sarınca ikon üste hizalı dursun
+        }
 
         // Dikey ayırıcı (aboutyou tarzı) — yalnızca masaüstünde, ilk sütun hariç.
         @media (min-width: 768px) {
@@ -102,10 +112,20 @@
         font-size: $vape-usp-title-size;
         font-weight: $vape-usp-title-weight;
         color: $vape-usp-title-color;
+
+        // 2 sütunlu mobilde 16px başlık 173px sütuna sığmıyordu.
+        // 14px'te "Schneller Versand" / "Sichere Zahlung" tek satıra iner.
+        @media (max-width: 767.98px) {
+            font-size: $vape-text-sm;
+        }
     }
 
     &__sub {
         font-size: $vape-usp-sub-size;
         color: $vape-usp-sub-color;
+
+        @media (max-width: 767.98px) {
+            font-size: $vape-text-xs;
+        }
     }
 }

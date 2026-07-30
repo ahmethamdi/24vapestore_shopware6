@@ -186,6 +186,32 @@ Boş config (0 ürün / görselsiz) ile de temiz render olur.
         grid-template-columns: repeat(2, 1fr);
         gap: $vape-showcase-grid-gap;
 
+        // MOBİL: banner + 2×N ürün ızgarası uzuyordu → yatay kaydırma.
+        // product-tabs ile AYNI desen ve AYNI kart genişliği ki iki bölüm
+        // mobilde tutarlı kaydırma hissi versin.
+        @media (max-width: 767.98px) {
+            display: flex;
+            align-items: stretch;
+            gap: $vape-hscroll-gap;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: $vape-hscroll-pad-y 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            > * {
+                flex: 0 0 $vape-hscroll-product-w;
+                max-width: $vape-hscroll-product-max;
+                scroll-snap-align: start;
+            }
+        }
+
         @media (min-width: 992px) {
             gap: $vape-showcase-grid-gap-lg;
         }

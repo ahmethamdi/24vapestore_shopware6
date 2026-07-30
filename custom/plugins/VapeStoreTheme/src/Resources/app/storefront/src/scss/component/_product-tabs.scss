@@ -118,6 +118,33 @@ Boş config (0 sekme) → hiç render etmez. 0 ürün → panelde nazik boş dur
         grid-template-columns: repeat($vape-ptabs-grid-cols-sm, minmax(0, 1fr));
         gap: $vape-ptabs-grid-gap;
 
+        // MOBİL: 8 kart 2×4 ızgarada 1765px yer kaplıyordu (ölçüldü) —
+        // anasayfanın mobildeki en uzun bölümü → yatay kaydırma.
+        // Ürün kartı dar olduğu için burada kart genişliği daha küçük:
+        // ekranda ~2 kart + bir sonrakinin kenarı görünür.
+        @media (max-width: 767.98px) {
+            display: flex;
+            align-items: stretch;
+            gap: $vape-hscroll-gap;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: $vape-hscroll-pad-y 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            > * {
+                flex: 0 0 $vape-hscroll-product-w;
+                max-width: $vape-hscroll-product-max;
+                scroll-snap-align: start;
+            }
+        }
+
         @media (min-width: 768px) {
             grid-template-columns: repeat($vape-ptabs-grid-cols-md, minmax(0, 1fr));
             gap: $vape-ptabs-grid-gap-md;
