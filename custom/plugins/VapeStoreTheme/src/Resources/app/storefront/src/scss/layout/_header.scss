@@ -496,12 +496,28 @@ $vape-usp-bar-color: $vape-neutral-white !default;
 }
 
 .main-navigation-menu-list {
-    // 12 kategori var; tek satırda tutmak için sarma kapalı ve
+    // 13 kategori var; tek satırda tutmak için sarma kapalı ve
     // sığmayanlar yatay kaydırılabilir (mobil menüsü zaten offcanvas).
     flex-wrap: nowrap !important;
     gap: 0;
     overflow-x: auto;
     scrollbar-width: none;
+
+    // ⚠️ KAYDIRMA BOZUKTU (ölçüldü 2026-07-30, 1440px):
+    //    `overflow-x: auto` tek başına yetmiyordu çünkü liste flex item
+    //    olarak İÇERİĞİ KADAR BÜYÜYORDU (1505px) — kendi içinde asla
+    //    taşmıyor, dolayısıyla scrollWidth == clientWidth ve kaydırma
+    //    hiç devreye girmiyordu. Taşma bir üstteki `.navbar`da (1312px)
+    //    oluşuyor, orası `overflow: visible` olduğu için içerik sessizce
+    //    dışarı taşıyordu: 1440px'te "SALE" yarıda kesiliyor, "Outlet"
+    //    tamamen kayboluyordu ve kullanıcı onlara ULAŞAMIYORDU.
+    //
+    //    Çözüm: kutuyu ebeveyne sınırla. `min-width: 0` flex item'ın
+    //    içeriğe göre büyümesini keser (flex'in min-width:auto varsayılanı),
+    //    `max-width: 100%` de tavanı kapatır → taşma artık listenin
+    //    KENDİ içinde oluşur ve `overflow-x: auto` gerçekten çalışır.
+    min-width: 0;
+    max-width: 100%;
 
     // Son öğe kenara yapışmasın; kaydırma varsa da nefes alanı kalsın
     padding-right: $vape-space-4;
@@ -509,6 +525,13 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     &::-webkit-scrollbar {
         display: none;
     }
+}
+
+// Kaydırma kutusunun ebeveyni de içeriğe göre büyümemeli, yoksa yukarıdaki
+// `max-width: 100%` yanlış referansa (içerik genişliği) bağlanır.
+.main-navigation-menu .navbar-collapse,
+.nav-main .navbar-collapse {
+    min-width: 0;
 }
 
 // Kategori menüsü de header ana satırıyla AYNI kenar payında hizalanır —
@@ -540,9 +563,19 @@ $vape-usp-bar-color: $vape-neutral-white !default;
     // Eşik 1400px → 1200px. Ölçüldüğünde 12 kategori 1200px'te 14px ile
     // sığıyor; 1400px beklemek laptop genişliklerinde menüyü gereksiz
     // yere 12px'te bırakıyordu (okunabilirlik kaybı).
+    //
+    // ⚠️ Kategori sayısı 12 → 13 oldu (Outlet eklendi) ve 12px yan padding
+    //    ile menü 1489px istiyordu; 1440px laptopta son iki öğe taşıyordu.
+    //    Eşik 1500px'e çekildi: bu genişliğin ALTINDA daha dar padding
+    //    (8px) kullanılır, 13 öğe 1440px'te de tek satıra sığar.
+    //    Kaydırma yine yedek olarak duruyor (yukarıdaki min-width düzeltmesi).
     @media (min-width: 1200px) {
-        padding: $vape-space-4 $vape-space-3 !important;
+        padding: $vape-space-4 $vape-space-2 !important;
         font-size: $vape-text-sm;
+    }
+
+    @media (min-width: 1500px) {
+        padding: $vape-space-4 $vape-space-3 !important;
     }
 
     // Aktif/hover durumunda altta kırmızı çizgi
