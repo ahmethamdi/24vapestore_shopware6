@@ -114,6 +114,26 @@ body {
 // Hero: kendi tam-genişlik mekanizmasını korur, İSTİSNA (elemente göre hedeflenir).
 // ==================================================
 
+// ---- .container-main: core'un üst boşluğunu kaldır ----
+// Core `layout/_container.scss`:
+//     .container-main { padding: 20px 0; min-height: 200px; }
+//     @xl { .container-main { min-height: 700px; } }
+//
+// Bu kapsayıcı anasayfa/landing VE ürün detay sayfasını sarıyor. Üstteki
+// 20px, breadcrumb kaldırıldıktan sonra nav ile hero arasında kalan son
+// boşluğun TAMAMI (ölçüldü: boşluk tam 20px).
+//
+// ⚠️ Core dosyası DEĞİŞTİRİLMEZ — burada ezilir (base.scss @Storefront'tan
+//    sonra yükleniyor).
+// ⚠️ `padding-bottom` KORUNUYOR: sıfırlanırsa son section footer'a yapışır.
+//    Yalnızca üst boşluk alınıyor.
+// ⚠️ `min-height` DOKUNULMADI: gerçek içerik zaten çok daha uzun
+//    (anasayfa 7834px, PDP 1650px) → kural pratikte etkisiz, kaldırmak
+//    yalnızca 404/boş sayfa gibi kısa sayfalarda görünüm bozardı.
+.container-main {
+    padding-top: 0;
+}
+
 // Shopware'in section'a koyduğu değişken davranışı (boxed → max-width 1400px +
 // sabit 100px margin; full-width → sınırsız) tek tutarlı kurala indiriyoruz:
 // section İÇERİĞİ her zaman ortalı, aynı max genişlikte, responsive padding'li.
