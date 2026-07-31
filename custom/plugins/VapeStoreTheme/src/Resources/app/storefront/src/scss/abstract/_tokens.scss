@@ -2138,6 +2138,12 @@ $vape-nav-badge-outline-border: $vape-brand;
 $vape-nav-badge-group-gap: $vape-space-2;
 
 // ---- kompakt ölçek (talep: "biraz küçült") ----
-$vape-nav-link-size:     $vape-text-xs;   // 13px değil 12px — 13 öğe ferah sığsın
+// 2026-07-31: 12px → 11px (talep: "menüyü ortala").
+// ⚠️ Bu bir ORTALAMA gereksinimi, estetik tercih değil: ölçümde 13 öğe
+//    1600px'te şeridin 1389/1421px'ini dolduruyordu → ortalanacak alan
+//    yalnızca 32px kalıyordu ve `justify-content: safe center` görünür
+//    bir etki yaratamıyordu. 11px ~90px açar.
+//    Daha da küçültme: 11px konfor sınırı; altına inersen menü okunmaz.
+$vape-nav-link-size:     11px;
 $vape-nav-link-pad-x:    $vape-space-2;
 $vape-nav-link-pad-x-lg: $vape-space-3;

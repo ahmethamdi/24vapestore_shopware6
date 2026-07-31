@@ -529,6 +529,16 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
     min-width: 0;
     max-width: 100%;
 
+    // ⚠️ ORTALAMANIN ASIL ŞARTI — `flex-grow: 1`.
+    //    Uzun süre `justify-content: safe center` yazılı olmasına rağmen
+    //    menü sola yaslı kalıyordu. Sebep ortalama kuralı değil, GENİŞLİK:
+    //    `ul` bir flex item ve varsayılan `flex-grow: 0` ile yalnızca
+    //    İÇERİĞİ kadar genişliyordu (ölçüm: ebeveyn 1472px, ul 1363px).
+    //    Kutu içeriğe yapışıksa dağıtılacak boş alan yoktur → hiçbir
+    //    ortalama kuralı görünür etki yaratamaz.
+    //    `flex: 1` ile ul ebeveyni doldurur, artan alan ortalamaya kalır.
+    flex: 1 1 auto;
+
     // Kategoriler ORTADA (talep). Rozet grubu aşağıda `margin-left: auto`
     // ile sağa itilir; ortalama ondan ARTA KALAN alana göre yapılır.
     //
@@ -547,27 +557,65 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
         display: none;
     }
 
-    // ---- promosyon rozetleri sağa gruplanır ----
-    // ⚠️ DOM sırası uygun DEĞİL: "Salt Produkte" tam olarak Aktionen ile
-    //    SALE arasında duruyor (ölçüldü). Flex `order` ile üçü DOM'a
-    //    dokunmadan yan yana getirilir — twig override gerekmez.
-    //    order varsayılanı 0; rozetlere 1,2,3 verilir → hepsi sona gider.
-    > li:has(> [title="Aktionen" i]) { order: 1; }
-    > li:has(> [title="SALE" i])     { order: 2; }
-    > li:has(> [title="Outlet" i])   { order: 3; }
+    // ⚠️ ESKİDEN rozetler `order: 1,2,3` ile sağa toplanıyordu (DOM'da
+    //    "Salt Produkte" tam aralarında duruyordu). Artık gerekmiyor:
+    //    twig override rozetleri `.vape-nav-badges` sarmalayıcısına
+    //    ayırdığı için DOM sırası zaten doğru.
 
-    // Grubun ilki sola boşluk bırakır → kategorilerden ayrışır ve
-    // `auto` margin sayesinde grup sağ kenara yaslanır.
-    > li:has(> [title="Aktionen" i]) {
-        margin-left: auto;
-        padding-left: $vape-space-4;
+    // ---- KATEGORİLER EKRANIN TAM ORTASINDA (talep) ----
+    //
+    // Sorun: kategoriler + rozetler aynı flex kabında olduğu sürece
+    // `justify-content: center` HEPSİNİ birlikte ortalar; sağdaki ~310px
+    // rozet alanı yüzünden kategori bloğunun merkezi ekran merkezinden
+    // sabit ~164px sola kayıyordu (her genişlikte ölçüldü).
+    //
+    // Denenip TERK EDİLEN iki yol:
+    //   1. Sabit sol pay (`311px`): yalnızca 1792px'te tutuyordu, diğer
+    //      genişliklerde gereksiz yatay kaydırma tetikliyordu. Sabit sayı
+    //      ekranla ölçeklenmiyor.
+    //   2. Rozetleri `position: absolute` yapmak: üçü ayrı kardeş <li>,
+    //      sarmalayıcı yok → sağdan istiflemek her rozetin genişliğini
+    //      sabit varsaymayı gerektiriyordu (çeviri/yazı tipiyle kayar).
+    //
+    // ÇÖZÜM — GRID: `ul` üç kolona bölünür [esnek | kategoriler | rozetler].
+    // Kategoriler ortadaki kolonda kendi içinde ortalanır; kolonun iki yanı
+    // `1fr` olduğu için o kolonun merkezi ŞERİDİN merkezine denk gelir.
+    // Rozet kolonu `auto` — içeriği kadar yer kaplar, ölçmeye gerek yok.
+    // Twig'e dokunulmuyor; kolon ataması `grid-column` + `order` ile.
+    // ÇÖZÜM: rozet grubu akıştan çıkar (`position: absolute`), böylece
+    // kategoriler ŞERİDİN TAMAMINA göre ortalanır. Üç rozet ayrı kardeş
+    // <li> ve genişlikleri sabit varsayılamaz; bu yüzden her biri kendi
+    // sağ ofsetini SABİT PX ile değil, `right: 0` + `transform` ile değil,
+    // TWIG'DE eklenen tek bir sarmalayıcıyla alır.
+    // Bkz. layout/navbar/navbar.html.twig — `.vape-nav-badges`.
+    @media (min-width: 1200px) {
+        position: relative;
     }
+}
 
-    // Rozetler arası nefes payı
-    > li:has(> [title="SALE" i]),
-    > li:has(> [title="Outlet" i]) {
-        margin-left: $vape-nav-badge-group-gap;
+// Rozet grubu sarmalayıcısı (twig'de eklendi: layout/navbar/navbar.html.twig).
+// Kategoriler bu grubun varlığından habersiz ortalanır → blok ekranın
+// tam ortasında durur, grup sağ kenarda ayrı bir katman gibi okunur.
+.vape-nav-badges {
+    display: flex;
+    align-items: center;
+
+    // ≥1200px: akıştan çıkar → ortalanacak alan rozetlerden etkilenmez
+    @media (min-width: 1200px) {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
     }
+}
+
+.vape-nav-badges__list {
+    display: flex;
+    align-items: center;
+    gap: $vape-nav-badge-group-gap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 // Kaydırma kutusunun ebeveyni de içeriğe göre büyümemeli, yoksa yukarıdaki
@@ -698,13 +746,18 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
         // (bordo şeritte kırmızı-üstüne-kırmızı olduğu için beyaza
         // çevrilmişti). Gri zeminde kırmızı en güçlü vurgu.
         // Talep: "daha göze batmalı" → dolgu büyütüldü, harf aralığı açıldı.
+        // ⚠️ Dolgu ve harf aralığı DARALTILDI (2026-07-31). Sebep ölçüm:
+        //    üç rozet 328px yiyordu (13 öğenin ~%23'ü) ve şeritte
+        //    ortalama için yalnızca 31px serbest alan kalıyordu.
+        //    Daraltma hem kategorilere yer açıyor hem de rozetleri
+        //    sakinleştiriyor (minimalist yön).
         .main-navigation-link-text {
-            padding: 5px $vape-space-3;
+            padding: 4px $vape-space-2;
             border-radius: $vape-radius-sm;
             background-color: $vape-nav-badge-bg;
             color: $vape-nav-badge-fg;
-            font-weight: $vape-weight-bold;
-            letter-spacing: $vape-tracking-wider;
+            font-weight: $vape-weight-semibold;
+            letter-spacing: $vape-tracking-wide;
             text-transform: uppercase;
             font-size: $vape-text-2xs;
         }
@@ -759,9 +812,15 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
     border: 0;
     border-bottom: 1px solid $vape-border-subtle;
     border-radius: 0;
-    box-shadow: $vape-shadow-lg;
+    // MİNİMALİST (2026-07-31): ağır `shadow-lg` yerine yumuşak `shadow-md`.
+    // Panel zaten alt kenarlıkla sayfadan ayrılıyor; güçlü gölge katman
+    // hissini abartıp menüyü "kutu" gibi gösteriyordu.
+    box-shadow: $vape-shadow-md;
     background-color: $vape-bg-page;
-    padding: $vape-space-5 $vape-space-4 !important;   // 24→20: daha sıkı üst/alt
+    // Yatay dolgu artırıldı (16→32): içerik kenara yapışmasın, sütunlar
+    // nefes alsın. Minimalizmde boşluk, çizgiden daha iyi ayırıcıdır.
+    // ⚠️ `$vape-space-7` YOK — ölçek 6 (24px) sonrası 8 (32px)'e atlıyor.
+    padding: $vape-space-6 $vape-space-8 !important;
 
     // Mega menü sayfa içeriğinin üstünde kalmalı. Bootstrap varsayılanı
     // z-dropdown (1000) idi; PLP'nin sticky sıralama barı (z-sticky 1020)
@@ -847,13 +906,16 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
     }
 
     // 1. seviye: sütun başlığı (marka adı)
+    // ⚠️ Ayraç çizgisi KALDIRILDI — `.vape-flyout-head` ile aynı gerekçe
+    //    (32 yatay çizgi = tablo görünümü). İkisi birlikte değişmeli,
+    //    yoksa görselli/görselsiz başlıklar farklı görünür.
     &.is-level-0 {
-        margin-bottom: $vape-space-1;
-        padding-bottom: $vape-space-1;
-        border-bottom: 1px solid $vape-border-subtle;
+        margin-bottom: $vape-space-2;
+        padding-bottom: 0;
+        border-bottom: 0;
         color: $vape-text-heading;
         font-size: $vape-text-sm;
-        font-weight: $vape-weight-bold;
+        font-weight: $vape-weight-semibold;
     }
 
     &.is-level-1 {
@@ -880,6 +942,21 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
 // Dolguyu sıfırlıyoruz; sütun aralığı zaten Bootstrap grid gutter'ından geliyor.
 .navigation-flyout-col {
     padding-left: 0;
+
+    // ⚠️ MİNİMALİST: core'un DİKEY AYRAÇ ÇİZGİSİ kaldırılıyor.
+    //    Kaynak: core `skin/shopware/layout/_navigation-flyout.scss`
+    //        .is-level-0 > .navigation-flyout-col::before {
+    //            border-left: 1px solid $border-color; left: 15px; }
+    //    Yatay başlık çizgileri dururken göze çarpmıyordu; onlar kalkınca
+    //    panelde 5 dikey çizgi ortaya çıktı ve ızgarayı yine "tablo"
+    //    gösterdi. Ayırma işini sütun aralığı (grid gutter) yapıyor.
+    //
+    //    ⚠️ Core bu sınıfı satırın İLK sütunu HARİÇ hepsine veriyor, o
+    //    yüzden çizgi yalnızca 2..n sütunlarda vardı → ilk sütun görsel
+    //    olarak hizasız duruyordu. Çizgi gidince hiza da düzeliyor.
+    &::before {
+        display: none;
+    }
 }
 
 // "Show all …" bağlantısı — menünün en üstünde, belirgin
@@ -898,16 +975,22 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
 //
 // `display: flex !important` gerekiyor: `.navigation-flyout-link.is-level-0`
 // kuralı `display: block` veriyor ve özgüllüğü daha yüksek.
+// ⚠️ MİNİMALİST (2026-07-31): başlık altındaki AYRAÇ ÇİZGİSİ KALDIRILDI.
+//    32 sütunlu bir panelde 32 yatay çizgi ızgarayı "tablo" gibi
+//    gösteriyordu. Hiyerarşi artık yalnızca TİPOGRAFİ ile: başlık koyu +
+//    semibold, alt linkler açık gri + küçük. Ayırıcı iş boşluğa devredildi.
 .vape-flyout-head {
     display: flex !important;
     align-items: center;
     gap: $vape-flyout-thumb-gap;
     margin-bottom: $vape-flyout-head-gap;
-    padding-bottom: $vape-space-1;   // 8→4: başlık-liste arası sıkı
-    border-bottom: 1px solid $vape-border-subtle;
+    padding-bottom: 0;
+    border-bottom: 0;
     color: $vape-text-heading;
     font-size: $vape-text-sm;
-    font-weight: $vape-weight-bold;
+    // bold → semibold: 32 kalın başlık aynı anda görünürken sayfa
+    // "bağırıyordu"; semibold hiyerarşiyi bozmadan sakinleştiriyor.
+    font-weight: $vape-weight-semibold;
     line-height: $vape-leading-snug;
 
     &__text {
@@ -931,6 +1014,14 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
     }
 }
 
+// ⚠️ MİNİMALİST (2026-07-31): baş harf rozeti ARTIK GİZLİ.
+//    Gerekçe: harf, hemen yanındaki kategori adının ilk harfiydi — sıfır
+//    bilgi, saf gürültü. 32 sütunun çoğunda görsel yok, dolayısıyla panel
+//    "gri daireler içinde harfler" tarlasına dönüyordu (ekran görüntüsünde
+//    görüldü). Gerçek GÖRSELİ olan kategorilerde daire korunuyor: orada
+//    görsel gerçekten çıpa işlevi görüyor.
+//    Kural aşağıda `:has(img)` ile: görsel varsa daire çizilir, yoksa
+//    thumb tamamen kaldırılır ve başlık sola hizalanır.
 .vape-flyout-thumb {
     flex: 0 0 auto;
     display: flex;
@@ -941,6 +1032,11 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
     border: 1px solid $vape-flyout-thumb-ring;
     border-radius: $vape-radius-pill;
     background-color: $vape-flyout-thumb-bg;
+
+    // Görseli olmayan thumb hiç yer kaplamaz (daire de, harf de yok)
+    &:not(:has(img)) {
+        display: none;
+    }
     // Yuvarlak maskeyi görsele uygular
     overflow: hidden;
     transition: border-color $vape-duration-fast $vape-ease-out;

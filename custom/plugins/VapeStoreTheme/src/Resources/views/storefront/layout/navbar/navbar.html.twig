@@ -1,0 +1,68 @@
+{#
+    Kategori menüsü — promosyon rozetlerini (AKTIONEN / SALE / OUTLET)
+    kendi sarmalayıcısına alır.
+
+    NEDEN TWIG'E DOKUNULDU: talep "menüyü ortala". Kategoriler ve rozetler
+    aynı flex kabında olduğu sürece `justify-content: center` HEPSİNİ
+    birlikte ortalıyor; sağdaki ~310px rozet alanı yüzünden kategori
+    bloğunun merkezi ekran merkezinden sabit ~164px sola kayıyordu
+    (1280–1920 arası her genişlikte ölçüldü).
+
+    Salt CSS ile çözmek için üç yol denendi, üçü de terk edildi:
+      1. `margin-left: auto` — artan alanın tamamını tek yana verir,
+         `justify-content` çalışmaz hale gelir (ikisi aynı anda olmaz).
+      2. Sabit sol pay (`311px`) — yalnızca 1792px'te tutuyordu, diğer
+         genişliklerde gereksiz yatay kaydırma tetikliyordu.
+      3. Rozetleri tek tek `position: absolute` — üçü ayrı kardeş <li>
+         olduğu için sağdan istiflemek her rozetin genişliğini sabit
+         varsaymayı gerektiriyordu (çeviri/yazı tipi değişince kayar).
+      4. `display: grid` — her <li> kendi satırına düşüyor, kategoriler
+         alt alta yığılıyordu.
+
+    Tek sarmalayıcı bunların hepsini gereksiz kılıyor: grup akıştan
+    çıkarılır (SCSS'te `position: absolute`), kategoriler şeridin tamamına
+    göre ortalanır. Genişlik ölçmeye gerek yok.
+
+    ⚠️ `order` ile yapılan eski sağa-gruplama SCSS'ten KALDIRILMALI değil —
+    <1200px'te sarmalayıcı `display: contents` olduğu için rozetler yine
+    normal akışta ve `order` hâlâ onları sona taşıyor.
+
+    MİNİMAL OVERRIDE: yalnızca `layout_navbar_menu_items` bloğu eziliyor.
+    Öğe render'ı core'un `layout_navbar_menu_item` bloğuna devrediliyor,
+    yani link/dropdown/mega menü mantığı core'da kalıyor.
+#}
+{% sw_extends '@Storefront/storefront/layout/navbar/navbar.html.twig' %}
+
+{% block layout_navbar_menu_items %}
+    {# Rozet olarak davranacak kategoriler — ada göre (SCSS ile aynı liste) #}
+    {% set badgeNames = ['aktionen', 'sale', 'outlet'] %}
+
+    {% for treeItem in header.navigation.tree %}
+        {% set category = treeItem.category %}
+        {% set id = category.id %}
+        {% set name = category.translated.name %}
+        {% set hasChildren = treeItem.children|length > 0 %}
+        {% set itemSkipped = category.type == 'folder' and not hasChildren %}
+
+        {% if name|lower not in badgeNames %}
+            {{ block('layout_navbar_menu_item') }}
+        {% endif %}
+    {% endfor %}
+
+    {# Rozetler: tek sarmalayıcı, sağa yaslanır (SCSS: .vape-nav-badges) #}
+    <li class="vape-nav-badges">
+        <ul class="vape-nav-badges__list">
+            {% for treeItem in header.navigation.tree %}
+                {% set category = treeItem.category %}
+                {% set id = category.id %}
+                {% set name = category.translated.name %}
+                {% set hasChildren = treeItem.children|length > 0 %}
+                {% set itemSkipped = category.type == 'folder' and not hasChildren %}
+
+                {% if name|lower in badgeNames %}
+                    {{ block('layout_navbar_menu_item') }}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </li>
+{% endblock %}
