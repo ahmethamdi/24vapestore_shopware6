@@ -565,31 +565,35 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
     // ---- KATEGORİLER EKRANIN TAM ORTASINDA (talep) ----
     //
     // Sorun: kategoriler + rozetler aynı flex kabında olduğu sürece
-    // `justify-content: center` HEPSİNİ birlikte ortalar; sağdaki ~310px
-    // rozet alanı yüzünden kategori bloğunun merkezi ekran merkezinden
-    // sabit ~164px sola kayıyordu (her genişlikte ölçüldü).
+    // `justify-content: center` HEPSİNİ birlikte ortalar; sağdaki rozet
+    // alanı yüzünden kategori bloğunun merkezi ekran merkezinden sabit
+    // ~164px sola kayıyordu (1280–1920 arası her genişlikte ölçüldü).
     //
-    // Denenip TERK EDİLEN iki yol:
-    //   1. Sabit sol pay (`311px`): yalnızca 1792px'te tutuyordu, diğer
-    //      genişliklerde gereksiz yatay kaydırma tetikliyordu. Sabit sayı
-    //      ekranla ölçeklenmiyor.
-    //   2. Rozetleri `position: absolute` yapmak: üçü ayrı kardeş <li>,
-    //      sarmalayıcı yok → sağdan istiflemek her rozetin genişliğini
-    //      sabit varsaymayı gerektiriyordu (çeviri/yazı tipiyle kayar).
+    // ÇÖZÜM: rozetler twig'de tek sarmalayıcıya alındı (`.vape-nav-badges`,
+    // bkz. layout/navbar/navbar.html.twig) ve ≥1200px'te akıştan çıkarıldı.
+    // Kategoriler artık şeridin TAMAMINA göre ortalanıyor.
     //
-    // ÇÖZÜM — GRID: `ul` üç kolona bölünür [esnek | kategoriler | rozetler].
-    // Kategoriler ortadaki kolonda kendi içinde ortalanır; kolonun iki yanı
-    // `1fr` olduğu için o kolonun merkezi ŞERİDİN merkezine denk gelir.
-    // Rozet kolonu `auto` — içeriği kadar yer kaplar, ölçmeye gerek yok.
-    // Twig'e dokunulmuyor; kolon ataması `grid-column` + `order` ile.
-    // ÇÖZÜM: rozet grubu akıştan çıkar (`position: absolute`), böylece
-    // kategoriler ŞERİDİN TAMAMINA göre ortalanır. Üç rozet ayrı kardeş
-    // <li> ve genişlikleri sabit varsayılamaz; bu yüzden her biri kendi
-    // sağ ofsetini SABİT PX ile değil, `right: 0` + `transform` ile değil,
-    // TWIG'DE eklenen tek bir sarmalayıcıyla alır.
-    // Bkz. layout/navbar/navbar.html.twig — `.vape-nav-badges`.
-    @media (min-width: 1200px) {
-        position: relative;
+    // ⚠️ Rozetler akıştan çıkınca kategoriler onların yerini BİLMEZ ve dar
+    //    ekranda altlarına girerler (ölçüldü: 1600px'te "Salt Produkte"
+    //    rozetlerle 69px örtüşüyordu). Bu yüzden şeridin İKİ YANINA da
+    //    rozet alanı kadar pay bırakılır: sağdaki örtüşmeyi önler, soldaki
+    //    simetriyi koruyup ortalamanın kaymasını engeller.
+    // ⚠️⚠️ BURAYA `position: relative` EKLEME — MEGA MENÜYÜ GÖRÜNMEZ YAPAR.
+    //    Bu `ul` 44px yüksekliğinde ve `overflow: auto` (yatay kaydırma
+    //    için gerekli). `relative` verilirse 801px'lik `.dropdown-menu`
+    //    ona göre konumlanır ve 44px'lik kutuya HAPSOLUP KIRPILIR: panel
+    //    DOM'da var, ölçülüyor (h=801, visibility:visible), ama ekranda
+    //    hiç çizilmiyor. Bir kez yaşandı, teşhisi zor.
+    //    Panel `<li class="dropdown position-static">`e göre konumlanmalı.
+    //
+    // ⚠️ Pay yalnızca GENİŞ ekranda. 1200–1750 arasında 2×300px pay
+    //    kategorileri sığmaz hale getirip yatay kaydırma tetikliyordu
+    //    (ölçüldü). O aralıkta rozetler akışta kalır: ortalama bir miktar
+    //    kayar ama menü kullanılabilir kalır — kaydırmaya düşmesindense
+    //    hafif asimetri yeğdir.
+    @media (min-width: 1750px) {
+        padding-left: $vape-nav-badges-reserve;
+        padding-right: $vape-nav-badges-reserve;
     }
 }
 
@@ -600,10 +604,19 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
     display: flex;
     align-items: center;
 
-    // ≥1200px: akıştan çıkar → ortalanacak alan rozetlerden etkilenmez
-    @media (min-width: 1200px) {
+    // ⚠️ Akıştan çıkma eşiği, yukarıdaki pay eşiğiyle AYNI olmalı (1750px).
+    //    Daha düşük bir eşikte absolute yapılırsa, pay henüz devrede
+    //    olmadığı için kategoriler rozetlerin altına girer (ölçüldü:
+    //    1600px'te "Salt Produkte" 69px örtüşüyordu).
+    //    <1750px: rozetler normal akışta, sağ uçta — örtüşme imkânsız.
+    //
+    // ⚠️ Konumlanma referansı `.navbar` (o zaten `position: relative` ve
+    //    tam genişlikte). Referans `ul` OLAMAZ: ul 44px + `overflow:auto`
+    //    olduğu için ona `relative` vermek mega menüyü kırpıp görünmez
+    //    yapıyor (yukarıdaki uyarıya bak).
+    @media (min-width: 1750px) {
         position: absolute;
-        right: 0;
+        right: $vape-container-pad-desktop;
         top: 0;
         bottom: 0;
     }
@@ -809,6 +822,15 @@ $vape-usp-bar-color: $vape-nav-topbar-fg !default;
 //    `.navigation-flyout-link` sınıfını taşıyor. Bu ikisini karıştırmak
 //    stillerin sessizce uygulanmamasına yol açar.
 .main-navigation-menu .dropdown-menu {
+    // ⚠️ Panel şeridin TAMAMINI kaplamalı. Core bunu `<li class="dropdown
+    //    position-static">` + Bootstrap ile çözüyordu; `.vape-nav-badges`
+    //    sarmalayıcısı eklenince konumlanma referansı değişti ve panel
+    //    ekranın ortasından başlar oldu (ölçüldü: left=513, sağdan taşıyor).
+    //    Sol/sağ açıkça sabitlenerek referanstan bağımsız hale getiriliyor.
+    left: 0;
+    right: 0;
+    width: auto;
+
     border: 0;
     border-bottom: 1px solid $vape-border-subtle;
     border-radius: 0;

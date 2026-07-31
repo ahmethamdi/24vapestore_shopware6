@@ -8,7 +8,7 @@
     bloğunun merkezi ekran merkezinden sabit ~164px sola kayıyordu
     (1280–1920 arası her genişlikte ölçüldü).
 
-    Salt CSS ile çözmek için üç yol denendi, üçü de terk edildi:
+    Salt CSS ile dört yol denendi, hepsi terk edildi:
       1. `margin-left: auto` — artan alanın tamamını tek yana verir,
          `justify-content` çalışmaz hale gelir (ikisi aynı anda olmaz).
       2. Sabit sol pay (`311px`) — yalnızca 1792px'te tutuyordu, diğer
@@ -19,17 +19,21 @@
       4. `display: grid` — her <li> kendi satırına düşüyor, kategoriler
          alt alta yığılıyordu.
 
-    Tek sarmalayıcı bunların hepsini gereksiz kılıyor: grup akıştan
-    çıkarılır (SCSS'te `position: absolute`), kategoriler şeridin tamamına
-    göre ortalanır. Genişlik ölçmeye gerek yok.
+    ⚠️⚠️ `{{ block('layout_navbar_menu_item') }}` İLE DELEGASYON DENENDİ,
+    MEGA MENÜYÜ BOZDU. Twig blok çağrısı, çağrıldığı yerdeki `{% set %}`
+    değişkenlerini DEĞİL, bloğun kendi kapsamını kullanıyor: döngüdeki
+    her öğe için hep SON `treeItem` render ediliyordu (ölçüldü: 6 kategori
+    aynı `nav-item-...84ee72c3b7adbc` ID'sini taşıyordu) ve <li> üzerindeki
+    `dropdown position-static` sınıfları kayboluyordu → Bootstrap dropdown
+    konumlanamıyor, mega menü açılmıyordu.
 
-    ⚠️ `order` ile yapılan eski sağa-gruplama SCSS'ten KALDIRILMALI değil —
-    <1200px'te sarmalayıcı `display: contents` olduğu için rozetler yine
-    normal akışta ve `order` hâlâ onları sona taşıyor.
+    ⚠️ Core'da tekil öğe için ayrı bir template YOK (navbar/ altında yalnızca
+    categories, content, navbar var) — o yüzden sw_include ile de devredilemez.
+    Bu nedenle <li> markup'ı burada AÇIKÇA yazılıyor, core ile birebir.
+    Mega menü içeriği yine core'dan geliyor (`content.html.twig`).
+    ⚠️ Core `navbar.html.twig` güncellenirse burayı da gözden geçir.
 
     MİNİMAL OVERRIDE: yalnızca `layout_navbar_menu_items` bloğu eziliyor.
-    Öğe render'ı core'un `layout_navbar_menu_item` bloğuna devrediliyor,
-    yani link/dropdown/mega menü mantığı core'da kalıyor.
 #}
 {% sw_extends '@Storefront/storefront/layout/navbar/navbar.html.twig' %}
 
@@ -37,32 +41,57 @@
     {# Rozet olarak davranacak kategoriler — ada göre (SCSS ile aynı liste) #}
     {% set badgeNames = ['aktionen', 'sale', 'outlet'] %}
 
+    {# --- normal kategoriler: ortada --- #}
     {% for treeItem in header.navigation.tree %}
-        {% set category = treeItem.category %}
-        {% set id = category.id %}
-        {% set name = category.translated.name %}
-        {% set hasChildren = treeItem.children|length > 0 %}
-        {% set itemSkipped = category.type == 'folder' and not hasChildren %}
-
-        {% if name|lower not in badgeNames %}
-            {{ block('layout_navbar_menu_item') }}
+        {% if treeItem.category.translated.name|lower not in badgeNames %}
+            {{ _self.vapeNavItem(treeItem, level, page, themeIconConfig) }}
         {% endif %}
     {% endfor %}
 
-    {# Rozetler: tek sarmalayıcı, sağa yaslanır (SCSS: .vape-nav-badges) #}
+    {# --- rozetler: tek sarmalayıcı, sağa yaslanır (SCSS: .vape-nav-badges) --- #}
     <li class="vape-nav-badges">
         <ul class="vape-nav-badges__list">
             {% for treeItem in header.navigation.tree %}
-                {% set category = treeItem.category %}
-                {% set id = category.id %}
-                {% set name = category.translated.name %}
-                {% set hasChildren = treeItem.children|length > 0 %}
-                {% set itemSkipped = category.type == 'folder' and not hasChildren %}
-
-                {% if name|lower in badgeNames %}
-                    {{ block('layout_navbar_menu_item') }}
+                {% if treeItem.category.translated.name|lower in badgeNames %}
+                    {{ _self.vapeNavItem(treeItem, level, page, themeIconConfig) }}
                 {% endif %}
             {% endfor %}
         </ul>
     </li>
 {% endblock %}
+
+{#
+    Tek bir üst seviye menü öğesi. Core'un `layout_navbar_menu_item` bloğuyla
+    birebir aynı markup — `dropdown position-static` sınıfları dahil (Bootstrap
+    dropdown'ın konumlanması bunlara bağlı, düşerse mega menü açılmaz).
+#}
+{% macro vapeNavItem(treeItem, level, page, themeIconConfig) %}
+    {% set category = treeItem.category %}
+    {% set id = category.id %}
+    {% set name = category.translated.name %}
+    {% set hasChildren = treeItem.children|length > 0 %}
+    {% set itemSkipped = category.type == 'folder' and not hasChildren %}
+
+    {% if not itemSkipped %}
+        <li class="nav-item nav-item-{{ id|raw }} dropdown position-static">
+            <a class="nav-link nav-item-{{ id|raw }}-link root main-navigation-link p-2 {% if hasChildren %}dropdown-toggle{% else %}no-dropdown{% endif %}"
+               href="{{ category.seoUrl ?: '#' }}"
+               {% if hasChildren %}data-bs-toggle="dropdown"{% endif %}
+               {% if category.type != 'folder' and category.shouldOpenInNewTab %}target="_blank"{% endif %}
+               title="{{ name }}">
+                <span class="main-navigation-link-text">{{ name }}</span>
+            </a>
+
+            {% if hasChildren %}
+                <div class="dropdown-menu w-100 p-4">
+                    {% sw_include '@Storefront/storefront/layout/navbar/content.html.twig' with {
+                        themeIconConfig: themeIconConfig,
+                        navigationTree: treeItem,
+                        level: level + 1,
+                        page: page
+                    } only %}
+                </div>
+            {% endif %}
+        </li>
+    {% endif %}
+{% endmacro %}

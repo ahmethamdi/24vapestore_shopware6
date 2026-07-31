@@ -2137,6 +2137,14 @@ $vape-nav-badge-outline-border: $vape-brand;
 // Rozet grubu sağa yaslanır; kategori linkleri ortada kalır.
 $vape-nav-badge-group-gap: $vape-space-2;
 
+// Rozet grubu (AKTIONEN+SALE+OUTLET) akıştan çıkarıldığı için kategoriler
+// onun yerini bilmez. Şeridin iki yanına bırakılan pay:
+//   sağ  → kategoriler rozetlerin altına girmesin (ölçüldü: paysız
+//          1600px'te "Salt Produkte" 69px örtüşüyordu)
+//   sol  → simetri; yoksa ortalama sağa kayar
+// ⚠️ Rozet metinleri veya menü yazı boyutu değişirse bunu da güncelle.
+$vape-nav-badges-reserve: 300px;
+
 // ---- kompakt ölçek (talep: "biraz küçült") ----
 // 2026-07-31: 12px → 11px (talep: "menüyü ortala").
 // ⚠️ Bu bir ORTALAMA gereksinimi, estetik tercih değil: ölçümde 13 öğe
