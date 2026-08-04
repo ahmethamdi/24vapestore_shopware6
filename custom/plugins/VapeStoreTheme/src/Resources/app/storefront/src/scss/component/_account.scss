@@ -1,0 +1,288 @@
+// ==================================================
+// HESAP SAYFALARI (login / register / overview / orders / profile / address)
+//
+// Checkout'la aynı durumdaydı: tema kurulduğundan beri hiç elden
+// geçirilmemiş, çıplak Bootstrap. `views/storefront/` altında account
+// override'ı YOK (doğrulandı) — bu dosya da salt SCSS.
+//
+// ⚠️ SALT SCSS, twig override YOK. Core markup semantik ve yeterli
+//    tutunma noktası veriyor (.account-*, .register-*, .login-*).
+//    Aynı yol: _checkout.scss ve breadcrumb.
+//
+// ÖLÇÜLEN sorunlar (1600px, tema öncesi):
+//   - H1 56px — checkout'takiyle aynı; sayfayı eziyordu
+//   - Üst boşluk 0 — başlık koyu menü şeridine yapışıktı
+//   - Kartlarda kenarlık 0 + gölge yok → kutular sayfada yüzüyordu
+//   - "Anmelden" butonu çok küçüktü (dokunma hedefi altında)
+// ==================================================
+
+// ---------- Sayfa üst boşluğu ----------
+// Checkout'taki `.is-ctl-checkout` kuralının hesap karşılığı.
+// Core bu sayfalarda üst pay vermiyor.
+.is-ctl-accountprofile .content-main,
+.is-ctl-accountorder .content-main,
+.is-ctl-address .content-main,
+.is-ctl-auth .content-main {
+    padding-top: $vape-space-6;
+
+    @media (min-width: 768px) {
+        padding-top: $vape-space-8;
+    }
+}
+
+// ---------- Başlıklar ----------
+// 56px → 36px (checkout ve page-headings ile aynı ölçek)
+.account-welcome h1,
+.account-overview h1,
+.is-ctl-accountprofile h1,
+.is-ctl-accountorder h1,
+.is-ctl-address h1,
+.is-ctl-auth h1 {
+    font-size: $vape-text-2xl;
+    font-weight: $vape-weight-bold;
+    color: $vape-text-heading;
+    letter-spacing: $vape-tracking-tight;
+
+    @media (min-width: 768px) {
+        font-size: $vape-text-3xl;
+    }
+}
+
+.account-welcome p,
+.account-overview-profile p {
+    color: $vape-text-muted;
+}
+
+// Bölüm başlıkları ("Ich bin bereits Kunde", "Ihre Adresse" …)
+.card-title,
+.account-overview-profile .card-title,
+.register-form legend,
+.is-ctl-accountprofile legend,
+.is-ctl-accountorder legend,
+.is-ctl-auth legend {
+    font-size: $vape-text-lg;
+    font-weight: $vape-weight-semibold;
+    color: $vape-text-heading;
+}
+
+// ---------- Kart kabuğu ----------
+// Sepet/checkout ve ürün kartlarıyla aynı dil.
+.is-ctl-accountprofile .card,
+.is-ctl-accountorder .card,
+.is-ctl-address .card,
+.is-ctl-auth .card,
+.account-overview .card,
+.login-card,
+.register-card {
+    border: 1px solid $vape-border-subtle;
+    border-radius: $vape-radius-lg;
+    box-shadow: $vape-shadow-sm;
+    background-color: $vape-bg-page;
+}
+
+.is-ctl-accountprofile .card-body,
+.is-ctl-accountorder .card-body,
+.is-ctl-address .card-body,
+.is-ctl-auth .card-body {
+    padding: $vape-space-5;
+
+    @media (min-width: 768px) {
+        padding: $vape-space-6;
+    }
+}
+
+// ---------- Sol menü (hesap gezinme) ----------
+.account-menu,
+.account-aside {
+    .list-group-item,
+    .account-aside-item {
+        border: 0;
+        border-radius: $vape-radius-md;
+        padding: $vape-space-3 $vape-space-4;
+        color: $vape-text-primary;
+        font-weight: $vape-weight-medium;
+        // Dokunma hedefi — mobilde menü öğeleri parmakla seçiliyor
+        min-height: $vape-touch-min;
+        display: flex;
+        align-items: center;
+
+        &:hover,
+        &:focus {
+            background-color: $vape-bg-subtle;
+            color: $vape-text-heading;
+        }
+
+        // Aktif öğe: renk TEK gösterge değil — dolgu + kalınlık da değişir
+        &.is-active,
+        &.active {
+            background-color: $vape-bg-subtle;
+            color: $vape-brand;
+            font-weight: $vape-weight-semibold;
+        }
+    }
+}
+
+// ---------- Form alanları ----------
+// Checkout'takiyle aynı: dokunma hedefi + tutarlı köşe + marka focus halkası
+.is-ctl-accountprofile,
+.is-ctl-accountorder,
+.is-ctl-address,
+.is-ctl-auth {
+    .form-control,
+    .form-select {
+        min-height: $vape-touch-min;
+        border-radius: $vape-radius-md;
+
+        &:focus {
+            border-color: $vape-brand;
+            box-shadow: 0 0 0 3px rgba($vape-red-500, 0.15);
+        }
+    }
+
+    // ⚠️ Input group'ta (ör. şifre göster/gizle) köşeler DIŞ kenarlarda
+    //    kalmalı; hepsine radius verilirse ortada çift yuvarlak oluşur.
+    //    Ölçümde `8px 0 0 8px` görülmüştü — core zaten doğru yapıyor,
+    //    bu yüzden input-group içinde radius'a dokunulmuyor.
+    .input-group > .form-control:not(:last-child),
+    .input-group > .form-select:not(:last-child) {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    // Zorunlu alan yıldızı
+    .form-label .required,
+    .required {
+        color: $vape-brand;
+    }
+}
+
+// ---------- Butonlar ----------
+.is-ctl-accountprofile,
+.is-ctl-accountorder,
+.is-ctl-address,
+.is-ctl-auth {
+    .btn-primary,
+    .btn-outline-primary,
+    .btn-secondary {
+        min-height: $vape-touch-min;
+        padding: $vape-space-3 $vape-space-5;
+        border-radius: $vape-radius-md;
+        font-weight: $vape-weight-semibold;
+    }
+}
+
+// "Vorteile einer Registrierung" listesi — sakin, ikincil
+.login-benefits,
+.register-benefits {
+    ul,
+    ol {
+        color: $vape-text-primary;
+        line-height: $vape-leading-normal;
+    }
+}
+
+// ---------- Sipariş listesi ----------
+.order-table,
+.order-item {
+    border: 1px solid $vape-border-subtle;
+    border-radius: $vape-radius-lg;
+}
+
+.order-table-header-heading,
+.order-item-header {
+    font-size: $vape-text-md;
+    font-weight: $vape-weight-semibold;
+    color: $vape-text-heading;
+}
+
+.order-item-property-label,
+.order-table-header-label {
+    font-size: $vape-text-xs;
+    color: $vape-text-muted;
+    letter-spacing: $vape-tracking-wide;
+    text-transform: uppercase;
+}
+
+.order-item-total,
+.order-table-header-summary-total {
+    font-weight: $vape-weight-bold;
+    color: $vape-text-heading;
+    font-variant-numeric: tabular-nums;
+}
+
+// Sipariş durumu rozeti — nötr, bağırmayan
+.order-item-status-badge,
+.badge {
+    border-radius: $vape-radius-pill;
+    font-weight: $vape-weight-semibold;
+}
+
+// ⚠️ "Standard-Lieferadresse" / "Standard-Rechnungsadresse" rozetleri
+//    Bootstrap MAVİSİYLE geliyordu (bu temada mavi hiç yok).
+//    Kaynak core'da doğrulandı — `.badge` DEĞİL:
+//      component/address/address-manager-item.html.twig
+//      <span class="address-item-default-badge … text-bg-info">
+//    İlk denemede `.badge` seçilmişti, hiç eşleşmedi (ekran görüntüsünde
+//    mavi kaldığı görüldü). Utility sınıfı olduğu için `!important` şart.
+//
+//    Renk seçimi: bunlar bir DURUM etiketi, eylem değil → marka kırmızısı
+//    da yanlış olurdu (kırmızı bu temada "indirim/aktif eylem" demek).
+//    Nötr gri etiket doğrusu.
+.address-item-default-badge,
+.is-ctl-address .text-bg-info,
+.is-ctl-accountprofile .text-bg-info {
+    background-color: $vape-bg-subtle !important;
+    color: $vape-text-primary !important;
+    border: 1px solid $vape-border-subtle;
+    font-size: $vape-text-xs !important;
+}
+
+// İkinci seviye başlıklar ("Verfügbare Adressen") — sayfa H1'iyle
+// aynı ağırlıkta durmasın, hiyerarşi kurulsun
+.is-ctl-address h2,
+.is-ctl-accountprofile h2,
+.is-ctl-accountorder h2 {
+    font-size: $vape-text-xl;
+    font-weight: $vape-weight-semibold;
+    color: $vape-text-heading;
+    letter-spacing: normal;
+}
+
+// ---------- Adres kartları ----------
+.address-card {
+    border: 1px solid $vape-border-subtle;
+    border-radius: $vape-radius-lg;
+    padding: $vape-space-5;
+
+    &.is-default,
+    &.address-card-default {
+        border-color: $vape-brand;
+    }
+}
+
+// ---------- Boş durumlar ----------
+// "Henüz siparişiniz yok" gibi — çıplak metin yerine sakin bir kutu
+.is-ctl-accountprofile .alert-info,
+.is-ctl-accountorder .alert-info,
+.is-ctl-address .alert-info {
+    border-radius: $vape-radius-lg;
+}
+
+// ---------- Mobil ----------
+@media (max-width: 767.98px) {
+    // Hesap menüsü içerikten önce gelir; araya nefes payı
+    .account-menu,
+    .account-aside {
+        margin-bottom: $vape-space-5;
+    }
+
+    // ⚠️ Mobil alt gezinme barı sayfanın son satırını örtmesin.
+    //    mobile-app katmanı footer'a pay veriyor ama hesap sayfalarında
+    //    içerik footer'dan önce bitiyor.
+    .is-ctl-accountprofile .content-main,
+.is-ctl-accountorder .content-main,
+    .is-ctl-address .content-main,
+    .is-ctl-auth .content-main {
+        padding-bottom: $vape-space-6;
+    }
+}
