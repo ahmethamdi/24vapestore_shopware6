@@ -1,0 +1,19 @@
+{#
+    Ürün detay sayfası — mobil sticky satın-alma barı eklenir.
+
+    Bar sayfa akışının SONUNA basılır (position: fixed olduğu için DOM
+    konumu görsel konumu etkilemez), ama `base_main_inner` içinde kalır ki
+    `page.product` değişkenine erişebilsin.
+
+    ⚠️ Bu YENİ bir core template override'ı → ilk eklendiğinde
+       `cache:clear` YETMEZ, `brew services restart php` şart (opcache).
+
+    Bkz. component/pdp-sticky-buy.html.twig (gerekçe + form bağlama mantığı).
+#}
+{% sw_extends '@Storefront/storefront/page/content/product-detail.html.twig' %}
+
+{% block base_main_inner %}
+    {{ parent() }}
+
+    {% sw_include '@Storefront/storefront/component/pdp-sticky-buy.html.twig' %}
+{% endblock %}

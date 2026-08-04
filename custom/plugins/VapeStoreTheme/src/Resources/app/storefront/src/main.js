@@ -18,6 +18,7 @@ import VapeProductTabsPlugin from './plugin/vape-product-tabs/vape-product-tabs.
 import VapeBrandSliderPlugin from './plugin/vape-brand-slider/vape-brand-slider.plugin';
 import VapeDealsCountdownPlugin from './plugin/vape-deals-countdown/vape-deals-countdown.plugin';
 import VapeAgeGatePlugin from './plugin/vape-age-gate/vape-age-gate.plugin';
+import VapePdpStickyBuyPlugin from './plugin/vape-pdp-sticky-buy/vape-pdp-sticky-buy.plugin';
 
 const registry = window.PluginManager;
 
@@ -34,3 +35,6 @@ registry.register('VapeDealsCountdown', VapeDealsCountdownPlugin, '.vape-deals')
 registry.register('VapeAgeGate', VapeAgeGatePlugin, '[data-vape-age-gate]');
 // Mobil alt gezinme — sepet rozetini header widget'ından senkronlar.
 registry.register('VapeMobileNav', VapeMobileNavPlugin, '[data-vape-mobile-nav]');
+// PDP mobil sticky satın alma barı — ana CTA ekrandan çıkınca belirir.
+// Bar core satın alma formuna bağlıdır (kendi formu yok).
+registry.register('VapePdpStickyBuy', VapePdpStickyBuyPlugin, '[data-vape-pdp-bar]');

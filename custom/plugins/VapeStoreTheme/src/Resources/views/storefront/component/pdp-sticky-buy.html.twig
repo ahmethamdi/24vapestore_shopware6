@@ -1,0 +1,71 @@
+{#
+    PDP mobil sticky satın-alma barı.
+
+    SORUN (ölçüldü, 390×844): "In den Warenkorb" butonu y=760'ta, mobil alt
+    gezinme barı y=779'da → CTA sayfa AÇILIR AÇILMAZ alt barın altında yarı
+    gizliydi. Sayfa 2629px; biraz kaydırınca satın alma yolu tamamen
+    kayboluyor ve kullanıcı geri kaydırmak zorunda kalıyordu.
+
+    NEDEN CMS ELEMENT DEĞİL (altın kuralın meşru istisnası):
+      Bu bir sayfa içeriği değil, SATIN ALMA KABUĞU — mobil alt gezinme barı
+      ve age-gate ile aynı kategori. Yalnızca ürün sayfasında, ürünün kendi
+      verisiyle çalışır; yönetici onu "başka bir yere sürükleyemez" çünkü
+      bağlamı ürün sayfasının kendisi. Ayrıca yönetici bunu yanlışlıkla
+      kaldırırsa mobilde satın alma bozulur.
+      Düzenlenebilirlik theme.json ile korunuyor: `pdpStickyBarEnabled`.
+      Aynı gerekçe: [[legal-gate-not-cms-element]] ve mobil alt bar deseni.
+
+    ⚠️ YALNIZCA MOBİLDE (<768px) — SCSS'te media query ile. Masaüstünde
+       buy-widget zaten ekranda kalıyor, bara gerek yok.
+
+    ⚠️ Form core'un satın alma formunu TEKRARLAMAZ, ona BAĞLANIR:
+       `form="productDetailPageBuyProductForm"` ile aynı formu submit eder.
+       Böylece miktar, varyant ve gizli alanlar tek kaynaktan gelir —
+       iki ayrı form olsaydı biri diğeriyle senkron kalmazdı.
+       (Core form id'si: buy-widget-form.html.twig içinde tanımlı.)
+
+    ⚠️ Satılamayan ürünlerde (stok yok / satın alınamaz) bar BASILMAZ:
+       core CTA da orada devre dışı; boş bir bar göstermek yanıltıcı olur.
+#}
+{% if theme_config('pdpStickyBarEnabled') %}
+
+    {% set product = page.product %}
+    {% set canBuy = product.available and not product.isCloseout or (product.isCloseout and product.availableStock > 0) %}
+
+    {% if canBuy %}
+        {% set realPrice = product.calculatedPrice %}
+        {% set listPrice = realPrice.listPrice %}
+
+        <div class="vape-pdp-bar"
+             data-vape-pdp-bar="true"
+             aria-hidden="true">
+            <div class="vape-pdp-bar__inner">
+
+                {# Fiyat — kullanıcı kaydırdıktan sonra ne ödeyeceğini görmeli #}
+                <div class="vape-pdp-bar__price">
+                    <span class="vape-pdp-bar__price-now{% if listPrice and listPrice.percentage > 0 %} is-discounted{% endif %}">
+                        {{ realPrice.unitPrice|currency }}
+                    </span>
+
+                    {% if listPrice and listPrice.percentage > 0 %}
+                        <span class="vape-pdp-bar__price-was">
+                            {{ listPrice.price|currency }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                {#
+                    Core satın alma formuna bağlanır (ayrı form DEĞİL).
+                    `form` özniteliği HTML5 — buton formun DIŞINDA durabilir
+                    ama onu submit eder.
+                #}
+                <button class="btn btn-primary vape-pdp-bar__btn"
+                        type="submit"
+                        form="productDetailPageBuyProductForm">
+                    {{ 'detail.addProduct'|trans|sw_sanitize }}
+                </button>
+            </div>
+        </div>
+    {% endif %}
+
+{% endif %}

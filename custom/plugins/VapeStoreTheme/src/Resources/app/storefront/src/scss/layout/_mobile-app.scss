@@ -237,3 +237,114 @@ Bu dosya 4 şey yapar — HEPSİ yalnızca <768px:
         }
     }
 }
+
+// ==================================================
+// 4) PDP MOBİL STICKY SATIN ALMA BARI
+// ==================================================
+//
+// SORUN (ölçüldü 2026-08-04, 390×844): "In den Warenkorb" butonu y=760'ta,
+// mobil alt gezinme barı y=779'da → CTA sayfa AÇILIR AÇILMAZ alt barın
+// altında yarı gizliydi. Sayfa 2629px olduğu için biraz kaydırınca satın
+// alma yolu tamamen kayboluyordu (ekran görüntüsünde doğrulandı: 1200px'te
+// zaten footer'daydık, ekranda tek satın alma yolu yoktu).
+//
+// ⚠️ Bar alt gezinme barının ÜSTÜNE oturur, ONU ÖRTMEZ — `bottom` değeri
+//    mnav yüksekliği + safe-area kadar yukarıdan başlar. İkisi de
+//    $vape-z-fixed; offcanvas (1045) ikisinin de üstünde kalır.
+@media (max-width: 767.98px) {
+
+    .vape-pdp-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        // Alt gezinme barının üstü. mnav kapalıysa (theme_config) bu boşluk
+        // fazla kalır ama bar yine ekranda ve kullanılabilir olur.
+        bottom: calc(#{$vape-mnav-height} + env(safe-area-inset-bottom, 0px));
+        z-index: $vape-pdpbar-z;
+
+        min-height: $vape-pdpbar-height;
+        padding: $vape-space-3 $vape-pdpbar-pad-x;
+        background-color: $vape-pdpbar-bg;
+        border-top: 1px solid $vape-pdpbar-border;
+        box-shadow: $vape-pdpbar-shadow;
+
+        // Varsayılan GİZLİ — core CTA ekrandayken bara gerek yok, iki aynı
+        // buton kafa karıştırır. JS `is-visible` ekleyince belirir.
+        transform: translateY(110%);
+        opacity: 0;
+        visibility: hidden;
+        transition:
+            transform $vape-pdpbar-anim-dur $vape-ease-out,
+            opacity $vape-pdpbar-anim-dur $vape-ease-out,
+            visibility 0s linear $vape-pdpbar-anim-dur;
+
+        &.is-visible {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+            transition-delay: 0s, 0s, 0s;
+        }
+
+        // Hareketi azalt tercihi — kayma yerine anında görün
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    .vape-pdp-bar__inner {
+        display: flex;
+        align-items: center;
+        gap: $vape-pdpbar-gap;
+    }
+
+    .vape-pdp-bar__price {
+        display: flex;
+        flex-direction: column;
+        // Fiyat sütunu içeriği kadar; kalan alanı buton alır
+        flex: 0 0 auto;
+        min-width: 0;
+        line-height: $vape-leading-tight;
+    }
+
+    .vape-pdp-bar__price-now {
+        font-size: $vape-pdpbar-price-size;
+        font-weight: $vape-weight-bold;
+        color: $vape-text-heading;
+        font-variant-numeric: tabular-nums;
+
+        // İndirimli fiyat marka kırmızısı — PDP'deki fiyat diliyle aynı
+        &.is-discounted {
+            color: $vape-brand;
+        }
+    }
+
+    .vape-pdp-bar__price-was {
+        font-size: $vape-pdpbar-old-price-size;
+        color: $vape-text-muted;
+        text-decoration: line-through;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .vape-pdp-bar__btn {
+        flex: 1 1 auto;
+        min-height: $vape-touch-min;
+        border-radius: $vape-radius-md;
+        font-weight: $vape-weight-bold;
+    }
+
+    // Sayfa sonu içeriği barın altında kalmasın.
+    // ⚠️ mobile-app katmanı footer'a zaten mnav kadar pay veriyor; PDP'de
+    //    bara da yer gerekiyor, bu yüzden ÜSTÜNE eklenir.
+    .is-ctl-product .footer-main {
+        padding-bottom: calc(
+            #{$vape-mnav-height} + #{$vape-pdpbar-height} + env(safe-area-inset-bottom, 0px)
+        );
+    }
+}
+
+// Masaüstünde bar hiç görünmez — buy-widget zaten ekranda kalıyor.
+@media (min-width: 768px) {
+    .vape-pdp-bar {
+        display: none;
+    }
+}

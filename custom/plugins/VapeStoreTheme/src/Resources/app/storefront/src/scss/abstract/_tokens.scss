@@ -2063,6 +2063,27 @@ $vape-mnav-badge-fg:         $vape-neutral-white;
 $vape-mnav-badge-size:       16px;
 $vape-mnav-badge-font:       10px;
 
+// ---------- PDP mobil sticky satın alma barı ----------
+// Sorun (ölçüldü, 390×844): "In den Warenkorb" butonu y=760'ta, alt gezinme
+// barı y=779'da → CTA sayfa AÇILIR AÇILMAZ alt barın altında yarı gizliydi.
+// Biraz kaydırınca da tamamen kayboluyordu (sayfa 2629px, buton 760px'te).
+//
+// ⚠️ Bar alt gezinme barının ÜSTÜNE oturur, onu ÖRTMEZ: `bottom` değeri
+//    mnav yüksekliği + safe-area kadar yukarıdan başlar. İkisi aynı
+//    z-katmanında ($vape-z-fixed) — offcanvas (1045) ikisinin de üstünde
+//    kalmalı, yoksa menü açıkken bar menünün üstüne biner.
+$vape-pdpbar-height:         64px;
+$vape-pdpbar-bg:             $vape-neutral-white;
+$vape-pdpbar-border:         $vape-border-subtle;
+$vape-pdpbar-shadow:         0 -2px 12px rgba(16, 16, 24, 0.10);
+$vape-pdpbar-z:              $vape-z-fixed;
+$vape-pdpbar-pad-x:          $vape-space-4;
+$vape-pdpbar-gap:            $vape-space-3;
+$vape-pdpbar-price-size:     $vape-text-lg;
+$vape-pdpbar-old-price-size: $vape-text-xs;
+// Barın belirdiği kaydırma eşiği JS'te; buton ekrandan çıkınca görünür.
+$vape-pdpbar-anim-dur:       180ms;
+
 // ---- yapışkan header: TOKEN YOK ----
 // `vape-sticky-header` plugin'i zaten var ve mobilde çalışıyor (doğrulandı).
 // IntersectionObserver + sentinel + spacer deseni kullanıyor; CSS'ten

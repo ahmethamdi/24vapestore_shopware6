@@ -801,6 +801,22 @@
           "en-GB": "Label: Account"
         },
         "scss": false
+      },
+      "pdpStickyBarEnabled": {
+        "type": "bool",
+        "value": true,
+        "editable": true,
+        "block": "mobileNav",
+        "order": 160,
+        "label": {
+          "de-DE": "Sticky Kaufleiste auf Produktseiten (mobil)",
+          "en-GB": "Sticky buy bar on product pages (mobile)"
+        },
+        "helpText": {
+          "de-DE": "Blendet Preis und „In den Warenkorb“ am unteren Rand ein, sobald der Kaufbutton aus dem Sichtbereich scrollt – nur mobil (<768px).",
+          "en-GB": "Shows price and “Add to cart” at the bottom once the buy button scrolls out of view – mobile only (<768px)."
+        },
+        "scss": false
       }
     }
   }
