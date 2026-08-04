@@ -239,6 +239,70 @@
 }
 
 // ==================================================
+// OFFCANVAS SEPET (sepete ekleyince açılan panel)
+// ==================================================
+//
+// Panelin çoğu stili yukarıdaki `.line-item-*` ve CTA kurallarından zaten
+// miras geliyor (ölçüldü: CTA 60px, teslimat satırı yeşil). Eksik olan
+// kenar payıydı — içerik panel kenarlarına yapışıktı.
+
+.offcanvas-cart {
+    padding: $vape-space-5;
+
+    @media (min-width: 768px) {
+        padding: $vape-space-6;
+    }
+}
+
+.offcanvas-cart-header {
+    margin-bottom: $vape-space-4;
+    padding-bottom: $vape-space-4;
+    border-bottom: 1px solid $vape-border-subtle;
+
+    .offcanvas-cart-header-headline,
+    h2 {
+        font-size: $vape-text-xl;
+        font-weight: $vape-weight-bold;
+        color: $vape-text-heading;
+        margin-bottom: 0;
+    }
+}
+
+// Ürün sayacı — başlıkla yarışmasın (core `h4` sınıfı veriyor)
+.offcanvas-cart-header-count {
+    font-size: $vape-text-sm !important;
+    font-weight: $vape-weight-medium !important;
+    color: $vape-text-muted !important;
+}
+
+// Ara toplam bloğu — sepet sayfasındaki özet diliyle aynı
+.offcanvas-cart-summary {
+    margin-top: $vape-space-4;
+    padding-top: $vape-space-4;
+    border-top: 1px solid $vape-border-subtle;
+
+    dt,
+    dd {
+        font-size: $vape-text-sm;
+        color: $vape-text-primary;
+    }
+
+    dd {
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.offcanvas-cart-actions {
+    margin-top: $vape-space-5;
+
+    // İkincil eylem ("Warenkorb anzeigen") ana CTA ile yarışmasın
+    .btn-secondary,
+    .btn-link {
+        min-height: $vape-touch-min;
+    }
+}
+
+// ==================================================
 // CHECKOUT ADIMLARI (register / confirm / finish)
 // ==================================================
 
@@ -270,7 +334,8 @@
 // Adım başlıkları ("Versandinformationen" vb.) — 56px'ten indirildi
 .checkout-main h1,
 .register-headline,
-.confirm-main-header {
+.confirm-main-header,
+.finish-header {
     font-size: $vape-text-2xl;
     font-weight: $vape-weight-bold;
     color: $vape-text-heading;
