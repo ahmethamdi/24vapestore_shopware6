@@ -1,0 +1,343 @@
+// ==================================================
+// SEPET + CHECKOUT
+//
+// Bu akış tema kurulduğundan beri hiç elden geçirilmemişti: anasayfa/PLP/PDP
+// özenliyken sepet çıplak Bootstrap'ti. Kullanıcı en kritik anda — parayı
+// vereceği yerde — temayı kaybediyordu.
+//
+// ⚠️ SALT SCSS, twig override YOK. Core markup zaten semantik ve yeterli
+//    tutunma noktası veriyor (.cart-main-header, .checkout-product-table,
+//    .checkout-aside-container, .line-item-*). Breadcrumb'da da aynı yol
+//    izlenmişti. Override yazmak = core güncellemelerinde bakım borcu.
+//
+// ÖLÇÜLEN sorunlar (1600px, tema öncesi):
+//   - H1 56px — PDP başlığından bile büyük, sayfayı eziyordu
+//   - "Zur Kasse" CTA padding 2px 12px — neredeyse dolgusuz, dokunma
+//     hedefi 40px'in altında
+//   - Özet kutusu şeffaf zeminli, kart kabuğu yok — sayfada yüzüyordu
+// ==================================================
+
+// ---------- Sayfa üst boşluğu ----------
+// Core sepet sayfasında üst pay YOK; başlık koyu menü şeridine yapışıyordu
+// (ekran görüntüsünde görüldü). Diğer sayfalarda bu boşluk page-headings'ten
+// geliyor, sepet o bloğu kullanmıyor.
+.is-ctl-checkout .content-main,
+.is-ctl-checkout.is-act-cartpage .content-main {
+    padding-top: $vape-space-6;
+
+    @media (min-width: 768px) {
+        padding-top: $vape-space-8;
+    }
+}
+
+// ---------- Sayfa başlığı ----------
+// 56px → 36px (page-headings ile aynı ölçek). Sepet bir "vitrin" değil,
+// işlem sayfası: başlık yön göstersin, sahneyi çalmasın.
+.cart-main-header {
+    font-size: $vape-text-2xl;
+    font-weight: $vape-weight-bold;
+    color: $vape-text-heading;
+    letter-spacing: $vape-tracking-tight;
+
+    @media (min-width: 768px) {
+        font-size: $vape-text-3xl;
+    }
+}
+
+// Ürün sayacı başlıkla aynı hizada ama ikincil — core `fs-3` (28px) veriyor,
+// bu başlıkla yarışıyordu.
+.cart-main-header-item-counter {
+    font-size: $vape-text-md !important;
+    font-weight: $vape-weight-medium !important;
+    color: $vape-text-muted !important;
+}
+
+// ---------- Ürün tablosu kabuğu ----------
+// Kart dili anasayfa/PLP ile aynı: yumuşak köşe + ince kenarlık + hafif gölge.
+// ⚠️ `.checkout-aside-container .card` BURAYA DAHİL EDİLMEZ — özetin kendi
+//    kabuğu aşağıda var; ikisi birden uygulanınca İÇ İÇE İKİ KUTU çıkıyordu
+//    (ekran görüntüsünde görüldü, ölçüm bunu yakalamamıştı).
+.checkout-product-table,
+.checkout-additional .card {
+    border: 1px solid $vape-border-subtle;
+    border-radius: $vape-radius-lg;
+    box-shadow: $vape-shadow-sm;
+    background-color: $vape-bg-page;
+}
+
+.checkout-product-table > .card-body {
+    padding: $vape-space-5;
+
+    @media (min-width: 768px) {
+        padding: $vape-space-6;
+    }
+}
+
+// Tablo başlığı (Produkt / Anzahl / Stückpreis / Summe) — sakin etiket satırı
+.cart-header-container {
+    padding-bottom: $vape-space-4;
+    border-bottom: 1px solid $vape-border-subtle;
+    color: $vape-text-muted;
+    font-size: $vape-text-xs;
+    font-weight: $vape-weight-semibold;
+    letter-spacing: $vape-tracking-wide;
+    text-transform: uppercase;
+}
+
+// ---------- Satır öğeleri ----------
+.line-item {
+    padding-top: $vape-space-5;
+    padding-bottom: $vape-space-5;
+
+    // Son satırın altındaki çizgi gereksiz — kart kenarlığı zaten bitişi veriyor
+    &:not(:last-child) {
+        border-bottom: 1px solid $vape-border-subtle;
+    }
+}
+
+.line-item-label {
+    font-size: $vape-text-md;
+    font-weight: $vape-weight-semibold;
+    color: $vape-text-heading;
+    line-height: $vape-leading-snug;
+}
+
+// Ürün no + teslimat süresi — ikincil bilgi, gri ve küçük
+.line-item-product-number,
+.line-item-delivery-date {
+    font-size: $vape-text-xs;
+    color: $vape-text-muted;
+}
+
+// Teslimat süresi olumlu bir sinyal: gri değil yeşil okunmalı.
+// ⚠️ Renk TEK gösterge değil — metnin kendisi ("Lieferzeitraum: …") bilgiyi
+//    zaten taşıyor, renk yalnızca vurgu. Bkz. kart rating'deki aynı kalıp.
+.line-item-delivery-date {
+    color: $vape-success;
+    font-weight: $vape-weight-medium;
+}
+
+.line-item-price,
+.line-item-total-price {
+    font-size: $vape-text-md;
+    font-weight: $vape-weight-semibold;
+    color: $vape-text-heading;
+    font-variant-numeric: tabular-nums;   // fiyatlar sütunda hizalı kalsın
+}
+
+// Ürün görseli — kartlardaki gibi yumuşak köşe, beyaz zemin
+.line-item-img-link img,
+.line-item-img-container img {
+    border-radius: $vape-radius-md;
+    background-color: $vape-bg-page;
+}
+
+// ---------- Miktar seçici ----------
+// PDP'deki stepper diliyle aynı olmalı; core burada düz bir select/input veriyor.
+.line-item-quantity-container .form-select,
+.line-item-quantity-container .form-control {
+    border-radius: $vape-radius-md;
+    border-color: $vape-border-strong;
+    font-weight: $vape-weight-semibold;
+    text-align: center;
+}
+
+// ---------- Sağdaki özet kutusu ----------
+// Şeffaf zeminde yüzüyordu; artık kendi kabuğu var ve sticky.
+.checkout-aside-container {
+    padding: 0;
+
+    @media (min-width: 992px) {
+        position: sticky;
+        // Sticky header'ın altına girmesin
+        top: calc(#{$vape-header-sticky-height} + #{$vape-space-4});
+    }
+}
+
+// Özetin TEK kabuğu burası. İçindeki core `.card`'ı şeffaflaştırıyoruz ki
+// kutu içinde kutu görünmesin.
+.checkout-aside-summary,
+.checkout-aside-container .checkout-aside-summary-container {
+    padding: $vape-space-5;
+    border: 1px solid $vape-border-subtle;
+    border-radius: $vape-radius-lg;
+    background-color: $vape-bg-subtle;
+
+    @media (min-width: 768px) {
+        padding: $vape-space-6;
+    }
+
+    .card,
+    .card-body {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0;
+    }
+}
+
+.checkout-aside-headline,
+.checkout-aside-container h2 {
+    font-size: $vape-text-xl;
+    font-weight: $vape-weight-bold;
+    color: $vape-text-heading;
+    margin-bottom: $vape-space-4;
+}
+
+// Ara toplam / kargo / KDV satırları
+.checkout-aside-summary-list {
+    dt,
+    dd {
+        font-size: $vape-text-sm;
+        color: $vape-text-primary;
+        padding-top: $vape-space-1;
+        padding-bottom: $vape-space-1;
+    }
+
+    dd {
+        font-variant-numeric: tabular-nums;
+    }
+
+    // Genel toplam — en güçlü satır
+    .checkout-aside-summary-total {
+        font-size: $vape-text-lg;
+        font-weight: $vape-weight-bold;
+        color: $vape-text-heading;
+        padding-top: $vape-space-3;
+        margin-top: $vape-space-2;
+        border-top: 1px solid $vape-border-subtle;
+    }
+}
+
+// ---------- Ana CTA ----------
+// ⚠️ Core `padding: 2px 12px` veriyordu (ölçüldü) — 44px'lik dokunma hedefinin
+//    çok altında ve sayfanın en önemli butonu için fazla cılız.
+.begin-checkout-btn,
+.checkout-aside-container .btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: $vape-touch-min;
+    padding: $vape-space-3 $vape-space-5;
+    border-radius: $vape-radius-md;
+    font-size: $vape-text-md;
+    font-weight: $vape-weight-bold;
+}
+
+// Kupon alanı — CTA ile yarışmasın
+.checkout-aside-container .form-control {
+    border-radius: $vape-radius-md;
+    min-height: $vape-touch-min;
+}
+
+// ---------- Boş sepet ----------
+.cart-main-header + .alert,
+.checkout-main .alert-info {
+    border-radius: $vape-radius-lg;
+}
+
+// ==================================================
+// CHECKOUT ADIMLARI (register / confirm / finish)
+// ==================================================
+
+// Sadeleştirilmiş checkout header — logo + destek + "shop'a dön"
+.checkout-header {
+    padding-top: $vape-space-5;
+    padding-bottom: $vape-space-5;
+    border-bottom: 1px solid $vape-border-subtle;
+    background-color: $vape-bg-page;
+}
+
+.checkout-header-support,
+.checkout-header .checkout-info-support {
+    font-size: $vape-text-sm;
+    color: $vape-text-primary;
+
+    a {
+        color: $vape-brand;
+        font-weight: $vape-weight-semibold;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+    }
+}
+
+// Adım başlıkları ("Versandinformationen" vb.) — 56px'ten indirildi
+.checkout-main h1,
+.register-headline,
+.confirm-main-header {
+    font-size: $vape-text-2xl;
+    font-weight: $vape-weight-bold;
+    color: $vape-text-heading;
+    letter-spacing: $vape-tracking-tight;
+
+    @media (min-width: 768px) {
+        font-size: $vape-text-3xl;
+    }
+}
+
+// Form kartları — sepet kabuğuyla aynı dil
+.register-form .card,
+.confirm-product-table,
+.confirm-address,
+.checkout-main .card {
+    border: 1px solid $vape-border-subtle;
+    border-radius: $vape-radius-lg;
+    box-shadow: $vape-shadow-sm;
+}
+
+// Form alanları: dokunma hedefi + tutarlı köşe
+.checkout-main .form-control,
+.checkout-main .form-select,
+.register-form .form-control,
+.register-form .form-select {
+    min-height: $vape-touch-min;
+    border-radius: $vape-radius-md;
+
+    &:focus {
+        border-color: $vape-brand;
+        box-shadow: 0 0 0 3px rgba($vape-red-500, 0.15);
+    }
+}
+
+// Bölüm başlıkları ("Persönliche Informationen", "Ihre Adresse")
+.register-form legend,
+.checkout-main legend,
+.card-title {
+    font-size: $vape-text-lg;
+    font-weight: $vape-weight-semibold;
+    color: $vape-text-heading;
+}
+
+// Zorunlu alan yıldızı — kırmızı ama bağırmayan
+.form-label .required,
+.checkout-main .required {
+    color: $vape-brand;
+}
+
+// Sipariş tamamlama butonu
+.confirm-checkout .btn-primary,
+#confirmFormSubmit {
+    min-height: $vape-touch-min;
+    border-radius: $vape-radius-md;
+    font-weight: $vape-weight-bold;
+}
+
+// ---------- Mobil ----------
+@media (max-width: 767.98px) {
+    // Özet mobilde ürünlerin ALTINDA; sticky olmamalı (ekranı yer)
+    .checkout-aside-container {
+        position: static;
+        margin-top: $vape-space-5;
+    }
+
+    .line-item {
+        padding-top: $vape-space-4;
+        padding-bottom: $vape-space-4;
+    }
+}

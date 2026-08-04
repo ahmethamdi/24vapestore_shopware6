@@ -1,6 +1,7 @@
 {
   "header": {
-    "searchPlaceholder": "Search liquids, pods, devices …"
+    "searchPlaceholder": "Search liquids, pods, devices …",
+    "supportInfo": "<strong>Questions about your order?</strong><br /><strong><a href=\"tel:+4921252082100\">0212 / 520 821 00</a></strong> <small>Mon–Fri 9:00–17:00</small>"
   },
   "listing": {
     "boxLabelTopseller": "Top",
