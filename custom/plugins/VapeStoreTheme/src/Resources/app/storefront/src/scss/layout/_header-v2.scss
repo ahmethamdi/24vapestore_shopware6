@@ -26,6 +26,19 @@
     border-bottom: 1px solid $vape-hdr-border;
 }
 
+// ---------- USP üst şeridi (modernize) ----------
+// Gri kutu hissini kır: zemin beyaz, yalnızca ince alt ayraç. Metin küçük
+// ve harf aralıklı — "duyuru bandı" değil, sakin bir üst bilgi satırı.
+.vape-usp-bar,
+.header-top-bar,
+.top-bar {
+    background-color: $vape-bg-page !important;
+    border-bottom: 1px solid $vape-hdr-border;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: $vape-text-muted;
+}
+
 .vape-hdr__inner {
     display: flex;
     align-items: center;
@@ -53,26 +66,40 @@
     min-width: 0;
 }
 
+// ---------- ORTA: logo ----------
+// ⚠️ Logo ORTALANMIŞ (talep). Gerçek optik merkez için sol ve sağ blokların
+//    EŞİT esneklikte olması şart (`flex: 1 1 0`); biri içeriği kadar
+//    kalırsa logo o yana kayar. Sol blokta bu yüzden tagline var — hem
+//    simetriyi kuruyor hem boşluğu anlamlandırıyor.
 .vape-hdr__logo {
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
 
     img,
     svg {
         display: block;
         width: auto;
         max-width: $vape-hdr-logo-w;
-        max-height: 40px;
+        max-height: 44px;
         transition: max-width $vape-hdr-transition;
     }
 
-    // Core logo sarmalayıcısı ortalama/padding ekliyor — tek satırda gereksiz
     .header-logo-main,
     .header-logo-main-link {
         margin: 0;
         padding: 0;
-        text-align: left;
+        text-align: center;
     }
+}
+
+// Soldaki güven mikro-metni — sakin, ikincil, logo ile yarışmaz
+.vape-hdr__tagline {
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: $vape-text-muted;
+    white-space: nowrap;
 }
 
 // ---------- Kategori menüsü satırı ----------
@@ -316,12 +343,34 @@
 // ---------- Mobil ----------
 @media (max-width: 991.98px) {
     // Logo mobilde sola yapışmasın, burger ile arası açılsın
+    // ⚠️ MOBİLDE LOGO AKIŞTAN ÇIKAR. Flex ile ortalama denendi ve OLMADI:
+    //    sol blokta burger (44px), sağda 3 ikon (~132px) var; eşit esneklik
+    //    verilince logo optik olarak kayıyor, `flex:0 1 auto` verilince
+    //    sola yapışıyordu — iki denemede de logo soldan KIRPILDI (ekran
+    //    görüntüsünde görüldü). Absolute ortalama bu asimetriden bağımsızdır.
+    .vape-hdr__inner {
+        position: relative;
+    }
+
     .vape-hdr__left {
         gap: $vape-space-3;
-        // ⚠️ Mobilde sol blok `flex: 1 1 0` ile büyüyüp ikonları sağa
-        //    itiyordu; logo ile ikonlar arası kapanıyordu (ekran
-        //    görüntüsünde görüldü). İçeriği kadar kalsın.
-        flex: 0 1 auto;
+        flex: 0 0 auto;
+    }
+
+    .vape-hdr__logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        // Burger ve ikonlar tıklanabilir kalmalı
+        pointer-events: none;
+
+        a {
+            pointer-events: auto;
+        }
+    }
+
+    .vape-hdr__actions {
+        margin-left: auto;
     }
 
     .vape-hdr__inner {
@@ -334,10 +383,12 @@
         flex: 1 1 auto;
     }
 
-    // Logo mobilde daha küçük — ikonlara nefes payı bırakır
+    // ⚠️ Logo mobilde 132px'te burger'a değip kırpılıyordu (ekran
+    //    görüntüsünde görüldü). 3 ikon + burger toplamı ~176px yer
+    //    kaplıyor; 390px ekranda logoya kalan güvenli genişlik ~112px.
     .vape-hdr__logo img,
     .vape-hdr__logo svg {
-        max-width: 132px;
+        max-width: 112px;
     }
 }
 

@@ -25,7 +25,7 @@
     <div class="vape-hdr">
         <div class="vape-hdr__inner">
 
-            {# ========== SOL: mobil menü butonu + logo ========== #}
+            {# ========== SOL: mobil menü + (masaüstü) USP mikro-metni ========== #}
             <div class="vape-hdr__left">
                 {% block layout_header_navigation_toggle %}
                     <button class="btn vape-hdr__icon-btn vape-hdr__burger d-lg-none"
@@ -36,12 +36,23 @@
                     </button>
                 {% endblock %}
 
-                {% block layout_header_logo %}
-                    <div class="vape-hdr__logo">
-                        {% sw_include '@Storefront/storefront/layout/header/logo.html.twig' %}
-                    </div>
-                {% endblock %}
+                {#
+                    Logo ORTADA olduğu için sol blok boş kalırdı ve denge
+                    bozulurdu (logo optik olarak sağa kayardı). Buraya sakin
+                    bir güven mikro-metni konuyor: hem simetri kuruluyor hem
+                    de üst şeritteki mesaj header'da tekrar hatırlatılıyor.
+                #}
+                <span class="vape-hdr__tagline d-none d-lg-inline">
+                    {{ 'header.taglineShipping'|trans|sw_sanitize }}
+                </span>
             </div>
+
+            {# ========== ORTA: logo ========== #}
+            {% block layout_header_logo %}
+                <div class="vape-hdr__logo">
+                    {% sw_include '@Storefront/storefront/layout/header/logo.html.twig' %}
+                </div>
+            {% endblock %}
 
             {# ========== SAĞ: arama + hesap + sepet ========== #}
             {% block layout_header_actions %}

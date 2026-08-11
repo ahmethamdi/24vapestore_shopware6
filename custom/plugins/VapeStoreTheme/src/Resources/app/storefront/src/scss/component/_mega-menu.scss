@@ -90,16 +90,18 @@
     gap: $vape-mega-link-gap;
 
     // Marka listesi kolonlara yayılır — dikey uzamayı kırar.
-    // 14 öğe / 4 kolon ≈ 4 satır → panel kısa kalır.
+    // ⚠️ `1fr` kolonlar eşit genişlikte olduğu için uzun marka adı kolonu
+    //    şişiriyor ve sağda büyük boşluk kalıyordu (ekran görüntüsünde
+    //    görüldü). `max-content` + `column-gap` ile kolonlar içeriğe göre
+    //    daralır, liste sola toplanır.
     &--brands {
         @media (min-width: 992px) {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-auto-flow: column;
+            grid-template-rows: repeat(4, auto);
+            grid-auto-columns: max-content;
+            justify-content: start;
             gap: $vape-mega-link-gap $vape-mega-col-gap;
-        }
-
-        @media (min-width: 1400px) {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
         }
     }
 }
