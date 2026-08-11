@@ -434,6 +434,12 @@ $vape-usp-bar-icon-size:  14px;
 $vape-usp-bar-icon-color: $vape-brand;   // açık zeminde marka kırmızısı okunur
 
 // ---------- Ana satır ----------
+// ⚠️ YENİDEN TASARIM (2026-08-11): üç yatay şerit → TEK SATIR.
+//    Eski hal ölçüldü: gri USP (37px) + beyaz logo satırı (128px) + koyu
+//    antrasit menü şeridi (44px) = 171px. Koyu şerit sayfayı ikiye bölüyor,
+//    logo geniş boşlukta yüzüyor, arama solda dengesiz duruyordu.
+//    Yeni düzen: logo SOL · menü ORTA · ikonlar SAĞ, hepsi tek beyaz satırda.
+//    Arama ikona indi (tıklayınca açılan panel) — satırı o serbestleştirdi.
 $vape-header-row-pad-y:         $vape-space-4;
 $vape-header-row-pad-y-desktop: $vape-space-5;
 $vape-header-row-pad-y-sticky:  $vape-space-2;
@@ -442,6 +448,29 @@ $vape-header-logo-max-sticky:   128px;
 $vape-header-icon-size:         22px;
 $vape-header-badge-size:        18px;
 $vape-header-badge-offset:      -6px;
+
+// ---------- Tek satır header (yeni) ----------
+$vape-hdr-height:            72px;   // masaüstü tek satır yüksekliği
+$vape-hdr-height-sticky:     60px;   // kaydırınca incelir
+$vape-hdr-height-mobile:     60px;
+$vape-hdr-logo-w:            150px;
+$vape-hdr-logo-w-sticky:     126px;
+$vape-hdr-pad-x:             $vape-space-6;
+$vape-hdr-pad-x-wide:        $vape-space-8;
+// Menü linkleri: ince, harf aralıklı — "editoryal" his
+$vape-hdr-link-size:         13px;
+$vape-hdr-link-weight:       $vape-weight-medium;
+$vape-hdr-link-tracking:     0.01em;
+$vape-hdr-link-gap:          $vape-space-5;
+$vape-hdr-link-color:        $vape-neutral-700;
+$vape-hdr-link-color-hover:  $vape-neutral-900;
+// Aktif/hover göstergesi: alt çizgi DEĞİL, ince kırmızı alt vurgu
+$vape-hdr-underline-h:       2px;
+$vape-hdr-icon-gap:          $vape-space-2;
+$vape-hdr-border:            $vape-neutral-200;
+// Kaydırınca beliren gölge — "yüzen" his
+$vape-hdr-shadow-sticky:     0 1px 16px rgba(16, 16, 24, 0.07);
+$vape-hdr-transition:        200ms $vape-ease-out;
 
 // Sticky moddaki header'ın SABİT yüksekliği. Sticky'de header ve nav ayrı
 // ayrı `position:fixed`; nav bu değer kadar aşağıdan başlar. Önceden JS
@@ -469,6 +498,48 @@ $vape-flyout-thumb-ring-hover: $vape-brand;
 $vape-flyout-fallback-bg:     $vape-neutral-100;
 $vape-flyout-fallback-fg:     $vape-neutral-500;
 $vape-flyout-head-gap:        $vape-space-2;
+
+// ---------- EDİTORYAL MEGA MENÜ (2026-08-11 yeniden tasarım) ----------
+// ⚠️ Eski hal ÖLÇÜLDÜ: 856px yükseklik, 32 sütun, 7'si TAMAMEN BOŞ
+//    (sadece marka adı, altında hiçbir şey yok), 0 görsel.
+//    "Minimalist" diye tüm görsel çıpalar sökülmüştü → sade değil ÇIPLAK
+//    bir liste kalmıştı ve panel ekranın yarısını kaplıyordu.
+//
+// Yeni düzen: [ kategoriler | markalar | görsel panel ]
+//   - Sol sütun: gerçek alt kategoriler (ürünü olanlar)
+//   - Orta: marka listesi, SINIRLI (hepsi değil) + "tümü" linki
+//   - Sağ: büyük görsel + başlık + CTA (editoryal vitrin)
+$vape-mega-pad-y:            $vape-space-6;
+$vape-mega-pad-x:            $vape-space-8;
+$vape-mega-max-h:            460px;   // 856 → 460: ekranı kaplamasın
+$vape-mega-col-gap:          $vape-space-8;
+$vape-mega-radius:           0;       // tam genişlik panel, köşe yok
+$vape-mega-shadow:           0 12px 32px rgba(16, 16, 24, 0.10);
+
+// Sütun başlığı — küçük, harf aralıklı etiket (editoryal dil)
+$vape-mega-eyebrow-size:     11px;
+$vape-mega-eyebrow-tracking: 0.10em;
+$vape-mega-eyebrow-color:    $vape-neutral-500;
+
+$vape-mega-link-size:        14px;
+$vape-mega-link-color:       $vape-neutral-700;
+$vape-mega-link-hover:       $vape-brand;
+$vape-mega-link-gap:         10px;
+
+// Sağdaki görsel panel
+$vape-mega-promo-w:          380px;
+$vape-mega-promo-radius:     $vape-radius-lg;
+$vape-mega-promo-ratio:      4 / 3;
+$vape-mega-promo-title:      $vape-text-lg;
+// Görsel üzerine okunabilirlik katmanı
+$vape-mega-promo-scrim:      linear-gradient(
+                                 to top,
+                                 rgba(16, 16, 24, 0.72) 0%,
+                                 rgba(16, 16, 24, 0.15) 55%,
+                                 rgba(16, 16, 24, 0) 100%
+                             );
+// Kaç marka gösterilecek — gerisi "tümü" linkinin arkasında
+$vape-mega-brand-limit:      8;
 
 // Mega menü panelinin ekranın üstünden başladığı yer = header'ın alt kenarı.
 // Panelin max-height'ı bundan hesaplanır (`100dvh - offset`), aksi halde

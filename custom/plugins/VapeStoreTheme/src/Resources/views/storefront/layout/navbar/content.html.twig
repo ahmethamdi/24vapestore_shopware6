@@ -1,0 +1,112 @@
+{#
+    EDİTORYAL MEGA MENÜ.
+
+    ⚠️ YENİDEN TASARIM (2026-08-11). Eski hal ÖLÇÜLDÜ: 856px yükseklik,
+    32 sütun, bunların 7'si TAMAMEN BOŞ (yalnızca marka adı, altında hiç
+    alt kategori yok), 0 görsel. "Minimalist" diye tüm görsel çıpalar
+    sökülmüştü — sonuç sade değil ÇIPLAK bir liste oldu ve panel ekranın
+    yarısını kaplıyordu.
+
+    Yeni yapı üç sütun:
+      1. KATEGORIEN — alt kategoriler (gerçek gezinme)
+      2. MARKEN     — marka listesi, SINIRLI (hepsi değil) + "tümü" linki
+      3. Görsel panel — kategori medyası varsa vitrin + CTA
+
+    ⚠️ VERİ GERÇEĞİ (doğrulandı): 296 kategorinin HİÇBİRİNDE medya yok ve
+       marka alt kategorilerinde ürün sayısı 0. Bu yüzden:
+       - Görsel panel yalnızca medya VARSA basılır (yoksa iki sütun kalır,
+         düzen bozulmaz) — şu an demo veride basılmayacak, ama yönetici
+         kategoriye görsel eklediği an devreye girer.
+       - Ürün sayısı rozeti YOK: hepsi "0" gösterirdi, yanıltıcı olurdu.
+
+    ⚠️ Marka listesi kısaltılıyor ($vape-mega-brand-limit karşılığı 8).
+       Kesilenler "Alle Marken" linkinin arkasında — 32 markayı ekrana
+       dökmek zaten eski tasarımın hatasıydı.
+
+    MİNİMAL OVERRIDE değil, tam yeniden yazım: core'un iki sütunlu
+    (kategoriler + teaser) yapısı istenen editoryal düzeni veremiyordu.
+    Alt kategori listesi yine core'un `categories.html.twig`'ine devredilir
+    (orada alfabetik sıralama + thumbnail mantığı var).
+#}
+{% block layout_navbar_content %}
+    {% set category = navigationTree.category %}
+    {% set name = category.translated.name %}
+    {% set children = navigationTree.children %}
+
+    {# ⚠️ İLK DENEME "çocuğu olan = kategori / olmayan = marka" ayrımıydı;
+       BU VERİDE ÇALIŞMADI (ölçüldü: 25 vs 7 çıktı, sol sütun taştı, sağ
+       neredeyse boş kaldı). Gerçek katalogda alt kategori varlığı marka
+       olup olmamayla ilgisiz — bazı markaların Pods/Akkuträger alt dalı
+       var, bazılarının yok.
+
+       Dürüst yaklaşım: hepsi tek liste, alfabetik, SINIRLI sayıda göster,
+       gerisi "Alle Marken" linkinin arkasında. Liste kolonlara yayılır. #}
+    {% set allItems = children|sort((a, b) =>
+        (a.category.translated.name|lower) <=> (b.category.translated.name|lower)
+    ) %}
+    {% set shown = allItems|slice(0, 14) %}
+
+    {# Görsel panel yalnızca kategori medyası varsa #}
+    {% set hasPromo = category.media is not null %}
+
+    <div class="vape-mega{% if hasPromo %} vape-mega--with-promo{% endif %}">
+
+        {# ---------- Ana liste: markalar/alt kategoriler ---------- #}
+        {% if shown|length > 0 %}
+            <div class="vape-mega__col vape-mega__col--brands">
+                <p class="vape-mega__eyebrow">
+                    {{ 'header.megaBrands'|trans|sw_sanitize }}
+                </p>
+
+                <ul class="vape-mega__list vape-mega__list--brands">
+                    {% for item in shown %}
+                        <li>
+                            <a class="vape-mega__link" href="{{ item.category.seoUrl }}">
+                                {{ item.category.translated.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                {# Kesilenler burada — 32 markayı dökmek eski hatanın kendisiydi #}
+                {% if allItems|length > shown|length %}
+                    <a class="vape-mega__more" href="{{ category.seoUrl }}">
+                        {{ 'header.megaAllBrands'|trans|sw_sanitize }}
+                        <span aria-hidden="true">&rarr;</span>
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {# ---------- 3. sütun: editoryal görsel panel ---------- #}
+        {% if hasPromo %}
+            <a class="vape-mega__promo" href="{{ category.seoUrl }}">
+                <span class="vape-mega__promo-media">
+                    {% sw_thumbnails 'vape-mega-promo-thumbnails' with {
+                        media: category.media,
+                        sizes: { default: '380px' },
+                        attributes: {
+                            class: 'vape-mega__promo-img',
+                            alt: (category.media.translated.alt ?: ''),
+                            loading: 'lazy'
+                        }
+                    } %}
+                </span>
+
+                <span class="vape-mega__promo-body">
+                    <span class="vape-mega__promo-title">{{ name }}</span>
+                    <span class="vape-mega__promo-cta">
+                        {{ 'general.toCategory'|trans|sw_sanitize }}
+                        <span aria-hidden="true">&rarr;</span>
+                    </span>
+                </span>
+            </a>
+        {% endif %}
+
+        {# Kapatma butonu — core'un davranışı korunuyor #}
+        {% block layout_navbar_content_row_close %}
+            <button class="navigation-flyout-close js-close-flyout-menu btn-close vape-mega__close"
+                    aria-label="{{ 'general.closeMenu'|trans|striptags }}"></button>
+        {% endblock %}
+    </div>
+{% endblock %}

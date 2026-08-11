@@ -17,6 +17,8 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 
 // 2. Layout parçaları
 @import 'layout/header';
+// ⚠️ header'dan SONRA: tek satır düzeni eski üç-şerit kurallarını ezer
+@import 'layout/header-v2';
 @import 'layout/offcanvas-nav';
 @import 'layout/page-headings';
 @import 'layout/footer';
@@ -45,6 +47,7 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 @import 'component/breadcrumb';
 @import 'component/checkout';
 @import 'component/account';
+@import 'component/mega-menu';
 @import 'component/age-gate';
 
 // ==================================================

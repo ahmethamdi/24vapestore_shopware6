@@ -1,0 +1,421 @@
+// ==================================================
+// HEADER v2 (2026-08-11 yeniden tasarım)
+//
+// Eski hal ÖLÇÜLDÜ (1920px): gri USP şeridi 37px + beyaz logo satırı 128px
+// + KOYU ANTRASİT menü şeridi 44px = 171px. Koyu şerit sayfayı ikiye
+// bölüyor, logo geniş boşlukta yüzüyor, arama solda dengesiz duruyordu.
+//
+// Yeni yapı — iki satır ama ikisi de BEYAZ:
+//   1) logo sol · ikonlar sağ  (72px, arama ikona indi)
+//   2) kategori menüsü, ortalanmış, yalnızca ince ayraç çizgisiyle ayrılmış
+//
+// ⚠️ Menü önce 1. satıra (logo·menü·ikon yan yana) konmuştu; 13 kategori
+//    1920px'te bile sığmadı ve sıkışık durdu → kendi satırına indirildi.
+//    Koyu şerit GERİ GELMEDİ; kazanılan ferahlık korunuyor.
+//
+// ⚠️ Bu dosya `_header.scss`ten SONRA yüklenir ve oradaki üç-şerit
+//    kurallarını bilinçli olarak ezer. Eski dosya silinmedi çünkü
+//    içinde hâlâ geçerli olan parçalar var (USP şeridi, sticky mantığı,
+//    offcanvas tetikleyicileri, rozet stilleri).
+// ==================================================
+
+// ---------- Dış kabuk ----------
+.vape-hdr {
+    position: relative;   // arama paneli buna göre konumlanır
+    background-color: $vape-bg-page;
+    border-bottom: 1px solid $vape-hdr-border;
+}
+
+.vape-hdr__inner {
+    display: flex;
+    align-items: center;
+    gap: $vape-space-4;
+    min-height: $vape-hdr-height-mobile;
+    padding-inline: $vape-hdr-pad-x;
+    transition: min-height $vape-hdr-transition;
+
+    @media (min-width: 992px) {
+        min-height: $vape-hdr-height;
+    }
+
+    @media (min-width: 1600px) {
+        padding-inline: $vape-hdr-pad-x-wide;
+    }
+}
+
+// ---------- SOL: burger + logo ----------
+.vape-hdr__left {
+    display: flex;
+    align-items: center;
+    gap: $vape-space-2;
+    // Sol ve sağ EŞİT esneklikte → orta blok gerçekten ortada kalır
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.vape-hdr__logo {
+    display: flex;
+    align-items: center;
+
+    img,
+    svg {
+        display: block;
+        width: auto;
+        max-width: $vape-hdr-logo-w;
+        max-height: 40px;
+        transition: max-width $vape-hdr-transition;
+    }
+
+    // Core logo sarmalayıcısı ortalama/padding ekliyor — tek satırda gereksiz
+    .header-logo-main,
+    .header-logo-main-link {
+        margin: 0;
+        padding: 0;
+        text-align: left;
+    }
+}
+
+// ---------- Kategori menüsü satırı ----------
+// ⚠️ Menü ÖNCE tek satıra (logo·menü·ikon yan yana) alınmıştı; 13 kategori
+//    1920px'te bile sığmadı, sıkışık durdu. Kendi satırına indirildi.
+//    AMA eski koyu antrasit şerit geri gelmedi: zemin beyaz, yalnızca ince
+//    ayraç. Header'ın ferah dili korunuyor, menü nefes alıyor.
+.vape-hdr__navrow {
+    border-top: 1px solid $vape-hdr-border;
+    background-color: $vape-bg-page;
+}
+
+.vape-hdr__navrow-inner {
+    display: flex;
+    // ⚠️ `safe center`: içerik sığmazsa düz `center` taşmayı İKİ YANA
+    //    dağıtır ve baştaki öğeye `scrollLeft:0`da bile ULAŞILAMAZ
+    //    ("Home" gidip "e" kalmıştı — bu projede bir kez yaşandı).
+    justify-content: safe center;
+    align-items: center;
+    padding-inline: $vape-hdr-pad-x;
+
+    // ⚠️ Ölçüldü: 1280 ve 1440px'te 13 öğe + 3 rozet sığmıyor (menü taşıyor).
+    //    Yatay kaydırma güvenlik ağı. `min-width: 0` ŞART — yoksa liste
+    //    flex item olarak içeriği kadar büyür, kendi içinde asla taşmaz ve
+    //    `overflow-x` ölü kod olur (taşan kategorilere ulaşılamaz).
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    @media (min-width: 1600px) {
+        padding-inline: $vape-hdr-pad-x-wide;
+    }
+}
+
+.vape-hdr__nav,
+.vape-hdr__navrow {
+    min-width: 0;
+
+    // ⚠️ Mega menü paneli BUNA göre konumlanır (position: relative olan tek
+    //    öğe). Menü listesine (`ul`) relative VERİLMEZ: o 44px yüksekliğinde
+    //    ve `overflow:auto` — panel 460px olduğu için içine hapsolup
+    //    GÖRÜNMEZ olur. Bu bir kez yaşandı, teşhisi zor (panel DOM'da var,
+    //    ölçülüyor, ama ekranda çizilmiyor).
+    .navbar {
+        position: static;
+        padding: 0;
+        width: auto;
+    }
+
+    .navbar-collapse {
+        min-width: 0;
+        flex: 0 1 auto;
+    }
+
+    .main-navigation-menu-list {
+        display: flex;
+        align-items: center;
+        // Dar ekranda daha sıkı aralık → kaydırmaya daha geç düşülür.
+        // 1280/1440px'te 13 öğe + 3 rozet ancak böyle rahatlıyor.
+        gap: $vape-space-4;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        min-width: 0;
+        flex-wrap: nowrap;
+
+        @media (min-width: 1600px) {
+            gap: $vape-hdr-link-gap;
+        }
+    }
+
+    // Eski koyu şeritten kalan kurallar burada geçersiz kılınır
+    li {
+        margin: 0;
+    }
+}
+
+// ---------- Menü linkleri ----------
+// Editoryal dil: ince ağırlık, hafif harf aralığı, sakin gri.
+.vape-hdr__navrow .main-navigation-link {
+    position: relative;
+    display: block;
+    padding: $vape-space-3 0 !important;   // yatay padding YOK, aralık gap'ten
+    color: $vape-hdr-link-color;
+    font-size: $vape-hdr-link-size;
+    font-weight: $vape-hdr-link-weight;
+    letter-spacing: $vape-hdr-link-tracking;
+    white-space: nowrap;
+    transition: color $vape-hdr-transition;
+
+    // Bootstrap dropdown oku — mega menü hover ile açılıyor, ok gereksiz
+    &.dropdown-toggle::before,
+    &.dropdown-toggle::after {
+        display: none;
+    }
+
+    .main-navigation-link-text {
+        display: inline-block;
+        // ⚠️ Alt çizginin kaynağı core `_main-navigation.scss`teki
+        //    `border-bottom` — pseudo-element DEĞİL. Kapatılmazsa
+        //    aktif linkte istenmeyen çizgi kalır.
+        border-bottom: 0 !important;
+    }
+
+    // Aktif/hover göstergesi: ince kırmızı alt vurgu (çizgi değil, vurgu)
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 6px;
+        height: $vape-hdr-underline-h;
+        background-color: $vape-brand;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform $vape-hdr-transition;
+    }
+
+    &:hover,
+    &:focus-visible,
+    &.active {
+        color: $vape-hdr-link-color-hover;
+
+        &::after {
+            transform: scaleX(1);
+        }
+    }
+
+    // Bootstrap'in aktif rengi bizimkinden özgül — aynı özgüllükle geri al
+    .navbar-nav &.active {
+        color: $vape-hdr-link-color-hover;
+    }
+}
+
+// ---------- SAĞ: ikonlar ----------
+.vape-hdr__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: $vape-hdr-icon-gap;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.vape-hdr__icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-width: $vape-touch-min;
+    min-height: $vape-touch-min;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: $vape-neutral-800;
+    transition: color $vape-hdr-transition;
+
+    &:hover,
+    &:focus-visible {
+        color: $vape-brand;
+    }
+
+    .icon {
+        width: $vape-header-icon-size;
+        height: $vape-header-icon-size;
+        margin: 0;   // base.scss global `.icon { margin-bottom: 5px }` ezilir
+    }
+
+    svg {
+        width: $vape-header-icon-size;
+        height: $vape-header-icon-size;
+    }
+}
+
+// Sepet tutarı ikonun yanında — küçük ve sakin
+.vape-hdr__actions {
+    .header-cart-total {
+        font-size: $vape-text-sm;
+        font-weight: $vape-weight-semibold;
+        color: $vape-neutral-800;
+        margin-left: $vape-space-1;
+
+        @media (max-width: 575.98px) {
+            display: none;   // dar ekranda yalnızca ikon
+        }
+    }
+}
+
+// ---------- Arama paneli ----------
+// İkon tıklanınca açılır; header'ın altında tam genişlik.
+.vape-hdr__search-panel {
+    // Core `.collapse` mekanizması korunuyor; panel kapalıyken yer kaplamaz
+    .collapse:not(.show) {
+        display: none;
+    }
+
+    .header-search,
+    .header-search-form {
+        padding: 0 $vape-hdr-pad-x $vape-space-5;
+
+        @media (min-width: 1600px) {
+            padding-inline: $vape-hdr-pad-x-wide;
+        }
+    }
+
+    .form-control,
+    .header-search-input {
+        min-height: 52px;
+        border-radius: $vape-radius-md;
+        border-color: $vape-hdr-border;
+        font-size: $vape-text-md;
+
+        &:focus {
+            border-color: $vape-brand;
+            box-shadow: 0 0 0 3px rgba($vape-red-500, 0.12);
+        }
+    }
+}
+
+// ---------- Sticky davranışı ----------
+// Kaydırınca header incelir ve altında yumuşak gölge belirir ("yüzen" his).
+.is--header-sticky {
+    .vape-hdr__inner {
+        min-height: $vape-hdr-height-sticky;
+    }
+
+    .vape-hdr__logo img,
+    .vape-hdr__logo svg {
+        max-width: $vape-hdr-logo-w-sticky;
+    }
+
+    .vape-hdr {
+        box-shadow: $vape-hdr-shadow-sticky;
+    }
+}
+
+// ---------- Mobil ----------
+@media (max-width: 991.98px) {
+    // Logo mobilde sola yapışmasın, burger ile arası açılsın
+    .vape-hdr__left {
+        gap: $vape-space-3;
+        // ⚠️ Mobilde sol blok `flex: 1 1 0` ile büyüyüp ikonları sağa
+        //    itiyordu; logo ile ikonlar arası kapanıyordu (ekran
+        //    görüntüsünde görüldü). İçeriği kadar kalsın.
+        flex: 0 1 auto;
+    }
+
+    .vape-hdr__inner {
+        padding-inline: $vape-space-4;
+        gap: $vape-space-2;
+    }
+
+    // İkon bloğu kalan alanı alır ve sağa yaslanır
+    .vape-hdr__actions {
+        flex: 1 1 auto;
+    }
+
+    // Logo mobilde daha küçük — ikonlara nefes payı bırakır
+    .vape-hdr__logo img,
+    .vape-hdr__logo svg {
+        max-width: 132px;
+    }
+}
+
+// ---------- Promosyon rozetleri (AKTIONEN / SALE / OUTLET) ----------
+// ⚠️ Eski düzende bunlar `position: absolute` ile şeridin SAĞ kenarına
+//    yaslanıyordu (kategoriler ortalanabilsin diye). Tek satır düzeninde
+//    bu YIKICI: ölçümde rozetler (1633–1856) sağdaki ikonların
+//    (1544–1888) tam üstüne biniyordu — ekran görüntüsünde de görüldü.
+//    Artık menü akışının doğal parçası: son öğeler olarak sırada dururlar.
+.vape-hdr__navrow .vape-nav-badges {
+    position: static;
+    display: flex;
+    align-items: center;
+    inset: auto;
+    margin-left: $vape-space-3;
+}
+
+.vape-hdr__navrow .vape-nav-badges__list {
+    display: flex;
+    align-items: center;
+    gap: $vape-space-2;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+// Rozet görünümü: dolgulu değil, ince çerçeveli — tek satırda dolgu
+// üç kırmızı leke yaratıyordu, şerit yokken fazla ağır duruyor.
+.vape-hdr__navrow .vape-nav-badges .main-navigation-link {
+    padding: 0 !important;
+
+    .main-navigation-link-text {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: $vape-radius-sm;
+        background-color: $vape-brand;
+        color: $vape-neutral-white;
+        font-size: 11px;
+        font-weight: $vape-weight-bold;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    // Alt vurgu çizgisi rozetlerde anlamsız
+    &::after {
+        display: none;
+    }
+
+    &:hover .main-navigation-link-text,
+    &:focus-visible .main-navigation-link-text {
+        background-color: $vape-red-600;
+    }
+}
+
+// OUTLET ikincil seviye — dolgu yerine çerçeve (hiyerarşi)
+.vape-hdr__navrow .vape-nav-badges [title="Outlet" i] .main-navigation-link-text {
+    background-color: transparent;
+    border: 1px solid $vape-brand;
+    color: $vape-brand;
+}
+
+.vape-hdr__navrow .vape-nav-badges [title="Outlet" i]:hover .main-navigation-link-text {
+    background-color: $vape-brand;
+    color: $vape-neutral-white;
+}
+
+// ==================================================
+// ESKİ ÜÇ-ŞERİT KURALLARINI ETKİSİZLEŞTİR
+// ==================================================
+// `_header.scss` koyu antrasit `.nav-main` şeridini çiziyordu. Nav artık
+// header satırının içinde; dıştaki şerit hiç render edilmiyor ama kuralları
+// hâlâ dosyada. Yanlışlıkla devreye girmesin diye açıkça kapatılıyor.
+.nav-main {
+    display: none;
+}
+
+// Eski header sarmalayıcısının dikey padding'i tek satırda fazla
+.header-main {
+    padding: 0;
+    border-bottom: 0;
+}

@@ -1,17 +1,28 @@
 {#
-    Header wrapper override.
+    Header sarmalayıcı.
 
-    Core `base_header_inner`'ı dar bir `.container` (Bootstrap ~1320px) ile
-    sarıyordu; bu yüzden hem USP şeridinin siyah zemini hem ana header satırı
-    dar bir kutuda sıkışıp geniş ekranlarda sağda kocaman boşluk bırakıyordu.
+    ⚠️ YENİDEN TASARIM (2026-08-11): ÜÇ ŞERİT → TEK SATIR.
 
-    Burada `.container`'ı KALDIRIYORUZ. USP şeridi kendi tam-genişlik zeminini
-    çizer (siyah kenardan kenara), ana satır ise `.vape-header__inner` ile
-    tam genişlikte kenar paylarıyla hizalanır. İç hizalama artık SCSS'in işi,
-    core grid'inin değil.
+    Eski hal ölçüldü (1920px): gri USP şeridi 37px + beyaz logo satırı 128px
+    + koyu antrasit menü şeridi 44px = 171px. Koyu şerit sayfayı ikiye
+    bölüyor, logo geniş boşlukta yüzüyor, arama solda dengesiz duruyordu.
+
+    Yeni yapı: logo SOL · kategori menüsü ORTA · ikonlar SAĞ — hepsi tek
+    beyaz satırda. Arama ikona indi (tıklayınca panel açılır), satırı
+    serbestleştiren şey bu oldu.
+
+    ⚠️ `base_navigation` bloğu BOŞALTILIYOR — nav artık header satırının
+       İÇİNDE render ediliyor (header/header.html.twig içinde). Burada
+       bırakılsaydı menü ikinci bir şerit olarak tekrar basılırdı.
+
+    USP şeridi korunuyor ama ince ve sakin: `theme.json`'dan kapatılabilir
+    olduğu için içerik yöneticisinin elinde kalıyor.
 #}
 {% sw_extends '@Storefront/storefront/layout/header.html.twig' %}
 
 {% block base_header_inner %}
     {% sw_include '@Storefront/storefront/layout/header/header.html.twig' %}
 {% endblock %}
+
+{# Nav header satırının içine taşındı — burada tekrar basılmamalı. #}
+{% block base_navigation %}{% endblock %}

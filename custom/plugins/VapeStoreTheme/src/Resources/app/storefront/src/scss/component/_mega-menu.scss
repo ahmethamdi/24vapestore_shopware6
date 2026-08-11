@@ -1,0 +1,250 @@
+// ==================================================
+// EDİTORYAL MEGA MENÜ (2026-08-11 yeniden tasarım)
+//
+// Eski hal ÖLÇÜLDÜ: 856px yükseklik, 32 sütun, 7'si TAMAMEN BOŞ, 0 görsel.
+// "Minimalist" diye tüm görsel çıpalar sökülmüştü → sade değil ÇIPLAK bir
+// liste kalmış, panel ekranın yarısını kaplıyordu.
+//
+// Yeni yapı: [ Kategorien | Marken (sınırlı) | görsel panel ]
+// Yükseklik 856px → max 460px.
+//
+// ⚠️ 6.7 tuzağı: panel kapsayıcısı `.navigation-flyout` DEĞİL, Bootstrap'in
+//    `.dropdown-menu`'sü. Yanlış selector = stiller sessizce uygulanmaz.
+// ==================================================
+
+.main-navigation-menu .dropdown-menu {
+    // Tam genişlik panel — header satırının altına yapışır
+    left: 0;
+    right: 0;
+    width: auto;
+    margin: 0;
+
+    padding: $vape-mega-pad-y $vape-mega-pad-x !important;
+    border: 0;
+    border-top: 1px solid $vape-hdr-border;
+    border-radius: $vape-mega-radius;
+    box-shadow: $vape-mega-shadow;
+    background-color: $vape-bg-page;
+
+    // Sayfa içeriğinin ve PLP sticky sıralama barının (z-sticky 1020) üstünde
+    z-index: $vape-z-fixed;
+
+    // ⚠️ Sınır `vh` DEĞİL — panel header'ın altında başlar, `85vh` gibi bir
+    //    değer ekranın dışına taşar ve kaydırma sonuna ULAŞILAMAZ.
+    //    Editoryal düzende zaten kısa; bu bir güvenlik ağı.
+    max-height: $vape-mega-max-h;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+
+// ---------- Izgara ----------
+.vape-mega {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $vape-mega-col-gap;
+    align-items: start;
+
+    // Görsel panel varsa sağda sabit genişlikte sütun açılır
+    &--with-promo {
+        grid-template-columns: 1fr $vape-mega-promo-w;
+    }
+
+    @media (max-width: 1199.98px) {
+        grid-template-columns: 1fr;
+
+        &--with-promo {
+            grid-template-columns: 1fr;
+
+            // Dar ekranda vitrin gizlenir — liste gezinme için daha kritik
+            .vape-mega__promo {
+                display: none;
+            }
+        }
+    }
+}
+
+.vape-mega__col {
+    min-width: 0;
+}
+
+// ---------- Sütun etiketi ----------
+// Küçük, harf aralıklı, sakin — editoryal dilin taşıyıcısı.
+.vape-mega__eyebrow {
+    margin: 0 0 $vape-space-4;
+    font-size: $vape-mega-eyebrow-size;
+    font-weight: $vape-weight-semibold;
+    letter-spacing: $vape-mega-eyebrow-tracking;
+    text-transform: uppercase;
+    color: $vape-mega-eyebrow-color;
+}
+
+// ---------- Listeler ----------
+.vape-mega__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: $vape-mega-link-gap;
+
+    // Marka listesi kolonlara yayılır — dikey uzamayı kırar.
+    // 14 öğe / 4 kolon ≈ 4 satır → panel kısa kalır.
+    &--brands {
+        @media (min-width: 992px) {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: $vape-mega-link-gap $vape-mega-col-gap;
+        }
+
+        @media (min-width: 1400px) {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+}
+
+.vape-mega__link {
+    display: inline-block;
+    color: $vape-mega-link-color;
+    font-size: $vape-mega-link-size;
+    line-height: $vape-leading-snug;
+    text-decoration: none;
+    transition: color $vape-duration-fast $vape-ease-out;
+
+    &:hover,
+    &:focus-visible {
+        color: $vape-mega-link-hover;
+    }
+}
+
+// "Alle Marken →" — listeden ayrışan eylem linki
+.vape-mega__more {
+    display: inline-flex;
+    align-items: center;
+    gap: $vape-space-1;
+    margin-top: $vape-space-4;
+    color: $vape-text-heading;
+    font-size: $vape-text-sm;
+    font-weight: $vape-weight-semibold;
+    text-decoration: none;
+
+    span {
+        transition: transform $vape-duration-fast $vape-ease-out;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: $vape-brand;
+
+        span {
+            transform: translateX(3px);
+        }
+    }
+}
+
+// ---------- Editoryal görsel panel ----------
+.vape-mega__promo {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: $vape-mega-promo-radius;
+    text-decoration: none;
+    background-color: $vape-neutral-100;
+}
+
+.vape-mega__promo-media {
+    display: block;
+    aspect-ratio: $vape-mega-promo-ratio;
+    overflow: hidden;
+
+    // Görselin üstüne okunabilirlik katmanı — beyaz metin her görselde okunur
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: $vape-mega-promo-scrim;
+    }
+}
+
+.vape-mega__promo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms $vape-ease-out;
+
+    .vape-mega__promo:hover & {
+        transform: scale(1.04);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+
+        .vape-mega__promo:hover & {
+            transform: none;
+        }
+    }
+}
+
+.vape-mega__promo-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $vape-space-1;
+    padding: $vape-space-5;
+}
+
+.vape-mega__promo-title {
+    color: $vape-neutral-white;
+    font-size: $vape-mega-promo-title;
+    font-weight: $vape-weight-bold;
+    line-height: $vape-leading-snug;
+}
+
+.vape-mega__promo-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: $vape-space-1;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: $vape-text-sm;
+    font-weight: $vape-weight-semibold;
+
+    span {
+        transition: transform $vape-duration-fast $vape-ease-out;
+    }
+
+    .vape-mega__promo:hover & span {
+        transform: translateX(3px);
+    }
+}
+
+// ---------- Kapatma butonu ----------
+.vape-mega__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0.5;
+
+    &:hover,
+    &:focus-visible {
+        opacity: 1;
+    }
+}
+
+// ==================================================
+// ESKİ MEGA MENÜ KURALLARINI ETKİSİZLEŞTİR
+// ==================================================
+// `_header.scss` içindeki eski sütun/thumbnail kuralları artık kullanılmayan
+// markup'ı hedefliyor (core'un `categories.html.twig` çıktısı). Editoryal
+// düzen kendi markup'ını basıyor; eski kurallar yanlışlıkla eşleşmesin.
+.main-navigation-menu .dropdown-menu {
+    .navigation-flyout-categories,
+    .navigation-flyout-content,
+    .navigation-flyout-bar {
+        display: none;
+    }
+}

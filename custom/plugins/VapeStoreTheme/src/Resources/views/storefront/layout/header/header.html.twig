@@ -1,122 +1,124 @@
 {#
-    Header ana satırı.
+    Header ana satırı — TEK SATIR düzeni.
 
-    Düzen (2026-07-23, kullanıcı isteği): ARAMA sol · LOGO orta · AKSİYON sağ.
-    Logo görsel merkez, arama en solda, hesap/sepet sağda. Simetrik.
+    ⚠️ YENİDEN TASARIM (2026-08-11). Eski düzen "arama sol · logo orta ·
+    aksiyon sağ" idi ve altında AYRI bir koyu menü şeridi vardı (toplam
+    171px, ölçüldü). Koyu şerit sayfayı ikiye bölüyordu.
 
-    Core'un Bootstrap grid düzeni yerine flexbox kullanıyoruz — üç bölgeyi
-    (sol/orta/sağ) net konumlandırmak için. Logonun gerçekten ortalanması
-    için sol ve sağ bölgeler EŞİT esneklikte (flex: 1) tutulur; logo
-    flex: 0 0 auto ile ortada sabit kalır.
+    Yeni düzen:  LOGO sol  ·  KATEGORİ MENÜSÜ orta  ·  İKONLAR sağ
+    Hepsi tek beyaz satırda (~72px). Arama artık ikon — tıklayınca
+    açılan panel. Satırı serbestleştiren şey bu oldu: arama kutusu
+    yatayda ~400px yiyordu ve menüye yer bırakmıyordu.
 
-    `.vape-header__inner` kendi tam-genişlik sarmalayıcısıdır: core'un dar
-    `.container`'ına (Bootstrap ~1320px) bağımlı DEĞİL, sayfanın tamamını
-    kenar paylarıyla kullanır. Header'ın dar bir kutuda sıkışıp sağda kocaman
-    boşluk bırakması bu yüzden çözüldü.
+    ⚠️ Nav BURADA render ediliyor (`layout/header.html.twig` içindeki
+       `base_navigation` bloğu bilerek boşaltıldı). İki yerde birden
+       basılırsa menü iki kez görünür.
 
-    Core'un widget include'ları (sepet/hesap/istek listesi) korunuyor;
-    yalnızca sarmalayıcı yapı ve sınıflar değişiyor.
+    ⚠️ Mega menü panelinin konumlanması `.navbar`a bağlı — bu yüzden nav
+       sarmalayıcısı `position: relative` olan tek öğe olmalı. Menü listesine
+       (`ul`) relative VERİLMEZ: 44px yüksekliğinde ve `overflow:auto`,
+       panel içine hapsolup görünmez olur (bir kez yaşandı).
 #}
 {% sw_extends '@Storefront/storefront/layout/header/header.html.twig' %}
 
 {% block layout_header_navigation %}
-    <div class="vape-header__inner">
-        <div class="vape-header__row">
+    <div class="vape-hdr">
+        <div class="vape-hdr__inner">
 
-            {# ========== SOL: mobil menü + arama ========== #}
-            <div class="vape-header__left">
-
-                {# mobil: menü butonu #}
+            {# ========== SOL: mobil menü butonu + logo ========== #}
+            <div class="vape-hdr__left">
                 {% block layout_header_navigation_toggle %}
-                    <div class="vape-header__burger d-lg-none">
-                        <button class="btn vape-header__icon-btn"
-                                type="button"
-                                data-off-canvas-menu="true"
-                                aria-label="{{ 'general.menuLink'|trans|striptags }}">
-                            {% sw_icon 'stack' %}
-                        </button>
-                    </div>
+                    <button class="btn vape-hdr__icon-btn vape-hdr__burger d-lg-none"
+                            type="button"
+                            data-off-canvas-menu="true"
+                            aria-label="{{ 'general.menuLink'|trans|striptags }}">
+                        {% sw_icon 'stack' %}
+                    </button>
                 {% endblock %}
 
-                {# arama — masaüstünde solda geniş #}
-                {% block layout_header_search %}
-                    <div class="vape-header__search">
-                        {% sw_include '@Storefront/storefront/layout/header/search.html.twig' %}
+                {% block layout_header_logo %}
+                    <div class="vape-hdr__logo">
+                        {% sw_include '@Storefront/storefront/layout/header/logo.html.twig' %}
                     </div>
                 {% endblock %}
             </div>
 
-            {# ========== ORTA: logo ========== #}
-            {% block layout_header_logo %}
-                <div class="vape-header__logo">
-                    {% sw_include '@Storefront/storefront/layout/header/logo.html.twig' %}
-                </div>
-            {% endblock %}
-
-            {# ========== SAĞ: aksiyonlar ========== #}
+            {# ========== SAĞ: arama + hesap + sepet ========== #}
             {% block layout_header_actions %}
-                <div class="vape-header__actions">
+                <div class="vape-hdr__actions">
 
+                    {# Arama: ikon → panel. Core'un collapse mekanizması korunuyor. #}
                     {% block layout_header_search_toggle %}
-                        <div class="vape-header__action d-lg-none">
-                            <button class="btn vape-header__icon-btn js-search-toggle-btn collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#searchCollapse"
-                                    aria-expanded="false"
-                                    aria-controls="searchCollapse"
-                                    aria-label="{{ 'header.searchButton'|trans|striptags }}">
-                                {% sw_icon 'search' %}
-                            </button>
-                        </div>
+                        <button class="btn vape-hdr__icon-btn js-search-toggle-btn collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#searchCollapse"
+                                aria-expanded="false"
+                                aria-controls="searchCollapse"
+                                aria-label="{{ 'header.searchButton'|trans|striptags }}">
+                            {% sw_icon 'search' %}
+                        </button>
                     {% endblock %}
 
                     {% if config('core.cart.wishlistEnabled') %}
                         {% block layout_header_actions_wishlist %}
-                            <div class="vape-header__action">
-                                <a class="btn vape-header__icon-btn"
-                                   href="{{ path('frontend.wishlist.page') }}"
-                                   title="{{ 'header.wishlist'|trans|striptags }}"
-                                   aria-labelledby="wishlist-basket-live-area">
-                                    {% sw_include '@Storefront/storefront/layout/header/actions/wishlist-widget.html.twig' %}
-                                    <span class="vape-header__icon-label d-none d-xl-inline">
-                                        {{ 'header.wishlist'|trans|striptags }}
-                                    </span>
-                                </a>
-                            </div>
+                            <a class="btn vape-hdr__icon-btn"
+                               href="{{ path('frontend.wishlist.page') }}"
+                               title="{{ 'header.wishlist'|trans|striptags }}"
+                               aria-labelledby="wishlist-basket-live-area">
+                                {% sw_include '@Storefront/storefront/layout/header/actions/wishlist-widget.html.twig' %}
+                            </a>
                         {% endblock %}
                     {% endif %}
 
                     {% block layout_header_actions_account %}
-                        <div class="vape-header__action">
-                            <div class="account-menu">
-                                {% sw_include '@Storefront/storefront/layout/header/actions/account-widget.html.twig' %}
-                            </div>
+                        <div class="account-menu vape-hdr__action">
+                            {% sw_include '@Storefront/storefront/layout/header/actions/account-widget.html.twig' %}
                         </div>
                     {% endblock %}
 
                     {% set offcanvasCartOptions = { autoFocus: true } %}
 
                     {% block layout_header_actions_cart %}
-                        <div class="vape-header__action">
-                            <div class="header-cart"
-                                 data-off-canvas-cart="true"
-                                 data-off-canvas-cart-options="{{ offcanvasCartOptions|json_encode }}">
-                                <a class="btn vape-header__icon-btn vape-header__icon-btn--cart"
-                                   href="{{ path('frontend.checkout.cart.page') }}"
-                                   data-cart-widget="true"
-                                   title="{{ 'checkout.cartTitle'|trans|striptags }}"
-                                   aria-labelledby="cart-widget-aria-label"
-                                   aria-haspopup="dialog">
-                                    {% sw_include '@Storefront/storefront/layout/header/actions/cart-widget.html.twig' %}
-                                </a>
-                            </div>
+                        <div class="header-cart vape-hdr__action"
+                             data-off-canvas-cart="true"
+                             data-off-canvas-cart-options="{{ offcanvasCartOptions|json_encode }}">
+                            <a class="btn vape-hdr__icon-btn vape-hdr__icon-btn--cart"
+                               href="{{ path('frontend.checkout.cart.page') }}"
+                               data-cart-widget="true"
+                               title="{{ 'checkout.cartTitle'|trans|striptags }}"
+                               aria-labelledby="cart-widget-aria-label"
+                               aria-haspopup="dialog">
+                                {% sw_include '@Storefront/storefront/layout/header/actions/cart-widget.html.twig' %}
+                            </a>
                         </div>
                     {% endblock %}
 
                 </div>
             {% endblock %}
 
+        </div>
+
+        {# Arama paneli — ikon tıklanınca açılır, tam genişlik #}
+        {% block layout_header_search %}
+            <div class="vape-hdr__search-panel">
+                {% sw_include '@Storefront/storefront/layout/header/search.html.twig' %}
+            </div>
+        {% endblock %}
+
+        {#
+            Kategori menüsü — KENDİ SATIRINDA, header'ın altında.
+
+            ⚠️ Önce tek satıra (logo·menü·ikon yan yana) alınmıştı; 13 kategori
+            1920px'te bile sığmıyordu, sıkışık duruyordu. Menü alta indi AMA
+            eski koyu antrasit şerit GERİ GELMEDİ: zemin beyaz, yalnızca ince
+            bir ayraç çizgisi var. Böylece hem menü rahat nefes alıyor hem
+            header'ın ferah/modern dili korunuyor.
+        #}
+        <div class="vape-hdr__navrow d-none d-lg-block">
+            <div class="vape-hdr__navrow-inner">
+                {% sw_include '@Storefront/storefront/layout/navbar/navbar.html.twig' with { header: header } %}
+            </div>
         </div>
     </div>
 {% endblock %}
