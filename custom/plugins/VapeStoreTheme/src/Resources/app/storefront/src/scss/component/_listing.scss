@@ -417,7 +417,10 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
         margin-bottom: $vape-plp-actions-mb;
         padding: $vape-plp-actions-pad-y $vape-plp-actions-pad-x;
         background-color: $vape-plp-actions-bg;
-        border: 1px solid $vape-plp-actions-border;
+        // ⚠️ TAM ÇERÇEVE DEĞİL, yalnızca alt çizgi. Bar artık düz (beyaz
+        //    kart değil); dört yanı çerçevelemek onu tekrar "kutu" yapardı.
+        border: 0;
+        border-bottom: 1px solid $vape-plp-actions-border;
         border-radius: $vape-plp-actions-radius;
         box-shadow: $vape-plp-actions-shadow;
 
@@ -432,6 +435,11 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
             position: sticky;
             top: calc(#{$vape-plp-actions-sticky-top} + #{$vape-plp-actions-sticky-gap});
             z-index: $vape-z-sticky;
+
+            // ⚠️ Bar ŞEFFAF olduğu için yapıştığında altından geçen ürün
+            //    kartları içinden görünürdü. Sayfa rengiyle dolduruyoruz —
+            //    beyaz kart görünümüne dönmeden okunabilirlik korunur.
+            background-color: $vape-plp-page-bg;
         }
     }
 
@@ -440,12 +448,31 @@ Token: abstract/_tokens.scss §24. Magic px/hex YOK.
     // `col-sm-6 col-lg-4 col-xl-3` (4'lü). Sidebar yer kapladığı için ≥lg'de
     // 3'lü, ≥xxl'de 4'lü olması daha dengeli. Bootstrap col genişliklerini
     // burada override ediyoruz (twig'e dokunmadan).
+    // ⚠️ SÜTUN ve SATIR boşluğu EŞİT olmalı. Önce yalnızca `row-gap`
+    //    ayarlıydı (20/24px); sütun boşluğu Bootstrap gutter'ından geliyordu
+    //    (`--bs-gutter-x: 24px` → 12px×2). Yani yatayda 24, dikeyde 20px:
+    //    eşit olmayan boşluk bir ızgarayı "bitmemiş" gösteren en güvenilir
+    //    işaretlerden biri. Gutter'ı token'a bağlayıp ikisini eşitliyoruz.
     .cms-listing-row {
+        --bs-gutter-x: #{$vape-plp-grid-gap};
         row-gap: $vape-plp-grid-gap;
 
         @media (min-width: 768px) {
+            --bs-gutter-x: #{$vape-plp-grid-gap-md};
             row-gap: $vape-plp-grid-gap-md;
         }
+    }
+
+    // ⚠️ WCAG 2.2 SC 2.4.11 (Focus Not Obscured). Sayfada İKİ sticky katman
+    //    var: header rayı (~57px) + aksiyon barı (~65px). Klavyeyle kartlar
+    //    arasında gezerken tarayıcı odaklanan kartı viewport'un tepesine
+    //    kaydırıyor ve kart bu iki şeridin ARKASINDA kalıyordu.
+    //    `scroll-margin-top` kaydırmayı şeritlerin altında durduruyor.
+    .cms-listing-col,
+    .cms-listing-col :focus-visible {
+        scroll-margin-top: calc(
+            #{$vape-plp-actions-sticky-top} + #{$vape-plp-actions-sticky-gap} + 72px
+        );
     }
 
     .cms-listing-col {

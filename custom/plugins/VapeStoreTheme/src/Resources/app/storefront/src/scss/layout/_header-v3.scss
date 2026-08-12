@@ -343,7 +343,15 @@
     //    çıkar (ölçüldü: scrollY=900'de railTop=-800).
     position: sticky;
     top: 0;
-    z-index: $vape-z-sticky;
+    // ⚠️ `$vape-z-sticky` (1020) İDİ ve mega menüyü PLP'de kırpıyordu.
+    //    Sebep İSTİFLEME BAĞLAMI: mega menü paneli bu ray'in İÇİNDE.
+    //    Panelin kendi z-index'i 1030 olsa da, ray 1020'de bir bağlam
+    //    açtığı için panel o bağlamın içinde kalıyor ve PLP'nin sıralama
+    //    barı (o da sticky, 1020, ama DAHA SONRA geliyor) panelin üstüne
+    //    biniyordu. Ölçüm yanıltıcıydı: panel z=1030 diyordu ama ekranda
+    //    barın altında kalıyordu.
+    //    Ray'i bir kademe yukarı alınca bağlamın tamamı barın üstünde.
+    z-index: $vape-z-fixed;
 
     // Marka satırından TON ile ayrılır, çizgi ile değil (%1.2 luminans).
     background-color: $vape-h3-rail-bg;

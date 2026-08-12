@@ -331,7 +331,12 @@ $vape-pcard-lift:             -4px;
 
 // Fiyat bloğu: indirim/indirimsiz kartlar aynı y'de kalsın diye rezerve yükseklik.
 // İndirimli kartta "eski fiyat + %X saved" satırı; indirimsizde boş ama yer korunur.
-$vape-pcard-price-min-height: 44px;                              // fiyat + list-price satırı
+// ⚠️ 44px idi. KDV notu 12→10px'e inip tek satıra sığınca bu rezerv de
+//    daralabildi. Rezerv KASITLI: indirimsiz kartta "tasarruf" satırı
+//    olmadığı için boşluk ayrılmazsa CTA yukarı kayar ve kartlar
+//    hizasız durur (bu tuzak bir kez yaşandı — çözüm flex:0 DEĞİL,
+//    min-height rezervi).
+$vape-pcard-price-min-height: 38px;                              // fiyat + list-price satırı
 $vape-pcard-price-color:      $vape-price;                       // nötr koyu (indirimsiz)
 $vape-pcard-price-sale-color: $vape-price-sale;                  // kırmızı (indirimli)
 $vape-pcard-price-size:       $vape-text-lg;                     // 18px — fiyat vurgusu
@@ -1632,8 +1637,10 @@ $vape-footer-pay-logo-h:         18px;                     // çip içi logo yü
 // ==================================================
 
 // ---------- iki sütun düzeni (≥lg) ----------
-$vape-plp-sidebar-width:        264px;              // sol filtre sütunu sabit genişliği (≥lg)
-$vape-plp-sidebar-width-xxl:    288px;              // ≥1400px biraz daha geniş
+// ⚠️ 264/288px idi. Sidebar kart dolgusu (20px×2) kalkınca aynı metin genişliği
+//    daha dar sütunda sığıyor; kazanılan 24px ürün ızgarasına gidiyor.
+$vape-plp-sidebar-width:        240px;              // sol filtre sütunu sabit genişliği (≥lg)
+$vape-plp-sidebar-width-xxl:    264px;              // ≥1400px biraz daha geniş
 $vape-plp-col-gap:              $vape-space-8;       // 32px — sidebar ↔ grid arası
 $vape-plp-col-gap-xxl:          $vape-space-10;      // 40px ≥1400px
 
@@ -1649,18 +1656,30 @@ $vape-plp-col-gap-xxl:          $vape-space-10;      // 40px ≥1400px
 //       şeffaflaştırmadan DAHA ÖZGÜL; oradan ezilemez, kaynağı burası.
 //    Artık sayfa zeminine bağlı: tek yerden değişir.
 $vape-plp-page-bg:              $vape-bg-page;       // PLP zemini = sayfa zemini
-$vape-plp-page-pad-y:           $vape-space-6;       // gri zemin iç dikey nefes (mobil)
-$vape-plp-page-pad-y-lg:        $vape-space-8;       // ≥lg
+// ⚠️ 24/32px idi. ÖLÇÜLDÜ: ilk ürün kartı y=775'te başlıyordu; kategori
+//    görseli kaldırıldıktan sonra bile y≈415 kalıyordu — 1080px'lik ilk
+//    ekranın %26'sı tek bir H1 için harcanıyordu.
+//    Sebep tek bir değer değil, ÜST ÜSTE BİNEN ÜÇ ritim sistemi:
+//    (1) `.cms-page .cms-section` bölüm boşluğu, (2) buradaki PLP dolgusu,
+//    (3) başlık bloğunun kendi alt ritmi. Buradaki katman inceltildi.
+$vape-plp-page-pad-y:           $vape-space-4;       // 16px (mobil)
+$vape-plp-page-pad-y-lg:        $vape-space-4;       // 16px ≥lg
 
-// ---------- sidebar filtre paneli (KART) ----------
-// Çıplak sütun yerine beyaz panel-kart: gri zeminde yüzsün, "filtre paneli"
-// hissi versin (madde 2).
-$vape-plp-sidebar-card-bg:      $vape-bg-surface;    // beyaz
-$vape-plp-sidebar-card-border:  $vape-border-subtle;
-$vape-plp-sidebar-card-radius:  $vape-radius-lg;     // 12px — kart diliyle tutarlı
-$vape-plp-sidebar-card-shadow:  $vape-shadow-soft;   // yumuşak yükseliş
-$vape-plp-sidebar-card-pad-x:   $vape-space-5;       // 20px iç yatay boşluk
-$vape-plp-sidebar-card-pad-y:   $vape-space-4;       // 16px iç dikey boşluk
+// ---------- sidebar filtre paneli (DÜZ, kart DEĞİL) ----------
+// ⚠️ Önce beyaz panel-kart'tı (gölge + kenarlık + 12px radius). Sayfada ÜÇ
+//    ayrı beyaz yüzen yüzey oluyordu: sidebar kartı + aksiyon barı + 24 ürün
+//    kartı. Hepsi aynı yükseklik dilinde olunca hiyerarşi kayboluyor ve sayfa
+//    2010'ların "dashboard" estetiğine düşüyordu.
+//    Artık TEK yükselen yüzey ürün kartı. Sidebar düz zeminde duruyor,
+//    yapısını mevcut grup ayraçları veriyor.
+//    Kontrast korunuyor: neutral-800 #2a2a33 üzerinde #ededed = 11.9:1,
+//    neutral-500 #71717f = 4.6:1 → ikisi de AA.
+$vape-plp-sidebar-card-bg:      transparent;
+$vape-plp-sidebar-card-border:  transparent;
+$vape-plp-sidebar-card-radius:  0;
+$vape-plp-sidebar-card-shadow:  none;
+$vape-plp-sidebar-card-pad-x:   0;                   // düz sütun → iç yatay boşluk yok
+$vape-plp-sidebar-card-pad-y:   0;
 
 // Sticky sidebar üst boşluğu — sticky header yüksekliğinin altına yapışsın ki
 // filtre paneli header'ın arkasına kaymasın (aksiyon barıyla aynı hiza).
@@ -1753,15 +1772,21 @@ $vape-plp-range-unit-pad-x:     $vape-space-1;                // 4px
 $vape-plp-range-input-pad-right: 26px;
 
 // ---------- sağ sütun: sıralama / sonuç barı (STICKY, madde 4) ----------
-$vape-plp-actions-mb:           $vape-space-5;               // bar ↔ grid arası
+$vape-plp-actions-mb:           $vape-space-4;               // bar ↔ grid arası (20→16)
 $vape-plp-actions-pad-y:        $vape-space-3;
 $vape-plp-actions-border:       $vape-border-subtle;         // barın alt çizgisi
-// Sticky aksiyon barı: grid uzunken sıralama hep erişilebilir. Beyaz kart-şerit,
-// gri zeminde yüzer; header sticky yüksekliğinin altına yapışır.
-$vape-plp-actions-bg:           $vape-bg-surface;            // beyaz şerit
-$vape-plp-actions-radius:       $vape-radius-lg;
-$vape-plp-actions-shadow:       $vape-shadow-soft;
-$vape-plp-actions-pad-x:        $vape-space-4;               // şerit iç yatay boşluk
+// ⚠️ Beyaz kart-şeritti (radius + iki katmanlı gölge). Sidebar kartıyla
+//    birlikte sayfada üç ayrı yüzen beyaz yüzey üretiyordu; hiyerarşi
+//    kayboluyordu. Artık DÜZ: zemin sayfa rengiyle aynı, yalnızca alt
+//    çizgi ayırıyor. Tek yükselen yüzey ürün kartı.
+// ⚠️ `pad-x: 0` KASITLI: sayaç metni, sağdaki ilk ürün kartının SOL KENARIYLA
+//    aynı dikey hizada başlamalı. 16px iç boşluk o hizalama çizgisini
+//    kırıyordu — hizalama çizgileri bir düzeni "tasarlanmış" gösteren en
+//    ucuz araçtır.
+$vape-plp-actions-bg:           transparent;
+$vape-plp-actions-radius:       0;
+$vape-plp-actions-shadow:       none;
+$vape-plp-actions-pad-x:        0;
 $vape-plp-actions-sticky-top:   $vape-header-sticky-height;  // header sticky yüksekliği
 $vape-plp-actions-sticky-gap:   $vape-space-2;               // header ile şerit arası nefes
 $vape-plp-actions-count-color:  $vape-text-primary;          // "X Produkte" metni
