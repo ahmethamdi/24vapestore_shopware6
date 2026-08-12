@@ -205,9 +205,19 @@
         margin: 0;   // base.scss global `.icon { margin-bottom: 5px }` ezilir
     }
 
+    // ⚠️ Core `component/_icon.scss:40` her `.icon > svg`ye
+    //    `position: relative; top: 0.25em` veriyor (ikonu metin taban
+    //    çizgisine oturtmak için tasarlanmış eski bir kalıp).
+    //    `align-items: center` ile hizalanan flex kaplarda ikonu aşağı
+    //    kaydırır. Header'daki tüm ikonlar flex-merkezli → nötrleniyor.
+    //    ⚠️ Core'a dokunulmaz, yerel ezme. Global kaldırmak sitedeki
+    //       HER ikonu etkiler — ayrı bir karar.
+    .icon > svg,
     svg {
         width: $vape-h3-icon-size;
         height: $vape-h3-icon-size;
+        top: 0;
+        position: static;
     }
 
     &:hover {
@@ -612,9 +622,22 @@
         margin: 0;   // base.scss global `.icon { margin-bottom: 5px }` ezilir
     }
 
+    // ⚠️ Core `component/_icon.scss:40` her `.icon > svg`ye
+    //    `position: relative; top: 0.25em` veriyor. Bu, ikonun metin
+    //    taban çizgisine oturması için tasarlanmış eski bir kalıp; ama
+    //    `align-items: center` ile hizalanan flex kaplarda ikonu
+    //    aşağı KAYDIRIYOR — promo rozetlerinde ikon metnin altına
+    //    düşüyordu.
+    //    ⚠️ Core'a dokunulmaz; burada YEREL olarak eziliyor.
+    //       Global kaldırmak (`.icon > svg { top: 0 }`) sitedeki HER
+    //       ikonu etkiler (footer, ürün kartı, PDP, checkout, hesap,
+    //       CMS elementleri) — bilinçli bir karar olmadan yapılmamalı.
+    .icon > svg,
     svg {
         width: $vape-h3-promo-icon;
         height: $vape-h3-promo-icon;
+        top: 0;
+        position: static;
     }
 
     // ⚠️ Core sw_icon'ları `fill: currentColor` kullanır; renk link'ten
@@ -824,6 +847,14 @@
 
         &:hover {
             color: $vape-h3-icon-color-hover;
+        }
+
+        // Core'un `top: 0.25em` kaydırması burada da nötrleniyor
+        // (gerekçe: `.vape-h3__icon-btn` içindeki nota bak).
+        .icon > svg,
+        svg {
+            top: 0;
+            position: static;
         }
     }
 }
