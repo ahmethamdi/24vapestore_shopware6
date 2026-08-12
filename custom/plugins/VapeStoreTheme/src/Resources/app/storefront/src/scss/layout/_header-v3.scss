@@ -1,0 +1,840 @@
+// ==================================================
+// HEADER v3 — "Bölünmüş Sticky" (2026-08-11)
+//
+// ⚠️ Bu dosya `_header.scss` ve `_header-v2.scss`ten SONRA yüklenir ve
+//    ikisini de bilinçli olarak ezer. Eski dosyalar silinmedi: içlerinde
+//    hâlâ geçerli parçalar var (offcanvas tetikleyicileri, arama formu
+//    detayları, mobil menü). Çakışan her kural burada AÇIKÇA kapatılıyor.
+//
+// TEŞHİS (iki bağımsız tasarım denetimi aynı noktaya vardı):
+//   v2'de header üç beyaz şeritti ve üçü de aynı 1px $vape-neutral-200
+//   çizgisiyle kapanıyordu. ÖLÇÜLDÜ (1600px viewport):
+//     .vape-usp-bar   h=37   çizgi ↓
+//     .vape-hdr__inner h=72
+//     .vape-hdr__navrow h=48  çizgi ↓
+//     toplam 158px
+//   ~40px'te bir yatay çizgi = tablo/admin paneli grameri. Ayrıca:
+//     • 11/12/13/14px hepsi ağırlık ~500 → skala değil, gürültü
+//     • üç DOLU kırmızı rozet header'ın en gürültülü şeyiydi (logo değil)
+//     • header 1600px viewport'ta 1280px'te kesiliyordu (320px ölü alan)
+//     • rozetler x=1179..1427, kapsayıcı 1280 → 147px TAŞMA (ölçüldü)
+//
+// v3 YAPISI — iki bölge, TEK yapısal çizgi:
+//   1) .vape-h3__brand  100px  beyaz         — kaydırınca gider
+//   2) .vape-h3__rail    56px  #fcfcfd ton   — position: sticky
+//
+// Marka↔ray ayrımı ÇİZGİ ile değil TON ile yapılıyor (%1.2 luminans).
+// Tek 1px çizgi ray satırının ALTINDA.
+// ==================================================
+
+// ---------- Dış kabuk ----------
+.vape-h3 {
+    background-color: $vape-h3-bg;
+
+    // ⚠️ v2'de `.vape-hdr` kendi alt kenarlığını çiziyordu → üçüncü çizgi.
+    //    v3'te dış kabuğun kenarlığı YOK; tek çizgi ray satırının altında.
+    border-bottom: 0;
+
+    // ⚠️ KRİTİK: `display: contents`.
+    //
+    //    `position: sticky` bir öğe YALNIZCA KENDİ EBEVEYNİNİN kutusu
+    //    içinde yapışır. Ray `.vape-h3` (ve onun ebeveyni `.header-main`,
+    //    h=157px) içindeyken, sayfa 900px kaydırıldığında ebeveyn ekrandan
+    //    çıkıyor ve ray onunla birlikte gidiyordu.
+    //
+    //    ÖLÇÜLDÜ (1600×900, scrollY=900):
+    //      railTop = -800  ← yapışmamış, ekranın 800px yukarısında
+    //      headerBottom = -743
+    //
+    //    `display: contents` bu sarmalayıcının kendi kutusunu kaldırır;
+    //    çocukları (marka satırı + ray) doğrudan `.header-main`in
+    //    çocuğuymuş gibi düzenlenir. Aşağıda `.header-main` da aynı
+    //    şekilde açılıyor → ray'in sticky bağlamı `<body>` olur ve
+    //    sayfa boyunca yapışır.
+    //
+    //    ⚠️ `display: contents` öğeyi erişilebilirlik ağacından da
+    //       kaldırır; bu sarmalayıcı salt görsel (rol taşımıyor), sorun
+    //       değil. Rol taşıyan bir öğede KULLANMA.
+    display: contents;
+}
+
+// ⚠️ Core sarmalayıcısı da açılmalı — yoksa sticky bağlamı `.header-main`
+//    kutusunda kalır ve yukarıdaki `display: contents` tek başına yetmez.
+//    `.header-main` v3'te yalnızca bir kapsayıcı: zemin ve kenarlığı
+//    zaten kaldırılmıştı (dosya sonundaki etkisizleştirme bölümü).
+.header-main {
+    display: contents;
+}
+
+// ==================================================
+// 1. MARKA SATIRI
+// ==================================================
+.vape-h3__brand {
+    background-color: $vape-h3-bg;
+}
+
+.vape-h3__brand-inner {
+    display: flex;
+    align-items: center;
+    gap: $vape-space-4;
+    min-height: $vape-h3-brand-h-md;
+
+    // ⚠️ ÖLÇÜLDÜ: v2'de header 1600px viewport'ta 1280px'te kesiliyordu —
+    //    Bootstrap container'ının max-width'ini devralmıştı, sağda 320px
+    //    ölü alan kalıyordu. Kendi genişliğimizi açıkça veriyoruz.
+    max-width: $vape-h3-max-w;
+    margin-inline: auto;
+    padding-inline: $vape-h3-pad-x-sm;
+
+    @media (min-width: 992px) {
+        min-height: $vape-h3-brand-h;
+        padding-inline: $vape-h3-pad-x-md;
+    }
+
+    @media (min-width: 1200px) {
+        padding-inline: $vape-h3-pad-x;
+    }
+}
+
+// ---------- SOL: burger + USP mikro-metni ----------
+// ⚠️ Logo ORTALANMIŞ. Gerçek optik merkez için sol ve sağ blokların EŞİT
+//    esneklikte olması şart (`flex: 1 1 0`); biri içeriği kadar kalırsa
+//    logo o yana kayar.
+.vape-h3__brand-left {
+    display: flex;
+    align-items: center;
+    gap: $vape-space-3;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+// USP mikro-metni — header'daki TEK büyük harf kullanımı.
+// ⚠️ Büyük harf + harf aralığı yalnızca burada meşru: kısa, ikincil,
+//    etiketlediği içerikten bilinçli olarak daha sessiz.
+// ⚠️ `display` BURADA VERİLMEZ. Twig'de `d-none d-lg-flex` var ve bizim
+//    `display: flex` kuralımız onu AYNI ÖZGÜLLÜKTE ama SONRA geldiği için
+//    eziyordu → USP mobilde de render olup 390px ekranda 491px'e taşıyordu
+//    (ölçüldü). Görünürlüğü Bootstrap'e bırakıyoruz, yalnızca iç düzeni
+//    media query içinde veriyoruz.
+.vape-h3__usp {
+    align-items: center;
+    gap: $vape-space-4;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-width: 0;
+}
+
+.vape-h3__usp-item {
+    font-size: $vape-h3-micro-size;
+    font-weight: $vape-h3-micro-weight;
+    letter-spacing: $vape-h3-micro-tracking;
+    text-transform: uppercase;
+    // #71717f beyazda 5.3:1 → AA ✓. ⚠️ neutral-400'e KAYMA: 2.6:1, düşer.
+    color: $vape-h3-micro-color;
+    white-space: nowrap;
+    line-height: 1;
+
+    // İnce ayraç — çizgi değil, nokta. Şerit hissi yaratmaz.
+    + .vape-h3__usp-item::before {
+        content: "·";
+        margin-right: $vape-space-4;
+        color: $vape-neutral-300;
+    }
+}
+
+// ---------- ORTA: logo ----------
+.vape-h3__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+
+    img,
+    svg {
+        display: block;
+        width: auto;
+        max-width: $vape-h3-logo-w-md;
+        max-height: 44px;
+
+        @media (min-width: 1200px) {
+            max-width: $vape-h3-logo-w;
+        }
+    }
+
+    .header-logo-main,
+    .header-logo-main-link {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+}
+
+// ---------- SAĞ: ikonlar ----------
+.vape-h3__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    // ⚠️ 4px: 44px hit alanları neredeyse bitişik → üç ikon TEK kontrol
+    //    grubu olarak okunur. 16–24px aralık verilirse üç ilgisiz buton
+    //    gibi görünürler.
+    gap: $vape-h3-icon-gap;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.vape-h3__icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-width: $vape-h3-icon-hit;
+    min-height: $vape-h3-icon-hit;
+    padding: 0;
+    border: 0;
+    border-radius: $vape-h3-icon-radius;   // yuvarlak kare, daire DEĞİL
+    background: none;
+    color: $vape-h3-icon-color;
+    transition:
+        color $vape-h3-dur-color $vape-h3-ease,
+        background-color $vape-h3-dur-surface $vape-h3-ease;
+
+    .icon {
+        width: $vape-h3-icon-size;
+        height: $vape-h3-icon-size;
+        margin: 0;   // base.scss global `.icon { margin-bottom: 5px }` ezilir
+    }
+
+    svg {
+        width: $vape-h3-icon-size;
+        height: $vape-h3-icon-size;
+    }
+
+    &:hover {
+        color: $vape-h3-icon-color-hover;
+        background-color: $vape-h3-icon-bg-hover;
+    }
+
+    &:active {
+        background-color: $vape-h3-icon-bg-active;
+    }
+
+    // WCAG 2.2 SC 2.4.11 — beyaz zeminde görünür odak halkası
+    &:focus-visible {
+        color: $vape-h3-icon-color-hover;
+        outline: 2px solid $vape-brand;
+        outline-offset: 2px;
+    }
+
+    // ⚠️ hover'da scale/transform YOK. Büyüyen ikon oyun arayüzü okunur;
+    //    bu kategorideki en net "ucuz" işareti.
+}
+
+// ⚠️ Bootstrap'in `d-lg-none` yardımcı sınıfı `.vape-h3__icon-btn`in
+//    `display: inline-flex` kuralını EZEMİYOR (aynı özgüllük, bizimki
+//    sonra geliyor) → burger masaüstünde de görünüyordu (ekran
+//    görüntüsünde yakalandı). Açıkça geri alıyoruz.
+.vape-h3__burger {
+    @media (min-width: 992px) {
+        display: none !important;
+    }
+}
+
+// Sepet tutarı
+.vape-h3__actions .header-cart-total {
+    font-size: $vape-h3-cart-size;
+    font-weight: $vape-h3-cart-weight;
+    color: $vape-neutral-900;
+    margin-left: $vape-space-2;
+    // Sepet güncellenince rakam genişliği zıplamasın
+    font-variant-numeric: tabular-nums;
+
+    @media (max-width: 575.98px) {
+        display: none;
+    }
+}
+
+// Sepet sayacı rozeti — kırmızı DOLGUNUN meşru yeri (durum bilgisi taşır)
+.vape-h3__actions {
+    .header-cart-badge,
+    .badge {
+        width: $vape-h3-badge-size;
+        height: $vape-h3-badge-size;
+        min-width: $vape-h3-badge-size;
+        top: $vape-h3-badge-offset;
+        right: $vape-h3-badge-offset;
+        font-size: $vape-h3-badge-text;
+        line-height: $vape-h3-badge-size;
+        // İkonla üst üste gelince ayrışsın
+        box-shadow: 0 0 0 2px $vape-neutral-white;
+    }
+}
+
+// ==================================================
+// 2. RAY SATIRI — sticky
+// ==================================================
+// ⚠️ Sticky SAF CSS. v2'de JS header'ı ölçüp yüksekliği bir CSS
+//    değişkenine yazıyordu; ölçüm 200ms'lik küçülme animasyonunun
+//    ORTASINDA yapılıyor, nav çok aşağıda başlıyor, arada boşluk
+//    kalıyordu ($vape-header-sticky-height: 67px sabiti o yüzden vardı).
+//    Yapışan öğe artık sabit yükseklikli AYRI bir satır — ölçülecek bir
+//    şey yok, yarış da yok.
+.vape-h3__rail {
+    // ⚠️ Yapışabilmesi için sticky bağlamı `<body>` olmalı. Bunu yukarıdaki
+    //    `.vape-h3 { display: contents }` + `.header-main { display: contents }`
+    //    sağlıyor — ikisi de kaldırılırsa ray ebeveyniyle birlikte ekrandan
+    //    çıkar (ölçüldü: scrollY=900'de railTop=-800).
+    position: sticky;
+    top: 0;
+    z-index: $vape-z-sticky;
+
+    // Marka satırından TON ile ayrılır, çizgi ile değil (%1.2 luminans).
+    background-color: $vape-h3-rail-bg;
+
+    // Header'ın TEK yapısal çizgisi
+    border-bottom: 1px solid $vape-h3-hairline;
+
+    // Yumuşak gölge — "yüzen" his.
+    // ⚠️ CSS'te `:stuck` seçicisi YOK, yani "yapıştı mı" bilgisi JS'siz
+    //    alınamaz. Bu yüzden gölge HER ZAMAN var ama çok hafif: yapışmamış
+    //    haldeyken rahatsız etmiyor, yapışınca yeterli ayrım veriyor.
+    box-shadow: $vape-h3-shadow-stuck;
+
+    // ⚠️ Mega menü paneli BUNA göre konumlanır (position: sticky de
+    //    konumlanma bağlamı kurar). Menü listesine (`ul`) relative
+    //    VERİLMEZ: 44px yüksekliğinde ve `overflow:auto`, panel içine
+    //    hapsolup GÖRÜNMEZ olur (bir kez yaşandı; teşhisi zor çünkü panel
+    //    DOM'da var ve ölçülüyor ama ekranda çizilmiyor).
+}
+
+.vape-h3__rail-inner {
+    display: flex;
+    align-items: center;
+    gap: $vape-h3-gap-rail-search;
+    min-height: $vape-h3-rail-h-md;
+    max-width: $vape-h3-max-w;
+    margin-inline: auto;
+    padding-inline: $vape-h3-pad-x-sm;
+
+    @media (min-width: 992px) {
+        min-height: $vape-h3-rail-h;
+        padding-inline: $vape-h3-pad-x-md;
+    }
+
+    @media (min-width: 1200px) {
+        padding-inline: $vape-h3-pad-x;
+    }
+}
+
+// ---------- Kategori menüsü ----------
+// ⚠️ `display` BURADA VERİLMEZ — twig'deki `d-none d-lg-flex` ezilirdi
+//    (aynı özgüllük, bizimki sonra geliyor) ve kategori menüsü mobilde de
+//    render olurdu. Mobilde menü offcanvas'ta.
+.vape-h3__nav {
+    align-items: center;
+    // Menü kalan alanı alır, arama sabit genişlikte sağda kalır
+    flex: 1 1 auto;
+    // ⚠️ `min-width: 0` ŞART ve zincirin HER halkasında olmalı
+    //    (.vape-h3__nav → .navbar → .navbar-collapse → ul). Bir halkada
+    //    eksikse flex item içeriği kadar büyür, kutusu asla daralmaz ve
+    //    `overflow-x` ölü koda döner: liste aramanın üstüne taşar.
+    //    ÖLÇÜLDÜ (eksikken): rozetler right=1610, arama right=1442.
+    min-width: 0;
+
+    // ⚠️ BURAYA `overflow: hidden` KOYMA. Mega menü paneli (`.dropdown-menu`)
+    //    bu zincirin içinde konumlanıyor; herhangi bir atada `overflow`
+    //    kırpma yaratır ve panel GÖRÜNMEZ olur. Teşhisi zor: panel DOM'da
+    //    var, ölçülüyor, `visibility:visible` diyor — ama ekranda yok.
+    //    (Bu projede bir kez yaşandı, bkz. _header-v2.scss notları.)
+    //    Genişlik sınırı `max-width` ile veriliyor, kırpma ile değil.
+
+    .navbar {
+        position: static;
+        padding: 0;
+        width: auto;
+        min-width: 0;
+        max-width: 100%;
+        flex: 1 1 auto;
+    }
+
+    .navbar-collapse {
+        min-width: 0;
+        max-width: 100%;
+        flex: 1 1 auto;
+    }
+
+    .main-navigation-menu-list {
+        display: flex;
+        align-items: center;
+        gap: $vape-h3-nav-gap;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        min-width: 0;
+        flex-wrap: nowrap;
+
+        // ⚠️ Kaydırma GÜVENLİK AĞI, tasarım değil. Görünür kategori sayısı
+        //    twig'te 9 ile sınırlandığı için normalde hiç devreye girmez;
+        //    çok dar masaüstünde (≈992–1100px) veya uzun çeviride son
+        //    çare olarak kalıyor. Kategorilerin ARAMANIN ALTINA kaçmasını
+        //    engelleyen şey bu (ekran görüntüsünde bir kez yaşandı).
+        overflow-x: auto;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    li {
+        margin: 0;
+    }
+}
+
+// ---------- Menü linkleri ----------
+// ⚠️ DAR MASAÜSTÜNDE KATEGORİ GİZLEME.
+//    Görünür kategori sayısı twig'te SABİT 7 (1600px'e göre ölçülerek
+//    seçildi). 1440 ve 1280px'te bu kadarı sığmıyor:
+//      1440: gereken 949, mevcut 829  → taşıyor
+//      1280: gereken 949, mevcut 669  → taşıyor
+//    Taşınca liste yatay kaydırmaya düşüyor ve kaydırma çubuğu gizli
+//    olduğu için son kategoriler ERİŞİLEMEZ görünüyor.
+//    Twig sayısı sunucu tarafında sabit olduğundan, fazlalığı CSS ile
+//    gizleyip "Mehr"i her zaman görünür bırakıyoruz — "Mehr" paneli
+//    zaten TÜM taşan kategorileri listeliyor, dolayısıyla gizlenen
+//    kategoriye erişim kaybolmuyor.
+//    ⚠️ `.vape-nav-more` ASLA gizlenmemeli (aksi halde gizlenen
+//       kategorilere ulaşılamaz).
+@media (max-width: 1499.98px) {
+    .vape-h3__nav .main-navigation-menu-list > li:nth-child(n + 7):not(.vape-nav-more) {
+        display: none;
+    }
+}
+
+@media (max-width: 1339.98px) {
+    .vape-h3__nav .main-navigation-menu-list > li:nth-child(n + 5):not(.vape-nav-more) {
+        display: none;
+    }
+}
+
+.vape-h3__nav .main-navigation-link {
+    position: relative;
+    display: block;
+    padding: $vape-space-2 0 !important;
+    color: $vape-h3-nav-color;
+    font-size: $vape-h3-nav-size;          // v2: 13px → 14px
+    font-weight: $vape-h3-nav-weight;
+    // ⚠️ v2: 0.01em. Küçük punto KÜÇÜK HARF metinde pozitif harf aralığı
+    //    kelimeyi "gerilmiş" gösterir ve algılanan kaliteyi DÜŞÜRÜR.
+    //    Harf aralığı yalnızca büyük harfte (USP mikro-metni) kullanılır.
+    letter-spacing: $vape-h3-nav-tracking;
+    line-height: 1;
+    white-space: nowrap;
+    transition: color $vape-h3-dur-color $vape-h3-ease;
+
+    // Bootstrap dropdown oku — mega menü hover ile açılıyor, ok gereksiz.
+    // ⚠️ ::before ve ::after İKİSİ de gizlenmeli.
+    &.dropdown-toggle::before,
+    &.dropdown-toggle::after {
+        display: none;
+    }
+
+    .main-navigation-link-text {
+        display: inline-block;
+        // ⚠️ Aktif alt çizginin kaynağı core `_main-navigation.scss`teki
+        //    `border-bottom` — pseudo-element DEĞİL. Kapatılmazsa aktif
+        //    linkte istenmeyen ikinci çizgi kalır.
+        border-bottom: 0 !important;
+    }
+
+    // Alt vurgu: `transform: scaleX()` — `width` DEĞİL.
+    // Width animasyonu compositor'da çalışmaz, 13 öğeli menüde takılır.
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 2px;
+        height: $vape-h3-underline-h;
+        background-color: $vape-h3-underline-active;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform $vape-h3-dur-underline $vape-h3-ease;
+    }
+
+    &:hover,
+    &:focus-visible,
+    &.active {
+        color: $vape-h3-nav-color-hover;
+
+        &::after {
+            transform: scaleX(1);
+        }
+    }
+
+    .navbar-nav &.active {
+        color: $vape-h3-nav-color-hover;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $vape-brand;
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+}
+
+// ---------- Promo linkleri (AKTIONEN / SALE / OUTLET) ----------
+// ⚠️ v2'de üç DOLU kırmızı dikdörtgendi ve header'ın en gürültülü şeyi
+//    onlardı — logo değil. Ayrıca projenin kendi kuralı: "header'a kırmızı
+//    dolgulu kutu koyma" (bir kez sepet CTA'sında yaşandı, geri alındı).
+//    ÖLÇÜLDÜ: rozetler x=1179..1427 iken kapsayıcı 1280px → 147px TAŞMA.
+//
+// v3: dolgu yok, 5px kırmızı NOKTA. Toplam kırmızı alan ~8000px² → ~60px².
+// Kırmızı hâlâ satırdaki tek renk olduğu için en dikkat çekici şey, ama
+// artık blok değil.
+// ⚠️ Promo grubu ÖNCE kategori listesinin içinde bir <li> idi. O liste
+//    `overflow-x: auto` (dar ekranda kategorilere ulaşmak için şart) ve
+//    grup kaydırma alanının DIŞINDA kalıp aramanın üstüne biniyordu.
+//    ÖLÇÜLDÜ: ul w=1044 ama scrollWidth=1478; grup right=1610,
+//    arama right=1442 → 168px çakışma.
+//    `min-width:0` zinciri ÇÖZMEDİ (grup listeye aitti), `overflow:hidden`
+//    de çözüm değil (mega menü panelini kırpar, görünmez yapar).
+//    Çözüm YAPISAL: grup artık listenin KARDEŞİ (header.html.twig).
+// ⚠️ `display` BURADA VERİLMEZ — twig'deki `d-none d-lg-flex` ezilirdi
+//    ve promo linkleri mobilde de görünürdü (ölçüldü: 390px ekranda
+//    ray satırında duruyorlardı, oysa orada arama olmalı).
+.vape-h3__promo {
+    align-items: center;
+    flex: 0 0 auto;
+    // Ayraç — kategoriler ile promo grubu arasında tek ince dikey çizgi
+    padding-left: $vape-h3-gap-nav-promo;
+    border-left: 1px solid $vape-neutral-200;
+}
+
+.vape-h3__promo-list {
+    display: flex;
+    align-items: center;
+    gap: $vape-h3-promo-gap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+// ⚠️ v2'de bunlar üç DOLU kırmızı dikdörtgendi ve header'ın en gürültülü
+//    şeyi onlardı — logo değil. Projenin kendi kuralı da "header'a kırmızı
+//    dolgulu kutu koyma" (bir kez sepet CTA'sında yaşandı, geri alındı).
+// v3: dolgu yok, 5px kırmızı NOKTA. Kırmızı alan ~8000px² → ~60px².
+// Kırmızı hâlâ satırdaki tek renk olduğu için en dikkat çekici şey,
+// ama artık blok değil.
+.vape-h3__promo-link {
+    display: inline-flex;
+    align-items: center;
+    padding: $vape-space-2 0;
+    font-size: $vape-h3-promo-size;
+    font-weight: $vape-h3-promo-weight;
+    // ⚠️ Üç büyük harfli kelime yan yana + kırmızı = sert indirim sinyali
+    //    (Lidl/MediaMarkt), premium değil. Cümle düzeni kullanılıyor.
+    //    Büyük harf yalnızca USP mikro-metninde (header'daki tek yer).
+    //    ⚠️ Kategori adı VERİDE büyük harfse ("SALE") CSS onu küçültemez —
+    //       küçültme twig'te `|lower|capitalize` ile yapılıyor
+    //       (header.html.twig). Burada yalnızca dönüşüm kapatılıyor ki
+    //       core'un veya Bootstrap'in uppercase kuralı sızmasın.
+    text-transform: none;
+    letter-spacing: 0;
+    color: $vape-h3-promo-color;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    transition: color $vape-h3-dur-color $vape-h3-ease;
+
+    // 5px kırmızı nokta — dolgunun yerini alan işaret
+    &::before {
+        content: "";
+        display: inline-block;
+        flex: 0 0 auto;
+        width: $vape-h3-promo-dot;
+        height: $vape-h3-promo-dot;
+        margin-right: $vape-h3-promo-dot-gap;
+        border-radius: 50%;
+        background-color: $vape-brand;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: $vape-brand;
+    }
+
+    &:focus-visible {
+        outline: 2px solid $vape-brand;
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+}
+
+// ⚠️ v2'de OUTLET ayrı stildeydi (çerçeveli, diğer ikisi doluydu).
+//    v3'te üçü BİREBİR AYNI: bunlar bir KÜME. Aralarında hiyerarşi
+//    kurmaya çalışmak v2'deki uyumsuz rozet boyutlarını üretmişti.
+//    Biri ticari olarak daha önemliyse diğer ikisi header'dan çıkmalı.
+
+// ---------- "Mehr" taşma açılırı ----------
+// ⚠️ Ray satırına 13 kategori + 3 promo + arama SIĞMIYOR (ölçüldü: 1588px
+//    gereken, 1376px mevcut). İlk 9 görünür, kalanlar burada.
+//    Yatay kaydırma çözüm değildi: kaydırma çubuğu gizli olduğu için
+//    taşan kategorilerin varlığına dair hiçbir işaret kalmıyordu.
+// ⚠️ Core `.dropdown-menu w-100` tam genişlik veriyor. Mega menüde bu
+//    doğru (marka kolonları + görsel panel doldurur), ama "Mehr"de
+//    yalnızca birkaç kategori var → 1600px panelde sağda kocaman boşluk
+//    kalıyordu (ekran görüntüsünde görüldü: 2 kolon, ~1300px boş).
+//    İçerik kadar genişlet, sola hizala.
+// ⚠️ Seçici `.vape-h3__nav` ile başlıyor: core `.dropdown-menu.w-100`
+//    iki sınıflı, aynı özgüllükte `!important` yarışına giriyordu ve
+//    panel 1600px kalıyordu (ölçüldü). Üç sınıflı seçici net kazanır.
+// ⚠️ Panelin 1600px kalmasının sebebi `w-100` DEĞİLDİ (o markup'tan
+//    çıkarıldı, hiçbir şey değişmedi). Gerçek kaynak
+//    `_mega-menu.scss`teki `.main-navigation-menu .dropdown-menu` kuralı:
+//    `left: 0; right: 0` paneli iki yana geriyor. Mega menüde bu DOĞRU
+//    (tam genişlik editoryal panel), ama "Mehr"de yalnızca birkaç
+//    kategori var → sağda ~1300px boşluk kalıyordu.
+//    `right`i serbest bırakınca kutu içeriği kadar kalır.
+.vape-h3__nav .vape-nav-more .dropdown-menu {
+    right: auto;
+    width: auto;
+    min-width: 320px;
+    max-width: $vape-h3-max-w;
+
+    // ⚠️ <li> core'da `position-static` (mega menünün tam genişlik
+    //    panelini konumlandırabilmek için — kaldırılırsa mega menü
+    //    bozulur). Yan etkisi: dar panel de `.navbar`a göre hizalanır,
+    //    yani ray'in sol kenarından başlar. "Mehr" ile görsel bağı
+    //    panelin hemen altında açılmasıyla kuruluyor.
+    left: 0;
+}
+
+.vape-nav-more__panel {
+    max-width: $vape-h3-max-w;
+}
+
+.vape-nav-more__list {
+    display: grid;
+    // ⚠️ `1fr` KULLANMA — eşit genişlik verdiği için uzun kategori adı
+    //    kolonu şişirir ve sağda kocaman boşluk bırakır (mega menüde bir
+    //    kez yaşandı).
+    grid-template-columns: repeat(auto-fit, minmax(180px, max-content));
+    gap: $vape-space-6 $vape-space-8;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.vape-nav-more__item {
+    min-width: 0;
+}
+
+.vape-nav-more__link {
+    display: block;
+    margin-bottom: $vape-space-2;
+    color: $vape-text-heading;
+    font-size: $vape-text-sm;
+    font-weight: $vape-weight-semibold;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+        color: $vape-brand;
+    }
+}
+
+.vape-nav-more__sublist {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.vape-nav-more__sublink {
+    display: block;
+    padding: 3px 0;
+    color: $vape-text-muted;
+    font-size: $vape-text-xs;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+        color: $vape-text-heading;
+    }
+}
+
+// ---------- Arama (ray satırında, hep görünür) ----------
+.vape-h3__search {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    // ⚠️ Core arama formu `.collapse` içinde gelir ve kapalıyken yüksekliği
+    //    0 kalır. v3'te arama ray satırının KALICI parçası (hem masaüstü
+    //    hem mobil) — collapse mekanizması HER genişlikte etkisiz
+    //    kılınmalı, yoksa alan hiç görünmez.
+    //    ÖLÇÜLDÜ (mobil 390px): arama render olmuyordu, ray boş kalıyordu.
+    .collapse:not(.show) {
+        display: block !important;
+        height: auto !important;
+    }
+
+    .header-search,
+    .header-search-form {
+        padding: 0;
+        margin: 0;
+        width: $vape-h3-search-w;
+        // Odaklanınca genişler — dar durması menüye yer açıyor, ama
+        // yazarken rahat olmalı. `width` layout tetikler; tek öğe ve
+        // kardeşi (menü) esnek olduğu için kabul edilebilir.
+        transition: width $vape-h3-dur-open $vape-h3-ease;
+    }
+
+    .header-search-form:focus-within {
+        width: $vape-h3-search-w-focus;
+    }
+
+    .header-search-form {
+        position: relative;
+    }
+
+    .form-control,
+    .header-search-input {
+        min-height: $vape-h3-search-h;
+        height: $vape-h3-search-h;
+        border-radius: $vape-h3-search-radius;
+        border: 1px solid $vape-h3-search-border;
+        background-color: $vape-h3-search-bg;
+        font-size: $vape-text-sm;
+        padding-block: 0;
+
+        &::placeholder {
+            color: $vape-text-muted;
+        }
+
+        &:focus {
+            border-color: $vape-neutral-900;
+            box-shadow: 0 0 0 3px rgba($vape-red-500, 0.10);
+            outline: none;
+        }
+    }
+
+    .header-search-btn {
+        color: $vape-h3-icon-color;
+
+        &:hover {
+            color: $vape-h3-icon-color-hover;
+        }
+    }
+}
+
+// ==================================================
+// MOBİL
+// ==================================================
+@media (max-width: 991.98px) {
+    .vape-h3__brand-inner {
+        // ⚠️ MOBİLDE LOGO AKIŞTAN ÇIKAR. Flex ile ortalama İKİ KEZ denendi
+        //    ve ikisinde de logo soldan KIRPILDI: solda burger (44px),
+        //    sağda 3 ikon (~132px) — bu asimetri flex ortalamayı bozar.
+        //    Absolute ortalama asimetriden bağımsızdır.
+        //    ⚠️ Ölçüm bunu YAKALAMADI, yalnızca ekran görüntüsünde görüldü.
+        position: relative;
+        min-height: 60px;
+        padding-inline: $vape-h3-pad-x-sm;
+        gap: $vape-space-2;
+    }
+
+    .vape-h3__brand-left {
+        flex: 0 0 auto;
+    }
+
+    .vape-h3__logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        // Burger ve ikonlar tıklanabilir kalmalı
+        pointer-events: none;
+
+        a {
+            pointer-events: auto;
+        }
+
+        img,
+        svg {
+            // ⚠️ 3 ikon + burger ~176px yer kaplıyor; 390px ekranda logoya
+            //    kalan güvenli genişlik ~112px (ölçüldü, v2'de kırpılmıştı).
+            max-width: $vape-h3-logo-w-sm;
+        }
+    }
+
+    .vape-h3__actions {
+        flex: 1 1 auto;
+        margin-left: auto;
+    }
+
+    // Ray satırı mobilde YALNIZCA arama taşır — kategoriler offcanvas'ta.
+    // 4000 SKU'lu bir katalogda mobilde yapışkan kalması gereken şey arama.
+    .vape-h3__rail-inner {
+        min-height: 52px;
+        gap: 0;
+    }
+
+    // ⚠️ Mobilde arama ray satırının TEK içeriği ve tam genişlik olmalı.
+    //    ÖLÇÜLDÜ (390px): 186px kalıyordu, sağda 188px boş alan vardı —
+    //    çünkü masaüstü genişliği ($vape-h3-search-w) ve `flex: 0 0 auto`
+    //    mobilde de geçerliydi. Genişliği burada açıkça eziyoruz.
+    // ⚠️ Mobilde arama ray satırının TEK içeriği ve tam genişlik olmalı.
+    //    ÖLÇÜLDÜ (390px): 186px kalıyordu, sağda boşluk vardı.
+    //    ⚠️ Zincirde ARA bir `.collapse` katmanı var (core markup'ı):
+    //         .vape-h3__search 358 → .collapse 232 → form 232 → input 186
+    //       Yalnızca `.header-search`e genişlik vermek YETMEZ, `.collapse`
+    //       kendi genişliğinde kalıp zinciri kilitliyor. Zincirin HER
+    //       halkası açıkça %100 yapılmalı.
+    .vape-h3__search {
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+
+        .collapse,
+        .header-search,
+        .header-search-form,
+        .input-group {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+        }
+    }
+}
+
+// ==================================================
+// ESKİ HEADER KURALLARINI ETKİSİZLEŞTİR
+// ==================================================
+// ⚠️ `_header.scss` (v1) ve `_header-v2.scss` hâlâ import ediliyor çünkü
+//    içlerinde geçerli parçalar var (offcanvas, arama formu detayları,
+//    mobil menü). Ama v1/v2'ye ait KAPSAYICI kuralları burada açıkça
+//    kapatıyoruz — yoksa görünmez kalıntı şeritler ve çift çizgi kalır.
+
+// v1'in koyu antrasit menü şeridi
+.nav-main {
+    display: none;
+}
+
+// v1'in header sarmalayıcısı.
+// ⚠️ `display` BURADA VERİLMEZ — yukarıda `display: contents` atanıyor
+//    (ray'in sticky bağlamı için şart). Burada tekrar `display` yazmak
+//    onu sessizce ezerdi.
+.header-main {
+    padding: 0;
+    border-bottom: 0;
+}
+
+// v1'in USP şeridi — artık marka satırının içinde (top-bar.html.twig boş)
+.vape-usp-bar {
+    display: none;
+}
+
+// v2'nin kapsayıcıları — twig artık `.vape-h3*` basıyor, bunlar
+// render edilmiyor. Yine de kural kalıntısı bırakmamak için kapatılıyor.
+.vape-hdr {
+    border-bottom: 0;
+}

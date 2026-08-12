@@ -38,26 +38,165 @@
 {% sw_extends '@Storefront/storefront/layout/navbar/navbar.html.twig' %}
 
 {% block layout_navbar_menu_items %}
-    {# Rozet olarak davranacak kategoriler — ada göre (SCSS ile aynı liste) #}
+    {# Promo linki olarak davranacak kategoriler — ada göre (SCSS ile aynı liste) #}
     {% set badgeNames = ['aktionen', 'sale', 'outlet'] %}
 
-    {# --- normal kategoriler: ortada --- #}
+    {#
+        ⚠️ GÖRÜNÜR KATEGORİ SINIRI (2026-08-11, header v3).
+
+        Ray satırında kategoriler + promo linkleri + arama YAN YANA duruyor.
+        ÖLÇÜLDÜ (1600px viewport, 1440px kapsayıcı):
+          kategori listesi 1044 + promo ~270 + arama 214 + aralıklar ~60
+          = 1588px gereken, 1376px mevcut → 212px EKSİK.
+        Sonuç: "Salt Produkte" ve üç promo linki aramanın altında kalıp
+        görünmez oluyordu (ekran görüntüsünde yakalandı; ölçümde yalnızca
+        `right: 1610` taşması olarak görünüyordu).
+
+        Çözüm: ilk N kategori görünür, kalanlar "Mehr" başlığı altında
+        mega menüde toplanır. Yatay kaydırma ÇÖZÜM DEĞİL — kaydırma çubuğu
+        gizli olduğu için taşan kategorilerin VAR OLDUĞUNA dair hiçbir
+        işaret kalmıyor, keşfedilebilirlik sıfıra düşüyor.
+
+        ⚠️ Sıra KATALOG SIRASI (admin'deki kategori sıralaması). Yönetici
+           hangi kategorinin görünür kalacağını admin'den sıralamayı
+           değiştirerek belirler — burada isim listesi HARDCODE EDİLMEDİ.
+    #}
+    {#
+        ⚠️ SAYI ÖLÇÜLEREK BULUNDU, tahmin değil. 1600px ekranda ray
+           satırında menüye 983px kalıyor (kalanı arama 220 + promo 229
+           + aralıklar). Kategori genişlikleri kümülatif ölçüldü:
+             Home 56 · Pod Kits 208 · Liquids 294 · Einweg 426 ·
+             Big Puffs 524 · E-Zigaretten 719 · Aromen 810 · Shisha 893
+             → Raucherbedarf 1031 TAŞIYOR
+           Yani "Home" + 7 kategori sığıyor. `maxVisible` yalnızca
+           ağaçtan gelen kategorileri sayar (Home ağaçta değil, core
+           ayrı basıyor) → 7.
+
+        ⚠️ Dar ekranda (992–1400px) daha azı sığar; kalanına menü kendi
+           içinde yatay kaydırma ile ulaşılır (güvenlik ağı). Kaydırma
+           TASARIM DEĞİL — asıl çözüm "Mehr" açılırı.
+    #}
+    {% set maxVisible = 7 %}
+
+    {#
+        ⚠️ `|filter` + `|slice` ZİNCİRİ KULLANMA. İki ayrı tuzak var:
+          1. `|filter` tembel bir generator döndürür; üzerine doğrudan
+             `|slice` uygulanınca taşma listesi sessizce BOŞ kalıyor
+             (render edilen HTML'de `vape-nav-more` hiç görünmedi).
+          2. `|values` ile dizileştirmek de ÇALIŞMAZ — bu Twig sürümünde
+             öyle bir filtre yok, sayfa HTTP 500 veriyor
+             (`Unknown "values" filter`).
+        Doğrusu: açık döngüyle gerçek bir diziye topla.
+    #}
+    {% set mainItems = [] %}
     {% for treeItem in header.navigation.tree %}
         {% if treeItem.category.translated.name|lower not in badgeNames %}
-            {{ _self.vapeNavItem(treeItem, level, page, themeIconConfig) }}
+            {% set mainItems = mainItems|merge([treeItem]) %}
         {% endif %}
     {% endfor %}
 
-    {# --- rozetler: tek sarmalayıcı, sağa yaslanır (SCSS: .vape-nav-badges) --- #}
-    <li class="vape-nav-badges">
-        <ul class="vape-nav-badges__list">
-            {% for treeItem in header.navigation.tree %}
-                {% if treeItem.category.translated.name|lower in badgeNames %}
-                    {{ _self.vapeNavItem(treeItem, level, page, themeIconConfig) }}
-                {% endif %}
-            {% endfor %}
-        </ul>
-    </li>
+    {% set visibleItems = mainItems|slice(0, maxVisible) %}
+    {% set overflowItems = mainItems|slice(maxVisible) %}
+
+    {# --- görünür kategoriler --- #}
+    {% for treeItem in visibleItems %}
+        {{ _self.vapeNavItem(treeItem, level, page, themeIconConfig) }}
+    {% endfor %}
+
+    {#
+        --- "Mehr" açılırı: tüm kategoriler ---
+
+        ⚠️ Koşul `overflowItems` DEĞİL `mainItems`. Sunucu tarafında
+           taşma olmasa bile (≥1500px'te 7 kategori sığıyor) dar
+           masaüstünde SCSS fazlalığı gizliyor; "Mehr" o zaman da
+           gerekli. Panel zaten tüm listeyi gösteriyor.
+    #}
+    {% if mainItems|length > 0 %}
+        <li class="nav-item vape-nav-more dropdown position-static">
+            <a class="nav-link root main-navigation-link p-2 dropdown-toggle"
+               href="#"
+               data-bs-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false"
+               title="{{ 'header.moreCategories'|trans|striptags }}">
+                <span class="main-navigation-link-text">{{ 'header.moreCategories'|trans|sw_sanitize }}</span>
+            </a>
+
+            {#
+                ⚠️ `w-100` YOK (mega menüdeki panelde VAR, orada doğru).
+                   Burada yalnızca birkaç kategori listeleniyor; tam
+                   genişlik panelde sağda ~1300px boşluk kalıyordu.
+                   Sınıfı CSS ile ezmek denendi ve tutmadı (`w-100`
+                   utility'si `!important` ile bile kazanıyordu) —
+                   markup'tan çıkarmak temiz çözüm.
+            #}
+            <div class="dropdown-menu p-4">
+                <div class="vape-nav-more__panel">
+                    {#
+                        ⚠️ Panel TÜM kategorileri listeler, yalnızca
+                           taşanları değil.
+
+                           Sebep: dar masaüstünde (≤1500px) ray satırına
+                           7 kategori de sığmıyor, fazlası SCSS ile
+                           gizleniyor (`_header-v3.scss`, nth-child
+                           kuralları). Panel yalnızca `overflowItems`
+                           içerseydi, CSS ile gizlenen kategorilere
+                           HİÇBİR yerden ulaşılamazdı.
+                           Tüm listeyi göstermek bu boşluğu kapatır ve
+                           panelin anlamını da netleştirir: "tüm
+                           kategoriler".
+                    #}
+                    <ul class="vape-nav-more__list">
+                        {% for treeItem in mainItems %}
+                            {% set category = treeItem.category %}
+                            {% if not (category.type == 'folder' and treeItem.children|length == 0) %}
+                                <li class="vape-nav-more__item">
+                                    <a class="vape-nav-more__link"
+                                       href="{{ category.seoUrl ?: '#' }}"
+                                       {% if category.type != 'folder' and category.shouldOpenInNewTab %}target="_blank"{% endif %}>
+                                        {{ category.translated.name }}
+                                    </a>
+
+                                    {% if treeItem.children|length > 0 %}
+                                        <ul class="vape-nav-more__sublist">
+                                            {% for child in treeItem.children|slice(0, 6) %}
+                                                <li>
+                                                    <a class="vape-nav-more__sublink"
+                                                       href="{{ child.category.seoUrl ?: '#' }}">
+                                                        {{ child.category.translated.name }}
+                                                    </a>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </li>
+    {% endif %}
+
+    {#
+        ⚠️ PROMO LİNKLERİ (Aktionen/SALE/Outlet) ARTIK BURADA DEĞİL.
+
+        Kategori listesinin İÇİNDE bir <li> olarak duruyorlardı, ama o
+        liste `overflow-x: auto` (dar ekranda kategorilere ulaşılabilmesi
+        için şart). ÖLÇÜLDÜ: ul genişliği 1044px iken scrollWidth 1478px —
+        promo grubu kaydırma alanının DIŞINDA kalıyor, ataların
+        `overflow: visible`i sayesinde ekranda çiziliyor ve ARAMANIN
+        ÜSTÜNE biniyordu (rozetler right=1610, arama right=1442).
+
+        `min-width: 0` zinciri bu durumu ÇÖZMEDİ (liste zaten daralıyordu,
+        sorun grubun listeye ait olması). `overflow: hidden` de çözüm
+        değil: mega menü paneli bu zincirde konumlanıyor, kırpılır ve
+        görünmez olur.
+
+        Doğru çözüm yapısal: promo grubu artık kaydırılan listenin
+        KARDEŞİ, `layout/header/header.html.twig` içinde ayrı bir blok
+        olarak basılıyor (`.vape-h3__promo`).
+    #}
 {% endblock %}
 
 {#

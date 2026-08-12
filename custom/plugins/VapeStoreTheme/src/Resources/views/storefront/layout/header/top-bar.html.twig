@@ -1,54 +1,34 @@
 {#
-    Üst şerit — yalnızca USP mesajları.
+    Üst şerit — v3'te TAMAMEN BOŞ render edilir.
 
-    USP metinleri ve ikonları theme.json'dan gelir, yönetici admin'den
-    (Themes → 24VapeStore Theme → Header) düzenleyebilir. Metni boş bırakılan
-    USP hiç render edilmez.
+    ⚠️ USP mesajları BURADAN KALDIRILDI (2026-08-11, header v3).
+       Silinmediler — marka satırının SOL tarafına taşındılar
+       (`layout/header/header.html.twig`, `.vape-h3__usp`). Metinler hâlâ
+       theme.json'dan geliyor, yönetici admin'den düzenlemeye devam eder.
 
-    Mobilde yatay kaydırılabilir; core'un `d-none d-lg-block` kısıtı
-    kaldırıldı çünkü USP'ler mobilde de değerli.
+    NEDEN: v2'de header üç yatay şeritti ve her biri aynı 1px kenarlıkla
+    kapanıyordu (ölçüldü: 37 + 72 + 48 = 158px). ~40px'te bir yatay çizgi
+    "tepsi/tablo" grameri üretiyor, mağaza değil. Bu şeridi kaldırmak hem
+    bir bandı hem bir çizgiyi siliyor.
+
+    ⚠️ Ayrıca marka satırındaki eski "tagline" ile bu şeridin ilk mesajı
+       AYNI metindi — kargo mesajı ekranda iki kez görünüyordu. Taşıma o
+       tekrarı da bitirdi.
+
+    Mobilde de göstermiyoruz: mobil header zaten dar, USP'ler için doğru
+    yer hero altındaki güven şeridi CMS elementi (`vape-trust-bar`).
+
+    ⚠️ Şerit geri istenirse metinler theme.json'da duruyor, burada tekrar
+       render etmek yeterli — ama önce header'ın kaç yatay çizgiye
+       çıktığını kontrol et.
+
+    Core'un yardımcı şeridi (dil + para birimi seçici) de bilinçli olarak
+    kaldırıldı — burada `{{ parent() }}` çağrılmıyor. Mağaza Almanya B2C,
+    tek para birimi (EUR); seçici tek seçenekli açılır menü olarak render
+    oluyor ve kullanıcıya karar sunmadan tıklama hedefi ekliyordu. İleride
+    ikinci dil/para birimi gelirse seçici footer'a taşınmalı (aboutyou.de
+    de böyle yapıyor), header'a geri konmamalı.
 #}
 {% sw_extends '@Storefront/storefront/layout/header/top-bar.html.twig' %}
 
-{% block layout_header_top_bar %}
-    {% set usps = [
-        { text: theme_config('vape-usp-1-text'), icon: theme_config('vape-usp-1-icon') },
-        { text: theme_config('vape-usp-2-text'), icon: theme_config('vape-usp-2-icon') },
-        { text: theme_config('vape-usp-3-text'), icon: theme_config('vape-usp-3-icon') }
-    ]|filter(usp => usp.text is not empty) %}
-
-    {% if usps|length > 0 %}
-        <div class="vape-usp-bar">
-            <div class="container">
-                <ul class="vape-usp-bar__list">
-                    {% for usp in usps %}
-                        <li class="vape-usp-bar__item">
-                            {% if usp.icon %}
-                                {% sw_icon usp.icon style { size: 'xs', pack: 'solid' } %}
-                            {% endif %}
-                            <span>{{ usp.text }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-
-    {#
-        Core'un yardımcı şeridi (dil seçici + para birimi seçici) BİLİNÇLİ
-        OLARAK kaldırıldı — burada {{ parent() }} çağrılmıyor.
-
-        Gerekçe:
-          • Mağaza Almanya B2C, tek para birimi (EUR). Para birimi seçici
-            tek seçenekli bir açılır menü olarak render oluyordu; kullanıcıya
-            hiçbir karar sunmadan tıklama hedefi ve görsel gürültü ekliyordu.
-          • Şerit ~40px dikey alan tüketiyor ve neredeyse boş render oluyordu;
-            bu alan header'ın ilk ekranda kapladığı yerin dörtte biri kadar.
-          • Tek dilli mağazada dil seçici de aynı durumda.
-
-        İleride ikinci bir dil veya para birimi eklenirse: seçici footer'a
-        taşınmalı (aboutyou.de de böyle yapıyor), header'a geri konmamalı.
-        Core bloğu ezildiği için ek bir şey silmek gerekmez — burada
-        {{ parent() }} eklemek yeterli.
-    #}
-{% endblock %}
+{% block layout_header_top_bar %}{% endblock %}

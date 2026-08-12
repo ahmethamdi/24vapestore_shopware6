@@ -472,6 +472,141 @@ $vape-hdr-border:            $vape-neutral-200;
 $vape-hdr-shadow-sticky:     0 1px 16px rgba(16, 16, 24, 0.07);
 $vape-hdr-transition:        200ms $vape-ease-out;
 
+// ==================================================
+// HEADER v3 — "Bölünmüş Sticky" (2026-08-11)
+//
+// Neden v3: v2'de header ÜÇ beyaz şerit + üç adet 1px $vape-neutral-200
+// çizgiydi (ölçüldü: 37px USP + 72px marka + 48px menü = 158px). ~40px'te
+// bir yatay çizgi tablo/admin paneli grameri üretiyordu, mağaza değil.
+// İki bağımsız tasarım denetimi aynı teşhise vardı: sorun herhangi bir
+// satırın stili değil, üç ayrı kutu olarak KURULMUŞ olması.
+//
+// v3 yapısı — iki bölge:
+//   1) MARKA satırı (100px): solda USP mikro-metni · ORTADA logo · sağda ikonlar
+//      Kaydırınca TAMAMEN gider (küçülmez — gitmesi sticky'yi basitleştirir).
+//   2) RAY satırı (56px): kategoriler + promo linkleri + arama.
+//      `position: sticky` ile yapışır. Arama her scroll konumunda ekranda.
+//
+// ⚠️ Sticky artık SAF CSS (`position: sticky`). v2'deki JS ölçüm yarışı
+//    ($vape-header-sticky-height: 67px sabiti, is--header-sticky sınıfı)
+//    ortadan kalkar — sticky öğe SABİT yükseklikli ayrı bir satır olduğu
+//    için ölçülecek bir şey yok.
+// ==================================================
+
+// ---------- Yapı ----------
+$vape-h3-brand-h:            100px;  // marka satırı, ≥1200px
+$vape-h3-brand-h-md:         88px;   // 992–1199px
+$vape-h3-rail-h:             56px;   // ray satırı (sticky olan bu)
+$vape-h3-rail-h-md:          52px;
+$vape-h3-max-w:              1720px; // ⚠️ ÖLÇÜLDÜ: v2'de header 1600px
+                                     // viewport'ta 1280px'te kesiliyordu
+                                     // (sağda 320px ölü alan). Bootstrap
+                                     // container'ı devralmıştı.
+                                     // ⚠️ 1440 denendi ve DAR GELDİ: ray
+                                     // satırında kategoriler + promo +
+                                     // arama yan yana duruyor; 1600px
+                                     // ekranda menüye yalnızca 783px
+                                     // kalıyor ve 10 kategoriden 6'sı
+                                     // sığıyordu. Header içeriği sayfa
+                                     // içeriğinden daha geniş olabilir.
+$vape-h3-pad-x:              32px;
+$vape-h3-pad-x-md:           24px;
+$vape-h3-pad-x-sm:           16px;
+
+// ---------- Yatay ritim ----------
+$vape-h3-logo-w:             190px;  // marka satırı ferah → logo büyüyebilir
+$vape-h3-logo-w-md:          160px;
+$vape-h3-logo-w-sm:          112px;  // ⚠️ mobilde 3 ikon + burger için
+                                     // güvenli üst sınır (v2'de ölçüldü)
+$vape-h3-gap-nav-promo:      28px;   // kategoriler │ promo linkleri
+$vape-h3-gap-rail-search:    32px;   // menü bloğu │ arama
+$vape-h3-icon-gap:           4px;    // 44px hit alanları neredeyse bitişik →
+                                     // üç ikon TEK kontrol grubu okunur
+
+// ---------- Arama (ray satırında, hep görünür) ----------
+$vape-h3-search-h:           40px;
+// ⚠️ 260px denendi; ray satırında kategorilere yer bırakmıyordu (1600px
+//    ekranda menüye 783px kalıyor, 10 kategoriden 6'sı sığıyordu).
+//    Arama ray'de HEP GÖRÜNÜR olduğu için dar olması sorun değil —
+//    odaklanınca genişliyor.
+$vape-h3-search-w:           220px;
+$vape-h3-search-w-focus:     360px;
+$vape-h3-search-radius:      $vape-radius-sm;
+$vape-h3-search-bg:          $vape-neutral-white;
+$vape-h3-search-border:      $vape-neutral-300;
+
+// ---------- Tipografi ----------
+// ⚠️ v2'de her şey 11/12/13/14px + ağırlık 500 idi — bu bir skala değil,
+//    gürültü. v3'te üç NET seviye var: 10px mikro / 14px menü / logo.
+$vape-h3-nav-size:           14px;   // v2: 13px
+$vape-h3-nav-weight:         $vape-weight-medium;
+$vape-h3-nav-weight-hover:   $vape-weight-semibold;
+$vape-h3-nav-tracking:       0;      // ⚠️ v2: 0.01em. Küçük punto KÜÇÜK
+                                     // HARF metinde pozitif harf aralığı
+                                     // "gerilmiş" okunur, kalite düşürür.
+                                     // Harf aralığı YALNIZCA büyük harfte.
+$vape-h3-nav-gap:            22px;
+$vape-h3-nav-color:          $vape-text-primary;
+$vape-h3-nav-color-hover:    $vape-text-heading;
+
+$vape-h3-promo-size:         13px;
+$vape-h3-promo-weight:       $vape-weight-semibold;
+$vape-h3-promo-color:        $vape-text-heading;
+$vape-h3-promo-gap:          18px;
+// Promo işareti: DOLU KUTU DEĞİL, 5px kırmızı nokta.
+// ⚠️ v2'de üç dolu kırmızı dikdörtgen vardı ve header'ın en gürültülü şeyi
+//    onlardı (logo değil). Ayrıca projenin kendi kuralı "header'a kırmızı
+//    kutu koyma". Nokta ile toplam kırmızı alan ~8000px² → ~60px².
+$vape-h3-promo-dot:          5px;
+$vape-h3-promo-dot-gap:      7px;
+
+// Mikro metin (USP). Büyük harf + harf aralığı — headerdaki TEK büyük harf.
+$vape-h3-micro-size:         10px;
+$vape-h3-micro-weight:       $vape-weight-semibold;
+$vape-h3-micro-tracking:     0.08em;
+$vape-h3-micro-color:        $vape-text-muted;  // #71717f = beyazda 5.3:1 ✓ AA
+                                                // ⚠️ neutral-400'e KAYMA (2.6:1)
+
+$vape-h3-cart-size:          13px;
+$vape-h3-cart-weight:        $vape-weight-semibold;
+
+// ---------- İkonlar ----------
+$vape-h3-icon-size:          22px;
+$vape-h3-icon-hit:           44px;   // WCAG 2.2 SC 2.5.8
+$vape-h3-icon-radius:        8px;    // yuvarlak kare (daire = 2018 material)
+$vape-h3-icon-color:         $vape-neutral-600;
+$vape-h3-icon-color-hover:   $vape-neutral-900;
+$vape-h3-icon-bg-hover:      rgba(24, 24, 29, 0.04);
+$vape-h3-icon-bg-active:     rgba(24, 24, 29, 0.07);
+
+// Sepet rozeti — kırmızı DOLGUNUN meşru yeri: durum bilgisi taşır
+$vape-h3-badge-size:         16px;   // v2: 18px (22px ikonun üstünde çok iri)
+$vape-h3-badge-offset:       -4px;   // v2: -6px → rozet ikondan kopuyordu
+$vape-h3-badge-text:         10px;
+
+// ---------- Ayrım ----------
+// ⚠️ TEK yapısal çizgi: ray satırının ALTI. Marka↔ray ayrımı ÇİZGİ ile
+//    değil TON ile yapılır (#fcfcfd, %1.2 luminans farkı). Üç eşit çizgi
+//    "tepsi" okunuyordu; ton farkı düzlem tanımlar, kutu üretmez.
+$vape-h3-bg:                 $vape-neutral-white;
+$vape-h3-rail-bg:            $vape-neutral-25;
+$vape-h3-hairline:           rgba(24, 24, 29, 0.07);
+$vape-h3-shadow-stuck:       0 2px 12px rgba(16, 16, 24, 0.06);
+
+// ---------- Gösterge ----------
+$vape-h3-underline-h:        2px;
+$vape-h3-underline-active:   $vape-brand;
+
+// ---------- Hareket ----------
+// Kural: pahalı hareket KISA, tek özellikli, out-easing'li.
+// Kapanış her zaman açılıştan hızlı (~0.65×).
+$vape-h3-dur-color:          120ms;
+$vape-h3-dur-surface:        140ms;
+$vape-h3-dur-underline:      180ms;
+$vape-h3-dur-open:           220ms;
+$vape-h3-dur-close:          140ms;
+$vape-h3-ease:               $vape-ease-out;
+
 // Sticky moddaki header'ın SABİT yüksekliği. Sticky'de header ve nav ayrı
 // ayrı `position:fixed`; nav bu değer kadar aşağıdan başlar. Önceden JS
 // header'ı ölçüp `--vape-header-height`'e yazıyordu, ama sticky küçülmesi

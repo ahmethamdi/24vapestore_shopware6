@@ -9,7 +9,6 @@ Inline <script> veya doğrudan DOM manipülasyonu KULLANILMAZ.
 */
 
 import VapeHeroSliderPlugin from './plugin/vape-hero-slider/vape-hero-slider.plugin';
-import VapeStickyHeaderPlugin from './plugin/vape-sticky-header/vape-sticky-header.plugin';
 import VapeMobileNavPlugin from './plugin/vape-mobile-nav/vape-mobile-nav.plugin';
 import VapeCategoryCarouselPlugin from './plugin/vape-category-carousel/vape-category-carousel.plugin';
 import VapeProductRailPlugin from './plugin/vape-product-rail/vape-product-rail.plugin';
@@ -23,7 +22,28 @@ import VapePdpStickyBuyPlugin from './plugin/vape-pdp-sticky-buy/vape-pdp-sticky
 const registry = window.PluginManager;
 
 registry.register('VapeHeroSlider', VapeHeroSliderPlugin, '[data-vape-hero-slider]');
-registry.register('VapeStickyHeader', VapeStickyHeaderPlugin, 'body');
+
+/*
+   ⚠️ VapeStickyHeader KAYDI KALDIRILDI (2026-08-11, header v3).
+
+   Header v3'te sticky SAF CSS: yapışan öğe `.vape-h3__rail`, sabit
+   yükseklikli ayrı bir satır (`position: sticky; top: 0`).
+
+   JS eklenti `body.is--header-sticky` sınıfını basıyor ve o sınıf
+   `_header.scss`te `.header-main`i `position: fixed` yapıyordu — bu
+   v3'ün CSS sticky'sini DOĞRUDAN BOZAR (iki konumlanma modeli aynı
+   öğede yarışır).
+
+   Eklenti ayrıca header'ı ölçüp `--vape-header-height` yazıyordu; ölçüm
+   200ms'lik küçülme animasyonunun ortasında yapıldığı için fazla büyük
+   çıkıyor, nav çok aşağıda başlıyor ve arada boşluk kalıyordu
+   ($vape-header-sticky-height: 67px sabiti bu yüzden eklenmişti).
+   Sabit yükseklikli sticky satırda ölçülecek bir şey yok — yarış da yok.
+
+   Eklenti dosyası SİLİNMEDİ (plugin/vape-sticky-header/), yalnızca
+   kaydı kaldırıldı. v3 geri alınırsa buradaki import + register
+   satırlarını geri koymak yeterli.
+*/
 registry.register('VapeCategoryCarousel', VapeCategoryCarouselPlugin, '[data-vape-category-carousel]');
 registry.register('VapeProductRail', VapeProductRailPlugin, '[data-vape-product-rail]');
 registry.register('VapeFeaturedSplit', VapeFeaturedSplitPlugin, '[data-vape-featured-split]');

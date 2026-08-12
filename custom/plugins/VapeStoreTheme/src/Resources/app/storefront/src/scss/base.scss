@@ -19,6 +19,11 @@ component/layout parçalarını import et. Her component kendi dosyasında.
 @import 'layout/header';
 // ⚠️ header'dan SONRA: tek satır düzeni eski üç-şerit kurallarını ezer
 @import 'layout/header-v2';
+// ⚠️ v2'den SONRA: "Bölünmüş Sticky" düzeni (marka satırı + sticky ray).
+//    v1/v2 silinmedi — içlerinde hâlâ geçerli parçalar var (offcanvas,
+//    arama formu, mobil menü). Çakışan kapsayıcı kuralları v3 açıkça
+//    kapatıyor. Sıra ÖNEMLİ: v3 en sonda olmalı.
+@import 'layout/header-v3';
 @import 'layout/offcanvas-nav';
 @import 'layout/page-headings';
 @import 'layout/footer';
