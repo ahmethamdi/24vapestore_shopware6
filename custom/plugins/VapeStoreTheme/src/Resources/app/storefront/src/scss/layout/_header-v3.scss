@@ -931,6 +931,29 @@
     }
 }
 
+// ---------- Header ↔ sayfa geçişi ----------
+// ⚠️ Header tamamen #ededed olunca altında BEYAZ bir şerit kalıyordu
+//    (ölçüldü: ray y=100..157, gri içerik y=197'de başlıyor → 40px
+//    beyaz boşluk). Kaynak: `.cms-section`ın `padding-top: 40px`
+//    değeri; section'ın kendi zemini şeffaf, o yüzden padding alanında
+//    `body`nin beyazı görünüyor.
+//
+//    ⚠️ `body`yi griye çevirmek ÇÖZÜM DEĞİL: anasayfadaki beyaz↔gri
+//       section ritmi (base.scss) bozulur, bütün beyaz bölümler zemini
+//       kaybeder.
+//    ⚠️ `.cms-page`e zemin vermek de çözüm değil — PLP'nin kendi gri
+//       zeminini ezer.
+//
+//    Çözüm: SAYFANIN İLK section'ının üst padding'ini header rengiyle
+//    doldur. Yalnızca ilk section (`:first-child`) hedefleniyor;
+//    aşağıdaki section'ların ritmi değişmiyor.
+.cms-sections > .cms-section:first-child {
+    // Padding kutusu header rengiyle boyanır; içerik kutusu kendi
+    // zeminini `background-clip: content-box` ile geri alamayacağı için
+    // (section zemini zaten şeffaf) tek renk yeterli: gri geçiş.
+    background-color: $vape-h3-rail-bg;
+}
+
 // ==================================================
 // MOBİL
 // ==================================================

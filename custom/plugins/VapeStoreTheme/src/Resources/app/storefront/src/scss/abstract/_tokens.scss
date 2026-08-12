@@ -564,8 +564,12 @@ $vape-h3-promo-icon:         14px;
 $vape-h3-micro-size:         10px;
 $vape-h3-micro-weight:       $vape-weight-semibold;
 $vape-h3-micro-tracking:     0.08em;
-$vape-h3-micro-color:        $vape-text-muted;  // #71717f = beyazda 5.3:1 ✓ AA
-                                                // ⚠️ neutral-400'e KAYMA (2.6:1)
+// ⚠️ `$vape-text-muted` (#71717f) idi; marka satırı beyazken 4.80 ile
+//    AA'yı geçiyordu. Satır #ededed'e dönünce **4.10**'a düştü, yani
+//    AA sınırının (4.5) ALTINA indi (ölçüldü). Bir ton koyu:
+//    neutral-600 (#52525e) → 6.0+ ile rahat geçer.
+//    ⚠️ neutral-400'e (2.6:1) ASLA kayma. Zemin tonu değişirse ÖLÇ.
+$vape-h3-micro-color:        $vape-neutral-600;
 
 $vape-h3-cart-size:          13px;
 $vape-h3-cart-weight:        $vape-weight-semibold;
@@ -585,13 +589,18 @@ $vape-h3-badge-offset:       -4px;   // v2: -6px → rozet ikondan kopuyordu
 $vape-h3-badge-text:         10px;
 
 // ---------- Ayrım ----------
-// ⚠️ TEK yapısal çizgi: ray satırının ALTI. Marka↔ray ayrımı ÇİZGİ ile
-//    değil TON ile yapılır. Üç eşit çizgi "tepsi" okunuyordu; ton farkı
-//    düzlem tanımlar, kutu üretmez.
-// ⚠️ Ton #fcfcfd (neutral-25) idi → #ededed (talep). Fark %1.2'den
-//    ~%8'e çıktı: ray artık "fısıltı" değil, açıkça ayrı bir düzlem.
-//    Kontrast etkisi ölçüldü, USP/menü/promo metinleri AA'da kalıyor.
-$vape-h3-bg:                 $vape-neutral-white;
+// ⚠️ TEK yapısal çizgi: ray satırının ALTI.
+//
+// TON GEÇMİŞİ (talep sırası):
+//   1) marka beyaz + ray #fcfcfd → fark %1.2, "fısıltı" düzlem
+//   2) marka beyaz + ray #ededed → fark ~%8, ray net ayrı düzlem
+//   3) İKİSİ DE #ededed (GÜNCEL) → header tek düzlem.
+//      Kullanıcı header ile sayfa arasındaki beyaz şeridin kesintiyi
+//      bozduğunu söyledi; tamamı griye alındı.
+//      ⚠️ Marka↔ray TON ayrımı artık YOK. İki bölge yalnızca boşluk ve
+//         ray'in alt çizgisiyle ayrılıyor. Bu bilinçli bir karar —
+//         "ton farkı düzlem tanımlar" gerekçesi bu turda geçersiz.
+$vape-h3-bg:                 #ededed;
 $vape-h3-rail-bg:            #ededed;
 $vape-h3-hairline:           rgba(24, 24, 29, 0.07);
 $vape-h3-shadow-stuck:       0 2px 12px rgba(16, 16, 24, 0.06);
