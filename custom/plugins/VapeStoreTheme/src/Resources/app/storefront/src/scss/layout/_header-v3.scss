@@ -250,6 +250,53 @@
     }
 }
 
+// ---------- İkon dikey hizası (sağ grup) ----------
+// ⚠️ ÖLÇÜLDÜ: sepet ve hesap ikonları butonlarının merkezinden 5px
+//    YUKARIDAYDI (dBagCart = -5, dAccIconBtn = -5). Fiyat metni doğru
+//    yerdeydi (dTotalCart = 0), bu yüzden kayma gözle belirgindi.
+//
+//    İki AYRI kök sebep vardı, ikisi de `.vape-h3__icon-btn` seçicisinin
+//    dışında kalıyordu:
+//      • hesap: ikon core'un `.account-menu-btn`i içinde → `top: 0.25em`
+//        nötrlemesi ona ulaşmıyordu (ölçüm: top hâlâ 6px)
+//      • sepet: `.header-cart-icon` sarmalayıcısı içeriği ortalamıyordu
+//
+//    ⚠️ Sabit `margin-top` ile itmek (örn. 13px) belirtiyi kapatır ama
+//       ikon boyutu/satır yüksekliği değişince yeniden kayar. Kaynağı
+//       kapatmak: sarmalayıcıları flex-merkez yap + core `top`u sıfırla.
+.vape-h3__actions {
+    .header-cart-icon,
+    .account-menu-btn,
+    .header-actions-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        // ⚠️ `align-items: center` tek başına yetmez: core'un
+        //    `line-height` değeri (34px) 22px'lik ikonu daha yüksek bir
+        //    satır kutusuna oturtuyor ve ikon o kutunun taban çizgisine
+        //    hizalanıp yukarı kayıyor. Satır kutusunu ikona indiriyoruz.
+        line-height: 1;
+    }
+
+    .icon {
+        align-self: center;
+        line-height: 1;
+        // ⚠️ `base.scss`teki global `.icon { margin-bottom: 5px }` burada
+        //    hâlâ geçerliydi ve ikonu 2.5px YUKARI itiyordu
+        //    (ölçüm: dAccIconBtn = -2, iconMb = 5px).
+        //    `.vape-h3__icon-btn` içinde zaten sıfırlanıyordu ama hesap
+        //    ikonu core'un `.account-menu-btn`i içinde, o seçicinin
+        //    dışında kalıyordu.
+        margin: 0;
+    }
+
+    .icon > svg,
+    svg {
+        top: 0;
+        position: static;
+    }
+}
+
 // Sepet tutarı
 .vape-h3__actions .header-cart-total {
     font-size: $vape-h3-cart-size;
@@ -846,7 +893,16 @@
         }
     }
 
+    // ⚠️ Arama butonu core'da `display: block` ve `align-items: normal`
+    //    geliyor → içindeki ikon dikey ORTALANMIYOR.
+    //    ÖLÇÜLDÜ: buton ile input merkezleri aynı (fark 0) ama ikon
+    //    butonun merkezinden 5px YUKARIDA (dBtnSvg = -5).
+    //    Butonu flex kabına çevirmek hizayı kesin çözer (satır
+    //    yüksekliği/padding tahminine dayanmaz).
     .header-search-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: $vape-h3-icon-color;
 
         &:hover {
@@ -855,10 +911,22 @@
 
         // Core'un `top: 0.25em` kaydırması burada da nötrleniyor
         // (gerekçe: `.vape-h3__icon-btn` içindeki nota bak).
+        //
+        // ⚠️ `align-items: center` TEK BAŞINA YETMEDİ. Butonun
+        //    `line-height: 34px` değeri, 22px'lik ikonu 34px'lik bir
+        //    satır kutusuna oturtuyor ve ikon o kutunun taban çizgisine
+        //    hizalanıyor → merkezden 5px yukarı kayıyor.
+        //    ÖLÇÜLDÜ: buton content merkezi 128, ikon merkezi 123.
+        //    `line-height: 1` satır kutusunu ikon boyutuna indirir.
+        line-height: 1;
+
+        .icon,
         .icon > svg,
         svg {
             top: 0;
             position: static;
+            margin: 0;
+            line-height: 1;
         }
     }
 }
