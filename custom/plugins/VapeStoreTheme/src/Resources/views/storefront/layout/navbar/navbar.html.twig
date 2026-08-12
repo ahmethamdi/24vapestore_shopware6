@@ -76,7 +76,13 @@
            içinde yatay kaydırma ile ulaşılır (güvenlik ağı). Kaydırma
            TASARIM DEĞİL — asıl çözüm "Mehr" açılırı.
     #}
-    {% set maxVisible = 7 %}
+    {#
+        ⚠️ 7 idi; promo linklerine ikon eklenince grup 223→295px büyüdü
+           ve menüye kalan alan 983→917px'e düştü. 7'de "Mehr" 33px
+           taşıyor ve sağdan kırpılıyordu (ekran görüntüsünde "I" olarak
+           görünüyordu). Ölçüm: 7 kategori + Mehr = 950 > 917.
+    #}
+    {% set maxVisible = 6 %}
 
     {#
         ⚠️ `|filter` + `|slice` ZİNCİRİ KULLANMA. İki ayrı tuzak var:

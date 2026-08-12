@@ -553,12 +553,11 @@ $vape-h3-promo-size:         13px;
 $vape-h3-promo-weight:       $vape-weight-semibold;
 $vape-h3-promo-color:        $vape-text-heading;
 $vape-h3-promo-gap:          18px;
-// Promo işareti: DOLU KUTU DEĞİL, 5px kırmızı nokta.
-// ⚠️ v2'de üç dolu kırmızı dikdörtgen vardı ve header'ın en gürültülü şeyi
-//    onlardı (logo değil). Ayrıca projenin kendi kuralı "header'a kırmızı
-//    kutu koyma". Nokta ile toplam kırmızı alan ~8000px² → ~60px².
-$vape-h3-promo-dot:          5px;
-$vape-h3-promo-dot-gap:      7px;
+// ⚠️ Promo işareti üç kez değişti (bkz. _header-v3.scss'teki geçmiş notu):
+//    v1/v2 üç dolu kırmızı kutu → v3.0 üç kırmızı nokta → v3.1 (güncel)
+//    her promo kendi İKONU + yalnızca SALE dolgulu.
+//    Nokta token'ları kaldırıldı; ikon boyutu bileşende sabit (14px).
+$vape-h3-promo-icon:         14px;
 
 // Mikro metin (USP). Büyük harf + harf aralığı — headerdaki TEK büyük harf.
 $vape-h3-micro-size:         10px;

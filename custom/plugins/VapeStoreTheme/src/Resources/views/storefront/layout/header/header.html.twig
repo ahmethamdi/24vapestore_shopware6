@@ -203,12 +203,40 @@
                                     {% set promoName = promoName|lower|capitalize %}
                                 {% endif %}
 
+                                {#
+                                    Her promo kendi ikonunu taşır — üçü aynı
+                                    kırmızı nokta olduğunda "ne oldukları
+                                    anlaşılmıyordu" (talep).
+                                    ⚠️ İkon adları core setinde VAR olarak
+                                       doğrulandı (dist/assets/icon/default/).
+                                       Olmayan ad sessizce boş render eder,
+                                       hata vermez.
+                                #}
+                                {% set promoKey = category.translated.name|lower %}
+                                {% set promoIcon = {
+                                    'aktionen': 'marketing',
+                                    'sale':     'tags',
+                                    'outlet':   'package-open'
+                                }[promoKey]|default('tags') %}
+
+                                {#
+                                    Yalnızca SALE dolgulu rozet. Üçü birden
+                                    dolgulu olunca header'ın en gürültülü şeyi
+                                    promosyon oluyordu (logo değil) ve proje
+                                    kuralı "header'a kırmızı kutu koyma"
+                                    deliniyordu. Tek dolgu = hiyerarşi.
+                                #}
+                                {% set isSolid = promoKey == 'sale' %}
+
                                 <li class="vape-h3__promo-item">
-                                    <a class="vape-h3__promo-link"
+                                    <a class="vape-h3__promo-link{{ isSolid ? ' vape-h3__promo-link--solid' : '' }}"
                                        href="{{ category.seoUrl ?: '#' }}"
                                        {% if category.type != 'folder' and category.shouldOpenInNewTab %}target="_blank"{% endif %}
                                        title="{{ category.translated.name }}">
-                                        {{ promoName }}
+                                        <span class="vape-h3__promo-icon">
+                                            {% sw_icon promoIcon style { size: 'xs' } %}
+                                        </span>
+                                        <span class="vape-h3__promo-text">{{ promoName }}</span>
                                     </a>
                                 </li>
                             {% endfor %}

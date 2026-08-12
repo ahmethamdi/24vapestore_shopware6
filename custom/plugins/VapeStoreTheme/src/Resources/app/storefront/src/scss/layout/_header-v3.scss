@@ -348,6 +348,19 @@
     //    (Bu projede bir kez yaşandı, bkz. _header-v2.scss notları.)
     //    Genişlik sınırı `max-width` ile veriliyor, kırpma ile değil.
 
+    // ⚠️ Core navbar'ın içinde bir Bootstrap `.container` var ve 20px
+    //    yatay dolgu ekliyor. ÖLÇÜLDÜ: ray 32px'te başlıyor ama menü
+    //    listesi 52px'te (32+20) — mega menü içeriği ise 32px'te, yani
+    //    panel başlıkları menü linkleriyle hizasız kalıyordu.
+    //    Ray zaten kendi dolgusunu veriyor; buradaki container'ı
+    //    şeffaflaştırıyoruz.
+    .container {
+        max-width: none;
+        padding-inline: 0;
+        margin-inline: 0;
+        width: 100%;
+    }
+
     .navbar {
         position: static;
         padding: 0;
@@ -366,6 +379,12 @@
     .main-navigation-menu-list {
         display: flex;
         align-items: center;
+        // ⚠️ `safe center` v2'den kalmıştı (menü o düzende ORTALANIYORDU).
+        //    v3'te menü SOLA yaslı; ortalama kuralı kalınca liste kendi
+        //    kutusu içinde ortalanıp 46px sol boşluk bırakıyordu ve
+        //    mega menü başlıkları menü linkleriyle hizasız görünüyordu
+        //    (ÖLÇÜLDÜ: ul x=32 ama ilk <li> x=78).
+        justify-content: flex-start;
         gap: $vape-h3-nav-gap;
         margin: 0;
         padding: 0;
@@ -505,10 +524,24 @@
 //    ray satırında duruyorlardı, oysa orada arama olmalı).
 .vape-h3__promo {
     align-items: center;
+    // Dikey ayraç, tam yükseklikte değil — ray'in ortasında kısa bir çizgi.
+    // ⚠️ `border-left` kullanılmıyor: promo linklerine dolgu/rozet
+    //    eklenince çizgi ile link arası açıldı ve çizgi "kayıp" göründü.
+    //    Kendi yüksekliğini kontrol edebilmek için pseudo-element.
+    position: relative;
     flex: 0 0 auto;
-    // Ayraç — kategoriler ile promo grubu arasında tek ince dikey çizgi
     padding-left: $vape-h3-gap-nav-promo;
-    border-left: 1px solid $vape-neutral-200;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 18px;
+        background-color: $vape-neutral-200;
+    }
 }
 
 .vape-h3__promo-list {
@@ -520,54 +553,87 @@
     list-style: none;
 }
 
-// ⚠️ v2'de bunlar üç DOLU kırmızı dikdörtgendi ve header'ın en gürültülü
-//    şeyi onlardı — logo değil. Projenin kendi kuralı da "header'a kırmızı
-//    dolgulu kutu koyma" (bir kez sepet CTA'sında yaşandı, geri alındı).
-// v3: dolgu yok, 5px kırmızı NOKTA. Kırmızı alan ~8000px² → ~60px².
-// Kırmızı hâlâ satırdaki tek renk olduğu için en dikkat çekici şey,
-// ama artık blok değil.
+// ⚠️ GEÇMİŞ — bu üç link üç kez değişti, sırayı bilmeden dokunma:
+//    v1/v2: üç DOLU kırmızı dikdörtgen → header'ın en gürültülü şeyi
+//           promosyondu, logo değil. Ayrıca proje kuralı "header'a
+//           kırmızı dolgulu kutu koyma" (sepet CTA'sında bir kez
+//           yaşandı, kullanıcı "iğrenç" dedi, geri alındı).
+//    v3.0:  dolgu yok, üçü de 5px kırmızı nokta → kırmızı alan
+//           ~8000px² → ~60px². Ama kullanıcı "ne oldukları
+//           anlaşılmıyor, görünsünler" dedi.
+//    v3.1 (şimdi): her promo KENDİ İKONUNU taşıyor, ve yalnızca
+//           SALE dolgulu. Tek dolgu = hiyerarşi; üç dolgu = v1'e
+//           dönüş olurdu. Aktionen/Outlet ikon + kırmızı metin.
 .vape-h3__promo-link {
     display: inline-flex;
     align-items: center;
-    padding: $vape-space-2 0;
+    gap: 6px;
+    padding: 5px 8px;
+    border-radius: $vape-radius-sm;
     font-size: $vape-h3-promo-size;
     font-weight: $vape-h3-promo-weight;
-    // ⚠️ Üç büyük harfli kelime yan yana + kırmızı = sert indirim sinyali
-    //    (Lidl/MediaMarkt), premium değil. Cümle düzeni kullanılıyor.
-    //    Büyük harf yalnızca USP mikro-metninde (header'daki tek yer).
-    //    ⚠️ Kategori adı VERİDE büyük harfse ("SALE") CSS onu küçültemez —
-    //       küçültme twig'te `|lower|capitalize` ile yapılıyor
-    //       (header.html.twig). Burada yalnızca dönüşüm kapatılıyor ki
-    //       core'un veya Bootstrap'in uppercase kuralı sızmasın.
+    // ⚠️ Büyük harf DEĞİL — üç büyük harfli kelime yan yana + kırmızı =
+    //    sert indirim sinyali (Lidl/MediaMarkt). Büyük harf header'da
+    //    yalnızca USP mikro-metninde.
+    //    ⚠️ Kategori adı VERİDE büyük harfse ("SALE") CSS küçültemez;
+    //       düzeltme twig'te (`|lower|capitalize`). Buradaki `none`
+    //       core/Bootstrap uppercase kuralının sızmasını engeller.
     text-transform: none;
     letter-spacing: 0;
-    color: $vape-h3-promo-color;
+    // İkonlu hâlde metin de kırmızı — nokta yokken görünürlüğü bu taşıyor
+    color: $vape-brand;
     text-decoration: none;
     white-space: nowrap;
     line-height: 1;
-    transition: color $vape-h3-dur-color $vape-h3-ease;
-
-    // 5px kırmızı nokta — dolgunun yerini alan işaret
-    &::before {
-        content: "";
-        display: inline-block;
-        flex: 0 0 auto;
-        width: $vape-h3-promo-dot;
-        height: $vape-h3-promo-dot;
-        margin-right: $vape-h3-promo-dot-gap;
-        border-radius: 50%;
-        background-color: $vape-brand;
-    }
+    transition:
+        color $vape-h3-dur-color $vape-h3-ease,
+        background-color $vape-h3-dur-surface $vape-h3-ease;
 
     &:hover,
     &:focus-visible {
-        color: $vape-brand;
+        color: $vape-brand-hover;
+        background-color: $vape-brand-subtle;
     }
 
     &:focus-visible {
         outline: 2px solid $vape-brand;
         outline-offset: 2px;
-        border-radius: 2px;
+    }
+}
+
+.vape-h3__promo-icon {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+
+    .icon {
+        width: $vape-h3-promo-icon;
+        height: $vape-h3-promo-icon;
+        margin: 0;   // base.scss global `.icon { margin-bottom: 5px }` ezilir
+    }
+
+    svg {
+        width: $vape-h3-promo-icon;
+        height: $vape-h3-promo-icon;
+    }
+
+    // ⚠️ Core sw_icon'ları `fill: currentColor` kullanır; renk link'ten
+    //    miras alınır. Ayrıca renk vermeye gerek yok — verilirse dolgulu
+    //    rozette beyaza dönmesi engellenir.
+}
+
+// SALE — tek dolgulu rozet.
+// ⚠️ Bu, kırmızı dolgunun header'daki TEK yeri (sepet sayacı rozeti
+//    hariç, o durum bilgisi taşır). İkinci bir dolgu eklenirse v1'in
+//    "üç kırmızı blok" hâline geri dönülür.
+.vape-h3__promo-link--solid {
+    background-color: $vape-brand;
+    color: $vape-neutral-white;
+
+    &:hover,
+    &:focus-visible {
+        background-color: $vape-brand-hover;
+        color: $vape-neutral-white;
     }
 }
 
@@ -575,6 +641,40 @@
 //    v3'te üçü BİREBİR AYNI: bunlar bir KÜME. Aralarında hiyerarşi
 //    kurmaya çalışmak v2'deki uyumsuz rozet boyutlarını üretmişti.
 //    Biri ticari olarak daha önemliyse diğer ikisi header'dan çıkmalı.
+
+// ---------- Mega menü: içeriği ray ile hizala ----------
+// ⚠️ Panel zemini TAM GENİŞLİK kalmalı (kenardan kenara; kesilmiş bir
+//    şerit gibi durmasın). Hizalanması gereken şey İÇERİK.
+//
+//    ÖLÇÜLDÜ: menü linki x=78, panelin ilk kolonu x=32 → başlıklar
+//    linklerle hizasızdı, panel "sola kaymış" duruyordu.
+//
+//    ⚠️ İlk deneme `max-width` + `margin-inline: auto` idi ve ETKİSİZ
+//       kaldı: viewport (1600) < $vape-h3-max-w (1720) olduğu için
+//       ortalanacak artık alan yok, içerik yine 0'dan başlıyor.
+//       Doğru yol, ray ile AYNI dolgu değerlerini kullanmak — ray da
+//       aynı max-width + padding çiftini kullanıyor, böylece iki
+//       kapsayıcının sol kenarı her genişlikte çakışıyor.
+.vape-h3__nav .main-navigation-menu .dropdown-menu {
+    // `_mega-menu.scss` yatay dolguyu `!important` ile veriyor
+    padding-inline: 0 !important;
+
+    > * {
+        max-width: $vape-h3-max-w;
+        margin-inline: auto;
+        // Ray ile birebir aynı dolgu — hizanın kaynağı bu
+        padding-inline: $vape-h3-pad-x-sm;
+        box-sizing: border-box;
+
+        @media (min-width: 992px) {
+            padding-inline: $vape-h3-pad-x-md;
+        }
+
+        @media (min-width: 1200px) {
+            padding-inline: $vape-h3-pad-x;
+        }
+    }
+}
 
 // ---------- "Mehr" taşma açılırı ----------
 // ⚠️ Ray satırına 13 kategori + 3 promo + arama SIĞMIYOR (ölçüldü: 1588px
