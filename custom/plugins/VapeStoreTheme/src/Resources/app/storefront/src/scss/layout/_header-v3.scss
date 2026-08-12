@@ -21,7 +21,7 @@
 //
 // v3 YAPISI — iki bölge, TEK yapısal çizgi:
 //   1) .vape-h3__brand  100px  beyaz         — kaydırınca gider
-//   2) .vape-h3__rail    56px  #fcfcfd ton   — position: sticky
+//   2) .vape-h3__rail    56px  #ededed ton   — position: sticky
 //
 // Marka↔ray ayrımı ÇİZGİ ile değil TON ile yapılıyor (%1.2 luminans).
 // Tek 1px çizgi ray satırının ALTINDA.
@@ -590,8 +590,13 @@
     //       core/Bootstrap uppercase kuralının sızmasını engeller.
     text-transform: none;
     letter-spacing: 0;
-    // İkonlu hâlde metin de kırmızı — nokta yokken görünürlüğü bu taşıyor
-    color: $vape-brand;
+    // İkonlu hâlde metin de kırmızı — nokta yokken görünürlüğü bu taşıyor.
+    // ⚠️ `$vape-brand` (#e11122) DEĞİL `$vape-brand-hover` (#c00d1c):
+    //    ray zemini #fcfcfd → #ededed olunca marka kırmızısı 4.76'dan
+    //    **4.17**'ye düştü ve AA'nın (4.5) altına indi. Bir ton koyu
+    //    kırmızı rengi korur, kontrastı geri getirir.
+    //    ⚠️ Ray tonu tekrar değişirse bunu YENİDEN ÖLÇ.
+    color: $vape-brand-hover;
     text-decoration: none;
     white-space: nowrap;
     line-height: 1;
@@ -599,9 +604,12 @@
         color $vape-h3-dur-color $vape-h3-ease,
         background-color $vape-h3-dur-surface $vape-h3-ease;
 
+    // ⚠️ Temel renk zaten `$vape-brand-hover` olduğu için hover bir ton
+    //    daha koyu olmalı, yoksa hover'da hiçbir şey değişmiyormuş gibi
+    //    görünür.
     &:hover,
     &:focus-visible {
-        color: $vape-brand-hover;
+        color: $vape-brand-active;
         background-color: $vape-brand-subtle;
     }
 
@@ -807,14 +815,10 @@
         padding: 0;
         margin: 0;
         width: $vape-h3-search-w;
-        // Odaklanınca genişler — dar durması menüye yer açıyor, ama
-        // yazarken rahat olmalı. `width` layout tetikler; tek öğe ve
-        // kardeşi (menü) esnek olduğu için kabul edilebilir.
-        transition: width $vape-h3-dur-open $vape-h3-ease;
-    }
-
-    .header-search-form:focus-within {
-        width: $vape-h3-search-w-focus;
+        // ⚠️ ODAKTA GENİŞLEME KALDIRILDI (talep). Kutu 220→360px
+        //    büyüyünce sağdaki arama butonu ray'in dışına taşıyordu
+        //    (ekran görüntüsünde görüldü). Genişlik sabit; ray'de
+        //    zaten hep görünür olduğu için büyümesine gerek yok.
     }
 
     .header-search-form {

@@ -530,7 +530,8 @@ $vape-h3-search-h:           40px;
 //    Arama ray'de HEP GÖRÜNÜR olduğu için dar olması sorun değil —
 //    odaklanınca genişliyor.
 $vape-h3-search-w:           220px;
-$vape-h3-search-w-focus:     360px;
+// ⚠️ Odakta genişleme KALDIRILDI: kutu 220→360px büyüyünce sağdaki
+//    arama butonu ray'in dışına taşıyordu. Genişlik artık sabit.
 $vape-h3-search-radius:      $vape-radius-sm;
 $vape-h3-search-bg:          $vape-neutral-white;
 $vape-h3-search-border:      $vape-neutral-300;
@@ -585,10 +586,13 @@ $vape-h3-badge-text:         10px;
 
 // ---------- Ayrım ----------
 // ⚠️ TEK yapısal çizgi: ray satırının ALTI. Marka↔ray ayrımı ÇİZGİ ile
-//    değil TON ile yapılır (#fcfcfd, %1.2 luminans farkı). Üç eşit çizgi
-//    "tepsi" okunuyordu; ton farkı düzlem tanımlar, kutu üretmez.
+//    değil TON ile yapılır. Üç eşit çizgi "tepsi" okunuyordu; ton farkı
+//    düzlem tanımlar, kutu üretmez.
+// ⚠️ Ton #fcfcfd (neutral-25) idi → #ededed (talep). Fark %1.2'den
+//    ~%8'e çıktı: ray artık "fısıltı" değil, açıkça ayrı bir düzlem.
+//    Kontrast etkisi ölçüldü, USP/menü/promo metinleri AA'da kalıyor.
 $vape-h3-bg:                 $vape-neutral-white;
-$vape-h3-rail-bg:            $vape-neutral-25;
+$vape-h3-rail-bg:            #ededed;
 $vape-h3-hairline:           rgba(24, 24, 29, 0.07);
 $vape-h3-shadow-stuck:       0 2px 12px rgba(16, 16, 24, 0.06);
 
