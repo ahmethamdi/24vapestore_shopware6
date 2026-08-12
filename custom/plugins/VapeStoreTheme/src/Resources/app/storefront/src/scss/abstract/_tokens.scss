@@ -63,7 +63,13 @@ $vape-danger:  #e11122;
 // ==================================================
 
 // Zemin
-$vape-bg-page:      $vape-neutral-white;  // sayfa
+// ⚠️ SAYFA ZEMİNİ TEK RENK (2026-08-12, talep).
+//    Önce beyazdı; header #ededed'e alınınca header↔sayfa arasında ve
+//    section'lar arasında beyaz kutular kalıyordu. Kullanıcı "arka plan
+//    rengini sayfanın her yerinde aynı kullan" dedi.
+//    ⚠️ `$vape-bg-surface` BEYAZ KALIR — kart/panel/açılır menü zeminleri
+//       bu zeminden ayrışmalı, yoksa ürün kartları kaybolur.
+$vape-bg-page:      #ededed;              // sayfa (tek zemin)
 $vape-bg-surface:   $vape-neutral-white;  // kart, panel
 $vape-bg-subtle:    $vape-neutral-50;     // bölüm ayrımı, alternatif şerit
 $vape-bg-raised:    $vape-neutral-100;    // hover, yükseltilmiş yüzey
@@ -1635,7 +1641,14 @@ $vape-plp-col-gap-xxl:          $vape-space-10;      // 40px ≥1400px
 // PLP section'ının kendi zemini çok açık gri olur (edge-to-edge). Beyaz
 // sidebar-kartı + beyaz ürün kartları bu gri üstünde "yüzer" → katmanlı
 // derinlik. base.scss'in section ritmine dokunmadan, yalnız bu section'a.
-$vape-plp-page-bg:              $vape-neutral-50;    // #f7f7f9 — PLP zemini
+// ⚠️ `$vape-neutral-50` (#f7f7f9) idi. Sayfa zemini tek renge alınınca
+//    (#ededed) PLP kendi açık gri zeminini basmaya devam ediyordu ve
+//    gövde "beyaz kutu" gibi görünüyordu — talep edilen tek zemin
+//    sessizce tutmuyordu.
+//    ⚠️ Bu kural `:has()` iki kez kullandığı için base.scss'teki
+//       şeffaflaştırmadan DAHA ÖZGÜL; oradan ezilemez, kaynağı burası.
+//    Artık sayfa zeminine bağlı: tek yerden değişir.
+$vape-plp-page-bg:              $vape-bg-page;       // PLP zemini = sayfa zemini
 $vape-plp-page-pad-y:           $vape-space-6;       // gri zemin iç dikey nefes (mobil)
 $vape-plp-page-pad-y-lg:        $vape-space-8;       // ≥lg
 

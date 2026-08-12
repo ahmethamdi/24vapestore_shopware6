@@ -185,21 +185,33 @@ body {
 // Kendi tam-genişlik/koyu zeminini taşıyan elementlere (hero, promo banner,
 // showcase) DOKUNULMAZ — onlar zaten kendi kontrastını üretiyor.
 // ==================================================
-.cms-page .cms-section {
-    &:has(.cms-element-vape-category-carousel),
-    &:has(.cms-element-vape-category-grid),
-    &:has(.cms-element-vape-usp-strip),
-    &:has(.cms-element-vape-trust-bar),
-    &:has(.cms-element-vape-brand-slider) {
-        background-color: $vape-section-tone-subtle;
-    }
-
-    // İki gri section yan yana gelirse ikincisi beyaza döner — şerit
-    // birleşip "tek dev gri blok" olmasın, sınır algısı korunsun.
-    &:has(.cms-element-vape-category-carousel) + &:has(.cms-element-vape-category-grid),
-    &:has(.cms-element-vape-usp-strip) + &:has(.cms-element-vape-trust-bar) {
-        background-color: transparent;
-    }
+// ⚠️ ZEMİN RİTMİ KALDIRILDI (2026-08-12, talep: "arka plan rengini
+//    sayfanın her yerinde aynı kullan").
+//
+//    Yukarıdaki beyaz↔gri alternasyonu artık uygulanmıyor: sayfa zemini
+//    tek renk ($vape-bg-page = #ededed) ve section'lar şeffaf.
+//    Bölümler arası ayrım artık RENKLE değil BOŞLUKLA yapılıyor
+//    (section dikey ritmi yukarıda duruyor).
+//
+//    ⚠️ Geri istenirse: aşağıdaki kuralı geri aç + $vape-bg-page'i
+//       beyaza döndür. İkisi birlikte yapılmalı — yalnızca birini
+//       değiştirmek "gri üstüne gri" veya "beyaz kutu" üretir.
+//
+//    Element-tipine bağlı hedefleme kasıtlıydı (pozisyona göre DEĞİL):
+//    2026-07-28'de anasayfa 16→9 section'a inince `pos-N` numaraları
+//    kaymış ve ritim bozulmuştu. Geri açılırsa bu kalıbı koru.
+// ⚠️ İKİ AYRI KATMAN var, ikisi de şeffaflaşmalı:
+//      div.cms-section.pos-0.cms-section-default   ← dış sarmalayıcı
+//        └ section.cms-section-default.boxed        ← İÇ eleman, zemini
+//                                                     BU basıyor (#f7f7f9)
+//    Yalnızca dıştaki hedeflenirse sayfa gövdesi beyaza yakın kalır ve
+//    "tek zemin" isteği sessizce tutmaz. Bu bir kez yaşandı; ölçümde
+//    iç section bg = rgb(247,247,249) iken body = rgb(237,237,237)
+//    çıkıyordu ve fark gözle "beyaz kutu" olarak görünüyordu.
+.cms-page .cms-section,
+.cms-page section.cms-section-default,
+.cms-page .cms-section-default.boxed {
+    background-color: transparent;
 }
 
 // Başlık ölçeği — Bootstrap'ın cılız defaultları yerine tema skalası.
